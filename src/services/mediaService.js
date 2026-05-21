@@ -1,0 +1,15 @@
+import api from "./api";
+
+export const uploadMedia = async (file, folder = "mchub_chat") => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("folder", folder);
+
+  const response = await api.post("/media/upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  
+  return response.data.data.url;
+};
