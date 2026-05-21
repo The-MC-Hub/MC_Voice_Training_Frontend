@@ -1,0 +1,424 @@
+﻿
+// ----------------------------------------
+// ADMIN â€” Quáº£n trá»‹ viÃªn (/admin)
+// Táº¥t cáº£ endpoint yÃªu cáº§u JWT + ADMIN role
+// ----------------------------------------
+/** GET /admin/dashboard â€” Láº¥y tá»•ng quan sá»‘ liá»‡u quáº£n trá»‹ */
+/** GET /admin/users â€” Láº¥y toÃ n bá»™ danh sÃ¡ch user (má»i role) */
+/** GET /admin/users/mcs â€” Láº¥y danh sÃ¡ch tÃ i khoáº£n MC */
+/** GET /admin/users/clients â€” Láº¥y danh sÃ¡ch tÃ i khoáº£n Client */
+/**
+ * PUT /admin/users/{id}/status â€” Cáº­p nháº­t tráº¡ng thÃ¡i user
+ * @param {string} id - User ID
+ * @param {{ isActive: boolean, isVerified: boolean }} data
+ */
+/** GET /admin/bookings â€” Láº¥y toÃ n bá»™ danh sÃ¡ch booking */
+const AI_URL = import.meta.env.VITE_AI_API_URL || "http://localhost:8000";
+/**
+ * @file api.js
+ * @description Axios instance for all backend API calls.
+ * 
+ * Base URL: VITE_API_URL env variable (e.g. http://localhost:5000/api/v1)
+ * Auth:     JWT token read from localStorage on every request
+ * Errors:   On 401, automatically logs out user and redirects to /login
+ */
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+// Request Interceptor: Attach JWT token to every request
+// Response Interceptor: Handle 401 Unauthorized globally
+      // Clear auth state and redirect to login
+      // Only redirect if not already on auth pages
+// ----------------------------------------
+// AUDIT LOG â€” Nháº­t kÃ½ há»‡ thá»‘ng (/audit-logs)
+// YÃªu cáº§u JWT + ADMIN role
+// ----------------------------------------
+/**
+ * GET /audit-logs â€” Láº¥y toÃ n bá»™ nháº­t kÃ½ hÃ nh Ä‘á»™ng trong há»‡ thá»‘ng
+ * @returns {AuditLogResponseDTO[]}
+ */
+/**
+ * GET /audit-logs/user/{userId} â€” Láº¥y nháº­t kÃ½ hÃ nh Ä‘á»™ng cá»§a má»™t user cá»¥ thá»ƒ
+ * @param {string} userId - User ID cáº§n tra cá»©u
+ * @returns {AuditLogResponseDTO[]}
+ */
+// ----------------------------------------
+// AUTH â€” XÃ¡c thá»±c (/auth)
+// KhÃ´ng yÃªu cáº§u JWT (Public)
+// ----------------------------------------
+/**
+ * POST /auth/register â€” ÄÄƒng kÃ½ tÃ i khoáº£n má»›i
+ * @param {{ name, email, password, role: "CLIENT"|"MC" }} userData
+ */
+  return response.data; // { status, message, data: UserResponseDTO }
+/**
+ * POST /auth/login â€” ÄÄƒng nháº­p vÃ  nháº­n JWT token
+ * @param {string} email
+ * @param {string} password
+ */
+  return response.data; // { status, message, data: { token, user } }
+/** GET /auth/fix-passwords â€” Reset password seeded (Dev only) */
+/**
+ * PUT /auth/settings â€” Cáº­p nháº­t cÃ i Ä‘áº·t tÃ i khoáº£n
+ * @param {{ name?, phoneNumber?, avatar?, bio? }} settings
+ */
+/**
+ * POST /auth/kyc â€” Gá»­i thÃ´ng tin KYC Ä‘á»ƒ xÃ¡c minh
+ * @param {Object} kycData
+ */
+// ----------------------------------------
+// AVAILABILITY â€” Lá»‹ch báº­n cá»§a MC (/availability)
+// YÃªu cáº§u JWT (POST, DELETE yÃªu cáº§u role MC). GET lÃ  public.
+// ----------------------------------------
+/**
+ * POST /availability â€” MC thÃªm lá»‹ch báº­n/lá»‹ch Ä‘Ã£ Ä‘áº·t vÃ o lá»‹ch cÃ¡ nhÃ¢n
+ * @param {{ date, startTime, endTime, title?, status: "Booked"|"Busy"|"Pending" }} payload
+ * @returns {Schedule}
+ */
+/**
+ * GET /availability/{mcId} â€” Láº¥y toÃ n bá»™ lá»‹ch cá»§a má»™t MC (public, dÃ¹ng cho client xem)
+ * @param {string} mcId - User ID cá»§a MC
+ * @returns {Schedule[]}
+ */
+/**
+ * DELETE /availability/{id} â€” MC xÃ³a má»™t má»¥c lá»‹ch báº­n
+ * @param {string} id - Schedule ID
+ */
+// ----------------------------------------
+// BOOKING DETAIL â€” Chi tiáº¿t ká»¹ thuáº­t sá»± kiá»‡n
+// YÃªu cáº§u JWT
+// Route prefix: /bookings/{bookingId}/detail
+// ----------------------------------------
+/**
+ * GET /bookings/{bookingId}/detail â€” Láº¥y chi tiáº¿t ká»¹ thuáº­t booking
+ * @param {string} bookingId
+ * @returns {BookingDetailResponseDTO}
+ */
+/**
+ * PUT /bookings/{bookingId}/detail â€” Táº¡o hoáº·c cáº­p nháº­t toÃ n bá»™ chi tiáº¿t booking
+ * @param {string} bookingId
+ * @param {{ runSheet?, dressCode?, venueNotes?, attachments? }} detailData
+ * @returns {BookingDetailResponseDTO}
+ */
+/**
+ * PUT /bookings/{bookingId}/detail/mc-notes â€” MC cáº­p nháº­t ghi chÃº cÃ¡ nhÃ¢n
+ * @param {string} bookingId
+ * @param {string} mcNotes - Ná»™i dung ghi chÃº cá»§a MC
+ * @returns {BookingDetailResponseDTO}
+ */
+// ----------------------------------------
+// BOOKING â€” Quáº£n lÃ½ Äáº·t lá»‹ch (/bookings)
+// YÃªu cáº§u JWT
+// ----------------------------------------
+/**
+ * POST /bookings â€” Client táº¡o yÃªu cáº§u Ä‘áº·t lá»‹ch MC
+ * @param {{ mcId, eventName, eventType, eventDate, startTime, endTime, location, description, audienceSize, budget, 
+specialRequests }} bookingData
+ * @returns {BookingResponseDTO}
+ */
+  return response.data; // Tráº£ full response vÃ¬ cáº§n message tá»« data
+/**
+ * GET /bookings/my â€” Láº¥y danh sÃ¡ch booking cá»§a user hiá»‡n táº¡i
+ * @param {"client"|"mc"} role - Vai trÃ² cáº§n láº¥y booking
+ * @returns {BookingResponseDTO[]}
+ */
+/** Shorthand: láº¥y booking vá»›i tÆ° cÃ¡ch Client */
+/** Shorthand: láº¥y booking vá»›i tÆ° cÃ¡ch MC */
+/**
+ * GET /bookings/{id} â€” Láº¥y chi tiáº¿t má»™t booking
+ * @param {string} id - Booking ID
+ * @returns {BookingResponseDTO}
+ */
+/**
+ * PUT /bookings/{id}/status â€” MC cáº­p nháº­t tráº¡ng thÃ¡i booking
+ * @param {string} id - Booking ID
+ * @param {"ACCEPTED"|"REJECTED"|"COMPLETED"|"CANCELLED"|"PAID"} status
+ * @param {number} [price] - GiÃ¡ Ä‘á» xuáº¥t (khi ACCEPTED)
+ * @param {string} [rejectionReason] - LÃ½ do tá»« chá»‘i (khi REJECTED)
+ * @returns {BookingResponseDTO}
+ */
+/** Shorthand: MC cháº¥p nháº­n booking */
+/** Shorthand: MC tá»« chá»‘i booking */
+/** Shorthand: ÄÃ¡nh dáº¥u booking hoÃ n thÃ nh */
+/**
+ * PUT /bookings/{id}/cancel â€” Client há»§y booking Ä‘ang PENDING
+ * @param {string} id - Booking ID
+ * @returns {BookingResponseDTO}
+ */
+// ----------------------------------------
+// CERTIFICATE â€” Chá»©ng chá»‰ MC (/certificates)
+// YÃªu cáº§u JWT (POST/DELETE yÃªu cáº§u role MC, PUT /verify yÃªu cáº§u ADMIN)
+// ----------------------------------------
+/**
+ * POST /certificates â€” MC thÃªm chá»©ng chá»‰ vÃ o há»“ sÆ¡
+ * @param {{ name, issuedBy, issuedDate, expiryDate?, fileUrl? }} certData
+ * @returns {CertificateResponseDTO}
+ */
+/**
+ * GET /certificates/mc/{mcProfileId} â€” Láº¥y danh sÃ¡ch chá»©ng chá»‰ cá»§a má»™t MC
+ * @param {string} mcProfileId - ID cá»§a MCProfile
+ * @returns {CertificateResponseDTO[]}
+ */
+/**
+ * PUT /certificates/{id}/verify â€” Admin xÃ¡c minh chá»©ng chá»‰ há»£p lá»‡
+ * @param {string} id - Certificate ID
+ * @returns {CertificateResponseDTO}
+ */
+/**
+ * DELETE /certificates/{id} â€” MC xÃ³a chá»©ng chá»‰ cá»§a mÃ¬nh
+ * @param {string} id - Certificate ID
+ */
+// ----------------------------------------
+// CHAT â€” Nháº¯n tin thá»i gian thá»±c (/chat)
+// YÃªu cáº§u JWT
+// ----------------------------------------
+/**
+ * GET /chat/conversations â€” Láº¥y toÃ n bá»™ cuá»™c há»™i thoáº¡i cá»§a user
+ * @returns {Conversation[]}
+ */
+  return response.data.data; // { conversations: [...] }
+/**
+ * GET /chat/conversations/{id} â€” Láº¥y chi tiáº¿t má»™t cuá»™c há»™i thoáº¡i
+ * @param {string} conversationId - Conversation ID
+ * @returns {Conversation}
+ */
+  return response.data.data; // { conversation: {} }
+/**
+ * PATCH /chat/conversations/{id}/read â€” ÄÃ¡nh dáº¥u cuá»™c há»™i thoáº¡i lÃ  Ä‘Ã£ Ä‘á»c
+ * @param {string} conversationId - Conversation ID
+ */
+/**
+ * GET /chat/messages/{conversationId} â€” Láº¥y lá»‹ch sá»­ tin nháº¯n (phÃ¢n trang)
+ * @param {string} conversationId - Conversation ID
+ * @param {number} [page=0] - Trang (báº¯t Ä‘áº§u tá»« 0)
+ * @param {number} [size=50] - Sá»‘ tin nháº¯n má»—i trang
+ * @returns {Message[]}
+ */
+  return response.data.data; // { messages: [...] }
+/**
+ * POST /chat/messages/{conversationId} â€” Gá»­i tin nháº¯n má»›i
+ * @param {string} conversationId - Conversation ID
+ * @param {string} content - Ná»™i dung tin nháº¯n
+ * @param {"TEXT"|"IMAGE"|"FILE"} [type="TEXT"] - Loáº¡i tin nháº¯n
+ * @returns {Message}
+ */
+  return response.data.data; // { message: {} }
+// ----------------------------------------
+// COUPON â€” MÃ£ giáº£m giÃ¡ (/coupons)
+// YÃªu cáº§u JWT (POST, /admin, /toggle yÃªu cáº§u ADMIN)
+// ----------------------------------------
+/**
+ * POST /coupons â€” Admin táº¡o mÃ£ giáº£m giÃ¡ má»›i
+ * @param {{ code, discountType, discountValue, minOrderValue?, maxUsage?, validFrom, validTo }} couponData
+ * @returns {CouponResponseDTO}
+ */
+/**
+ * GET /coupons â€” Láº¥y danh sÃ¡ch coupon Ä‘ang cÃ²n hiá»‡u lá»±c
+ * @returns {CouponResponseDTO[]}
+ */
+/**
+ * GET /coupons/admin â€” Admin láº¥y toÃ n bá»™ coupon (ká»ƒ cáº£ háº¿t háº¡n)
+ * @returns {CouponResponseDTO[]}
+ */
+/**
+ * POST /coupons/validate â€” Kiá»ƒm tra tÃ­nh há»£p lá»‡ cá»§a mÃ£ coupon vÃ  tÃ­nh giáº£m giÃ¡
+ * @param {string} code - MÃ£ coupon
+ * @param {number} bookingAmount - Tá»•ng giÃ¡ trá»‹ booking
+ * @returns {{ code, discountAmount, finalAmount }}
+ */
+/**
+ * PUT /coupons/{id}/toggle â€” Admin báº­t/táº¯t tráº¡ng thÃ¡i hoáº¡t Ä‘á»™ng cá»§a coupon
+ * @param {string} id - Coupon ID
+ * @returns {CouponResponseDTO}
+ */
+// ----------------------------------------
+// FAVORITE â€” MC YÃªu thÃ­ch (/favorites)
+// YÃªu cáº§u JWT (Client)
+// ----------------------------------------
+/**
+ * POST /favorites/{mcUserId} â€” Toggle yÃªu thÃ­ch/bá» yÃªu thÃ­ch má»™t MC
+ * @param {string} mcUserId - User ID cá»§a MC
+ * @returns {{ isFavorited: boolean, mcUserId: string }}
+ */
+/**
+ * GET /favorites/my â€” Láº¥y danh sÃ¡ch MC yÃªu thÃ­ch cá»§a client Ä‘ang Ä‘Äƒng nháº­p
+ * @returns {{ favorites: MCProfileResponseDTO[], total: number }}
+ */
+/**
+ * GET /favorites/check/{mcUserId} â€” Kiá»ƒm tra xem client Ä‘Ã£ yÃªu thÃ­ch MC nÃ y chÆ°a
+ * @param {string} mcUserId - User ID cá»§a MC
+ * @returns {{ isFavorited: boolean }}
+ */
+// ----------------------------------------
+// MC â€” Há»“ sÆ¡ MC (/mcs)
+// YÃªu cáº§u JWT (role MC)
+// ----------------------------------------
+/**
+ * GET /mcs/dashboard â€” Láº¥y thá»‘ng kÃª dashboard cÃ¡ nhÃ¢n cá»§a MC
+ * @returns {{ totalBookings, totalRevenue, pendingBookings, rating }}
+ */
+/**
+ * PUT /mcs/profile â€” MC cáº­p nháº­t há»“ sÆ¡ cá»§a mÃ¬nh
+ * @param {{ biography?, styles?, experience?, rates?, eventTypes? }} profileData
+ * @returns {MCProfile}
+ */
+/**
+ * GET /mcs/calendar â€” Láº¥y lá»‹ch cÃ¡ nhÃ¢n cá»§a MC (bookings + blockouts)
+ * @returns {Schedule[]}
+ */
+/**
+ * POST /mcs/calendar/blockout â€” MC táº¡o khoáº£ng thá»i gian báº­n
+ * @param {{ date, startTime, endTime, title?, reason? }} blockoutData
+ * @returns {Schedule}
+ */
+/**
+ * GET /mcs/wallet â€” Láº¥y thÃ´ng tin vÃ­ vÃ  lá»‹ch sá»­ giao dá»‹ch cá»§a MC
+ * @returns {{ balance, transactions: [] }}
+ */
+/**
+ * POST /mcs/payout â€” MC yÃªu cáº§u rÃºt tiá»n
+ * @param {number} amount - Sá»‘ tiá»n muá»‘n rÃºt (VND)
+ * @returns {{ success: boolean, message: string }}
+ */
+// ----------------------------------------
+// NOTIFICATION â€” ThÃ´ng bÃ¡o (/notifications)
+// YÃªu cáº§u JWT
+// ----------------------------------------
+/**
+ * GET /notifications â€” Láº¥y danh sÃ¡ch thÃ´ng bÃ¡o (phÃ¢n trang)
+ * @param {number} [page=0] - Trang (báº¯t Ä‘áº§u tá»« 0)
+ * @param {number} [limit=20] - Sá»‘ thÃ´ng bÃ¡o má»—i trang
+ * @returns {{ notifications: [], total: number, unreadCount: number }}
+ */
+/**
+ * GET /notifications/unread-count â€” Láº¥y sá»‘ lÆ°á»£ng thÃ´ng bÃ¡o chÆ°a Ä‘á»c
+ * @returns {{ count: number }}
+ */
+/**
+ * PATCH /notifications/{id}/read â€” ÄÃ¡nh dáº¥u má»™t thÃ´ng bÃ¡o Ä‘Ã£ Ä‘á»c
+ * @param {string} id - Notification ID
+ */
+/**
+ * POST /notifications/mark-all-read â€” ÄÃ¡nh dáº¥u táº¥t cáº£ thÃ´ng bÃ¡o lÃ  Ä‘Ã£ Ä‘á»c
+ */
+/**
+ * DELETE /notifications/delete-all â€” XÃ³a toÃ n bá»™ thÃ´ng bÃ¡o cá»§a user
+ */
+// ----------------------------------------
+// PAYMENT â€” Thanh toÃ¡n (/payments)
+// YÃªu cáº§u JWT cho checkout. Webhook lÃ  public.
+// ----------------------------------------
+/**
+ * POST /payments/{bookingId}/checkout â€” Táº¡o link thanh toÃ¡n PayOS
+ * Chá»‰ dÃ¹ng khi booking Ä‘Ã£ Ä‘Æ°á»£c MC cháº¥p nháº­n (status = ACCEPTED).
+ * @param {string} bookingId - Booking ID
+ * @returns {{ checkoutUrl, paymentLinkId, orderCode }}
+ */
+/**
+ * GET /payments/history â€” Láº¥y lá»‹ch sá»­ thanh toÃ¡n cá»§a user hiá»‡n táº¡i
+ * @returns {PaymentHistory[]}
+ */
+/**
+ * GET /payments/status/{orderCode} â€” Kiá»ƒm tra tráº¡ng thÃ¡i thanh toÃ¡n theo mÃ£ Ä‘Æ¡n
+ * @param {string|number} orderCode - MÃ£ Ä‘Æ¡n hÃ ng PayOS
+ * @returns {{ status, orderCode, amount, bookingId }}
+ */
+// ----------------------------------------
+// PUBLIC â€” Trang CÃ´ng khai (/public)
+// KhÃ´ng yÃªu cáº§u JWT
+// ----------------------------------------
+/**
+ * GET /public/landing
+ * Láº¥y thá»‘ng kÃª tá»•ng quan Ä‘á»ƒ hiá»ƒn thá»‹ trÃªn trang Home/Landing.
+ * @returns {{ stats: { totalMCs, totalClients, totalBookings } }}
+ */
+  return response.data.data; // { stats: { totalMCs, totalClients, totalBookings } }
+/**
+ * GET /public/mcs â€” Láº¥y danh sÃ¡ch MC (cÃ³ filter)
+ * @param {{ category?, minPrice?, maxPrice? }} filters
+ * @returns {MCProfileResponseDTO[]}
+ */
+  return response.data.data; // { mcs: [...] }
+/**
+ * GET /public/mcs/{id} â€” Xem há»“ sÆ¡ chi tiáº¿t cá»§a má»™t MC
+ * @param {string} id - User ID cá»§a MC
+ * @returns {MCProfileResponseDTO}
+ */
+  return response.data.data; // { profile: {} }
+/**
+ * GET /public/resources â€” Láº¥y danh sÃ¡ch tÃ i nguyÃªn cÃ´ng khai
+ * @returns {ResourceDTO[]}
+ */
+// ----------------------------------------
+// REPORT â€” BÃ¡o cÃ¡o vi pháº¡m (/reports)
+// YÃªu cáº§u JWT. /admin vÃ  /resolve yÃªu cáº§u ADMIN.
+// ----------------------------------------
+/**
+ * POST /reports â€” User bÃ¡o cÃ¡o má»™t MC hoáº·c ná»™i dung vi pháº¡m
+ * @param {{ targetId, targetType: "MC"|"SCRIPT", reason, description? }} reportData
+ * @returns {ReportResponseDTO}
+ */
+/**
+ * GET /reports/my â€” Láº¥y danh sÃ¡ch bÃ¡o cÃ¡o do user táº¡o ra
+ * @returns {ReportResponseDTO[]}
+ */
+/**
+ * GET /reports/admin â€” Admin xem toÃ n bá»™ bÃ¡o cÃ¡o
+ * @param {"pending"|""} [status] - Filter theo tráº¡ng thÃ¡i (pending = chÆ°a xá»­ lÃ½)
+ * @returns {ReportResponseDTO[]}
+ */
+/**
+ * PUT /reports/{id}/resolve â€” Admin xá»­ lÃ½ vÃ  Ä‘Ã³ng bÃ¡o cÃ¡o
+ * @param {string} id - Report ID
+ * @param {"RESOLVED"|"DISMISSED"} status - Káº¿t quáº£ xá»­ lÃ½
+ * @param {string} [adminNote] - Ghi chÃº cá»§a admin
+ * @returns {ReportResponseDTO}
+ */
+// ----------------------------------------
+// REVIEW â€” ÄÃ¡nh giÃ¡ MC (/reviews)
+// YÃªu cáº§u JWT (POST, PATCH, DELETE). GET public.
+// ----------------------------------------
+/**
+ * POST /reviews â€” Client Ä‘Ã¡nh giÃ¡ MC sau khi sá»± kiá»‡n hoÃ n thÃ nh
+ * @param {{ mcId, bookingId, rating: 1-5, comment? }} reviewData
+ * @returns {ReviewResponseDTO}
+ */
+/**
+ * GET /reviews/mc/{mcId} â€” Láº¥y danh sÃ¡ch Ä‘Ã¡nh giÃ¡ cá»§a má»™t MC (public)
+ * @param {string} mcId - User ID cá»§a MC
+ * @returns {ReviewResponseDTO[]}
+ */
+/**
+ * PATCH /reviews/{id} â€” Cáº­p nháº­t Ä‘Ã¡nh giÃ¡ (cá»§a chÃ­nh user)
+ * @param {string} id - Review ID
+ * @param {{ rating?, comment? }} reviewData
+ * @returns {ReviewResponseDTO}
+ */
+/**
+ * DELETE /reviews/{id} â€” XÃ³a Ä‘Ã¡nh giÃ¡ (cá»§a chÃ­nh user)
+ * @param {string} id - Review ID
+ */
+// ----------------------------------------
+// SCRIPT â€” Ká»‹ch báº£n sá»± kiá»‡n (/scripts)
+// YÃªu cáº§u JWT. GET list/detail cÃ³ thá»ƒ public.
+// ----------------------------------------
+/**
+ * GET /scripts â€” Láº¥y danh sÃ¡ch ká»‹ch báº£n (cÃ³ thá»ƒ filter)
+ * @param {{ category?: string }} [filters]
+ * @returns {ScriptResponseDTO[]}
+ */
+/**
+ * GET /scripts/{id} â€” Xem chi tiáº¿t má»™t ká»‹ch báº£n
+ * @param {string} id - Script ID
+ * @returns {ScriptResponseDTO}
+ */
+/**
+ * POST /scripts/{id}/favorite â€” TÄƒng lÆ°á»£t yÃªu thÃ­ch ká»‹ch báº£n
+ * @param {string} id - Script ID
+ * @returns {ScriptResponseDTO} Script vá»›i favoritesCount Ä‘Ã£ tÄƒng
+ */
+/**
+ * GET /scripts/{id}/reader â€” Láº¥y ná»™i dung ká»‹ch báº£n dáº¡ng Ä‘á»c (reader mode)
+ * @param {string} id - Script ID
+ * @returns {ScriptReaderDTO}
+ */
+
+

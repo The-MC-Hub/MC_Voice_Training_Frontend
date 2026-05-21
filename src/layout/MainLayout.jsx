@@ -1,0 +1,22 @@
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { Outlet } from "react-router-dom";
+
+const MainLayout = () => {
+  return (
+    <div className="flex flex-col min-h-screen bg-[#09090b] text-zinc-100">
+      <Navbar />
+      <div className="h-14 shrink-0" />
+      <main className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#27272a transparent' }}>
+        <div className="w-full min-h-full flex flex-col">
+          <section className="flex-1 p-4 lg:p-8">
+            <Outlet />
+          </section>
+          <Footer />
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default MainLayout;
