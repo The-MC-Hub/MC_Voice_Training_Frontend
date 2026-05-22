@@ -111,12 +111,12 @@ const Navbar = () => {
               </>
             ) : (
               <>
+                <NavLink to="/">{t('navbar.home')}</NavLink>
                 <NavLink to="/about">{t('navbar.about')}</NavLink>
                 <NavLink to="/m/dashboard">{t('navbar.dashboard')}</NavLink>
                 <NavLink to="/m/voice/library">{t('navbar.training')}</NavLink>
                 <NavLink to="/m/learning">{t('navbar.academy')}</NavLink>
                 <NavLink to="/m/courses">{t('navbar.courses')}</NavLink>
-                <NavLink to="/m/community">Community</NavLink>
               </>
             )}
           </div>
@@ -137,72 +137,10 @@ const Navbar = () => {
               </div>
             ) : (
               <>
-                {/* Notifications */}
-                <Dropdown placement="bottom-end">
-                  <DropdownTrigger>
-                    <button className="relative w-8 h-8 flex items-center justify-center rounded-md text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors">
-                      <Bell size={17} />
-                      {unreadCount > 0 && (
-                        <span className="absolute top-1 right-1 w-2 h-2 bg-[#f5a623] rounded-full" />
-                      )}
-                    </button>
-                  </DropdownTrigger>
-                  <DropdownPopover>
-                    <DropdownMenu
-                      aria-label="Notifications"
-                      className="w-80 p-0 overflow-hidden bg-[#111113] border border-white/[0.08] shadow-xl rounded-xl"
-                    >
-                      <DropdownItem key="header" className="h-auto px-4 py-3 opacity-100 cursor-default border-b border-white/[0.06]" textValue="Notifications">
-                        <div className="flex justify-between items-center w-full">
-                          <p className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">{t('navbar.notifications')}</p>
-                          {unreadCount > 0 && (
-                            <button
-                              onClick={(e) => { e.stopPropagation(); handleMarkAllRead(); }}
-                              className="text-[11px] text-zinc-500 hover:text-white transition-colors"
-                            >
-                              {t('navbar.markAllRead')}
-                            </button>
-                          )}
-                        </div>
-                      </DropdownItem>
-                      <DropdownItem key="content" className="p-0 opacity-100 cursor-default" textValue="Notification List">
-                        <div className="max-h-72 overflow-y-auto">
-                          {notifications.length > 0 ? (
-                            notifications.map((notif) => (
-                              <div
-                                key={notif._id}
-                                className={`px-4 py-3 border-b border-white/[0.04] hover:bg-white/[0.04] transition-colors cursor-pointer ${!notif.isRead ? 'bg-[#f5a623]/[0.04]' : ''}`}
-                                onClick={() => handleNotificationClick(notif)}
-                              >
-                                <div className="flex gap-3 items-start">
-                                  <div className={`w-1.5 h-1.5 mt-1.5 rounded-full shrink-0 ${!notif.isRead ? 'bg-[#f5a623]' : 'bg-zinc-700'}`} />
-                                  <div>
-                                    <p className={`text-[13px] leading-relaxed ${!notif.isRead ? 'text-white font-medium' : 'text-zinc-400'}`}>
-                                      {notif.message}
-                                    </p>
-                                    <p className="text-[11px] text-zinc-600 mt-0.5">
-                                      {formatDistanceToNow(new Date(notif.createdAt), { addSuffix: true })}
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                            ))
-                          ) : (
-                            <div className="py-10 px-6 text-center">
-                              <Bell size={16} className="text-zinc-700 mx-auto mb-2" />
-                              <p className="text-[12px] text-zinc-600">{t('navbar.noAlerts')}</p>
-                            </div>
-                          )}
-                        </div>
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </DropdownPopover>
-                </Dropdown>
-
                 {/* User Dropdown */}
                 <Dropdown placement="bottom-end">
                   <DropdownTrigger>
-                    <button className="flex items-center gap-2 px-2 py-1 rounded-md hover:bg-white/[0.06] transition-colors">
+                    <div className="flex items-center gap-2 px-2 py-1 rounded-md hover:bg-white/6 transition-colors cursor-pointer">
                       <Avatar className="w-7 h-7 ring-1 ring-white/10">
                         <AvatarImage src={user?.avatar || "https://i.pravatar.cc/150"} />
                         <AvatarFallback className="text-[11px]">{user?.name?.charAt(0) || "U"}</AvatarFallback>
@@ -210,7 +148,7 @@ const Navbar = () => {
                       <span className="hidden lg:block text-[13px] font-medium text-zinc-300">
                         {user?.name?.split(' ')[0]}
                       </span>
-                    </button>
+                    </div>
                   </DropdownTrigger>
                   <DropdownPopover>
                     <DropdownMenu
@@ -250,13 +188,7 @@ const Navbar = () => {
               </>
             )}
 
-            {/* Mobile Toggle */}
-            <button
-              className="md:hidden w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
-            </button>
+          
           </div>
         </div>
       </nav>

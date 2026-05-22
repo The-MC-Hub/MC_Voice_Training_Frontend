@@ -1,24 +1,15 @@
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Zap, Loader2, Mic, ChevronLeft, ChevronRight } from "lucide-react";
+import { Zap, Loader2, Mic, ChevronLeft, ChevronRight } from "lucide-react"; // Mic kept for empty-state
+import SessionCard from "../components/dashboard/SessionCard";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import i18n from "../i18n";
 import { useApi } from "../hooks/useApi";
 import { fetchDashboard } from "../controllers/mcController";
 import { fetchPracticeHistory } from "../controllers/voiceController";
 import { useAuthStore } from "../store/useAuthStore";
 import OverviewTab from "../components/dashboard/OverviewTab";
-
-const cardStyle = {
-  backgroundColor: "#111113",
-  border: "1px solid rgba(255,255,255,0.08)",
-  borderRadius: 12,
-};
-const tooltipStyle = {
-  backgroundColor: "#1a1a1e",
-  border: "1px solid rgba(255,255,255,0.08)",
-  borderRadius: 8,
-};
 
 const Dashboard = () => {
   const { user } = useAuthStore();
@@ -44,6 +35,8 @@ const Dashboard = () => {
   const avgWpm = practiceHistory?.length
     ? (practiceHistory.reduce((acc, p) => acc + (p.speaking_rate_wpm || 0), 0) / practiceHistory.length).toFixed(0)
     : "0";
+  const level = Math.floor(totalPractices / 5) + 1;
+  const levelLabel = totalPractices > 10 ? t('dashboard.professional') : t('dashboard.training');
 
   const chartData = useMemo(() => {
     if (!practiceHistory?.length) return [];
@@ -133,56 +126,110 @@ const Dashboard = () => {
 
   if (loading) return (
     <div className="flex items-center justify-center h-[60vh]">
-      <Loader2 className="animate-spin text-[#f5a623]" size={32} />
+      <Loader2 className="animate-spin text-[#f5a623]" size={28} />
     </div>
   );
 
+  const statCards = [
+    {
+      label: t('dashboard.accuracy'),
+      value: `${avgAccuracy}%`,
+      tag: 'AVG',
+      tagColor: 'text-emerald-400 bg-emerald-500/[0.08] border border-emerald-500/20',
+      sub: avgAccuracy >= 80 ? 'Xuất sắc' : avgAccuracy >= 60 ? 'Tiến bộ tốt' : 'Cần cải thiện',
+      subColor: avgAccuracy >= 80 ? 'text-emerald-500' : avgAccuracy >= 60 ? 'text-blue-400' : 'text-zinc-600',
+      bar: parseFloat(avgAccuracy),
+      barColor: '#10b981',
+    },
+    {
+      label: t('dashboard.practices'),
+      value: totalPractices,
+      tag: t('dashboard.sessions'),
+      tagColor: 'text-blue-400 bg-blue-500/[0.08] border border-blue-500/20',
+      sub: `${Math.max(0, 20 - totalPractices)} phiên đến cấp tiếp theo`,
+      subColor: 'text-zinc-600',
+      bar: Math.min(100, (totalPractices / 20) * 100),
+      barColor: '#3b82f6',
+    },
+    {
+      label: t('dashboard.level'),
+      value: levelLabel,
+      tag: `Lv ${level}`,
+      tagColor: 'text-[#f5a623] bg-[#f5a623]/[0.08] border border-[#f5a623]/20',
+      sub: `${totalPractices} phiên hoàn thành`,
+      subColor: 'text-zinc-600',
+      bar: ((totalPractices % 5) / 5) * 100,
+      barColor: '#f5a623',
+    },
+    {
+      label: t('dashboard.speakingRate'),
+      value: avgWpm,
+      tag: 'WPM',
+      tagColor: 'text-violet-400 bg-violet-500/[0.08] border border-violet-500/20',
+      sub: avgWpm >= 120 ? 'Tốc độ chuyên nghiệp' : 'Tốc độ trung bình',
+      subColor: avgWpm >= 120 ? 'text-violet-400' : 'text-zinc-600',
+      bar: Math.min(100, (avgWpm / 150) * 100),
+      barColor: '#8b5cf6',
+    },
+  ];
+
   return (
-    <div className="flex flex-col gap-6 max-w-6xl mx-auto">
+    <div className="flex flex-col gap-8 max-w-6xl mx-auto">
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2"
+      >
         <div>
+          <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-wider mb-1">Bảng điều khiển</p>
           <h1 className="text-2xl font-bold text-white tracking-tight">
             {t('dashboard.greeting')}{' '}
             <span className="text-[#f5a623]">{user?.fullName || t('dashboard.greetingDefault')}</span>
           </h1>
-          <p className="text-zinc-500 text-[14px] mt-0.5">{t('dashboard.trackProgress')}</p>
+          <p className="text-zinc-500 text-[13px] mt-0.5">{t('dashboard.trackProgress')}</p>
         </div>
         <Link
           to="/m/voice/library"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors self-start sm:self-auto"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors self-start sm:self-auto shadow-[0_0_20px_rgba(245,166,35,0.18)]"
         >
           <Zap size={14} /> {t('dashboard.practiceNow')}
         </Link>
-      </div>
+      </motion.div>
 
       {/* Stats grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {[
-          { label: t('dashboard.accuracy'), value: `${avgAccuracy}%`, tag: 'AVG', tagColor: 'text-emerald-400 bg-emerald-500/10' },
-          { label: t('dashboard.practices'), value: `${totalPractices}`, tag: t('dashboard.sessions'), tagColor: 'text-emerald-400 bg-emerald-500/10' },
-          { label: t('dashboard.level'), value: totalPractices > 10 ? t('dashboard.professional') : t('dashboard.training'), tag: `Lv ${Math.floor(totalPractices / 5) + 1}`, tagColor: 'text-[#f5a623] bg-[#f5a623]/10' },
-          { label: t('dashboard.speakingRate'), value: `${avgWpm}`, tag: t('dashboard.wpm'), tagColor: 'text-[#f5a623] bg-[#f5a623]/10' },
-        ].map((s) => (
-          <div key={s.label} style={cardStyle} className="p-5">
-            <div className="flex justify-between items-center mb-3">
-              <span className="text-[11px] text-zinc-500 uppercase tracking-wider font-medium">{s.label}</span>
+        {statCards.map((s, i) => (
+          <motion.div
+            key={s.label}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+            className="p-5 bg-[#111113] border border-white/[0.07] rounded-2xl hover:border-white/[0.12] transition-colors"
+          >
+            <div className="flex justify-between items-start mb-3">
+              <span className="text-[10px] text-zinc-600 uppercase tracking-wider font-semibold">{s.label}</span>
               <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${s.tagColor}`}>{s.tag}</span>
             </div>
-            <p className="text-2xl font-bold text-white">{s.value}</p>
-          </div>
+            <p className="text-[26px] font-bold text-white leading-none mb-2">{s.value}</p>
+            <div className="h-1 w-full bg-white/[0.04] rounded-full mb-2">
+              <div className="h-full rounded-full transition-all" style={{ width: `${s.bar}%`, backgroundColor: s.barColor }} />
+            </div>
+            <p className={`text-[11px] ${s.subColor}`}>{s.sub}</p>
+          </motion.div>
         ))}
       </div>
 
       {/* Tab bar */}
-      <div className="border-b border-white/[0.07]">
+      <div className="border-b border-white/[0.06]">
         <div className="flex gap-1">
           {["Overview", "Training History"].map((tab) => (
             <button
               key={tab}
               onClick={() => { setActiveTab(tab); if (tab === "Training History") setCurrentPage(1); }}
-              className={`px-4 py-2.5 text-[13px] font-medium border-b-2 transition-colors ${
+              className={`px-4 py-2.5 text-[13px] font-medium border-b-2 transition-colors -mb-px ${
                 activeTab === tab
                   ? 'border-[#f5a623] text-white'
                   : 'border-transparent text-zinc-500 hover:text-zinc-300'
@@ -200,8 +247,6 @@ const Dashboard = () => {
           <OverviewTab
             dashboard={dashboard}
             emptyMonthlyData={chartData}
-            cardStyle={cardStyle}
-            tooltipStyle={tooltipStyle}
             practiceHistory={practiceHistory}
             timeFrame={timeFrame}
             setTimeFrame={setTimeFrame}
@@ -212,8 +257,7 @@ const Dashboard = () => {
         )}
 
         {activeTab === "Training History" && (
-          <div style={cardStyle} className="p-5">
-            {/* Filter bar */}
+          <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-5">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
               <h3 className="text-[14px] font-semibold text-white">{t('dashboard.trainingHistory')}</h3>
               <div className="flex gap-2">
@@ -234,7 +278,7 @@ const Dashboard = () => {
                     key={i}
                     value={sel.value}
                     onChange={(e) => sel.onChange(e.target.value)}
-                    className="bg-[#09090b] border border-white/[0.08] text-zinc-300 text-[12px] py-1.5 px-3 rounded-lg focus:outline-none focus:border-[#f5a623]/40 cursor-pointer"
+                    className="bg-[#09090b] border border-white/[0.08] text-zinc-400 text-[12px] py-1.5 px-3 rounded-xl focus:outline-none focus:border-[#f5a623]/40 cursor-pointer"
                   >
                     {sel.options.map(o => <option key={o.v} value={o.v}>{o.l}</option>)}
                   </select>
@@ -244,32 +288,15 @@ const Dashboard = () => {
 
             {paginatedHistory.length > 0 ? (
               <>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {paginatedHistory.map((session, idx) => (
-                    <Link key={idx} to={`/m/voice/report/${session.id || session._id}`}>
-                      <div className="flex justify-between items-center p-4 rounded-xl bg-[#09090b] border border-white/[0.05] hover:border-[#f5a623]/20 hover:bg-[#f5a623]/[0.02] transition-colors">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-[#f5a623]/[0.08] flex items-center justify-center text-[#f5a623] shrink-0">
-                            <Mic size={16} />
-                          </div>
-                          <div>
-                            <p className="text-[14px] font-medium text-white">
-                              {session.lesson_title || `Session #${filteredHistory.length - ((currentPage - 1) * ITEMS_PER_PAGE + idx)}`}
-                            </p>
-                            <div className="flex items-center gap-3 mt-0.5">
-                              <span className="text-[12px] text-emerald-400">{(session.accuracy_score || 0).toFixed(0)}% {t('dashboard.accuracy')}</span>
-                              <span className="text-[12px] text-blue-400">{(session.rhythm_score || 0).toFixed(0)}% Rhythm</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-right shrink-0">
-                          <p className="text-[13px] font-medium text-white">{Math.round(session.speaking_rate_wpm || 0)} {t('dashboard.wpm')}</p>
-                          <p className="text-[11px] text-zinc-600 mt-0.5">
-                            {session.created_at ? new Date(session.created_at).toLocaleDateString(i18n.language === 'vi' ? 'vi-VN' : 'en-US') : t('dashboard.recent')}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
+                    <SessionCard
+                      key={session.id || session._id || idx}
+                      session={session}
+                      index={(currentPage - 1) * ITEMS_PER_PAGE + idx}
+                      total={filteredHistory.length}
+                      locale={i18n.language === 'vi' ? 'vi-VN' : 'en-US'}
+                    />
                   ))}
                 </div>
 
@@ -278,27 +305,25 @@ const Dashboard = () => {
                     <button
                       disabled={currentPage === 1}
                       onClick={() => setCurrentPage(p => p - 1)}
-                      className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/[0.05] text-zinc-400 disabled:opacity-30 hover:bg-white/[0.08] transition-colors"
+                      className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.06] text-zinc-500 disabled:opacity-30 hover:bg-white/[0.08] hover:text-white transition-colors"
                     >
-                      <ChevronLeft size={16} />
+                      <ChevronLeft size={15} />
                     </button>
-                    <span className="text-[12px] text-zinc-500">
-                      {currentPage} / {totalPages}
-                    </span>
+                    <span className="text-[12px] text-zinc-500 tabular-nums">{currentPage} / {totalPages}</span>
                     <button
                       disabled={currentPage === totalPages}
                       onClick={() => setCurrentPage(p => p + 1)}
-                      className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/[0.05] text-zinc-400 disabled:opacity-30 hover:bg-white/[0.08] transition-colors"
+                      className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.06] text-zinc-500 disabled:opacity-30 hover:bg-white/[0.08] hover:text-white transition-colors"
                     >
-                      <ChevronRight size={16} />
+                      <ChevronRight size={15} />
                     </button>
                   </div>
                 )}
               </>
             ) : (
-              <div className="py-16 text-center">
-                <Mic size={32} className="mx-auto text-zinc-800 mb-3" />
-                <p className="text-zinc-600 text-[14px]">{t('dashboard.noSessions')}</p>
+              <div className="py-16 text-center border border-dashed border-white/[0.06] rounded-xl">
+                <Mic size={28} className="mx-auto text-zinc-800 mb-3" />
+                <p className="text-[13px] text-zinc-600 mb-4">{t('dashboard.noSessions')}</p>
               </div>
             )}
           </div>

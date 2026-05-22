@@ -11,10 +11,33 @@ const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
   const [simulating, setSimulating] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
+  const [polling, setPolling] = useState(false);
+  const pollRef = React.useRef(null);
 
   useEffect(() => {
     if (isOpen && user?.id) fetchOrderDetails();
+    return () => { if (pollRef.current) clearInterval(pollRef.current); };
   }, [isOpen, user?.id]);
+
+  // Start polling once QR is shown
+  useEffect(() => {
+    if (!orderData || success || !user?.id) return;
+    setPolling(true);
+    pollRef.current = setInterval(async () => {
+      try {
+        const res = await api.get(`/payment/status/${user.id}`);
+        if (res.data?.data?.isPremium === true) {
+          clearInterval(pollRef.current);
+          setPolling(false);
+          updateUser({ isPremium: true });
+          setSuccess(true);
+          if (onUpgradeSuccess) onUpgradeSuccess();
+          setTimeout(() => { onClose(); setSuccess(false); }, 3000);
+        }
+      } catch { /* silent — keep polling */ }
+    }, 3000);
+    return () => { clearInterval(pollRef.current); setPolling(false); };
+  }, [orderData, success]);
 
   const fetchOrderDetails = async () => {
     setLoading(true); setError(null);
@@ -165,7 +188,12 @@ const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
                         <><ShieldCheck size={14} /> Simulate Successful Payment (Dev)</>
                       )}
                     </button>
-                    <p className="mt-2.5 text-[11px] text-zinc-600 text-center">*Payment auto-detected upon transfer</p>
+                    <div className="mt-2.5 flex items-center justify-center gap-1.5">
+                      {polling && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />}
+                      <p className="text-[11px] text-zinc-600 text-center">
+                        {polling ? 'Đang chờ thanh toán...' : '*Payment auto-detected upon transfer'}
+                      </p>
+                    </div>
                   </div>
                 ) : null}
               </div>
