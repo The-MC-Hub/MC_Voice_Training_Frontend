@@ -1,7 +1,19 @@
 import api from "../services/api";
 
-export const fetchLessons = async (category = null) => {
-    const url = category ? `/voice/lessons?category=${category}` : '/voice/lessons';
+export const fetchLessons = async (options = {}) => {
+    const isLegacyCategory = typeof options === "string";
+    const { category = null, search = null } = isLegacyCategory ? { category: options } : (options || {});
+    const params = new URLSearchParams();
+
+    if (category) {
+        params.set("category", category);
+    }
+
+    if (search) {
+        params.set("search", search);
+    }
+
+    const url = params.toString() ? `/voice/lessons?${params.toString()}` : '/voice/lessons';
     const response = await api.get(url);
     return response.data.data;
 };

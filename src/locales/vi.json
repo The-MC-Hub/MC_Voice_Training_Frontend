@@ -1,5 +1,6 @@
 {
   "navbar": {
+    "home": "Trang chủ",
     "about": "Về chúng tôi",
     "courses": "Khóa học",
     "dashboard": "Bảng điều khiển",
@@ -495,7 +496,8 @@
     "units": "Học phần",
     "backToHome": "Quay lại trang chủ",
     "start": "Bắt đầu",
-    "page": "Trang"
+    "page": "Trang",
+    "level": "Cấp độ"
   },
   "learning": {
     "title": "Lộ trình Sự nghiệp",
