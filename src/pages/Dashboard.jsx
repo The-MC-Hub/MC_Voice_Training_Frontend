@@ -10,6 +10,7 @@ import { fetchDashboard } from "../controllers/mcController";
 import { fetchPracticeHistory } from "../controllers/voiceController";
 import { useAuthStore } from "../store/useAuthStore";
 import OverviewTab from "../components/dashboard/OverviewTab";
+import PageBanner from '../components/ui/PageBanner';
 
 const Dashboard = () => {
   const { user } = useAuthStore();
@@ -176,28 +177,17 @@ const Dashboard = () => {
   return (
     <div className="flex flex-col gap-8 max-w-6xl mx-auto">
 
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2"
-      >
-        <div>
-          <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-wider mb-1">Bảng điều khiển</p>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
-            {t('dashboard.greeting')}{' '}
-            <span className="text-[#f5a623]">{user?.fullName || t('dashboard.greetingDefault')}</span>
-          </h1>
-          <p className="text-zinc-500 text-[13px] mt-0.5">{t('dashboard.trackProgress')}</p>
-        </div>
-        <Link
-          to="/m/voice/library"
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors self-start sm:self-auto shadow-[0_0_20px_rgba(245,166,35,0.18)]"
-        >
-          <Zap size={14} /> {t('dashboard.practiceNow')}
-        </Link>
-      </motion.div>
+      <PageBanner
+        icon={<Zap size={22} />}
+        eyebrow={t('dashboard.greeting')}
+        title={user?.fullName || t('dashboard.greetingDefault')}
+        description={t('dashboard.trackProgress')}
+        stats={[
+          { value: `${avgAccuracy}%`, label: t('dashboard.accuracy') },
+          { value: totalPractices, label: t('dashboard.sessions') || 'Buổi luyện' },
+          { value: `${avgWpm}`, label: 'WPM' },
+        ]}
+      />
 
       {/* Stats grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">

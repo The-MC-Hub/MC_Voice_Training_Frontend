@@ -11,6 +11,7 @@ import {
 import { fetchStats, fetchLeaderboards, fetchActiveArenas } from "../controllers/communityController";
 import { useAuthStore } from "../store/useAuthStore";
 import PageLoader from "../components/ui/PageLoader";
+import PageBanner from '../components/ui/PageBanner';
 
 const getTierBadge = (tier) => {
   const base = "flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-medium border";
@@ -75,35 +76,18 @@ const Community = () => {
 
   return (
     <div className="max-w-6xl mx-auto pb-16 space-y-12">
-      {/* Header */}
-      <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-8 pb-8 border-b border-white/[0.07]">
-        <div>
-          <p className="text-[11px] font-medium text-[#f5a623] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-            {t('community.arenaTitle')}
-          </p>
-          <h1 className="text-3xl font-bold text-white tracking-tight">
-            MC <span className="text-[#f5a623]">Community</span>
-          </h1>
-          <p className="text-zinc-500 text-[14px] mt-1">{t('community.subtitle')}</p>
-        </div>
-
-        <div className="flex flex-wrap gap-3">
-          {[
-            { label: t('community.totalStudents'), val: stats.totalUsers || 0, color: "text-blue-400", icon: Users },
-            { label: t('community.practiceHours'), val: `${(stats.totalPracticeHours || 0).toFixed(1)}h`, color: "text-[#f5a623]", icon: Clock },
-            { label: t('community.liveArenas'), val: stats.activeCompetitionsCount || 0, color: "text-purple-400", icon: Gamepad2 },
-          ].map((item, idx) => (
-            <div key={idx} className="bg-[#111113] border border-white/[0.07] rounded-xl px-4 py-3 min-w-[120px]">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[10px] text-zinc-600 uppercase tracking-wider">{item.label}</span>
-                <item.icon size={13} className={item.color} />
-              </div>
-              <span className={`text-2xl font-bold ${item.color}`}>{item.val}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+      <PageBanner
+        icon={<Users size={22} />}
+        eyebrow={t('community.arenaTitle')}
+        title="MC"
+        highlight="Community"
+        description={t('community.subtitle')}
+        stats={[
+          { value: stats.totalUsers || 0, label: t('community.totalStudents') },
+          { value: `${(stats.totalPracticeHours || 0).toFixed(1)}h`, label: t('community.practiceHours') },
+          { value: stats.activeCompetitionsCount || 0, label: t('community.liveArenas') },
+        ]}
+      />
 
       {/* Active Arena */}
       {allSlides.length > 0 ? (

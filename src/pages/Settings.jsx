@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import {
   Settings as SettingsIcon,
   User,
   Lock,
+  LogOut,
   Bell,
   Shield,
   Mail,
@@ -39,7 +41,6 @@ import {
   Copy,
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
-import { useSearchParams } from "react-router-dom";
 import { useToast } from "../components/ui/Toast";
 import { handleUpdateSettings } from "../controllers/authController";
 import * as notificationController from "../controllers/notificationController";
@@ -55,18 +56,138 @@ const inputCls = "flex-1 bg-transparent text-[13px] text-white placeholder:text-
 const inputWrapCls = "flex items-center gap-2 bg-[#09090b] border border-white/[0.07] rounded-xl px-3 py-2.5 focus-within:border-white/[0.14] transition-colors";
 const labelCls = "text-[10px] font-medium text-zinc-500 uppercase tracking-wider";
 
+const EMOJI_CATEGORIES = [
+  {
+    label: "Smileys",
+    emojis: ["😀","😃","😄","😁","😆","😅","🤣","😂","🙂","🙃","😉","😊","😇","🥰","😍","🤩","😘","😗","😚","😙","🥲","😋","😛","😜","🤪","😝","🤑","🤗","🤭","🤫","🤔","🤐","🤨","😐","😑","😶","😏","😒","🙄","😬","🤥","😌","😔","😪","🤤","😴","😷","🤒","🤕","🤢","🤮","🤧","🥵","🥶","🥴","😵","🤯","🤠","🥳","🥸","😎","🤓","🧐","😕","😟","🙁","☹️","😮","😯","😲","😳","🥺","😦","😧","😨","😰","😥","😢","😭","😱","😖","😣","😞","😓","😩","😫","🥱","😤","😡","😠","🤬","😈","👿","💀","☠️","💩","🤡","👹","👺","👻","👽","👾","🤖"],
+  },
+  {
+    label: "People",
+    emojis: ["👋","🤚","🖐️","✋","🖖","👌","🤌","🤏","✌️","🤞","🤟","🤘","🤙","👈","👉","👆","🖕","👇","☝️","👍","👎","✊","👊","🤛","🤜","👏","🙌","👐","🤲","🤝","🙏","✍️","💅","🤳","💪","🦾","🦿","🦵","🦶","👂","🦻","👃","🫀","🫁","🧠","🦷","🦴","👀","👁️","👅","👄","💋","🫂","👶","🧒","👦","👧","🧑","👱","👨","🧔","👩","🧓","👴","👵","🙍","🙎","🙅","🙆","💁","🙋","🧏","🙇","🤦","🤷","👮","🕵️","💂","🥷","👷","🤴","👸","👳","👲","🧕","🤵","👰","🤰","🤱","👼","🎅","🤶","🦸","🦹","🧙","🧝","🧛","🧟","🧞","🧜","🧚","👨‍⚕️","👩‍⚕️","👨‍🎓","👩‍🎓","👨‍🏫","👩‍🏫","👨‍⚖️","👩‍⚖️","👨‍🌾","👩‍🌾","👨‍🍳","👩‍🍳","👨‍🔧","👩‍🔧","👨‍🏭","👩‍🏭","👨‍💼","👩‍💼","👨‍🔬","👩‍🔬","👨‍🎨","👩‍🎨","👨‍✈️","👩‍✈️","👨‍🚀","👩‍🚀","👨‍🚒","👩‍🚒","🧑‍💻","👨‍💻","👩‍💻"],
+  },
+  {
+    label: "Animals",
+    emojis: ["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯","🦁","🐮","🐷","🐸","🐵","🙈","🙉","🙊","🐔","🐧","🐦","🐤","🦆","🦅","🦉","🦇","🐺","🐗","🐴","🦄","🐝","🪱","🐛","🦋","🐌","🐞","🐜","🪲","🦟","🦗","🪳","🕷️","🦂","🐢","🐍","🦎","🦖","🦕","🐙","🦑","🦐","🦞","🦀","🐡","🐠","🐟","🐬","🐳","🐋","🦈","🦭","🐊","🐅","🐆","🦓","🦍","🦧","🦣","🐘","🦛","🦏","🐪","🐫","🦒","🦘","🦬","🐃","🐂","🐄","🐎","🐖","🐏","🐑","🦙","🐐","🦌","🐕","🐩","🦮","🐕‍🦺","🐈","🐈‍⬛","🪶","🐓","🦃","🦤","🦚","🦜","🦢","🦩","🕊️","🐇","🦝","🦨","🦡","🦫","🦦","🦥","🐁","🐀","🐿️","🦔","🐾","🐉","🐲","🌵","🎄","🌲","🌳","🌴","🪵","🌱","🌿","☘️","🍀","🎍","🎋","🍃","🍂","🍁","🍄","🌾","💐","🌷","🌹","🥀","🌺","🌸","🌼","🌻","🌞","🌝","🌛","🌜","🌚","🌕","🌖","🌗","🌘","🌑","🌒","🌓","🌔","🌙","🌎","🌍","🌏","🪐","💫","⭐","🌟","✨","⚡","🌤️","⛅","🌥️","☁️","🌦️","🌧️","⛈️","🌩️","🌨️","❄️","☃️","⛄","🌬️","💨","🌊","🌈","🌂","☂️","☔","⚓"],
+  },
+  {
+    label: "Food",
+    emojis: ["🍏","🍎","🍐","🍊","🍋","🍌","🍉","🍇","🍓","🫐","🍈","🍒","🍑","🥭","🍍","🥥","🥝","🍅","🍆","🥑","🥦","🥬","🥒","🌶️","🫑","🥕","🧄","🧅","🥔","🌽","🍠","🫘","🥜","🍞","🥐","🥖","🫓","🥨","🥯","🧀","🥚","🍳","🧈","🥞","🧇","🥓","🥩","🍗","🍖","🌭","🍔","🍟","🍕","🫔","🌮","🌯","🥙","🧆","🥚","🍳","🥗","🥘","🫕","🍲","🍜","🍝","🍛","🍣","🍱","🥟","🦪","🍤","🍙","🍚","🍘","🍥","🥮","🍢","🧁","🍰","🎂","🍮","🍭","🍬","🍫","🍿","🍩","🍪","🌰","🥜","🍯","🧃","🥤","🧋","☕","🫖","🍵","🧉","🍺","🍻","🥂","🍷","🥃","🍸","🍹","🧊","🥄","🍴","🍽️","🥢","🧂"],
+  },
+  {
+    label: "Travel",
+    emojis: ["🚗","🚕","🚙","🚌","🚎","🏎️","🚓","🚑","🚒","🚐","🛻","🚚","🚛","🚜","🏍️","🛵","🛺","🚲","🛴","🛹","🛼","🚏","🛣️","🛤️","⛽","🚨","🚥","🚦","🛑","🚧","⚓","🛟","⛵","🚤","🛥️","🛳️","⛴️","🚢","✈️","🛩️","🛫","🛬","🪂","💺","🚁","🚟","🚠","🚡","🛸","🚀","🛶","⛺","🏠","🏡","🏢","🏣","🏤","🏥","🏦","🏨","🏩","🏪","🏫","🏬","🏭","🏯","🏰","💒","🗼","🗽","⛪","🕌","🛕","🕍","⛩️","🗾","🎑","⛰️","🏔️","🗻","🏕️","🏖️","🏜️","🏝️","🏞️","🏟️","🏛️","🏗️","🧱","🪨","🪵","🛖","🌁","🌃","🏙️","🌄","🌅","🌆","🌇","🌉","🌌","🌠","🎇","🎆","🗺️","🧭"],
+  },
+  {
+    label: "Activities",
+    emojis: ["⚽","🏀","🏈","⚾","🥎","🎾","🏐","🏉","🥏","🎱","🪀","🏓","🏸","🏒","🏑","🥍","🏏","🪃","🥅","⛳","🪁","🤿","🎿","🛷","🥌","🎯","🪃","🎱","🔮","🪄","🎮","🕹️","🎲","🎭","🎨","🖼️","🎰","🚂","🎠","🎡","🎢","🎪","🤹","🎭","🩰","🎬","🎤","🎧","🎼","🎹","🥁","🪘","🎷","🎺","🎸","🪕","🎻","🎙️","🎚️","🎛️","📻","🎵","🎶","🎤","🎧","📢","📣","🔔","🔕","🎵","🎼","🎹","🥁","🎷","🎺","🎸","🎻","🎲","♟️","🎯","🎳","🎮","🕹️","🎰","🧩","🪅","🪆","🎭","🎨","🖼️","🎪","🎤","🎧","🎼","📺","📷","📸","📹","🎥","📽️","🎞️","📞","☎️","📟","📠","📺","📻","🧭","⏱️","⏲️","⏰","🕰️","⌛","⏳","📡","🔋","🪫","🔌","💡","🔦","🕯️","🪔"],
+  },
+  {
+    label: "Objects",
+    emojis: ["💎","🔑","🗝️","🔒","🔓","🔨","🪓","⛏️","⚒️","🛠️","🗡️","⚔️","🛡️","🪚","🔧","🪛","🔩","⚙️","🗜️","⚖️","🦯","🔗","⛓️","🪝","🧲","🪜","🧰","🧲","🪤","🧯","🛢️","💰","💴","💵","💶","💷","💸","💳","🪙","💹","📈","📉","📊","📋","🗒️","🗓️","📅","📆","🗑️","📁","📂","🗂️","📄","📃","📑","📊","📈","📉","📋","📌","📍","📎","🖇️","📏","📐","✂️","🗃️","🗄️","🗑️","🔒","🔓","🔏","🔐","🔑","🗝️","🔨","🪓","⛏️","🛡️","🔧","🔩","⚙️","🗜️","🔗","🧲","🪜","🪤","🧯","💡","🔦","🕯️","🪔","🧱","🔭","🔬","🩺","💊","🩹","🩼","🩻","🧬","🦠","🧫","🧪","🌡️","🧹","🪣","🧺","🧻","🚽","🚰","🚿","🛁","🪥","🧼","🪒","🧴","🪮","🧽","🧷","🧹","🧺","🧻","🪣","🪠"],
+  },
+  {
+    label: "Symbols",
+    emojis: ["❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎","💔","❤️‍🔥","❤️‍🩹","❣️","💕","💞","💓","💗","💖","💘","💝","💟","☮️","✝️","☪️","🕉️","☸️","✡️","🔯","🕎","☯️","☦️","🛐","⛎","♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓","🆔","⚛️","🉑","☢️","☣️","📴","📳","🈶","🈚","🈸","🈺","🈷️","✴️","🆚","💮","🉐","㊙️","㊗️","🈴","🈵","🈹","🈲","🅰️","🅱️","🆎","🆑","🅾️","🆘","❌","⭕","🛑","⛔","📛","🚫","💯","💢","♨️","🚷","🚯","🚳","🚱","🔞","📵","🚭","❗","❕","❓","❔","‼️","⁉️","🔅","🔆","〽️","⚠️","🚸","🔱","⚜️","🔰","♻️","✅","🈯","💹","❇️","✳️","❎","🌐","💠","Ⓜ️","🌀","💤","🏧","🚾","♿","🅿️","🛗","🈳","🈂️","🛂","🛃","🛄","🛅","🚹","🚺","🚼","⚧️","🚻","🚮","🎦","📶","🈁","🔣","ℹ️","🔤","🔡","🔠","🆖","🆗","🆙","🆒","🆕","🆓","0️⃣","1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟","🔢","▶️","⏸️","⏹️","⏺️","⏭️","⏮️","⏩","⏪","⏫","⏬","◀️","🔼","🔽","➡️","⬅️","⬆️","⬇️","↗️","↘️","↙️","↖️","↕️","↔️","↪️","↩️","⤴️","⤵️","🔀","🔁","🔂","🔄","🔃","🎵","🎶","➕","➖","➗","✖️","♾️","💲","💱","™️","©️","®️","〰️","➰","➿","🔚","🔙","🔛","🔝","🔜","✔️","☑️","🔘","🔳","🔲","▪️","▫️","◾","◽","◼️","◻️","🟥","🟧","🟨","🟩","🟦","🟪","⬛","⬜","🔶","🔷","🔸","🔹","🔺","🔻","💠","🔘","🔵","🟤","🟠","🟡","🟢","🔴","🔴","⭕","⚫","⚪","🟣"],
+  },
+];
+
+const EmojiAvatarPicker = ({ selected, onSelect, compact = false }) => {
+  const [activeCategory, setActiveCategory] = useState(0);
+  const [search, setSearch] = useState("");
+
+  const displayEmojis = search.trim()
+    ? EMOJI_CATEGORIES.flatMap(c => c.emojis)
+    : EMOJI_CATEGORIES[activeCategory].emojis;
+
+  return (
+    <div className="space-y-3">
+      {/* Search */}
+      <input
+        type="text"
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        placeholder="Tìm emoji..."
+        className="w-full bg-[#09090b] border border-white/[0.07] rounded-xl px-3 py-2.5 text-[12px] text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/20 transition-colors"
+      />
+
+      {/* Category tabs */}
+      {!search.trim() && (
+        <div className="flex gap-1.5 flex-wrap py-0.5">
+          {EMOJI_CATEGORIES.map((cat, idx) => (
+            <button
+              key={cat.label}
+              type="button"
+              onClick={() => setActiveCategory(idx)}
+              className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${
+                activeCategory === idx
+                  ? 'bg-[#f5a623]/10 text-[#f5a623] border border-[#f5a623]/25'
+                  : 'text-zinc-500 hover:text-zinc-300 border border-white/[0.06] bg-[#09090b]'
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Emoji grid */}
+      <div className={`${compact ? 'h-40' : 'h-52'} overflow-y-auto rounded-xl bg-[#09090b] border border-white/[0.07] p-2.5`}>
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(36px,1fr))] gap-1">
+          {displayEmojis.map((emoji, i) => {
+            const isSelected = selected === emoji;
+            return (
+              <button
+                key={`${emoji}-${i}`}
+                type="button"
+                onClick={() => onSelect(emoji)}
+                title={emoji}
+                className={`aspect-square rounded-lg flex items-center justify-center text-xl leading-none transition-all duration-150 ${
+                  isSelected
+                    ? 'bg-[#f5a623]/15 ring-1 ring-[#f5a623] scale-110'
+                    : 'hover:bg-white/[0.07] hover:scale-105'
+                }`}
+              >
+                {emoji}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Settings = () => {
   const { t, i18n: i18nInstance } = useTranslation();
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, logout } = useAuth();
+  const navigate = useNavigate();
   const toast = useToast();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get("tab") || "profile";
   const [showBioPreview, setShowBioPreview] = useState(false);
   const [showPersonalityPreview, setShowPersonalityPreview] = useState(false);
 
-  const setActiveTab = (tabId) => {
-    setSearchParams({ tab: tabId });
+  const sectionRefs = {
+    profile: useRef(null),
+    security: useRef(null),
+    general: useRef(null),
+    notifications: useRef(null),
+    payment: useRef(null),
   };
+  const [activeSection, setActiveSection] = useState("profile");
+
+  useEffect(() => {
+    const observers = [];
+    Object.entries(sectionRefs).forEach(([id, ref]) => {
+      if (!ref.current) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
+        { rootMargin: "-30% 0px -60% 0px", threshold: 0 }
+      );
+      obs.observe(ref.current);
+      observers.push(obs);
+    });
+    return () => observers.forEach(o => o.disconnect());
+  }, []);
+
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [paymentOrder, setPaymentOrder] = useState(null);
   const [paymentError, setPaymentError] = useState(null);
@@ -88,10 +209,8 @@ const Settings = () => {
   };
 
   useEffect(() => {
-    if (activeTab === "payment" && user?.id && !user?.isPremium) {
-      fetchOrder();
-    }
-  }, [activeTab, user?.id, user?.isPremium]);
+    if (user?.id && !user?.isPremium) fetchOrder();
+  }, [user?.id, user?.isPremium]);
   const [loading, setLoading] = useState(false);
   const [portfolioLoading, setPortfolioLoading] = useState(false);
   const [success, setSuccess] = useState("");
@@ -133,7 +252,7 @@ const Settings = () => {
 
   React.useEffect(() => {
     const isMC = user?.role?.toLowerCase() === 'mc' || user?.role?.toLowerCase() === 'representative';
-    if (activeTab === "profile" && isMC && user?.mcProfile) {
+    if (isMC && user?.mcProfile) {
       const fetchMCData = async () => {
         try {
           const data = await getMCProfile(user.mcProfile);
@@ -157,7 +276,7 @@ const Settings = () => {
       };
       fetchMCData();
     }
-  }, [activeTab, user]);
+  }, [user]);
 
   const handleProfileChange = (e) => {
     setProfileData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -344,7 +463,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="space-y-8 pb-20 w-full px-4 lg:px-16">
+    <div className="space-y-8 pb-20 max-w-6xl mx-auto px-6">
       <div className="border-b border-white/[0.07] pb-8">
         <h1 className="text-2xl font-bold text-white mb-1">{t('settings.accountSettings')}</h1>
         <p className="text-[13px] text-zinc-500">{t('settings.manageAccount')}</p>
@@ -365,23 +484,25 @@ const Settings = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-8">
         {/* Sidebar */}
-        <aside className="space-y-6">
+        <aside className="space-y-6 lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto">
           {categories.map((category, idx) => (
-            <div key={idx} className="space-y-1">
+            <div key={idx} className="space-y-2">
               <h3 className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider px-3 mb-2">
                 {t(`settings.${category.label.toLowerCase()}`)}
               </h3>
               {category.items.map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => {
+                    sectionRefs[item.id]?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left ${
-                    activeTab === item.id
+                    activeSection === item.id
                       ? 'bg-[#f5a623]/[0.08] text-[#f5a623] border border-[#f5a623]/20'
                       : 'text-zinc-500 hover:text-white hover:bg-white/[0.04] border border-transparent'
                   }`}
                 >
-                  <item.icon size={15} className={activeTab === item.id ? 'text-[#f5a623]' : 'text-zinc-600'} />
+                  <item.icon size={15} className={activeSection === item.id ? 'text-[#f5a623]' : 'text-zinc-600'} />
                   <span className="text-[13px] font-medium">{t(`settings.${item.id}`)}</span>
                 </button>
               ))}
@@ -390,125 +511,67 @@ const Settings = () => {
         </aside>
 
         {/* Content */}
-        <div className="min-w-0">
-          {/* Profile Tab */}
-          {activeTab === "profile" && (
-            <div className={isMC ? "grid grid-cols-1 xl:grid-cols-[1fr_1.2fr] gap-8 items-start" : ""}>
-              <form onSubmit={handleProfileSave} className={`space-y-5 ${isMC ? 'xl:sticky xl:top-24' : ''}`}>
+        <div className="min-w-0 space-y-8">
+          {/* Profile Section */}
+          <div ref={sectionRefs.profile} id="section-profile" className="scroll-mt-20">
+            <form onSubmit={handleProfileSave} className="space-y-4">
+              <div className="flex items-center gap-2 mb-1">
+                <User size={16} className="text-[#f5a623]" />
+                <h2 className="text-[15px] font-semibold text-white">{t('settings.personalInfo')}</h2>
+              </div>
 
-                {/* Personal Information */}
-                <div className="bg-[#111113] border border-white/[0.07] rounded-2xl overflow-hidden">
-                  <button
-                    type="button"
-                    onClick={() => toggleSection('personal')}
-                    className="w-full flex items-center justify-between px-5 py-4 hover:bg-white/[0.02] transition-colors"
-                  >
-                    <h2 className="text-[14px] font-semibold text-white flex items-center gap-2.5">
-                      <User size={16} className="text-[#f5a623]" /> {t('settings.personalInfo')}
-                    </h2>
-                    {expandedSections.personal
-                      ? <ChevronDown size={16} className="text-zinc-500" />
-                      : <ChevronRight size={16} className="text-zinc-600" />}
-                  </button>
-
-                  {expandedSections.personal && (
-                    <div className="px-5 pb-5 space-y-5 border-t border-white/[0.06]">
-                      <div className="flex items-center gap-6 pt-5">
-                        <div className="relative group flex-shrink-0">
-                          <div className="w-20 h-20 rounded-xl overflow-hidden border border-white/[0.07] bg-[#09090b]">
-                            <img
-                              src={profileData.avatar || "https://i.pravatar.cc/150"}
-                              alt="Avatar"
-                              className="w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer rounded-xl">
-                              <Camera size={18} className="text-white" />
-                              <input
-                                type="file"
-                                accept="image/*"
-                                className="absolute inset-0 opacity-0 cursor-pointer"
-                                onChange={async (e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) {
-                                    try {
-                                      const url = await uploadMedia(file, "avatars");
-                                      setProfileData(prev => ({ ...prev, avatar: url }));
-                                    } catch (err) {
-                                      console.error("Avatar upload failed:", err);
-                                    }
-                                  }
-                                }}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div>
-                          <p className="text-[13px] font-semibold text-white">{t('settings.yourPortrait')}</p>
-                          <p className="text-[11px] text-zinc-500 mt-0.5">{t('settings.portraitDesc')}</p>
-                          <div className="flex gap-2 mt-3">
-                            <label className="cursor-pointer px-3 py-1.5 rounded-lg bg-[#f5a623]/[0.08] border border-[#f5a623]/20 text-[#f5a623] text-[11px] font-medium hover:bg-[#f5a623]/[0.14] transition-colors">
-                              {t('settings.changePhoto')}
-                              <input
-                                type="file"
-                                accept="image/*"
-                                className="hidden"
-                                onChange={async (e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) {
-                                    try {
-                                      const url = await uploadMedia(file, "avatars");
-                                      setProfileData(prev => ({ ...prev, avatar: url }));
-                                    } catch (err) {
-                                      console.error("Avatar upload failed:", err);
-                                    }
-                                  }
-                                }}
-                              />
-                            </label>
-                            {profileData.avatar && (
-                              <button
-                                type="button"
-                                onClick={() => setProfileData(prev => ({ ...prev, avatar: "" }))}
-                                className="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-[11px] font-medium hover:bg-red-500/[0.15] transition-colors"
-                              >
-                                {t('settings.remove')}
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
-                          <label className={labelCls}>{t('settings.displayName')}</label>
-                          <div className={inputWrapCls}>
-                            <User size={15} className="text-zinc-600 flex-shrink-0" />
-                            <input type="text" name="name" className={inputCls} value={profileData.name} onChange={handleProfileChange} />
-                          </div>
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className={labelCls}>{t('settings.phoneNumber')}</label>
-                          <div className={inputWrapCls}>
-                            <Phone size={15} className="text-zinc-600 flex-shrink-0" />
-                            <input type="tel" name="phoneNumber" className={inputCls} value={profileData.phoneNumber} onChange={handleProfileChange} placeholder="+84 9xx xxx xxxx" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="space-y-1.5">
-                        <label className={labelCls}>{t('settings.emailAddress')}</label>
-                        <div className={`${inputWrapCls} opacity-60`}>
-                          <Mail size={15} className="text-zinc-600 flex-shrink-0" />
-                          <input type="email" name="email" className={`${inputCls} cursor-not-allowed`} value={profileData.email} disabled />
-                        </div>
-                      </div>
+              <div className="bg-[#111113] border border-white/10 rounded-2xl shadow-sm overflow-hidden">
+                {/* Avatar section */}
+                <div className="p-6 border-b border-white/[0.07]">
+                  <label className={labelCls + " mb-3 block"}>Ảnh đại diện</label>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-14 h-14 rounded-xl bg-[#09090b] border border-white/10 flex items-center justify-center text-[2rem] leading-none shrink-0">
+                      {profileData.avatar || "🙂"}
                     </div>
-                  )}
+                    <div>
+                      <p className="text-[13px] font-medium text-white leading-snug">
+                        {profileData.avatar ? "Đã chọn" : "Chưa chọn"}
+                      </p>
+                      <p className="text-[11px] text-zinc-500 mt-0.5">Chọn emoji bên dưới</p>
+                    </div>
+                  </div>
+                  <EmojiAvatarPicker
+                    selected={profileData.avatar}
+                    onSelect={(emoji) => setProfileData(prev => ({ ...prev, avatar: emoji }))}
+                    compact
+                  />
                 </div>
 
-                {isMC && (
+                {/* Fields section */}
+                <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-5">
+                  <div className="space-y-1.5">
+                    <label className={labelCls}>{t('settings.displayName')}</label>
+                    <div className={inputWrapCls}>
+                      <User size={15} className="text-zinc-600 shrink-0" />
+                      <input type="text" name="name" className={inputCls} value={profileData.name} onChange={handleProfileChange} />
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className={labelCls}>{t('settings.phoneNumber')}</label>
+                    <div className={inputWrapCls}>
+                      <Phone size={15} className="text-zinc-600 shrink-0" />
+                      <input type="tel" name="phoneNumber" className={inputCls} value={profileData.phoneNumber} onChange={handleProfileChange} placeholder="+84 9xx xxx xxxx" />
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className={labelCls}>{t('settings.emailAddress')}</label>
+                    <div className={`${inputWrapCls} opacity-50`}>
+                      <Mail size={15} className="text-zinc-600 shrink-0" />
+                      <input type="email" name="email" className={`${inputCls} cursor-not-allowed`} value={profileData.email} disabled />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+                {false && (
                   <>
-                    {/* Professional Profile */}
-                    <div className={`bg-[#111113] border border-white/[0.07] rounded-2xl ${expandedSections.professional ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300`}>
+                    {/* Professional Profile — removed */}
+                    <div className={`bg-[#111113] border border-white/10 rounded-2xl shadow-sm ${expandedSections.professional ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300`}>
                       <button
                         type="button"
                         onClick={() => toggleSection('professional')}
@@ -598,7 +661,7 @@ const Settings = () => {
                     </div>
 
                     {/* Attributes */}
-                    <div className={`bg-[#111113] border border-white/[0.07] rounded-2xl ${expandedSections.attributes ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300`}>
+                    <div className={`bg-[#111113] border border-white/10 rounded-2xl shadow-sm ${expandedSections.attributes ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300`}>
                       <button
                         type="button"
                         onClick={() => toggleSection('attributes')}
@@ -636,7 +699,7 @@ const Settings = () => {
                     </div>
 
                     {/* Pricing */}
-                    <div className={`bg-[#111113] border border-white/[0.07] rounded-2xl ${expandedSections.pricing ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300`}>
+                    <div className={`bg-[#111113] border border-white/10 rounded-2xl shadow-sm ${expandedSections.pricing ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300`}>
                       <button
                         type="button"
                         onClick={() => toggleSection('pricing')}
@@ -741,7 +804,7 @@ const Settings = () => {
                     </div>
 
                     {/* Event Portfolio */}
-                    <div className="bg-[#111113] border border-white/[0.07] rounded-2xl overflow-hidden">
+                    <div className="bg-[#111113] border border-white/10 rounded-2xl overflow-hidden shadow-sm">
                       <button
                         type="button"
                         onClick={() => toggleSection('portfolio')}
@@ -824,28 +887,16 @@ const Settings = () => {
                     <Save size={15} /> {loading ? t('settings.saving') : t('settings.saveAllChanges')}
                   </button>
                 </div>
-              </form>
+            </form>
+          </div>
 
-              {isMC && (
-                <div className="hidden xl:block border border-white/[0.07] rounded-2xl bg-[#09090b]/60 overflow-hidden">
-                  <div className="bg-[#f5a623]/[0.06] text-[#f5a623] text-[11px] font-medium px-4 py-2.5 border-b border-white/[0.06] flex items-center justify-center gap-2">
-                    <Eye size={13} /> {t('settings.livePreview')}
-                  </div>
-                  <div className="p-4">
-                    <MCProfileView mc={previewMC} isPreview={true} />
-                  </div>
-                </div>
-              )}
+          {/* General Section */}
+          <div ref={sectionRefs.general} id="section-general" className="scroll-mt-20 space-y-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Globe size={16} className="text-[#f5a623]" />
+              <h2 className="text-[15px] font-semibold text-white">{t('settings.general')}</h2>
             </div>
-          )}
-
-          {/* General Tab */}
-          {activeTab === "general" && (
-            <div className="space-y-5">
-              <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6">
-                <h2 className="text-[14px] font-semibold text-white flex items-center gap-2.5 mb-5">
-                  <Globe size={16} className="text-[#f5a623]" /> {t('settings.language')}
-                </h2>
+            <div className="bg-[#111113] border border-white/10 rounded-2xl p-6 shadow-sm">
                 <div className="flex items-center justify-between p-4 rounded-xl bg-[#09090b] border border-white/[0.06]">
                   <div>
                     <p className="text-[13px] font-medium text-white">{t('settings.interfaceLanguage')}</p>
@@ -881,125 +932,100 @@ const Settings = () => {
                     )}
                   </div>
                 </div>
-              </div>
             </div>
-          )}
+          </div>
 
-          {/* Security Tab */}
-          {activeTab === "security" && (
-            <div className="space-y-5">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                <div className="lg:col-span-2">
-                  <form onSubmit={handlePasswordChange} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 space-y-5">
-                    <div className="flex items-center justify-between border-b border-white/[0.06] pb-5">
-                      <div>
-                        <h2 className="text-[14px] font-semibold text-white flex items-center gap-2.5">
-                          <Lock size={16} className="text-[#f5a623]" /> {t('settings.changePassword')}
-                        </h2>
-                        <p className="text-[11px] text-zinc-500 mt-0.5">{t('settings.passwordSecurityDesc')}</p>
-                      </div>
-                      <div className="p-2.5 rounded-xl bg-[#f5a623]/[0.08] border border-[#f5a623]/20 text-[#f5a623]">
-                        <Key size={16} />
-                      </div>
-                    </div>
+          {/* Security Section */}
+          <div ref={sectionRefs.security} id="section-security" className="scroll-mt-20 space-y-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Lock size={16} className="text-[#f5a623]" />
+              <h2 className="text-[15px] font-semibold text-white">{t('settings.security')}</h2>
+            </div>
 
-                    <div className="space-y-4">
-                      <div className="space-y-1.5">
-                        <label className={labelCls}>{t('settings.currentPassword')}</label>
-                        <div className={inputWrapCls}>
-                          <Lock size={15} className="text-zinc-600 flex-shrink-0" />
-                          <input
-                            type={showPassword ? "text" : "password"}
-                            name="currentPassword"
-                            className={inputCls}
-                            value={securityData.currentPassword}
-                            onChange={handleSecurityChange}
-                            placeholder="••••••••"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="text-zinc-600 hover:text-zinc-400 transition-colors"
-                          >
-                            {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
-                          <label className={labelCls}>New Password</label>
-                          <div className={inputWrapCls}>
-                            <Shield size={15} className="text-zinc-600 flex-shrink-0" />
-                            <input
-                              type="password"
-                              name="newPassword"
-                              className={inputCls}
-                              value={securityData.newPassword}
-                              onChange={handleSecurityChange}
-                              placeholder="Min. 8 characters"
-                            />
-                          </div>
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className={labelCls}>Confirm New Password</label>
-                          <div className={inputWrapCls}>
-                            <Shield size={15} className="text-zinc-600 flex-shrink-0" />
-                            <input
-                              type="password"
-                              name="confirmPassword"
-                              className={inputCls}
-                              value={securityData.confirmPassword}
-                              onChange={handleSecurityChange}
-                              placeholder="Repeat new password"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-end pt-2 border-t border-white/[0.06]">
-                      <button
-                        type="submit"
-                        disabled={loading}
-                        className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[13px] font-semibold transition-colors disabled:opacity-50"
-                      >
-                        <Save size={15} /> {loading ? "Updating..." : "Update Password"}
-                      </button>
-                    </div>
-                  </form>
-                </div>
-
-                <div>
-                  <div className="bg-[#111113] border border-red-500/10 rounded-2xl p-5">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="p-2 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">
-                        <Trash2 size={15} />
-                      </div>
-                      <h3 className="text-[13px] font-semibold text-white">Danger Zone</h3>
-                    </div>
-                    <p className="text-[11px] text-zinc-500 leading-relaxed mb-4">
-                      Once you delete your account, there is no going back. Please be certain.
-                    </p>
-                    <button className="w-full py-2.5 rounded-xl border border-red-500/30 text-red-400 text-[11px] font-medium hover:bg-red-500/[0.08] transition-colors">
-                      Delete Account
+            <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-4">
+              {/* Password form */}
+              <form onSubmit={handlePasswordChange} className="bg-[#111113] border border-white/10 rounded-2xl p-6 space-y-4 shadow-sm">
+                <p className="text-[13px] font-medium text-white">{t('settings.changePassword')}</p>
+                <div className="space-y-1.5">
+                  <label className={labelCls}>{t('settings.currentPassword')}</label>
+                  <div className={inputWrapCls}>
+                    <Lock size={15} className="text-zinc-600 shrink-0" />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="currentPassword"
+                      className={inputCls}
+                      value={securityData.currentPassword}
+                      onChange={handleSecurityChange}
+                      placeholder="••••••••"
+                    />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-zinc-600 hover:text-zinc-400 transition-colors">
+                      {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                     </button>
                   </div>
                 </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className={labelCls}>Mật khẩu mới</label>
+                    <div className={inputWrapCls}>
+                      <Shield size={15} className="text-zinc-600 shrink-0" />
+                      <input type="password" name="newPassword" className={inputCls} value={securityData.newPassword} onChange={handleSecurityChange} placeholder="Tối thiểu 8 ký tự" />
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className={labelCls}>Xác nhận mật khẩu</label>
+                    <div className={inputWrapCls}>
+                      <Shield size={15} className="text-zinc-600 shrink-0" />
+                      <input type="password" name="confirmPassword" className={inputCls} value={securityData.confirmPassword} onChange={handleSecurityChange} placeholder="Nhập lại mật khẩu mới" />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-end pt-1 border-t border-white/[0.06]">
+                  <button type="submit" disabled={loading} className="flex items-center gap-2 px-5 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[13px] font-semibold transition-colors disabled:opacity-50">
+                    <Save size={14} /> {loading ? "Đang lưu..." : "Cập nhật mật khẩu"}
+                  </button>
+                </div>
+              </form>
+
+              {/* Session + Danger Zone */}
+              <div className="bg-[#111113] border border-white/10 rounded-2xl p-5 shadow-sm flex flex-col gap-4">
+                {/* Logout */}
+                <div className="flex items-center justify-between pb-4 border-b border-white/[0.07]">
+                  <div>
+                    <p className="text-[13px] font-medium text-white">Đăng xuất</p>
+                    <p className="text-[11px] text-zinc-500 mt-0.5">Kết thúc phiên làm việc hiện tại</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { logout(); navigate('/'); }}
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl border border-white/10 text-zinc-300 text-[12px] font-medium hover:bg-white/[0.06] transition-colors"
+                  >
+                    <LogOut size={14} /> Đăng xuất
+                  </button>
+                </div>
+                {/* Delete account */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[13px] font-medium text-red-400">Xóa tài khoản</p>
+                    <p className="text-[11px] text-zinc-500 mt-0.5">Không thể khôi phục sau khi xóa</p>
+                  </div>
+                  <button className="flex items-center gap-2 px-4 py-2 rounded-xl border border-red-500/25 text-red-400 text-[12px] font-medium hover:bg-red-500/[0.08] transition-colors">
+                    <Trash2 size={14} /> Xóa tài khoản
+                  </button>
+                </div>
               </div>
             </div>
-          )}
+          </div>
 
-          {/* Notifications Tab */}
-          {activeTab === "notifications" && (
-            <div className="space-y-5">
-              <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6">
+          {/* Notifications Section */}
+          <div ref={sectionRefs.notifications} id="section-notifications" className="scroll-mt-20 space-y-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Bell size={16} className="text-[#f5a623]" />
+              <h2 className="text-[15px] font-semibold text-white">{t('settings.notifications')}</h2>
+            </div>
+            <div className="bg-[#111113] border border-white/10 rounded-2xl p-6 shadow-sm">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-white/[0.06] pb-5">
                   <div>
-                    <h2 className="text-[14px] font-semibold text-white flex items-center gap-2.5">
-                      <Bell size={16} className="text-[#f5a623]" /> {t('settings.notifications')}
-                    </h2>
-                    <p className="text-[11px] text-zinc-500 mt-0.5">{t('settings.notificationDesc')}</p>
+                    <p className="text-[13px] font-medium text-white">{t('settings.notificationDesc')}</p>
                   </div>
                   <div className="flex gap-2">
                     <button
@@ -1084,27 +1110,23 @@ const Settings = () => {
                     <Save size={15} /> {t('settings.saveAllChanges')}
                   </button>
                 </div>
-              </div>
             </div>
-          )}
+          </div>
 
-          {/* Payment Tab */}
-          {activeTab === "payment" && (
-            <div className="space-y-5">
-              <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6">
-                <div className="flex items-center justify-between mb-6 pb-5 border-b border-white/[0.06]">
-                  <div>
-                    <h2 className="text-[14px] font-semibold text-white flex items-center gap-2.5">
-                      <CreditCard size={16} className="text-[#f5a623]" /> Subscription Billing & Upgrade
-                    </h2>
-                    <p className="text-[11px] text-zinc-500 mt-0.5">Manage your active membership plans and billing details.</p>
-                  </div>
-                  {user?.isPremium && (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow-500/10 border border-yellow-500/20 px-3 py-1 text-[11px] font-medium text-yellow-400">
-                      <Sparkles size={11} fill="currentColor" /> Lifetime Premium
-                    </span>
-                  )}
-                </div>
+          {/* Payment Section */}
+          <div ref={sectionRefs.payment} id="section-payment" className="scroll-mt-20 space-y-4">
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-2">
+                <CreditCard size={16} className="text-[#f5a623]" />
+                <h2 className="text-[15px] font-semibold text-white">{t('settings.payment')}</h2>
+              </div>
+              {user?.isPremium && (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow-500/10 border border-yellow-500/20 px-3 py-1 text-[11px] font-medium text-yellow-400">
+                  <Sparkles size={11} fill="currentColor" /> Lifetime Premium
+                </span>
+              )}
+            </div>
+            <div className="bg-[#111113] border border-white/10 rounded-2xl p-6 shadow-sm">
 
                 {user?.isPremium ? (
                   <div className="space-y-5">
@@ -1299,9 +1321,8 @@ const Settings = () => {
                     </div>
                   </div>
                 )}
-              </div>
             </div>
-          )}
+          </div>
 
         </div>
       </div>

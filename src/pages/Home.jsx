@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -13,6 +13,7 @@ import ScrollReveal from '../components/animations/ScrollReveal';
 import { useApi } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
 import { fetchFeaturedTrainingStats } from '../controllers/publicController';
+import { fetchLessons } from '../controllers/voiceController';
 import LazyImage from '../components/ui/LazyImage';
 import ScrollToTop from '../components/ui/ScrollToTop';
 import ContactModal from '../components/modals/ContactModal';
@@ -24,6 +25,95 @@ const fadeUp = {
   transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
 };
 const stagger = (i) => ({ ...fadeUp, transition: { ...fadeUp.transition, delay: i * 0.09 } });
+
+// ─── Cursor spotlight + stage lights for Hero ─────────────────────────────────
+const SpotlightHero = () => {
+  const [pos, setPos] = useState({ x: 50, y: 50 }); // percent
+  const rafRef = useRef(null);
+  const targetRef = useRef({ x: 50, y: 50 });
+  const currentRef = useRef({ x: 50, y: 50 });
+
+  const onMouseMove = useCallback((e) => {
+    const pct = {
+      x: (e.clientX / window.innerWidth) * 100,
+      y: (e.clientY / window.innerHeight) * 100,
+    };
+    targetRef.current = pct;
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const tick = () => {
+      currentRef.current = {
+        x: lerp(currentRef.current.x, targetRef.current.x, 0.06),
+        y: lerp(currentRef.current.y, targetRef.current.y, 0.06),
+      };
+      setPos({ ...currentRef.current });
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, [onMouseMove]);
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {/* Cursor-following spotlight */}
+      <div
+        className="absolute w-[700px] h-[700px] rounded-full pointer-events-none"
+        style={{
+          left: `${pos.x}%`,
+          top: `${pos.y}%`,
+          transform: 'translate(-50%, -50%)',
+          background: 'radial-gradient(circle, rgba(245,166,35,0.055) 0%, rgba(245,166,35,0.018) 40%, transparent 70%)',
+          transition: 'none',
+        }}
+      />
+      {/* Fixed stage left spotlight */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          left: '15%', top: '-60px',
+          width: '320px', height: '600px',
+          background: 'conic-gradient(from 0deg at 50% 0%, transparent 70deg, rgba(245,166,35,0.04) 90deg, transparent 110deg)',
+          filter: 'blur(1px)',
+        }}
+      />
+      {/* Fixed stage right spotlight */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          right: '15%', top: '-60px',
+          width: '320px', height: '600px',
+          background: 'conic-gradient(from 180deg at 50% 0%, transparent 70deg, rgba(245,166,35,0.04) 90deg, transparent 110deg)',
+          filter: 'blur(1px)',
+        }}
+      />
+      {/* Sound wave rings — subtle pulse behind hero */}
+      {[1, 2, 3].map(i => (
+        <div
+          key={i}
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#f5a623]/[0.035] pointer-events-none"
+          style={{
+            width: `${300 + i * 200}px`,
+            height: `${300 + i * 200}px`,
+            animation: `stage-pulse ${2.5 + i * 0.6}s ease-in-out infinite`,
+            animationDelay: `${i * 0.5}s`,
+          }}
+        />
+      ))}
+      <style>{`
+        @keyframes stage-pulse {
+          0%, 100% { opacity: 0.3; transform: translate(-50%,-50%) scale(1); }
+          50%       { opacity: 0.7; transform: translate(-50%,-50%) scale(1.04); }
+        }
+      `}</style>
+    </div>
+  );
+};
 
 // ─── CSS-only dot-grid background ─────────────────────────────────────────────
 const GridBackground = () => (
@@ -457,14 +547,13 @@ const SampleReportCard = () => {
 const Home = () => {
   const { t, i18n } = useTranslation();
   const { data: trainingStats } = useApi(fetchFeaturedTrainingStats);
+  const { data: featuredLessons } = useApi(fetchLessons);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [selectedMCForCert, setSelectedMCForCert] = useState(null);
   const [showCertModal, setShowCertModal] = useState(false);
   const [copiedCert, setCopiedCert] = useState(false);
-
-  const featuredMCs = trainingStats?.length ? trainingStats : [];
 
   return (
     <div className="bg-[#09090b] text-white min-h-screen overflow-x-hidden">
@@ -473,6 +562,7 @@ const Home = () => {
       {/* ── 1. HERO ─────────────────────────────────────────────────────────── */}
       <section className="relative pt-32 pb-24 px-6 overflow-hidden">
         <GridBackground />
+        <SpotlightHero />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[280px] bg-[#f5a623]/[0.05] rounded-full blur-[80px] pointer-events-none" />
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -536,31 +626,89 @@ const Home = () => {
       </section>
 
       {/* ── FEATURES ────────────────────────────────────────────────────────── */}
-      <section className="py-24 max-w-6xl mx-auto px-6">
+      <section className="py-28 max-w-6xl mx-auto px-6 mt-12">
         <ScrollReveal direction="up">
-          <div className="mb-14">
+          <div className="mb-16">
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-[#f5a623] mb-4">{t('home.whyChooseUs')}</p>
             <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mb-4">{t('home.coreAdvantage')}</h2>
             <p className="text-zinc-400 max-w-lg leading-relaxed text-[15px]">{t('home.coreAdvantageDesc')}</p>
           </div>
         </ScrollReveal>
 
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-3 gap-5">
           {[
-            { icon: <Mic size={20} />, title: t('home.rhythmCoach'), desc: t('home.rhythmCoachDesc'), color: 'text-[#f5a623]', bg: 'bg-[#f5a623]/[0.08]' },
-            { icon: <Zap size={20} />, title: t('home.realTimeFeedback'), desc: t('home.realTimeFeedbackDesc'), color: 'text-blue-400', bg: 'bg-blue-500/[0.08]' },
-            { icon: <BookOpen size={20} />, title: t('home.extensiveLibrary'), desc: t('home.extensiveLibraryDesc'), color: 'text-violet-400', bg: 'bg-violet-500/[0.08]' },
+            {
+              icon: <Mic size={22} />, title: t('home.rhythmCoach'), desc: t('home.rhythmCoachDesc'),
+              iconColor: '#f5a623', iconBg: 'rgba(245,166,35,0.08)', iconBorder: 'rgba(245,166,35,0.2)',
+              accentColor: '#f5a623', glow: 'rgba(245,166,35,0.07)',
+              metric: '94%', metricLabel: 'Avg accuracy',
+            },
+            {
+              icon: <Zap size={22} />, title: t('home.realTimeFeedback'), desc: t('home.realTimeFeedbackDesc'),
+              iconColor: '#60a5fa', iconBg: 'rgba(59,130,246,0.08)', iconBorder: 'rgba(59,130,246,0.2)',
+              accentColor: '#60a5fa', glow: 'rgba(59,130,246,0.07)',
+              metric: '<2s', metricLabel: 'Response time',
+            },
+            {
+              icon: <BookOpen size={22} />, title: t('home.extensiveLibrary'), desc: t('home.extensiveLibraryDesc'),
+              iconColor: '#a78bfa', iconBg: 'rgba(139,92,246,0.08)', iconBorder: 'rgba(139,92,246,0.2)',
+              accentColor: '#a78bfa', glow: 'rgba(139,92,246,0.07)',
+              metric: '500+', metricLabel: 'Scripts',
+            },
           ].map((f, i) => (
-            <ScrollReveal key={i} delay={i * 0.1}>
+            <ScrollReveal key={i} delay={i * 0.12} direction="up">
               <motion.div
-                whileHover={{ y: -4 }}
-                transition={{ duration: 0.2 }}
-                className="p-7 bg-[#111113] border border-white/[0.07] rounded-2xl hover:border-white/[0.12] transition-colors h-full"
+                whileHover={{ y: -6, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
+                className="relative group p-8 bg-[#111113] rounded-2xl overflow-hidden flex flex-col h-full cursor-default"
+                style={{ border: '1px solid rgba(255,255,255,0.07)' }}
+                onHoverStart={e => { e.currentTarget.style.borderColor = f.accentColor + '33'; }}
+                onHoverEnd={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; }}
               >
-                <div className={`w-9 h-9 rounded-xl ${f.bg} flex items-center justify-center ${f.color} mb-5`}>
-                  {f.icon}
+                {/* Top accent line */}
+                <div className="absolute top-0 inset-x-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{ background: `linear-gradient(90deg, transparent, ${f.accentColor}60, transparent)` }} />
+                {/* Corner glow */}
+                <div className="absolute top-0 left-0 w-40 h-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-full"
+                  style={{ background: `radial-gradient(ellipse at 0% 0%, ${f.glow} 0%, transparent 70%)` }} />
+
+                <div className="relative z-10 flex flex-col h-full">
+                  {/* Icon box */}
+                  <motion.div
+                    whileHover={{ scale: 1.08 }}
+                    transition={{ duration: 0.2 }}
+                    className="w-12 h-12 rounded-xl flex items-center justify-center mb-7 shrink-0"
+                    style={{ background: f.iconBg, border: `1px solid ${f.iconBorder}`, color: f.iconColor }}
+                  >
+                    {f.icon}
+                  </motion.div>
+
+                  {/* Text */}
+                  <h3 className="text-[16px] font-semibold mb-3 text-white leading-snug">{f.title}</h3>
+                  <p className="text-zinc-500 text-[13px] leading-relaxed flex-1">{f.desc}</p>
+
+                  {/* Metric row */}
+                  <div className="mt-8 pt-5 border-t border-white/[0.06] flex items-end justify-between">
+                    <div>
+                      <motion.p
+                        initial={{ opacity: 0, y: 6 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.1 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                        className="text-[26px] font-bold tabular-nums leading-none"
+                        style={{ color: f.accentColor }}
+                      >
+                        {f.metric}
+                      </motion.p>
+                      <p className="text-[10px] text-zinc-600 uppercase tracking-wider mt-1">{f.metricLabel}</p>
+                    </div>
+                    <motion.div
+                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                      style={{ color: f.accentColor }}
+                    >
+                      <ArrowRight size={15} />
+                    </motion.div>
+                  </div>
                 </div>
-                <h3 className="text-[15px] font-semibold mb-3">{f.title}</h3>
-                <p className="text-zinc-500 text-[14px] leading-relaxed">{f.desc}</p>
               </motion.div>
             </ScrollReveal>
           ))}
@@ -609,13 +757,21 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── MC CAROUSEL ─────────────────────────────────────────────────────── */}
-      {featuredMCs.length > 0 && (
+      {/* ── LESSON CAROUSEL ─────────────────────────────────────────────────── */}
+      {featuredLessons?.length > 0 && (
         <section className="py-20 overflow-hidden">
-          <div className="max-w-6xl mx-auto px-6 mb-10">
+          <div className="max-w-6xl mx-auto px-6 mb-10 flex items-end justify-between">
             <ScrollReveal direction="left">
-              <h2 className="text-3xl font-bold tracking-tight mb-2">{t('home.premiumVoices')}</h2>
-              <p className="text-zinc-500 text-[14px]">{t('home.premiumVoicesDesc')}</p>
+              <h2 className="text-3xl font-bold tracking-tight mb-2">Bài luyện đọc</h2>
+              <p className="text-zinc-500 text-[14px]">Chọn bài và bắt đầu luyện giọng ngay hôm nay.</p>
+            </ScrollReveal>
+            <ScrollReveal direction="right">
+              <Link
+                to={isAuthenticated ? "/m/voice/library" : "/login"}
+                className="flex items-center gap-1.5 text-[13px] font-medium text-zinc-400 hover:text-white transition-colors shrink-0"
+              >
+                Xem tất cả <ArrowRight size={14} />
+              </Link>
             </ScrollReveal>
           </div>
 
@@ -623,54 +779,81 @@ const Home = () => {
             <div className="flex gap-5 animate-marquee-slow">
               {[...Array(2)].map((_, i) => (
                 <div key={i} className="flex gap-5 shrink-0">
-                  {featuredMCs.map((mc, idx) => (
-                    <motion.div
-                      key={`${i}-${idx}`}
-                      whileHover={{ y: -6 }}
-                      transition={{ duration: 0.2 }}
-                      className="min-w-[240px] aspect-[2/3] rounded-2xl overflow-hidden relative group border border-white/[0.07] cursor-pointer"
-                    >
-                      <LazyImage
-                        src={mc.avatar || `https://i.pravatar.cc/600?u=${idx}`}
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-
-                      <div className="absolute inset-0 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-all duration-250 bg-black/70 backdrop-blur-sm p-5">
-                        <div className="w-full space-y-3 mb-5">
-                          {[
-                            { label: t('home.accuracy'), val: `${mc.avgAccuracy?.toFixed(1)}%`, color: 'text-[#f5a623]' },
-                            { label: t('home.rhythm'), val: `${mc.avgRhythm?.toFixed(1)}%`, color: 'text-blue-400' },
-                            { label: t('home.totalSessions'), val: mc.totalSessions, color: 'text-violet-400' },
-                          ].map(({ label, val, color }, j) => (
-                            <div key={j} className="flex justify-between items-center border-b border-white/[0.08] pb-2">
-                              <span className="text-[11px] text-zinc-500 uppercase tracking-wider">{label}</span>
-                              <span className={`text-[14px] font-bold ${color}`}>{val}</span>
+                  {featuredLessons.map((lesson, idx) => {
+                    const wordCount = lesson.content?.split(/\s+/).filter(Boolean).length || 0;
+                    const diffColor = lesson.difficulty === 'EASY' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+                      : lesson.difficulty === 'MEDIUM' ? 'text-amber-400 bg-amber-500/10 border-amber-500/20'
+                      : 'text-red-400 bg-red-500/10 border-red-500/20';
+                    const diffLabel = lesson.difficulty === 'EASY' ? 'Cơ bản' : lesson.difficulty === 'MEDIUM' ? 'Trung bình' : lesson.difficulty === 'HARD' ? 'Nâng cao' : lesson.difficulty;
+                    return (
+                      <motion.div
+                        key={`${i}-${idx}`}
+                        whileHover={{ y: -6 }}
+                        transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                        onClick={() => navigate(isAuthenticated ? `/m/voice/practice/${lesson.id}` : '/login')}
+                        className="min-w-[340px] bg-[#111113] border border-white/[0.07] rounded-2xl overflow-hidden cursor-pointer hover:border-white/[0.16] transition-all duration-300 group flex flex-col"
+                      >
+                        {/* Thumbnail */}
+                        <div className="relative h-44 bg-[#09090b] overflow-hidden shrink-0">
+                          {lesson.thumbnailUrl ? (
+                            <LazyImage
+                              src={lesson.thumbnailUrl}
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-[#0d0d0f]">
+                              <div className="w-12 h-12 rounded-2xl bg-[#f5a623]/[0.08] border border-[#f5a623]/15 flex items-center justify-center">
+                                <Mic size={22} className="text-[#f5a623]/60" />
+                              </div>
                             </div>
-                          ))}
+                          )}
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#111113] via-[#111113]/20 to-transparent" />
+                          {/* Category pill — bottom left over gradient */}
+                          <div className="absolute bottom-3 left-3">
+                            <span className="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-black/70 border border-white/[0.1] text-[#f5a623] backdrop-blur-sm uppercase tracking-widest">
+                              {lesson.category || 'Luyện đọc'}
+                            </span>
+                          </div>
+                          {/* Difficulty — top right */}
+                          {lesson.difficulty && (
+                            <div className="absolute top-3 right-3">
+                              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border backdrop-blur-sm ${diffColor}`}>
+                                {diffLabel}
+                              </span>
+                            </div>
+                          )}
                         </div>
-                        <button
-                          disabled={!mc.totalSessions}
-                          onClick={() => { if (mc.totalSessions) { setSelectedMCForCert(mc); setShowCertModal(true); } }}
-                          className={`w-full py-2.5 rounded-lg text-[13px] font-semibold transition-colors ${
-                            mc.totalSessions ? 'bg-[#f5a623] text-black hover:bg-[#e09520]' : 'bg-white/[0.06] text-zinc-600 cursor-not-allowed'
-                          }`}
-                        >
-                          {t('home.viewPerformance')}
-                        </button>
-                      </div>
 
-                      <div className="absolute bottom-4 left-4 right-4 group-hover:opacity-0 transition-opacity duration-200">
-                        <p className="text-[10px] font-semibold text-[#f5a623] uppercase tracking-wider mb-0.5">MC Pro</p>
-                        <h4 className="text-[16px] font-bold truncate">{mc.name || 'Elite Voice'}</h4>
-                      </div>
-                    </motion.div>
-                  ))}
+                        {/* Info */}
+                        <div className="p-5 flex flex-col flex-1">
+                          <h4 className="text-[14px] font-semibold text-white leading-snug line-clamp-2 mb-2 group-hover:text-[#f5a623] transition-colors duration-200">
+                            {lesson.title}
+                          </h4>
+                          {lesson.description && (
+                            <p className="text-[12px] text-zinc-500 line-clamp-2 leading-relaxed mb-4 flex-1">
+                              {lesson.description}
+                            </p>
+                          )}
+                          <div className="flex items-center justify-between pt-3 border-t border-white/[0.06] mt-auto">
+                            <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-1.5">
+                                <BookOpen size={11} className="text-zinc-600" />
+                                <span className="text-[11px] text-zinc-600">{wordCount} từ</span>
+                              </div>
+                            </div>
+                            <span className="flex items-center gap-1 text-[11px] font-semibold text-[#f5a623] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                              Luyện ngay <ArrowRight size={11} />
+                            </span>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               ))}
             </div>
-            <div className="absolute top-0 left-0 w-20 h-full bg-gradient-to-r from-[#09090b] to-transparent pointer-events-none z-10" />
-            <div className="absolute top-0 right-0 w-20 h-full bg-gradient-to-l from-[#09090b] to-transparent pointer-events-none z-10" />
+            <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-[#09090b] to-transparent pointer-events-none z-10" />
+            <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-[#09090b] to-transparent pointer-events-none z-10" />
           </div>
         </section>
       )}
@@ -789,32 +972,51 @@ const Home = () => {
       {/* ── CTA BANNER ──────────────────────────────────────────────────────── */}
       <section className="pb-24 px-6 max-w-6xl mx-auto">
         <ScrollReveal>
-          <div className="bg-[#111113] border border-white/[0.07] rounded-3xl p-12 lg:p-16 text-center relative overflow-hidden">
-            <div className="absolute top-0 left-1/4 right-1/4 h-px"
-              style={{ background: 'linear-gradient(90deg, transparent, rgba(245,166,35,0.3), transparent)' }} />
-            <div className="w-11 h-11 bg-[#f5a623] rounded-xl flex items-center justify-center text-black mx-auto mb-8">
-              <Mic size={22} />
-            </div>
-            <h2 className="text-3xl lg:text-5xl font-bold tracking-tight mb-5 leading-tight">
-              {t('home.readyToOwnMic')}{' '}
-              <span className="text-[#f5a623]">{t('home.theMic')}</span>
-            </h2>
-            <p className="text-zinc-400 text-[15px] max-w-lg mx-auto mb-10 leading-relaxed">
-              {t('home.ctaDesc')}
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <button
-                onClick={() => setIsContactModalOpen(true)}
-                className="px-7 py-3 rounded-xl bg-[#f5a623] text-black text-[14px] font-semibold hover:bg-[#e09520] transition-colors"
-              >
-                {t('home.sendMessage') || 'Liên hệ ngay'}
-              </button>
-              <Link
-                to="/m/voice/library"
-                className="px-7 py-3 rounded-xl border border-white/[0.1] text-zinc-300 text-[14px] font-medium hover:border-white/[0.18] hover:text-white transition-colors"
-              >
-                {t('home.startLearning')}
-              </Link>
+          <div className="relative bg-[#111113] border border-white/[0.08] rounded-3xl overflow-hidden">
+            {/* Top gold line */}
+            <div className="absolute top-0 inset-x-0 h-px"
+              style={{ background: 'linear-gradient(90deg, transparent 10%, rgba(245,166,35,0.45) 40%, rgba(245,166,35,0.45) 60%, transparent 90%)' }} />
+            {/* Subtle glow center */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-[#f5a623]/[0.04] rounded-full blur-[60px] pointer-events-none" />
+
+            <div className="relative z-10 px-10 py-16 lg:px-20 lg:py-20 flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+              {/* Left: icon + text */}
+              <div className="flex-1 text-center lg:text-left">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#f5a623] text-black mb-6 shadow-lg shadow-[#f5a623]/20">
+                  <Mic size={22} />
+                </div>
+                <h2 className="text-3xl lg:text-4xl font-bold tracking-tight leading-tight mb-4">
+                  {t('home.readyToOwnMic')}{' '}
+                  <span className="text-[#f5a623]">{t('home.theMic')}</span>
+                </h2>
+                <p className="text-zinc-400 text-[14px] leading-relaxed max-w-md mx-auto lg:mx-0">
+                  {t('home.ctaDesc')}
+                </p>
+              </div>
+
+              {/* Right: buttons + social proof */}
+              <div className="flex flex-col items-center lg:items-end gap-5 shrink-0">
+                <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                  <motion.button
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => setIsContactModalOpen(true)}
+                    className="flex items-center justify-center gap-2 px-7 py-3 rounded-xl bg-[#f5a623] text-black text-[14px] font-semibold hover:bg-[#e09520] transition-colors shadow-lg shadow-[#f5a623]/15 whitespace-nowrap"
+                  >
+                    {t('home.sendMessage') || 'Liên hệ ngay'}
+                  </motion.button>
+                  <Link
+                    to="/m/voice/library"
+                    className="flex items-center justify-center gap-2 px-7 py-3 rounded-xl border border-white/[0.1] text-zinc-300 text-[14px] font-medium hover:border-white/[0.2] hover:text-white transition-colors whitespace-nowrap"
+                  >
+                    {t('home.startLearning')} <ArrowRight size={14} />
+                  </Link>
+                </div>
+                {/* Social proof */}
+                <p className="text-[12px] text-zinc-600">
+                  Đã có <span className="text-zinc-400 font-medium">500+</span> MC tin dùng
+                </p>
+              </div>
             </div>
           </div>
         </ScrollReveal>
