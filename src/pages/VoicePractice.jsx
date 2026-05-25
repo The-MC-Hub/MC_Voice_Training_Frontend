@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -7,8 +7,10 @@ import {
     Zap, CheckCircle2, Award, TrendingUp, AlertCircle,
     Loader2, BookOpen, ArrowLeft, AudioLines, BarChart3,
     Clock, Sparkles, Info, Calendar, Video, Target, ListChecks, FileText,
-    AlignLeft, AlignCenter, AlignRight, Type, Minus, Plus, Moon, Sun, Gauge, ChevronDown, ChevronUp, Settings2
+    AlignLeft, AlignCenter, AlignRight, Type, Minus, Plus, Moon, Sun, Gauge, ChevronDown, ChevronUp, Settings2,
+    Camera, CameraOff, Volume2, VolumeX, Volume1, AlertTriangle, Wifi
 } from 'lucide-react';
+import { useAudioAnalyser } from '../hooks/useAudioAnalyser';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../store/useAuthStore';
@@ -121,9 +123,21 @@ const VoicePractice = () => {
         return () => cancelAnimationFrame(animId);
     }, [teleprompterRunning, teleprompterWpm, lesson]);
 
-    const mediaRecorderRef = useRef(null);
-    const chunksRef        = useRef([]);
-    const timerRef         = useRef(null);
+    const mediaRecorderRef  = useRef(null);
+    const chunksRef         = useRef([]);
+    const timerRef          = useRef(null);
+    const liveStreamRef     = useRef(null); // raw mic stream for analyser
+
+    // Camera state
+    const [cameraOn, setCameraOn]       = useState(false);
+    const [cameraStream, setCameraStream] = useState(null);
+    const videoRef = useRef(null);
+
+    // Audio analyser — only active while recording
+    const { bars, volumeLevel, audioStatus } = useAudioAnalyser(
+        recording ? liveStreamRef.current : null,
+        { barCount: 36, fftSize: 256 }
+    );
 
     const fetchHistory = async () => {
         if (!user?.id || !id) return;
@@ -164,6 +178,7 @@ const VoicePractice = () => {
         if (!user?.isPremium && totalPracticesCount >= 5) { setIsPremiumModalOpen(true); return; }
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            liveStreamRef.current = stream; // expose to analyser
             mediaRecorderRef.current = new MediaRecorder(stream);
             chunksRef.current = [];
             mediaRecorderRef.current.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data); };
@@ -172,6 +187,7 @@ const VoicePractice = () => {
                 setAudioBlob(blob);
                 setAudioUrl(URL.createObjectURL(blob));
                 stream.getTracks().forEach(t => t.stop());
+                liveStreamRef.current = null;
             };
             mediaRecorderRef.current.start();
             setRecording(true); setResult(null); setRecordingTime(0); setError(null);
@@ -215,6 +231,34 @@ const VoicePractice = () => {
     };
 
     const resetPractice = () => { setAudioBlob(null); setAudioUrl(null); setResult(null); setError(null); setRecordingTime(0); };
+
+    const toggleCamera = useCallback(async () => {
+        if (cameraOn) {
+            cameraStream?.getTracks().forEach(t => t.stop());
+            setCameraStream(null);
+            setCameraOn(false);
+        } else {
+            try {
+                const vs = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 640, height: 360 } });
+                setCameraStream(vs);
+                setCameraOn(true);
+            } catch {
+                setError('Không thể bật camera. Kiểm tra quyền truy cập.');
+            }
+        }
+    }, [cameraOn, cameraStream]);
+
+    // Attach camera stream to video element
+    useEffect(() => {
+        if (videoRef.current && cameraStream) {
+            videoRef.current.srcObject = cameraStream;
+        }
+    }, [cameraStream]);
+
+    // Cleanup camera on unmount
+    useEffect(() => () => {
+        cameraStream?.getTracks().forEach(t => t.stop());
+    }, [cameraStream]);
 
     // Derived metrics
     const scriptMarkdown = useMemo(() => lesson?.content?.replace(/^\[(.+?)\]\s*$/gm,"## $1").replace(/\n{3,}/g,"\n\n") || "", [lesson]);
@@ -470,30 +514,122 @@ const VoicePractice = () => {
                                             {recording ? t_vp('recordingInProgress') : analyzing ? t_vp('analyzingVoice') : t_vp('readyToRecord')}
                                         </span>
                                     </div>
-                                    {(recording || recordingTime > 0) && (
-                                        <span className="text-[12px] font-mono text-zinc-400">{formatTime(recordingTime)}</span>
-                                    )}
+                                    <div className="flex items-center gap-2">
+                                        {(recording || recordingTime > 0) && (
+                                            <span className="text-[12px] font-mono text-zinc-400">{formatTime(recordingTime)}</span>
+                                        )}
+                                        {/* Camera toggle */}
+                                        <button
+                                            onClick={toggleCamera}
+                                            title={cameraOn ? 'Tắt camera' : 'Bật camera (MC Mirror)'}
+                                            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium border transition-all ${
+                                                cameraOn
+                                                    ? 'bg-[#f5a623]/10 border-[#f5a623]/30 text-[#f5a623]'
+                                                    : 'border-white/[0.07] text-zinc-600 hover:text-zinc-300 hover:border-white/[0.14]'
+                                            }`}
+                                        >
+                                            {cameraOn ? <Camera size={12} /> : <CameraOff size={12} />}
+                                            <span className="hidden sm:inline">{cameraOn ? 'Camera bật' : 'Camera'}</span>
+                                        </button>
+                                    </div>
                                 </div>
 
+                                {/* Camera overlay — MC Mirror */}
+                                <AnimatePresence>
+                                    {cameraOn && (
+                                        <motion.div
+                                            initial={{ opacity: 0, scaleY: 0.85 }}
+                                            animate={{ opacity: 1, scaleY: 1 }}
+                                            exit={{ opacity: 0, scaleY: 0.85 }}
+                                            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                                            className="relative w-full bg-black overflow-hidden"
+                                            style={{ aspectRatio: '16/9' }}
+                                        >
+                                            <video
+                                                ref={videoRef}
+                                                autoPlay
+                                                muted
+                                                playsInline
+                                                className="w-full h-full object-cover"
+                                                style={{ transform: 'scaleX(-1)' }}
+                                            />
+                                            {/* Stage vignette */}
+                                            <div className="absolute inset-0 pointer-events-none"
+                                                style={{ background: 'radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%)' }} />
+                                            {/* Top-left badge */}
+                                            <div className="absolute top-3 left-3 flex items-center gap-1.5">
+                                                <span className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold border ${
+                                                    recording
+                                                        ? 'bg-red-500/20 border-red-500/40 text-red-400'
+                                                        : 'bg-black/60 border-white/10 text-zinc-400'
+                                                }`}>
+                                                    <span className={`w-1.5 h-1.5 rounded-full ${recording ? 'bg-red-500 animate-pulse' : 'bg-zinc-600'}`} />
+                                                    {recording ? 'REC' : 'CAM'}
+                                                </span>
+                                                {recording && (
+                                                    <span className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-black/60 border border-white/10 text-zinc-300">
+                                                        {formatTime(recordingTime)}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            {/* MC Live badge */}
+                                            <div className="absolute top-3 right-3">
+                                                <span className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#f5a623]/20 border border-[#f5a623]/30 text-[#f5a623]">
+                                                    🎙 MC Live
+                                                </span>
+                                            </div>
+                                            {/* Bottom: spotlight lines */}
+                                            <div className="absolute bottom-0 inset-x-0 h-16 pointer-events-none"
+                                                style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)' }} />
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+
                                 {/* Mic area */}
-                                <div className="flex flex-col items-center justify-center py-10 bg-[#0d0d0f]">
+                                <div className={`flex flex-col items-center justify-center py-8 transition-all duration-300 ${
+                                    recording
+                                        ? 'bg-[#0d0d0f] shadow-[inset_0_0_60px_rgba(239,68,68,0.04)]'
+                                        : 'bg-[#0d0d0f]'
+                                }`}>
+                                    {/* Recording gold border glow on outer container — handled via parent class */}
+
                                     {/* Animated mic ring */}
-                                    <div className="relative flex items-center justify-center mb-5">
+                                    <div className="relative flex items-center justify-center mb-4">
+                                        {/* VU ring — volume-responsive */}
+                                        {recording && (
+                                            <svg className="absolute" width="96" height="96" viewBox="0 0 96 96" style={{ transform: 'rotate(-90deg)' }}>
+                                                <circle cx="48" cy="48" r="44" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="3" />
+                                                <circle
+                                                    cx="48" cy="48" r="44"
+                                                    fill="none"
+                                                    strokeWidth="3"
+                                                    strokeLinecap="round"
+                                                    strokeDasharray={`${2 * Math.PI * 44}`}
+                                                    strokeDashoffset={`${2 * Math.PI * 44 * (1 - volumeLevel / 100)}`}
+                                                    stroke={
+                                                        volumeLevel > 85 ? '#ef4444'
+                                                        : volumeLevel > 60 ? '#f5a623'
+                                                        : volumeLevel > 15 ? '#10b981'
+                                                        : '#f59e0b'
+                                                    }
+                                                    style={{ transition: 'stroke-dashoffset 0.08s linear, stroke 0.2s' }}
+                                                />
+                                            </svg>
+                                        )}
                                         {/* Expanding rings when recording */}
                                         {recording && [0, 1, 2].map(i => (
                                             <span
                                                 key={i}
-                                                className="absolute rounded-full border border-red-500/25"
+                                                className="absolute rounded-full border border-red-500/20"
                                                 style={{
-                                                    width: `${80 + i * 28}px`,
-                                                    height: `${80 + i * 28}px`,
-                                                    animation: `ping-slow 1.6s ease-out infinite`,
-                                                    animationDelay: `${i * 0.4}s`,
+                                                    width: `${88 + i * 28}px`,
+                                                    height: `${88 + i * 28}px`,
+                                                    animation: `ping-slow 1.8s ease-out infinite`,
+                                                    animationDelay: `${i * 0.45}s`,
                                                     opacity: 0,
                                                 }}
                                             />
                                         ))}
-                                        {/* Analyzing pulse rings */}
                                         {analyzing && [0, 1].map(i => (
                                             <span
                                                 key={i}
@@ -509,9 +645,9 @@ const VoicePractice = () => {
                                         ))}
                                         <div className={`relative w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 ${
                                             recording
-                                                ? 'bg-red-500/20 border-2 border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.15)]'
+                                                ? 'bg-red-500/20 border-2 border-red-500/50 shadow-[0_0_24px_rgba(239,68,68,0.2)]'
                                                 : analyzing
-                                                    ? 'bg-[#f5a623]/10 border-2 border-[#f5a623]/40 shadow-[0_0_20px_rgba(245,166,35,0.12)]'
+                                                    ? 'bg-[#f5a623]/10 border-2 border-[#f5a623]/40 shadow-[0_0_20px_rgba(245,166,35,0.15)]'
                                                     : audioBlob
                                                         ? 'bg-emerald-500/10 border-2 border-emerald-500/30'
                                                         : 'bg-[#f5a623]/[0.06] border border-[#f5a623]/15'
@@ -524,48 +660,83 @@ const VoicePractice = () => {
                                         </div>
                                     </div>
 
-                                    {/* Audio waveform bars — show when recording */}
-                                    <div className="flex items-end justify-center gap-[3px] h-8 mb-4">
-                                        {[0.4, 0.7, 1.0, 0.85, 0.6, 0.9, 0.5, 0.75, 0.95, 0.65].map((base, i) => (
-                                            <div
-                                                key={i}
-                                                className="w-[3px] rounded-full"
-                                                style={{
-                                                    height: recording
-                                                        ? `${Math.round(base * 32)}px`
-                                                        : analyzing
-                                                            ? `${Math.round(base * 20)}px`
-                                                            : '4px',
-                                                    background: recording
-                                                        ? `rgba(239,68,68,${0.5 + base * 0.5})`
-                                                        : analyzing
-                                                            ? `rgba(245,166,35,${0.4 + base * 0.5})`
-                                                            : 'rgba(63,63,70,0.6)',
-                                                    animation: (recording || analyzing)
-                                                        ? `bar-wave ${0.6 + base * 0.5}s ease-in-out infinite alternate`
-                                                        : 'none',
-                                                    animationDelay: `${i * 0.07}s`,
-                                                    transition: 'height 0.3s ease, background 0.3s ease',
-                                                }}
-                                            />
-                                        ))}
+                                    {/* Real-time waveform bars from mic */}
+                                    <div className="flex items-end justify-center gap-[2px] h-10 mb-3 px-4 w-full max-w-[280px]">
+                                        {(recording ? bars : analyzing ? bars.map(() => Math.random() * 30 + 5) : new Array(36).fill(0)).map((val, i) => {
+                                            const h = recording
+                                                ? Math.max(2, Math.round(val * 0.36))   // 0–36px from live data
+                                                : analyzing
+                                                    ? Math.max(2, Math.round(val * 0.3))
+                                                    : 2;
+                                            const color = recording
+                                                ? (audioStatus === 'too_loud' ? `rgba(239,68,68,${0.4 + (val/100)*0.6})` : `rgba(245,166,35,${0.3 + (val/100)*0.7})`)
+                                                : analyzing
+                                                    ? `rgba(245,166,35,${0.2 + (val/100)*0.5})`
+                                                    : 'rgba(63,63,70,0.3)';
+                                            return (
+                                                <div
+                                                    key={i}
+                                                    className="rounded-full shrink-0"
+                                                    style={{
+                                                        width: '3px',
+                                                        height: `${h}px`,
+                                                        background: color,
+                                                        transition: recording ? 'height 0.05s linear' : 'height 0.3s ease',
+                                                    }}
+                                                />
+                                            );
+                                        })}
                                     </div>
 
-                                    <p className="text-[14px] font-semibold text-white mb-1">{t_vp('voiceAnalysis')}</p>
-                                    <p className="text-[12px] text-zinc-500">
+                                    <p className="text-[13px] font-semibold text-white mb-1">{t_vp('voiceAnalysis')}</p>
+                                    <p className="text-[11px] text-zinc-500 mb-3">
                                         {recording ? t_vp('recordingInProgress') : analyzing ? t_vp('analyzingVoice') : t_vp('readScript')}
                                     </p>
+
+                                    {/* Audio quality feedback — only during recording */}
+                                    <AnimatePresence>
+                                        {recording && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 6 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: 6 }}
+                                                transition={{ duration: 0.25 }}
+                                                className="w-full max-w-[280px] px-4"
+                                            >
+                                                {audioStatus === 'too_quiet' && (
+                                                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-500/[0.08] border border-amber-500/20 text-amber-400 text-[11px]">
+                                                        <Volume1 size={13} className="shrink-0" />
+                                                        <span>Âm lượng quá nhỏ — hãy nói to hơn</span>
+                                                    </div>
+                                                )}
+                                                {audioStatus === 'too_loud' && (
+                                                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-red-500/[0.08] border border-red-500/20 text-red-400 text-[11px]">
+                                                        <Volume2 size={13} className="shrink-0" />
+                                                        <span>Âm lượng quá lớn — ra xa mic hơn</span>
+                                                    </div>
+                                                )}
+                                                {audioStatus === 'noisy' && (
+                                                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-orange-500/[0.08] border border-orange-500/20 text-orange-400 text-[11px]">
+                                                        <AlertTriangle size={13} className="shrink-0" />
+                                                        <span>Phát hiện tiếng ồn — đến nơi yên tĩnh hơn</span>
+                                                    </div>
+                                                )}
+                                                {audioStatus === 'good' && (
+                                                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/[0.08] border border-emerald-500/20 text-emerald-400 text-[11px]">
+                                                        <CheckCircle2 size={13} className="shrink-0" />
+                                                        <span>Âm lượng tốt — {volumeLevel}%</span>
+                                                    </div>
+                                                )}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
 
                                 {/* CSS keyframes */}
                                 <style>{`
                                     @keyframes ping-slow {
-                                        0%   { transform: scale(1); opacity: 0.5; }
-                                        100% { transform: scale(1.4); opacity: 0; }
-                                    }
-                                    @keyframes bar-wave {
-                                        0%   { transform: scaleY(0.4); }
-                                        100% { transform: scaleY(1.1); }
+                                        0%   { transform: scale(1); opacity: 0.45; }
+                                        100% { transform: scale(1.5); opacity: 0; }
                                     }
                                 `}</style>
 
@@ -1054,31 +1225,36 @@ const VoicePractice = () => {
 
                             {/* Vocal dynamics */}
                             <div className="rounded-2xl border border-white/[0.07] bg-[#111113] p-5">
-                                <div className="flex items-center justify-between mb-5">
+                                <div className="flex items-center justify-between mb-4">
                                     <h3 className="text-[13px] font-semibold text-white">{t('voicePractice.vocalDynamics')}</h3>
-                                    <AudioLines size={16} className="text-blue-400" />
+                                    <AudioLines size={15} className="text-blue-400" />
                                 </div>
-                                <div className="space-y-4">
+                                <div className="space-y-2">
                                     {[
-                                        { label: t_vp('clarity'), value: accuracy, pct: accuracy, color: 'bg-[#f5a623]', desc: t_vp('clarityDesc') },
-                                        { label: t_vp('energy'), value: energy, pct: energy, color: 'bg-blue-500', desc: t_vp('energyDesc') },
-                                        { label: t_vp('pace'), value: pace, pct: pacePercent, color: 'bg-emerald-500', desc: t_vp('paceDesc'), unit: ' wpm' },
+                                        { label: t_vp('clarity'), value: accuracy, pct: accuracy, accent: '#f5a623', unit: '%', desc: t_vp('clarityDesc') },
+                                        { label: t_vp('energy'), value: energy, pct: energy, accent: '#3b82f6', unit: '%', desc: t_vp('energyDesc') },
+                                        { label: t_vp('pace'), value: pace, pct: pacePercent, accent: '#10b981', unit: ' wpm', desc: t_vp('paceDesc') },
                                     ].map((m) => (
-                                        <div key={m.label} className="group/m relative">
-                                            <div className="flex items-center justify-between text-[13px] mb-2">
-                                                <div className="flex items-center gap-1.5">
-                                                    <span className="text-zinc-300 font-medium">{m.label}</span>
-                                                    <div className="relative cursor-help">
-                                                        <Info size={12} className="text-zinc-600 hover:text-zinc-400 transition-colors" />
-                                                        <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-44 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-300 leading-relaxed opacity-0 group-hover/m:opacity-100 transition-opacity z-50 shadow-xl">
-                                                            {m.desc}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <span className="text-zinc-400 font-medium">{m.value.toFixed(1)}{m.unit || '%'}</span>
+                                        <div key={m.label} className="group/m flex items-center gap-3 py-2 border-b border-white/[0.04] last:border-0">
+                                            <span className="text-[12px] text-zinc-500 w-20 shrink-0">{m.label}</span>
+                                            <div className="flex-1 h-1 bg-white/[0.05] rounded-full overflow-hidden">
+                                                <motion.div
+                                                    className="h-full rounded-full"
+                                                    initial={{ width: 0 }}
+                                                    animate={{ width: result ? `${m.pct}%` : '0%' }}
+                                                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                                                    style={{ backgroundColor: m.accent }}
+                                                />
                                             </div>
-                                            <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden">
-                                                <div className={`h-full ${m.color} rounded-full transition-all duration-500`} style={{ width: `${m.pct}%` }} />
+                                            <span className="text-[12px] font-semibold text-white w-14 text-right tabular-nums shrink-0">
+                                                {result ? `${m.value.toFixed(0)}${m.unit}` : '—'}
+                                            </span>
+                                            {/* Tooltip */}
+                                            <div className="relative cursor-help shrink-0">
+                                                <Info size={11} className="text-zinc-700 group-hover/m:text-zinc-500 transition-colors" />
+                                                <div className="pointer-events-none absolute bottom-full right-0 mb-2 w-44 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-300 leading-relaxed opacity-0 group-hover/m:opacity-100 transition-opacity z-50 shadow-xl">
+                                                    {m.desc}
+                                                </div>
                                             </div>
                                         </div>
                                     ))}
@@ -1086,42 +1262,67 @@ const VoicePractice = () => {
                             </div>
 
                             {/* AI Analysis */}
-                            <div className={`rounded-2xl border p-5 transition-all ${result ? 'border-white/[0.07] bg-[#111113]' : 'border-dashed border-white/[0.05] bg-[#111113]/60 opacity-70'}`}>
-                                <div className="flex items-center gap-2 mb-5">
-                                    <Sparkles size={16} className={result ? 'text-[#f5a623]' : 'text-zinc-600'} />
+                            <div className={`rounded-2xl border transition-all ${result ? 'border-white/[0.07] bg-[#111113]' : 'border-dashed border-white/[0.05] bg-[#111113]/50'}`}>
+                                <div className="flex items-center gap-2 px-5 py-4 border-b border-white/[0.05]">
+                                    <Sparkles size={14} className={result ? 'text-[#f5a623]' : 'text-zinc-700'} />
                                     <h3 className="text-[13px] font-semibold text-white">{t_vp('aiAnalysis')}</h3>
+                                    {result && (
+                                        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                            Done
+                                        </span>
+                                    )}
                                 </div>
 
                                 {result ? (
-                                    <div className="space-y-5">
+                                    <div className="p-5 space-y-4">
+                                        {/* Markdown report — prose style */}
                                         {markdownReport && (
-                                            <div className="relative p-4 rounded-xl bg-[#09090b] border border-white/[0.06] overflow-hidden">
-                                                <div className="absolute top-0 left-0 w-0.5 h-full bg-[#f5a623]/40" />
-                                                <div className="pl-3 prose prose-invert prose-sm max-w-none prose-headings:text-[#f5a623] prose-strong:text-white text-zinc-300">
+                                            <div className="relative rounded-xl bg-[#09090b] border border-white/[0.05] overflow-hidden">
+                                                <div className="absolute top-0 left-0 w-[3px] h-full bg-gradient-to-b from-[#f5a623]/60 to-[#f5a623]/10" />
+                                                <div className="pl-5 pr-4 py-4 prose prose-invert prose-sm max-w-none
+                                                    prose-headings:text-[13px] prose-headings:font-semibold prose-headings:text-[#f5a623] prose-headings:mb-1 prose-headings:mt-3
+                                                    prose-p:text-[13px] prose-p:text-zinc-300 prose-p:leading-relaxed prose-p:my-1
+                                                    prose-strong:text-white prose-strong:font-semibold
+                                                    prose-li:text-[13px] prose-li:text-zinc-300
+                                                    prose-ul:my-1 prose-ol:my-1">
                                                     <TypewriterMarkdown content={markdownReport} />
                                                 </div>
                                             </div>
                                         )}
+
+                                        {/* Feedback items — clean rows */}
                                         {feedbackItems.length > 0 && (
                                             <div>
-                                                <p className="text-[11px] font-semibold text-blue-400 uppercase tracking-wider mb-2">{t_vp('feedbackBreakdown')}</p>
-                                                <div className="space-y-2">
-                                                    {feedbackItems.map((item,i) => (
-                                                        <div key={i} className="px-3 py-2.5 rounded-xl bg-blue-500/[0.06] border border-blue-500/15 text-[13px] text-zinc-300">
-                                                            • {item}
-                                                        </div>
+                                                <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider mb-2">{t_vp('feedbackBreakdown')}</p>
+                                                <div className="space-y-1">
+                                                    {feedbackItems.map((item, i) => (
+                                                        <motion.div
+                                                            key={i}
+                                                            initial={{ opacity: 0, x: -6 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            transition={{ duration: 0.25, delay: i * 0.05 }}
+                                                            className="flex items-start gap-2.5 py-2 border-b border-white/[0.04] last:border-0"
+                                                        >
+                                                            <span className="w-1 h-1 rounded-full bg-blue-400 mt-[6px] shrink-0" />
+                                                            <p className="text-[13px] text-zinc-300 leading-relaxed">{item}</p>
+                                                        </motion.div>
                                                     ))}
                                                 </div>
                                             </div>
                                         )}
+
+                                        {/* Expert tips — compact cards */}
                                         {expertTips.length > 0 && (
                                             <div>
-                                                <p className="text-[11px] font-semibold text-amber-400 uppercase tracking-wider mb-2">{t_vp('coachingTips')}</p>
+                                                <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider mb-2">{t_vp('coachingTips')}</p>
                                                 <div className="space-y-2">
-                                                    {expertTips.map((tip,i) => (
-                                                        <div key={i} className="px-3 py-2.5 rounded-xl bg-amber-500/[0.06] border border-amber-500/15">
-                                                            <p className="text-[10px] font-semibold text-amber-400 mb-1">{tip.label}</p>
-                                                            <p className="text-[13px] text-zinc-300">{tip.tip}</p>
+                                                    {expertTips.map((tip, i) => (
+                                                        <div key={i} className="flex gap-3 p-3 rounded-xl bg-[#f5a623]/[0.04] border border-[#f5a623]/10">
+                                                            <span className="text-[#f5a623] text-[16px] shrink-0 leading-none mt-0.5">✦</span>
+                                                            <div>
+                                                                {tip.label && <p className="text-[11px] font-semibold text-[#f5a623] mb-0.5">{tip.label}</p>}
+                                                                <p className="text-[12px] text-zinc-300 leading-relaxed">{tip.tip}</p>
+                                                            </div>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -1129,12 +1330,16 @@ const VoicePractice = () => {
                                         )}
                                     </div>
                                 ) : (
-                                    <div className="py-10 text-center">
-                                        <div className="w-12 h-12 rounded-full bg-white/[0.04] border border-white/[0.06] flex items-center justify-center mx-auto mb-3">
-                                            <Loader2 size={20} className={recording ? 'animate-spin text-[#f5a623]' : 'text-zinc-700'} />
+                                    <div className="py-12 text-center px-5">
+                                        <div className="w-10 h-10 rounded-full bg-white/[0.03] border border-white/[0.05] flex items-center justify-center mx-auto mb-3">
+                                            <Sparkles size={16} className={recording ? 'text-[#f5a623] animate-pulse' : 'text-zinc-800'} />
                                         </div>
-                                        <p className="text-[14px] font-medium text-zinc-500">{recording ? t_vp('aiListening') : t_vp('lockedAnalysis')}</p>
-                                        <p className="text-[12px] text-zinc-700 mt-1 max-w-[200px] mx-auto leading-relaxed">{t_vp('recordToUnlock')}</p>
+                                        <p className="text-[13px] font-medium text-zinc-500 mb-1">
+                                            {recording ? t_vp('aiListening') : t_vp('lockedAnalysis')}
+                                        </p>
+                                        <p className="text-[11px] text-zinc-700 leading-relaxed max-w-[180px] mx-auto">
+                                            {t_vp('recordToUnlock')}
+                                        </p>
                                     </div>
                                 )}
                             </div>

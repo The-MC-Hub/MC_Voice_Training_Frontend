@@ -124,7 +124,7 @@ const Navbar = () => {
           {/* Right Actions */}
           <div className="flex items-center gap-2 shrink-0">
             {!isAuthenticated ? (
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 <Link to="/login" className="text-[13px] font-medium text-zinc-400 hover:text-white transition-colors">
                   {t('navbar.login')}
                 </Link>
@@ -137,58 +137,92 @@ const Navbar = () => {
               </div>
             ) : (
               <>
-                {/* User Dropdown */}
+                {/* Notification bell */}
                 <Dropdown placement="bottom-end">
                   <DropdownTrigger>
-                    <div className="flex items-center gap-2 px-2 py-1 rounded-md hover:bg-white/6 transition-colors cursor-pointer">
-                      <Avatar className="w-7 h-7 ring-1 ring-white/10">
-                        <AvatarImage src={user?.avatar || "https://i.pravatar.cc/150"} />
-                        <AvatarFallback className="text-[11px]">{user?.name?.charAt(0) || "U"}</AvatarFallback>
-                      </Avatar>
-                      <span className="hidden lg:block text-[13px] font-medium text-zinc-300">
-                        {user?.name?.split(' ')[0]}
-                      </span>
+                    <div className="relative w-8 h-8 flex items-center justify-center rounded-lg text-zinc-500 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer">
+                      <Bell size={16} />
+                      {unreadCount > 0 && (
+                        <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-[#f5a623]" />
+                      )}
                     </div>
                   </DropdownTrigger>
                   <DropdownPopover>
                     <DropdownMenu
-                      aria-label="User Actions"
-                      className="bg-[#111113] border border-white/[0.08] p-1 rounded-xl shadow-xl min-w-[160px]"
+                      aria-label="Notifications"
+                      className="bg-[#111113] border border-white/[0.08] p-1 rounded-xl shadow-xl w-72"
                     >
-                      <DropdownItem
-                        key="settings"
-                        className="px-3 py-2 rounded-lg hover:bg-white/[0.06] text-zinc-300 text-[13px]"
-                        onPress={() => navigate("/m/settings?tab=profile")}
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <User size={15} className="text-zinc-500" /> {t('navbar.profile')}
+                      <DropdownItem key="notif-header" className="px-3 py-2 cursor-default" isReadOnly>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[12px] font-semibold text-white">Thông báo</span>
+                          {unreadCount > 0 && (
+                            <button onClick={handleMarkAllRead} className="text-[11px] text-zinc-500 hover:text-[#f5a623] transition-colors">
+                              Đọc tất cả
+                            </button>
+                          )}
                         </div>
                       </DropdownItem>
-                      <DropdownItem
-                        key="payment"
-                        className="px-3 py-2 rounded-lg hover:bg-white/[0.06] text-zinc-300 text-[13px]"
-                        onPress={() => navigate("/m/settings?tab=payment")}
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <CreditCard size={15} className="text-zinc-500" /> {t('navbar.orders')}
-                        </div>
-                      </DropdownItem>
-                      <DropdownItem
-                        key="logout"
-                        className="px-3 py-2 rounded-lg hover:bg-red-500/10 text-red-400 text-[13px]"
-                        onPress={handleLogout}
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <LogOut size={15} /> {t('navbar.logout')}
-                        </div>
-                      </DropdownItem>
+                      {notifications.length === 0 ? (
+                        <DropdownItem key="empty" className="px-3 py-4 text-center" isReadOnly>
+                          <p className="text-[12px] text-zinc-600">Không có thông báo</p>
+                        </DropdownItem>
+                      ) : (
+                        notifications.slice(0, 5).map((notif) => (
+                          <DropdownItem
+                            key={notif._id}
+                            className={`px-3 py-2 rounded-lg text-[12px] cursor-pointer ${notif.isRead ? 'text-zinc-500' : 'text-zinc-200'} hover:bg-white/[0.04]`}
+                            onPress={() => handleNotificationClick(notif)}
+                          >
+                            <div className="flex items-start gap-2">
+                              {!notif.isRead && <span className="w-1.5 h-1.5 rounded-full bg-[#f5a623] mt-1.5 shrink-0" />}
+                              <p className="leading-relaxed line-clamp-2">{notif.message || notif.title}</p>
+                            </div>
+                          </DropdownItem>
+                        ))
+                      )}
+                      {notifications.length > 5 && (
+                        <DropdownItem key="all" className="px-3 py-2 text-center" onPress={() => navigate('/m/notifications')}>
+                          <span className="text-[12px] text-zinc-500 hover:text-white">Xem tất cả ({notifications.length})</span>
+                        </DropdownItem>
+                      )}
                     </DropdownMenu>
                   </DropdownPopover>
                 </Dropdown>
+
+                {/* Avatar + Settings gear */}
+                <div className="flex items-center gap-1">
+                  {user?.avatar ? (
+                    <div className="w-7 h-7 rounded-full bg-zinc-800 ring-1 ring-white/10 flex items-center justify-center shrink-0 text-base leading-none">
+                      {user.avatar.startsWith('http')
+                        ? <img src={user.avatar} alt="avatar" className="w-full h-full object-cover rounded-full" />
+                        : user.avatar
+                      }
+                    </div>
+                  ) : (
+                    <div className="w-7 h-7 rounded-full bg-zinc-800 ring-1 ring-white/10 flex items-center justify-center shrink-0">
+                      <User size={14} className="text-zinc-400" />
+                    </div>
+                  )}
+                  <span className="hidden lg:block text-[13px] font-medium text-zinc-300 mx-1">
+                    {user?.name?.split(' ')[0]}
+                  </span>
+                  <Link
+                    to="/m/settings"
+                    className="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-500 hover:text-white hover:bg-white/[0.06] transition-colors"
+                  >
+                    <Settings size={16} />
+                  </Link>
+                </div>
               </>
             )}
 
-          
+            {/* Mobile hamburger */}
+            <button
+              onClick={() => setIsMobileMenuOpen(v => !v)}
+              className="flex md:hidden w-8 h-8 items-center justify-center rounded-lg text-zinc-500 hover:text-white hover:bg-white/[0.06] transition-colors"
+            >
+              {isMobileMenuOpen ? <X size={16} /> : <Menu size={16} />}
+            </button>
           </div>
         </div>
       </nav>

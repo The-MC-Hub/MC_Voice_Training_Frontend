@@ -7,6 +7,7 @@ import {
   ChevronRight, GraduationCap
 } from 'lucide-react';
 import { academyService } from '../services/academyService';
+import PageBanner from '../components/ui/PageBanner';
 
 const DIFFICULTY_MAP = {
   BEGINNER:     { color: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/[0.06]' },
@@ -156,25 +157,16 @@ const CoursesList = () => {
 
   return (
     <div className="max-w-6xl mx-auto pb-16 space-y-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-6 border-b border-white/[0.07]">
-        <div>
-          <p className="text-[11px] font-medium text-[#f5a623] uppercase tracking-wider mb-1">MC Academy</p>
-          <h1 className="text-2xl font-bold text-white tracking-tight">{t('courses.pageTitle')}</h1>
-          <p className="text-zinc-500 text-[13px] mt-1 max-w-lg">{t('courses.subtitle')}</p>
-        </div>
-        <div className="flex items-center gap-5 bg-[#111113] border border-white/[0.07] rounded-xl px-5 py-3">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-white">{courses.length}</div>
-            <div className="text-[10px] text-zinc-600 uppercase tracking-wider mt-0.5">{t('courses.coursesCount')}</div>
-          </div>
-          <div className="w-px h-8 bg-white/[0.07]" />
-          <div className="text-center">
-            <div className="text-2xl font-bold text-[#f5a623]">{courses.filter(c => c.myProgress?.enrollmentId).length}</div>
-            <div className="text-[10px] text-zinc-600 uppercase tracking-wider mt-0.5">{t('courses.joinedCount')}</div>
-          </div>
-        </div>
-      </div>
+      <PageBanner
+        icon={<GraduationCap size={22} />}
+        eyebrow="MC Academy"
+        title={t('courses.pageTitle')}
+        description={t('courses.subtitle')}
+        stats={[
+          { value: courses.length, label: t('courses.coursesCount') || 'Khoá học' },
+          { value: courses.filter(c => c.myProgress?.enrollmentId).length, label: t('courses.joinedCount') || 'Đã tham gia' },
+        ]}
+      />
 
       {/* Filters */}
       <div className="flex items-center gap-2 flex-wrap">

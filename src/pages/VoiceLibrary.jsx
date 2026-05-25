@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useApi } from "../hooks/useApi";
 import { fetchLessons, fetchPracticeHistory } from "../controllers/voiceController";
 import { useAuth } from "../hooks/useAuth";
+import PageBanner from '../components/ui/PageBanner';
 
 const VoiceLibrary = () => {
   const { t } = useTranslation();
@@ -85,27 +86,17 @@ const VoiceLibrary = () => {
   return (
     <div className="max-w-6xl mx-auto pb-16">
 
-      {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8 pb-6 border-b border-white/[0.07]">
-        <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight mb-1.5">
-            {t('voiceLibrary.titlePrefix')}{' '}
-            <span className="text-gold">{t('voiceLibrary.titleSuffix')}</span>
-          </h1>
-          <p className="text-zinc-500 text-[14px] max-w-lg leading-relaxed">{t('voiceLibrary.description')}</p>
-        </div>
-        <div className="flex items-center gap-6 shrink-0">
-          <div className="text-center">
-            <p className="text-xl font-bold text-white">{lessons.length}</p>
-            <p className="text-[11px] text-zinc-600 uppercase tracking-wider mt-0.5">{t('voiceLibrary.lessons')}</p>
-          </div>
-          <div className="w-px h-8 bg-white/[0.07]" />
-          <div className="text-center">
-            <p className="text-xl font-bold text-white">{history.length}</p>
-            <p className="text-[11px] text-zinc-600 uppercase tracking-wider mt-0.5">{t('voiceLibrary.practices')}</p>
-          </div>
-        </div>
-      </div>
+      <PageBanner
+        icon={<Mic size={22} />}
+        eyebrow="Thư viện kịch bản"
+        title={t('voiceLibrary.titlePrefix')}
+        highlight={t('voiceLibrary.titleSuffix')}
+        description={t('voiceLibrary.description')}
+        stats={[
+          { value: lessons.length, label: t('voiceLibrary.lessons') },
+          { value: history.length, label: t('voiceLibrary.practices') },
+        ]}
+      />
 
       <div className="flex flex-col lg:flex-row gap-6">
 

@@ -8,6 +8,7 @@ import {
     BookOpen, Flag, Award, Play, Zap, TrendingUp, Star,
     CheckCircle2, User, Lock, ArrowRight, Sparkles, Trophy, Target
 } from 'lucide-react';
+import PageBanner from '../components/ui/PageBanner';
 
 const Learning = () => {
     const { t, i18n } = useTranslation();
@@ -52,25 +53,17 @@ const Learning = () => {
 
     return (
         <div className="max-w-6xl mx-auto pb-16 space-y-8">
-            {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-6 border-b border-white/[0.07]">
-                <div>
-                    <p className="text-[11px] font-medium text-[#f5a623] uppercase tracking-wider mb-1">{t('learning.officialAcademy')}</p>
-                    <h1 className="text-2xl font-bold text-white tracking-tight">
-                        {t('learning.title').split(' ')[0]} <span className="text-[#f5a623]">{t('learning.title').split(' ').slice(1).join(' ')}</span>
-                    </h1>
-                    <p className="text-zinc-500 text-[13px] mt-1 max-w-lg">{t('learning.description')}</p>
-                </div>
-                <div className="bg-[#111113] border border-white/[0.07] rounded-xl px-5 py-4 flex items-center gap-4 shrink-0">
-                    <div className="w-10 h-10 bg-[#f5a623] rounded-xl flex items-center justify-center">
-                        <Award size={20} className="text-black" />
-                    </div>
-                    <div>
-                        <p className="text-[10px] text-zinc-600 uppercase tracking-wider">{t('learning.currentTier')}</p>
-                        <p className="text-[15px] font-bold text-white">Associate</p>
-                    </div>
-                </div>
-            </div>
+            <PageBanner
+                icon={<BookOpen size={22} />}
+                eyebrow={t('learning.officialAcademy')}
+                title={t('learning.title').split(' ')[0]}
+                highlight={t('learning.title').split(' ').slice(1).join(' ')}
+                description={t('learning.description')}
+                stats={[
+                    { value: roadmapSteps.length, label: 'Khóa học' },
+                    { value: roadmapSteps.filter(s => s.status === 'Completed').length, label: 'Hoàn thành' },
+                ]}
+            />
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* Main Roadmap */}
@@ -185,54 +178,71 @@ const Learning = () => {
                 {/* Sidebar */}
                 <div className="lg:col-span-4 space-y-5">
                     {/* Resources */}
-                    <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6">
-                        <h3 className="text-[14px] font-semibold text-white flex items-center gap-2 mb-5">
-                            <BookOpen size={15} className="text-[#f5a623]" />
-                            {i18n.language === 'vi' ? (
-                                <>Tài liệu <span className="text-[#f5a623]">Đề xuất</span></>
-                            ) : (
-                                <>{t('learning.resources').substring(0, t('learning.resources').lastIndexOf(' '))} <span className="text-[#f5a623]">{t('learning.resources').substring(t('learning.resources').lastIndexOf(' ') + 1)}</span></>
-                            )}
-                        </h3>
+                    <div className="bg-[#111113] border border-white/[0.08] rounded-2xl overflow-hidden">
+                        <div className="px-5 pt-5 pb-4 border-b border-white/[0.06] flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-lg bg-[#f5a623]/10 border border-[#f5a623]/20 flex items-center justify-center">
+                                <BookOpen size={13} className="text-[#f5a623]" />
+                            </div>
+                            <h3 className="text-[13px] font-semibold text-white">
+                                {i18n.language === 'vi' ? <>Tài liệu <span className="text-[#f5a623]">Đề xuất</span></> : <>{t('learning.resources')}</>}
+                            </h3>
+                        </div>
 
-                        <div className="space-y-2">
+                        <div className="p-3 space-y-1">
                             {resources.map((res, i) => (
-                                <div key={i} className="group flex items-center gap-3 p-3 rounded-xl hover:bg-[#09090b] border border-transparent hover:border-white/[0.06] transition-colors cursor-pointer">
-                                    <div className="w-9 h-9 rounded-xl bg-[#09090b] border border-white/[0.06] flex items-center justify-center text-[#f5a623] group-hover:bg-[#f5a623] group-hover:text-black transition-colors shrink-0">
+                                <motion.div
+                                    key={i}
+                                    whileHover={{ x: 2 }}
+                                    transition={{ duration: 0.15 }}
+                                    onClick={() => navigate(isAuthenticated ? '/m/voice/library' : '/login')}
+                                    className="group flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/[0.06] transition-all cursor-pointer"
+                                >
+                                    <div className="w-9 h-9 rounded-xl bg-[#09090b] border border-white/[0.08] flex items-center justify-center text-[#f5a623] group-hover:bg-[#f5a623] group-hover:border-[#f5a623] group-hover:text-black transition-all shrink-0">
                                         {res.icon}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h4 className="text-[13px] font-medium text-white group-hover:text-[#f5a623] transition-colors truncate">{res.title}</h4>
-                                        <div className="flex items-center gap-2 mt-0.5">
+                                        <h4 className="text-[13px] font-medium text-white group-hover:text-[#f5a623] transition-colors leading-tight">{res.title}</h4>
+                                        <div className="flex items-center gap-1.5 mt-0.5">
                                             <span className="text-[11px] text-zinc-600">{res.type}</span>
-                                            <span className="w-1 h-1 rounded-full bg-zinc-700" />
-                                            <span className="text-[11px] text-[#f5a623]/60">{res.time}</span>
+                                            <span className="w-0.5 h-0.5 rounded-full bg-zinc-700" />
+                                            <span className="text-[11px] text-zinc-600">{res.time}</span>
                                         </div>
                                     </div>
-                                </div>
+                                    <ArrowRight size={13} className="text-zinc-700 group-hover:text-[#f5a623] transition-colors shrink-0" />
+                                </motion.div>
                             ))}
                         </div>
 
-                        <button className="w-full mt-4 py-2.5 rounded-xl border border-white/[0.07] hover:border-[#f5a623]/30 text-zinc-500 hover:text-white text-[12px] font-medium flex items-center justify-center gap-2 transition-colors">
-                            {t('learning.browseLibrary')} <ArrowRight size={13} />
-                        </button>
+                        <div className="px-3 pb-3">
+                            <button
+                                onClick={() => navigate(isAuthenticated ? '/m/voice/library' : '/login')}
+                                className="w-full py-2.5 rounded-xl border border-white/[0.07] hover:border-[#f5a623]/25 hover:bg-[#f5a623]/[0.04] text-zinc-500 hover:text-[#f5a623] text-[12px] font-medium flex items-center justify-center gap-2 transition-all"
+                            >
+                                {t('learning.browseLibrary')} <ArrowRight size={12} />
+                            </button>
+                        </div>
                     </div>
 
                     {/* Mentorship */}
-                    <div className="bg-[#f5a623] rounded-2xl p-6 relative overflow-hidden">
-                        <div className="w-12 h-12 bg-black/[0.12] rounded-xl flex items-center justify-center mb-4">
-                            <Star size={24} fill="black" className="text-black" />
+                    <div className="relative bg-[#111113] border border-[#f5a623]/20 rounded-2xl overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#f5a623]/[0.07] via-transparent to-transparent pointer-events-none" />
+                        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#f5a623]/50 to-transparent" />
+                        <div className="relative p-5">
+                            <div className="w-10 h-10 bg-[#f5a623]/15 border border-[#f5a623]/25 rounded-xl flex items-center justify-center mb-4">
+                                <Star size={18} className="text-[#f5a623]" fill="currentColor" />
+                            </div>
+                            <p className="text-[10px] font-semibold text-[#f5a623] uppercase tracking-widest mb-1">Premium</p>
+                            <h4 className="text-[16px] font-bold text-white mb-2 tracking-tight leading-snug">
+                                {t('learning.mentorship')}
+                            </h4>
+                            <p className="text-zinc-500 text-[12px] leading-relaxed mb-5">{t('learning.mentorshipDesc')}</p>
+                            <button
+                                onClick={() => navigate(isAuthenticated ? '/m/settings' : '/login')}
+                                className="w-full py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors shadow-lg shadow-[#f5a623]/15"
+                            >
+                                {t('learning.applyCoaching')}
+                            </button>
                         </div>
-                        <h4 className="text-[17px] font-bold text-black mb-2 tracking-tight">
-                            {t('learning.mentorship').split(' ')[0]} <span className="text-black/70">{t('learning.mentorship').split(' ').slice(1).join(' ')}</span>
-                        </h4>
-                        <p className="text-black/70 text-[13px] leading-relaxed mb-5">{t('learning.mentorshipDesc')}</p>
-                        <button
-                            onClick={() => navigate(isAuthenticated ? '#' : '/login')}
-                            className="w-full py-2.5 rounded-xl bg-black text-white text-[13px] font-semibold hover:bg-black/80 transition-colors"
-                        >
-                            {t('learning.applyCoaching')}
-                        </button>
                     </div>
                 </div>
             </div>
