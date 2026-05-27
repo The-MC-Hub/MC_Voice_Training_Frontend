@@ -221,7 +221,6 @@ const Settings = () => {
     name: user?.name || "",
     email: user?.email || "",
     phoneNumber: user?.phoneNumber || "",
-    avatar: user?.avatar || "",
   });
 
   const [securityData, setSecurityData] = useState({
@@ -448,7 +447,6 @@ const Settings = () => {
   const previewMC = {
     ...user,
     name: profileData.name || user?.name || "MC Name",
-    avatar: profileData.avatar || user?.avatar || "/placeholder.jpg",
     verified: user?.isVerified,
     location: mcProfileData.regions || "Vietnam",
     specialties: [],
@@ -521,27 +519,6 @@ const Settings = () => {
               </div>
 
               <div className="bg-[#111113] border border-white/10 rounded-2xl shadow-sm overflow-hidden">
-                {/* Avatar section */}
-                <div className="p-6 border-b border-white/[0.07]">
-                  <label className={labelCls + " mb-3 block"}>Ảnh đại diện</label>
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-14 h-14 rounded-xl bg-[#09090b] border border-white/10 flex items-center justify-center text-[2rem] leading-none shrink-0">
-                      {profileData.avatar || "🙂"}
-                    </div>
-                    <div>
-                      <p className="text-[13px] font-medium text-white leading-snug">
-                        {profileData.avatar ? "Đã chọn" : "Chưa chọn"}
-                      </p>
-                      <p className="text-[11px] text-zinc-500 mt-0.5">Chọn emoji bên dưới</p>
-                    </div>
-                  </div>
-                  <EmojiAvatarPicker
-                    selected={profileData.avatar}
-                    onSelect={(emoji) => setProfileData(prev => ({ ...prev, avatar: emoji }))}
-                    compact
-                  />
-                </div>
-
                 {/* Fields section */}
                 <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-5">
                   <div className="space-y-1.5">

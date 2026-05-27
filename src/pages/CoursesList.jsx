@@ -134,9 +134,8 @@ const CoursesList = () => {
     academyService.getAllCourses()
       .then(res => {
         const data = Array.isArray(res.data?.data) ? res.data.data : [];
-        const filtered = data.filter(c => c.learningPathType !== 'MILESTONE_PATH');
-        setCourses(filtered);
-        setCourseTypes([...new Set(filtered.map(c => c.type).filter(Boolean))]);
+        setCourses(data);
+        setCourseTypes([...new Set(data.map(c => c.type).filter(Boolean))]);
       })
       .catch(err => console.error('Failed to fetch courses:', err))
       .finally(() => setLoading(false));

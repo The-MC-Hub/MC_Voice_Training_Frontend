@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useTheme } from '../../contexts/ThemeContext';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
   Radar, RadarChart, PolarGrid, PolarAngleAxis,
@@ -17,20 +18,20 @@ const fadeUp = {
   transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
 };
 
-const cleanTooltipStyle = {
-  backgroundColor: "#18181b",
-  border: "1px solid rgba(255,255,255,0.08)",
-  borderRadius: "12px",
-  fontSize: "12px",
-  color: "#fafafa",
-  boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
-};
-
 const OverviewTab = ({
   dashboard, emptyMonthlyData, practiceHistory,
   timeFrame, setTimeFrame, skillsData, categoryStats, accuracyDistribution
 }) => {
   const { t, i18n: i18nInstance } = useTranslation();
+  const { theme } = useTheme();
+  const cleanTooltipStyle = {
+    backgroundColor: theme === 'light' ? '#ffffff' : '#18181b',
+    border: `1px solid ${theme === 'light' ? 'rgba(0,0,0,0.10)' : 'rgba(255,255,255,0.08)'}`,
+    borderRadius: '12px',
+    fontSize: '12px',
+    color: theme === 'light' ? '#111113' : '#fafafa',
+    boxShadow: theme === 'light' ? '0 8px 32px rgba(0,0,0,0.08)' : '0 8px 32px rgba(0,0,0,0.4)',
+  };
   const n = practiceHistory?.length || 0;
   const avgAcc = n ? (practiceHistory.reduce((a, p) => a + (p.accuracy_score || 0), 0) / n).toFixed(1) : 0;
   const avgRhy = n ? (practiceHistory.reduce((a, p) => a + (p.rhythm_score || 0), 0) / n).toFixed(1) : 0;

@@ -92,23 +92,24 @@ const SpotlightHero = () => {
           filter: 'blur(1px)',
         }}
       />
-      {/* Sound wave rings — subtle pulse behind hero */}
-      {[1, 2, 3].map(i => (
+      {/* Sound wave rings */}
+      {[1, 2, 3, 4].map(i => (
         <div
           key={i}
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#f5a623]/[0.035] pointer-events-none"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
           style={{
-            width: `${300 + i * 200}px`,
-            height: `${300 + i * 200}px`,
-            animation: `stage-pulse ${2.5 + i * 0.6}s ease-in-out infinite`,
-            animationDelay: `${i * 0.5}s`,
+            width: `${280 + i * 220}px`,
+            height: `${280 + i * 220}px`,
+            border: `1px solid rgba(245,166,35,${0.18 - i * 0.03})`,
+            animation: `stage-pulse ${2.8 + i * 0.5}s ease-in-out infinite`,
+            animationDelay: `${i * 0.45}s`,
           }}
         />
       ))}
       <style>{`
         @keyframes stage-pulse {
-          0%, 100% { opacity: 0.3; transform: translate(-50%,-50%) scale(1); }
-          50%       { opacity: 0.7; transform: translate(-50%,-50%) scale(1.04); }
+          0%, 100% { opacity: 0.5; transform: translate(-50%,-50%) scale(1); }
+          50%       { opacity: 1;   transform: translate(-50%,-50%) scale(1.05); }
         }
       `}</style>
     </div>
@@ -659,10 +660,10 @@ const Home = () => {
             <ScrollReveal key={i} delay={i * 0.12} direction="up">
               <motion.div
                 whileHover={{ y: -6, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
-                className="relative group p-8 bg-[#111113] rounded-2xl overflow-hidden flex flex-col h-full cursor-default"
+                className="relative group p-8 bg-[#111113] rounded-2xl overflow-hidden flex flex-col h-full cursor-default transition-colors duration-300"
                 style={{ border: '1px solid rgba(255,255,255,0.07)' }}
-                onHoverStart={e => { e.currentTarget.style.borderColor = f.accentColor + '33'; }}
-                onHoverEnd={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = f.accentColor + '33'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; }}
               >
                 {/* Top accent line */}
                 <div className="absolute top-0 inset-x-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
