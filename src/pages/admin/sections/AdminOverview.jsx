@@ -1,4 +1,5 @@
 import React from "react";
+import { useTheme } from '../../../contexts/ThemeContext';
 import { Activity, BarChart3 } from "lucide-react";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -6,6 +7,11 @@ import {
 } from 'recharts';
 
 const AdminOverview = ({ stats, revenueData, userData, totalUsers }) => {
+  const { theme } = useTheme();
+  const tooltipBg = theme === 'light' ? '#ffffff' : '#111113';
+  const tooltipBorder = theme === 'light' ? 'rgba(0,0,0,0.10)' : 'rgba(255,255,255,0.07)';
+  const tooltipText = theme === 'light' ? '#111113' : '#fafafa';
+  const tooltipLabel = theme === 'light' ? '#52525b' : '#a1a1aa';
   return (
     <div className="space-y-6 w-full">
       {/* Metrics */}
@@ -49,9 +55,9 @@ const AdminOverview = ({ stats, revenueData, userData, totalUsers }) => {
                 <YAxis stroke="#52525b" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `${v.toLocaleString("vi-VN")}đ`} />
                 <Tooltip
                   cursor={{ stroke: '#3B82F6', strokeWidth: 1, strokeDasharray: '3 3' }}
-                  contentStyle={{ backgroundColor: '#111113', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '10px', padding: '0.625rem 0.875rem' }}
-                  labelStyle={{ color: '#a1a1aa', fontSize: 11 }}
-                  itemStyle={{ color: '#fafafa', fontSize: 12 }}
+                  contentStyle={{ backgroundColor: tooltipBg, border: `1px solid ${tooltipBorder}`, borderRadius: '10px', padding: '0.625rem 0.875rem' }}
+                  labelStyle={{ color: tooltipLabel, fontSize: 11 }}
+                  itemStyle={{ color: tooltipText, fontSize: 12 }}
                 />
                 <Area type="monotone" dataKey="revenue" stroke="#3B82F6" fillOpacity={1} fill="url(#colorRev)" strokeWidth={1.5} />
               </AreaChart>

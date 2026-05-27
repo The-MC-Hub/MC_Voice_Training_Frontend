@@ -57,7 +57,7 @@ const VoicePractice = () => {
     // Script reader controls
     const [scriptFontSize, setScriptFontSize]     = useState(24);     // px, range 16-48
     const [scriptAlign, setScriptAlign]           = useState('center'); // 'left' | 'center' | 'right'
-    const [scriptFont, setScriptFont]             = useState('serif'); // 'serif' | 'sans' | 'mono'
+    const [scriptFont, setScriptFont]             = useState('sans'); // 'serif' | 'sans' | 'mono'
     const [scriptBg, setScriptBg]                 = useState('cream'); // 'cream' | 'dark' | 'white' | 'sepia'
     const [teleprompter, setTeleprompter]         = useState(false);
     const [teleprompterWpm, setTeleprompterWpm]   = useState(130);
@@ -534,16 +534,25 @@ const VoicePractice = () => {
                                     </div>
                                 </div>
 
-                                {/* Camera overlay — MC Mirror */}
+                                {/* Camera PiP — fixed bottom-right corner */}
                                 <AnimatePresence>
                                     {cameraOn && (
                                         <motion.div
-                                            initial={{ opacity: 0, scaleY: 0.85 }}
-                                            animate={{ opacity: 1, scaleY: 1 }}
-                                            exit={{ opacity: 0, scaleY: 0.85 }}
-                                            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                                            className="relative w-full bg-black overflow-hidden"
-                                            style={{ aspectRatio: '16/9' }}
+                                            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                                            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+                                            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                                            className="fixed z-50 overflow-hidden"
+                                            style={{
+                                                bottom: '1.5rem',
+                                                right: '1.5rem',
+                                                width: '220px',
+                                                aspectRatio: '4/3',
+                                                borderRadius: '12px',
+                                                border: '1px solid rgba(255,255,255,0.12)',
+                                                boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
+                                                background: '#000',
+                                            }}
                                         >
                                             <video
                                                 ref={videoRef}
@@ -553,34 +562,31 @@ const VoicePractice = () => {
                                                 className="w-full h-full object-cover"
                                                 style={{ transform: 'scaleX(-1)' }}
                                             />
-                                            {/* Stage vignette */}
+                                            {/* Vignette */}
                                             <div className="absolute inset-0 pointer-events-none"
-                                                style={{ background: 'radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%)' }} />
-                                            {/* Top-left badge */}
-                                            <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                                                <span className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold border ${
+                                                style={{ background: 'radial-gradient(ellipse 80% 80% at 50% 50%, transparent 50%, rgba(0,0,0,0.4) 100%)' }} />
+                                            {/* Status badge */}
+                                            <div className="absolute top-2 left-2 flex items-center gap-1">
+                                                <span className={`flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold border ${
                                                     recording
                                                         ? 'bg-red-500/20 border-red-500/40 text-red-400'
                                                         : 'bg-black/60 border-white/10 text-zinc-400'
                                                 }`}>
-                                                    <span className={`w-1.5 h-1.5 rounded-full ${recording ? 'bg-red-500 animate-pulse' : 'bg-zinc-600'}`} />
+                                                    <span className={`w-1 h-1 rounded-full ${recording ? 'bg-red-500 animate-pulse' : 'bg-zinc-600'}`} />
                                                     {recording ? 'REC' : 'CAM'}
                                                 </span>
                                                 {recording && (
-                                                    <span className="px-2 py-0.5 rounded-md text-[10px] font-mono bg-black/60 border border-white/10 text-zinc-300">
+                                                    <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-black/60 border border-white/10 text-zinc-300">
                                                         {formatTime(recordingTime)}
                                                     </span>
                                                 )}
                                             </div>
                                             {/* MC Live badge */}
-                                            <div className="absolute top-3 right-3">
-                                                <span className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#f5a623]/20 border border-[#f5a623]/30 text-[#f5a623]">
-                                                    🎙 MC Live
+                                            <div className="absolute top-2 right-2">
+                                                <span className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-[#f5a623]/20 border border-[#f5a623]/30 text-[#f5a623]">
+                                                    🎙 Live
                                                 </span>
                                             </div>
-                                            {/* Bottom: spotlight lines */}
-                                            <div className="absolute bottom-0 inset-x-0 h-16 pointer-events-none"
-                                                style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)' }} />
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
@@ -875,6 +881,24 @@ const VoicePractice = () => {
         setAnnotations(prev => prev.filter(a => a.id !== id));
     };
 
+    // Parse inline markdown: **bold**, *italic*, `code`, ~~strike~~
+    const renderInlineMarkdown = (text, baseStyle = {}) => {
+        const parts = [];
+        // Combined regex: **bold**, *italic*, `code`, ~~strike~~
+        const re = /(\*\*(.+?)\*\*|\*(.+?)\*|`(.+?)`|~~(.+?)~~)/g;
+        let last = 0, m;
+        while ((m = re.exec(text)) !== null) {
+            if (m.index > last) parts.push(<span key={last}>{text.slice(last, m.index)}</span>);
+            if (m[0].startsWith('**')) parts.push(<strong key={m.index} style={{ fontWeight: 700, color: 'inherit' }}>{m[2]}</strong>);
+            else if (m[0].startsWith('*')) parts.push(<em key={m.index} style={{ fontStyle: 'italic' }}>{m[3]}</em>);
+            else if (m[0].startsWith('`')) parts.push(<code key={m.index} style={{ fontFamily: 'monospace', background: 'rgba(245,166,35,0.12)', padding: '0 3px', borderRadius: 3 }}>{m[4]}</code>);
+            else if (m[0].startsWith('~~')) parts.push(<s key={m.index}>{m[5]}</s>);
+            last = m.index + m[0].length;
+        }
+        if (last < text.length) parts.push(<span key={last}>{text.slice(last)}</span>);
+        return parts.length ? parts : text;
+    };
+
     // Render plain script text with annotation spans
     // Split text into segments: normal | annotated
     const renderAnnotatedScript = () => {
@@ -900,23 +924,52 @@ const VoicePractice = () => {
 
         return segments.map((seg, i) => {
             if (seg.type === 'text') {
-                // Render text with heading detection
                 return seg.content.split('\n').map((line, li) => {
-                    const headingMatch = line.match(/^\[(.+?)\]$/);
-                    if (headingMatch) {
+                    // [Section] heading (legacy format)
+                    const bracketHeading = line.match(/^\[(.+?)\]$/);
+                    if (bracketHeading) {
                         return (
                             <React.Fragment key={`${i}-${li}`}>
                                 {li > 0 && <br />}
                                 <span style={{ display: 'block', textAlign: 'center', fontSize: `${Math.round(scriptFontSize * 0.75)}px`, fontWeight: 700, letterSpacing: '0.05em', color: subColor, marginTop: '1.5rem' }}>
-                                    {headingMatch[1]}
+                                    {bracketHeading[1]}
                                 </span>
                             </React.Fragment>
                         );
                     }
+                    // ### / ## / # markdown headings
+                    const h3 = line.match(/^###\s+(.+)$/);
+                    const h2 = line.match(/^##\s+(.+)$/);
+                    const h1 = line.match(/^#\s+(.+)$/);
+                    if (h3) return (
+                        <React.Fragment key={`${i}-${li}`}>
+                            {li > 0 && <br />}
+                            <span style={{ display: 'block', fontSize: `${Math.round(scriptFontSize * 0.8)}px`, fontWeight: 700, color: subColor, marginTop: '1rem', letterSpacing: '0.02em' }}>{renderInlineMarkdown(h3[1])}</span>
+                        </React.Fragment>
+                    );
+                    if (h2) return (
+                        <React.Fragment key={`${i}-${li}`}>
+                            {li > 0 && <br />}
+                            <span style={{ display: 'block', textAlign: 'center', fontSize: `${Math.round(scriptFontSize * 0.9)}px`, fontWeight: 700, color: subColor, marginTop: '1.5rem', letterSpacing: '0.04em', textTransform: 'uppercase' }}>{renderInlineMarkdown(h2[1])}</span>
+                        </React.Fragment>
+                    );
+                    if (h1) return (
+                        <React.Fragment key={`${i}-${li}`}>
+                            {li > 0 && <br />}
+                            <span style={{ display: 'block', textAlign: 'center', fontSize: `${Math.round(scriptFontSize * 1.1)}px`, fontWeight: 800, color: subColor, marginTop: '2rem', letterSpacing: '0.05em' }}>{renderInlineMarkdown(h1[1])}</span>
+                        </React.Fragment>
+                    );
+                    // Horizontal rule
+                    if (/^---+$/.test(line.trim())) return (
+                        <React.Fragment key={`${i}-${li}`}>
+                            {li > 0 && <br />}
+                            <hr style={{ border: 'none', borderTop: `1px solid ${subColor}40`, margin: '1rem 0', display: 'block' }} />
+                        </React.Fragment>
+                    );
                     return (
                         <React.Fragment key={`${i}-${li}`}>
                             {li > 0 && <br />}
-                            {line}
+                            {renderInlineMarkdown(line)}
                         </React.Fragment>
                     );
                 });
@@ -938,7 +991,7 @@ const VoicePractice = () => {
                     onMouseEnter={() => ann.type === 'note' && setHoveredAnnotation(ann.id)}
                     onMouseLeave={() => setHoveredAnnotation(null)}
                 >
-                    {seg.content}
+                    {renderInlineMarkdown(seg.content)}
                     {ann.type === 'note' && hoveredAnnotation === ann.id && (
                         <span style={{
                             position: 'absolute',

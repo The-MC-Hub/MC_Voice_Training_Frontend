@@ -137,7 +137,8 @@
     "wedding": "Wedding",
     "corporate": "Corporate Event",
     "productLaunch": "Product Launch",
-    "talkshow": "Talkshow"
+    "talkshow": "Talkshow",
+    "general": "General Skills"
   },
   "voiceLibrary": {
     "titlePrefix": "Voice",

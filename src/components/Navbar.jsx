@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Bell, User, Settings, LogOut,
-  BookOpen, MessageSquare, Wallet, Zap, Award, Menu, X, FileText, CreditCard
+  BookOpen, MessageSquare, Wallet, Zap, Award, Menu, X, FileText, CreditCard,
+  Sun, Moon
 } from 'lucide-react';
 import {
   Avatar, AvatarFallback, AvatarImage,
@@ -11,12 +12,14 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
+import { useTheme } from '../contexts/ThemeContext';
 import { formatDistanceToNow } from "date-fns";
 import * as notificationController from "../controllers/notificationController";
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const [notifications, setNotifications] = useState([]);
@@ -189,20 +192,32 @@ const Navbar = () => {
                   </DropdownPopover>
                 </Dropdown>
 
+                {/* Theme toggle */}
+                <button
+                  onClick={toggleTheme}
+                  className="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors"
+                  title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                  {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+                </button>
+
                 {/* Avatar + Settings gear */}
                 <div className="flex items-center gap-1">
-                  {user?.avatar ? (
-                    <div className="w-7 h-7 rounded-full bg-zinc-800 ring-1 ring-white/10 flex items-center justify-center shrink-0 text-base leading-none">
-                      {user.avatar.startsWith('http')
-                        ? <img src={user.avatar} alt="avatar" className="w-full h-full object-cover rounded-full" />
-                        : user.avatar
-                      }
-                    </div>
-                  ) : (
-                    <div className="w-7 h-7 rounded-full bg-zinc-800 ring-1 ring-white/10 flex items-center justify-center shrink-0">
-                      <User size={14} className="text-zinc-400" />
-                    </div>
-                  )}
+                  {(() => {
+                    const av = user?.avatar;
+                    const isUrl = av && av.startsWith('http');
+                    const isEmoji = av && !av.includes('.') && av.length <= 4;
+                    return (
+                      <div className="w-7 h-7 rounded-full bg-zinc-800 ring-1 ring-white/10 flex items-center justify-center shrink-0 text-base leading-none">
+                        {isUrl
+                          ? <img src={av} alt="avatar" className="w-full h-full object-cover rounded-full" />
+                          : isEmoji
+                            ? av
+                            : <span className="text-base">😊</span>
+                        }
+                      </div>
+                    );
+                  })()}
                   <span className="hidden lg:block text-[13px] font-medium text-zinc-300 mx-1">
                     {user?.name?.split(' ')[0]}
                   </span>
