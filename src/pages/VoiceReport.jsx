@@ -196,7 +196,7 @@ const VoiceReport = () => {
     );
 
     return (
-        <div className="max-w-6xl mx-auto pb-20">
+        <div className="min-h-screen bg-[#09090b] -mx-6 -mt-6 px-6 pt-6 pb-20 text-white">
 
             {/* Header */}
             <motion.div {...fadeUp(0)} className="flex items-center gap-3 mb-8 pb-6 border-b border-white/[0.06]">
