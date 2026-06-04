@@ -42,3 +42,8 @@ export const fetchDashboardStats = async () => {
   const response = await api.get('/admin/dashboard');
   return response.data.data || {};
 };
+
+export const fetchAnalytics = async () => {
+  const response = await api.get('/admin/analytics');
+  return response.data.data || {};
+};
