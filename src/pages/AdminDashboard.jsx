@@ -5,11 +5,12 @@ import {
   fetchAllUsers,
   verifyMC,
   suspendUser,
-  fetchAllBookings,
-  fetchAllTransactions
+  fetchAllTransactions,
+  fetchRevenueStats,
+  fetchDashboardStats,
 } from "../controllers/adminController";
 import {
-  Users, ShieldCheck, Briefcase, Zap, BookOpen, Award, LayoutGrid
+  Users, ShieldCheck, Briefcase, Zap, BookOpen, Award, LayoutGrid, CreditCard
 } from "lucide-react";
 
 import AdminOverview from "./admin/sections/AdminOverview";
@@ -23,7 +24,7 @@ const NAV_ITEMS = [
   { id: "overview",     label: "Overview",       icon: LayoutGrid },
   { id: "users",        label: "Users",          icon: Users },
   { id: "lessons",      label: "Lessons",        icon: BookOpen },
-  { id: "transactions", label: "Transactions",   icon: Zap },
+  { id: "transactions", label: "Transactions",   icon: CreditCard },
   { id: "academy",      label: "Academy",        icon: Award },
   { id: "competitions", label: "Competitions",   icon: ShieldCheck },
 ];
@@ -33,8 +34,9 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
 
   const { data: users, refetch: refetchUsers } = useApi(fetchAllUsers);
-  const { data: bookings } = useApi(fetchAllBookings);
   const { data: transactions } = useApi(fetchAllTransactions);
+  const { data: revenueStats } = useApi(fetchRevenueStats);
+  const { data: dashStats } = useApi(fetchDashboardStats);
 
   const handleVerify = async (id, currentStatus) => {
     const user = users?.find(u => (u._id || u.id) === id);
@@ -58,17 +60,18 @@ const AdminDashboard = () => {
     }
   };
 
+  // Monthly revenue chart data from real stats
   const revenueData = useMemo(() => {
-    if (!bookings) return [];
-    const monthlyData = bookings.reduce((acc, b) => {
-      const date = new Date(b.eventDate);
-      const month = date.toLocaleString('default', { month: 'short' });
-      acc[month] = (acc[month] || 0) + (b.price || 0);
-      return acc;
-    }, {});
-    const monthsOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return monthsOrder.filter(m => monthlyData[m] !== undefined).map(month => ({ name: month, revenue: monthlyData[month] }));
-  }, [bookings]);
+    if (!revenueStats?.monthlyRevenue) return [];
+    const monthNames = { '01':'Jan','02':'Feb','03':'Mar','04':'Apr','05':'May','06':'Jun','07':'Jul','08':'Aug','09':'Sep','10':'Oct','11':'Nov','12':'Dec' };
+    return Object.entries(revenueStats.monthlyRevenue)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, revenue]) => ({
+        name: monthNames[key.split('-')[1]] || key,
+        month: key,
+        revenue,
+      }));
+  }, [revenueStats]);
 
   const userData = useMemo(() => {
     if (!users) return [];
@@ -78,17 +81,42 @@ const AdminDashboard = () => {
       return acc;
     }, {});
     return [
-      { name: 'MC Talent', value: roles.mc || 0, color: '#3B82F6' },
-      { name: 'Clients',   value: roles.client || 0, color: '#10B981' },
-      { name: 'Admins',    value: roles.admin || 0, color: '#EF4444' },
+      { name: 'MC', value: roles.mc || 0, color: '#3B82F6' },
+      { name: 'Client', value: roles.client || 0, color: '#10B981' },
+      { name: 'Admin', value: roles.admin || 0, color: '#EF4444' },
     ];
   }, [users]);
 
   const stats = [
-    { label: "Ecosystem Members", value: users?.length || 0, icon: Users, color: "text-blue-400", trend: "Total Registered" },
-    { label: "Certified Talents", value: users?.filter(u => (u.role || "").toLowerCase() === 'mc' && u.isVerified).length || 0, icon: ShieldCheck, color: "text-emerald-400", trend: "Verified Accounts" },
-    { label: "Global Bookings", value: bookings?.length || 0, icon: Briefcase, color: "text-amber-400", trend: "System Total" },
-    { label: "Platform Revenue", value: bookings?.reduce((acc, b) => acc + (b.price || 0), 0) || 0, icon: Zap, color: "text-purple-400", trend: "Net Earnings", isMoney: true },
+    {
+      label: "Tổng người dùng",
+      value: dashStats?.totalUsers ?? users?.length ?? 0,
+      icon: Users,
+      color: "text-blue-400",
+      trend: "Đã đăng ký"
+    },
+    {
+      label: "Giao dịch thành công",
+      value: dashStats?.completedTransactions ?? 0,
+      icon: ShieldCheck,
+      color: "text-emerald-400",
+      trend: `Chờ: ${dashStats?.pendingTransactions ?? 0} · Lỗi: ${dashStats?.failedTransactions ?? 0}`
+    },
+    {
+      label: "Tổng giao dịch",
+      value: dashStats?.totalTransactions ?? transactions?.length ?? 0,
+      icon: Briefcase,
+      color: "text-amber-400",
+      trend: "Toàn hệ thống"
+    },
+    {
+      label: "Doanh thu thực tế",
+      value: dashStats?.totalRevenue ?? revenueStats?.totalRevenue ?? 0,
+      icon: Zap,
+      color: "text-purple-400",
+      trend: "Giao dịch hoàn thành",
+      isMoney: true
+    },
   ];
 
   return (
@@ -103,7 +131,7 @@ const AdminDashboard = () => {
           {NAV_ITEMS.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
-              onClick={() => navigate(`/admin/${id}`)}
+              onClick={() => navigate(`/m/admin/${id}`)}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-colors ${
                 section === id
                   ? 'bg-[#f5a623]/[0.08] text-[#f5a623] border border-[#f5a623]/20'
@@ -129,17 +157,23 @@ const AdminDashboard = () => {
           <h1 className="text-xl font-semibold text-white">
             {NAV_ITEMS.find(n => n.id === section)?.label || 'Overview'}
           </h1>
-          <p className="text-zinc-500 text-[12px] mt-0.5">Platform administration and database records.</p>
+          <p className="text-zinc-500 text-[12px] mt-0.5">Dữ liệu thực tế từ database.</p>
         </div>
 
         {section === "overview" && (
-          <AdminOverview stats={stats} revenueData={revenueData} userData={userData} totalUsers={users?.length || 0} />
+          <AdminOverview
+            stats={stats}
+            revenueData={revenueData}
+            revenueStats={revenueStats}
+            userData={userData}
+            totalUsers={dashStats?.totalUsers ?? users?.length ?? 0}
+          />
         )}
         {section === "users" && (
           <UserManagement users={users} handleVerify={handleVerify} handleSuspend={handleSuspend} />
         )}
         {section === "lessons" && <LessonManagement />}
-        {section === "transactions" && <TransactionManagement transactions={transactions} />}
+        {section === "transactions" && <TransactionManagement transactions={transactions} revenueStats={revenueStats} />}
         {section === "academy" && <AcademyManager />}
         {section === "competitions" && <CompetitionManager />}
       </div>
