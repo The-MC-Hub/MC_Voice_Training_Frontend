@@ -916,16 +916,7 @@ const Settings = () => {
                     <LogOut size={14} /> Đăng xuất
                   </button>
                 </div>
-                {/* Delete account */}
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-[13px] font-medium text-red-400">Xóa tài khoản</p>
-                    <p className="text-[11px] text-gray-500 mt-0.5">Không thể khôi phục sau khi xóa</p>
-                  </div>
-                  <button className="flex items-center gap-2 px-4 py-2 rounded-xl border border-red-500/25 text-red-400 text-[12px] font-medium hover:bg-red-500/[0.08] transition-colors">
-                    <Trash2 size={14} /> Xóa tài khoản
-                  </button>
-                </div>
+              
               </div>
             </div>
           </div>
