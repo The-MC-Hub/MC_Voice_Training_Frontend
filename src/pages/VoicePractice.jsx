@@ -8,13 +8,13 @@ import {
     Loader2, BookOpen, ArrowLeft, AudioLines, BarChart3,
     Clock, Sparkles, Info, Calendar, Video, Target, ListChecks, FileText,
     AlignLeft, AlignCenter, AlignRight, Type, Minus, Plus, Moon, Sun, Gauge, ChevronDown, ChevronUp, Settings2,
-    Camera, CameraOff, Volume2, VolumeX, Volume1, AlertTriangle, Wifi
+    Camera, CameraOff, Volume1, AlertTriangle
 } from 'lucide-react';
 import { useAudioAnalyser } from '../hooks/useAudioAnalyser';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../store/useAuthStore';
-import { fetchLessonById, analyzePractice, fetchPracticeHistory, generateTTSAudio } from '../controllers/voiceController';
+import { fetchLessonById, analyzePractice, fetchPracticeHistory } from '../controllers/voiceController';
 import { ProgressBar, ProgressBarTrack, ProgressBarFill } from '@heroui/react';
 import TypewriterMarkdown from '../components/TypewriterMarkdown';
 import Navbar from '../components/Navbar';
@@ -49,12 +49,6 @@ const VoicePractice = () => {
     const analyzeTimerRef = useRef(null);
     const [result, setResult]             = useState(null);
 
-    // TTS preview state
-    const [ttsLoading, setTtsLoading]     = useState(false);
-    const [ttsAudioUrl, setTtsAudioUrl]   = useState(null);
-    const [ttsVoice, setTtsVoice]         = useState('F1');
-    const [ttsError, setTtsError]         = useState(null);
-    const ttsAudioRef = useRef(null);
     const [error, setError]               = useState(null);
     const [history, setHistory]           = useState([]);
     const [currentPage, setCurrentPage]   = useState(1);
@@ -288,25 +282,6 @@ const VoicePractice = () => {
 
     const resetPractice = () => { setAudioBlob(null); setAudioUrl(null); setResult(null); setError(null); setRecordingTime(0); };
 
-    const handleTTSPreview = async () => {
-        if (!lesson?.content) return;
-        // Revoke previous blob URL to free memory
-        if (ttsAudioUrl) URL.revokeObjectURL(ttsAudioUrl);
-        setTtsAudioUrl(null);
-        setTtsError(null);
-        setTtsLoading(true);
-        try {
-            const url = await generateTTSAudio(lesson.content, ttsVoice);
-            setTtsAudioUrl(url);
-            // Auto-play after generation
-            setTimeout(() => ttsAudioRef.current?.play(), 100);
-        } catch (err) {
-            setTtsError('Không thể tạo giọng nói AI. Kiểm tra AI service đang chạy.');
-        } finally {
-            setTtsLoading(false);
-        }
-    };
-
     const toggleCamera = useCallback(async () => {
         if (cameraOn) {
             cameraStream?.getTracks().forEach(t => t.stop());
@@ -426,44 +401,6 @@ const VoicePractice = () => {
                                     </button>
                                 ))}
                             </div>
-
-                            {/* TTS Preview — nghe mẫu AI */}
-                            <div className="flex items-center gap-1.5">
-                                <select
-                                    value={ttsVoice}
-                                    onChange={e => setTtsVoice(e.target.value)}
-                                    disabled={ttsLoading}
-                                    className="bg-[#111113] border border-white/[0.08] text-zinc-400 text-[11px] py-1.5 px-2 rounded-lg focus:outline-none focus:border-white/20 cursor-pointer disabled:opacity-40"
-                                >
-                                    {['F1','F2','F3','F4','F5','M1','M2','M3','M4','M5'].map(v => (
-                                        <option key={v} value={v}>{v}</option>
-                                    ))}
-                                </select>
-                                <button
-                                    onClick={handleTTSPreview}
-                                    disabled={ttsLoading || !lesson?.content}
-                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/[0.1] text-zinc-300 text-[12px] font-medium hover:bg-white/[0.05] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                                >
-                                    {ttsLoading
-                                        ? <><Loader2 size={12} className="animate-spin" /> Đang tạo...</>
-                                        : <><Volume2 size={12} /> Nghe mẫu AI</>
-                                    }
-                                </button>
-                            </div>
-
-                            {/* Hidden audio player — auto-play after TTS generated */}
-                            {ttsAudioUrl && (
-                                <audio
-                                    ref={ttsAudioRef}
-                                    src={ttsAudioUrl}
-                                    controls
-                                    className="h-8 rounded-lg"
-                                    style={{ minWidth: 180, maxWidth: 220 }}
-                                />
-                            )}
-                            {ttsError && (
-                                <span className="text-[11px] text-red-400">{ttsError}</span>
-                            )}
 
                             {audioBlob && !analyzing && !result && (
                                 <button
@@ -1561,9 +1498,9 @@ const VoicePractice = () => {
                             )}
 
                             {/* AI Analysis */}
-                            <div className={`rounded-2xl border transition-all ${result ? 'border-white/[0.07] bg-[#111113]' : 'border-dashed border-white/[0.05] bg-[#111113]/50'}`}>
-                                <div className="flex items-center gap-2 px-5 py-4 border-b border-white/[0.05]">
-                                    <Sparkles size={14} className={result ? 'text-[#f5a623]' : 'text-zinc-700'} />
+                            <div className={`rounded-2xl border transition-all ${result ? 'border-[#f5a623]/20 bg-[#111113]' : analyzing ? 'border-[#f5a623]/15 bg-[#111113]' : 'border-[#f5a623]/10 bg-[#f5a623]/[0.02]'}`}>
+                                <div className={`flex items-center gap-2 px-5 py-4 border-b ${result ? 'border-[#f5a623]/10' : 'border-[#f5a623]/[0.07]'}`}>
+                                    <Sparkles size={14} className="text-[#f5a623]" />
                                     <h3 className="text-[13px] font-semibold text-white">{t_vp('aiAnalysis')}</h3>
                                     {result && (
                                         <span className="ml-auto text-[10px] px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
@@ -1684,13 +1621,13 @@ const VoicePractice = () => {
                                     </div>
                                 ) : (
                                     <div className="py-12 text-center px-5">
-                                        <div className="w-10 h-10 rounded-full bg-white/[0.03] border border-white/[0.05] flex items-center justify-center mx-auto mb-3">
-                                            <Sparkles size={16} className={recording ? 'text-[#f5a623] animate-pulse' : 'text-zinc-800'} />
+                                        <div className="w-10 h-10 rounded-full bg-[#f5a623]/[0.08] border border-[#f5a623]/20 flex items-center justify-center mx-auto mb-3">
+                                            <Sparkles size={16} className={recording ? 'text-[#f5a623] animate-pulse' : 'text-[#f5a623]/40'} />
                                         </div>
-                                        <p className="text-[13px] font-medium text-zinc-500 mb-1">
+                                        <p className="text-[13px] font-medium text-zinc-400 mb-1">
                                             {recording ? t_vp('aiListening') : t_vp('lockedAnalysis')}
                                         </p>
-                                        <p className="text-[11px] text-zinc-700 leading-relaxed max-w-[180px] mx-auto">
+                                        <p className="text-[11px] text-zinc-600 leading-relaxed max-w-[180px] mx-auto">
                                             {t_vp('recordToUnlock')}
                                         </p>
                                     </div>
