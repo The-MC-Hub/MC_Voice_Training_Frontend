@@ -8,6 +8,13 @@ import api from "../services/api";
 import { useAuth } from "../hooks/useAuth";
 import { useToast } from "../components/ui/Toast";
 
+const FREE_BENEFITS = [
+  { icon: BookOpen, text: "Xem tất cả bài học công khai" },
+  { icon: Zap, text: "5 lượt luyện tập AI" },
+  { icon: Check, text: "MC Đám cưới (xem trước)" },
+  { icon: Check, text: "Không có AI coaching" },
+];
+
 const PLANS = [
   {
     key: "BASIC",
@@ -161,6 +168,50 @@ const PaymentPage = () => {
 
           {/* Left: Plan cards */}
           <div className="space-y-3">
+
+            {/* FREE plan — current plan indicator */}
+            {!user?.isPremium && (
+              <div className="w-full text-left p-5 rounded-2xl border border-gray-200 bg-gray-50">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-[15px] font-bold text-gray-700">Free</span>
+                      <span className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-gray-100 border-gray-300 text-gray-500">
+                        Gói hiện tại
+                      </span>
+                    </div>
+                    <div className="flex items-baseline gap-1 mb-3">
+                      <span className="text-2xl font-bold text-gray-500">0đ</span>
+                      <span className="text-[11px] text-gray-400">/mãi mãi</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {FREE_BENEFITS.map(({ icon: Icon, text }, i) => (
+                        <div key={i} className="flex items-center gap-1.5 text-gray-400">
+                          <Icon size={11} className="shrink-0" />
+                          <span className="text-[11px] leading-snug">{text}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Usage bar */}
+                    <div className="mt-3 pt-3 border-t border-gray-200">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[11px] text-gray-500">Lượt AI đã dùng</span>
+                        <span className={`text-[11px] font-semibold ${(user?.aiSessionsUsed ?? 0) >= 5 ? 'text-red-500' : 'text-gray-700'}`}>
+                          {user?.aiSessionsUsed ?? 0}/5
+                        </span>
+                      </div>
+                      <div className="h-1.5 rounded-full bg-gray-200 overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-amber-400 transition-all"
+                          style={{ width: `${Math.min(100, ((user?.aiSessionsUsed ?? 0) / 5) * 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {PLANS.map((plan) => {
               const isSelected = selectedPlan === plan.key;
               return (

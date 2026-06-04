@@ -953,17 +953,64 @@ const Settings = () => {
                     <span className="text-[11px] font-medium text-emerald-400">Active</span>
                   </div>
                 ) : (
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-xl bg-amber-50 border border-amber-200">
-                    <div>
-                      <p className="text-[13px] font-semibold text-gray-900 mb-1">Nâng cấp tài khoản</p>
-                      <p className="text-[11px] text-gray-500 leading-relaxed">Chọn gói Basic, Full hoặc Annual để mở khoá toàn bộ tính năng AI.</p>
+                  <div className="space-y-4">
+                    {/* FREE plan info */}
+                    <div className="flex items-center gap-3 p-4 rounded-xl bg-gray-50 border border-gray-200">
+                      <div className="w-9 h-9 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-500 shrink-0">
+                        <Zap size={16} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13px] font-semibold text-gray-900">Gói Miễn Phí</p>
+                        <p className="text-[11px] text-gray-400 mt-0.5">Tài khoản hiện tại của bạn</p>
+                      </div>
+                      <span className="text-[11px] font-semibold text-gray-500 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-md uppercase tracking-wide">FREE</span>
                     </div>
-                    <button
-                      onClick={() => navigate('/m/payment')}
-                      className="shrink-0 px-5 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black text-[13px] font-semibold rounded-xl transition-colors"
-                    >
-                      Xem gói
-                    </button>
+
+                    {/* FREE benefits */}
+                    <div className="rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
+                      <div className="px-4 py-2.5 bg-gray-50">
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Quyền lợi hiện tại</p>
+                      </div>
+                      {[
+                        { label: 'Lượt luyện tập AI', used: user?.aiSessionsUsed ?? 0, total: 5, unit: 'lượt' },
+                        { label: 'Bài học có thể xem', used: null, total: null, note: 'Tất cả bài học công khai' },
+                        { label: 'Tính năng AI Coaching', used: null, total: null, note: 'Không khả dụng' },
+                        { label: 'Chủ đề luyện tập', used: null, total: null, note: 'MC Đám cưới (xem trước)' },
+                      ].map(({ label, used, total, unit, note }) => (
+                        <div key={label} className="flex items-center justify-between px-4 py-3">
+                          <span className="text-[12px] text-gray-600">{label}</span>
+                          {total !== null ? (
+                            <div className="flex items-center gap-2">
+                              <div className="w-20 h-1.5 rounded-full bg-gray-200 overflow-hidden">
+                                <div
+                                  className="h-full rounded-full bg-amber-400"
+                                  style={{ width: `${Math.min(100, (used / total) * 100)}%` }}
+                                />
+                              </div>
+                              <span className={`text-[11px] font-semibold tabular-nums ${used >= total ? 'text-red-500' : 'text-gray-700'}`}>
+                                {total - used} {unit} còn lại
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-[11px] text-gray-400">{note}</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Upgrade CTA */}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-xl bg-amber-50 border border-amber-200">
+                      <div>
+                        <p className="text-[13px] font-semibold text-gray-900 mb-0.5">Nâng cấp để mở khoá đầy đủ</p>
+                        <p className="text-[11px] text-gray-500">AI không giới hạn · 3 chủ đề · Theo dõi tiến độ</p>
+                      </div>
+                      <button
+                        onClick={() => navigate('/m/payment')}
+                        className="shrink-0 px-5 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black text-[13px] font-semibold rounded-xl transition-colors"
+                      >
+                        Xem gói
+                      </button>
+                    </div>
                   </div>
                 )}
             </div>

@@ -119,6 +119,15 @@ const Navbar = () => {
                   <span className="hidden lg:block text-[13px] font-medium text-gray-600 mx-1">
                     {user?.name?.split(' ')[0]}
                   </span>
+                  {user?.isPremium ? (
+                    <span className="hidden lg:inline-flex items-center px-2 py-0.5 rounded-md bg-amber-100 border border-amber-300 text-[10px] font-bold text-amber-700 uppercase tracking-wide">
+                      {user?.plan || 'Premium'}
+                    </span>
+                  ) : (
+                    <span className="hidden lg:inline-flex items-center px-2 py-0.5 rounded-md bg-gray-100 border border-gray-200 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">
+                      Free
+                    </span>
+                  )}
                   <Link
                     to="/m/settings"
                     className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
