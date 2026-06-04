@@ -79,35 +79,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-[#09090b] text-white">
-      {/* Sidebar */}
-      <aside className="w-52 shrink-0 border-r border-white/[0.06] bg-[#09090b] sticky top-0 h-screen flex flex-col pt-6 pb-5 px-2">
-        <div className="px-3 mb-5">
-          <p className="text-[9px] text-zinc-600 uppercase tracking-widest font-medium">Admin Panel</p>
-          <h2 className="text-[14px] font-semibold text-white mt-0.5">Control Center</h2>
-        </div>
-        <nav className="space-y-0.5 flex-1">
-          {NAV_ITEMS.map(({ id, label, icon: Icon }) => (
-            <button
-              key={id}
-              onClick={() => navigate(`/m/admin/${id}`)}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[12px] font-medium transition-all ${
-                section === id
-                  ? 'bg-[#f5a623]/[0.1] text-[#f5a623] border border-[#f5a623]/25'
-                  : 'text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.04] border border-transparent'
-              }`}
-            >
-              <Icon size={14} />
-              {label}
-            </button>
-          ))}
-        </nav>
-        <div className="px-3 pt-4 border-t border-white/[0.05]">
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[10px] text-zinc-600">Hệ thống hoạt động</span>
-          </div>
-        </div>
-      </aside>
 
       {/* Main content */}
       <div className="flex-1 min-w-0 overflow-auto">
