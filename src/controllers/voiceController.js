@@ -50,3 +50,20 @@ export const fetchPracticeById = async (id) => {
     const response = await api.get(`/voice/practice/${id}`);
     return response.data.data;
 };
+
+/**
+ * Generate TTS audio from text via AI service.
+ * Returns a Blob URL that can be set as <audio src>.
+ * @param {string} text - script text to synthesize
+ * @param {string} [voice='F1'] - voice id: M1-M5 or F1-F5
+ * @returns {Promise<string>} object URL of WAV blob
+ */
+export const generateTTSAudio = async (text, voice = 'F1') => {
+    const params = new URLSearchParams({ text, voice });
+    const response = await api.post(
+        `/voice/tts/generate?${params.toString()}`,
+        null,
+        { responseType: 'blob', timeout: 60000 }
+    );
+    return URL.createObjectURL(response.data);
+};

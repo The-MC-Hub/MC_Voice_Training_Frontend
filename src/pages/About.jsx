@@ -13,6 +13,7 @@ import ScrollToTop from '../components/ui/ScrollToTop';
 import { useTranslation } from 'react-i18next';
 import ContactModal from '../components/modals/ContactModal';
 import { useTheme } from '../contexts/ThemeContext';
+import SpotlightCard from '../components/ui/SpotlightCard';
 import mcImage from '../assets/mc.jpg';
 
 const teamMembers = [
@@ -30,48 +31,119 @@ const SocialIcon = ({ type }) => {
   return Icon ? <Icon size={16} /> : null;
 };
 
+/* Floating ambient orbs — purely decorative CSS */
+const AmbientOrbs = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    {/* Large amber blob top-right */}
+    <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full"
+      style={{ background: 'radial-gradient(circle, rgba(245,166,35,0.10) 0%, rgba(245,166,35,0.04) 50%, transparent 70%)', filter: 'blur(40px)' }} />
+    {/* Medium blue-ish blob left */}
+    <div className="absolute top-1/3 -left-40 w-[400px] h-[400px] rounded-full"
+      style={{ background: 'radial-gradient(circle, rgba(251,191,36,0.07) 0%, transparent 70%)', filter: 'blur(50px)' }} />
+    {/* Small amber blob bottom */}
+    <div className="absolute bottom-0 right-1/4 w-[300px] h-[300px] rounded-full"
+      style={{ background: 'radial-gradient(circle, rgba(245,166,35,0.08) 0%, transparent 70%)', filter: 'blur(40px)' }} />
+  </div>
+);
+
+/* Dot grid pattern */
+const DotGrid = () => (
+  <div className="absolute inset-0 pointer-events-none"
+    style={{
+      backgroundImage: 'radial-gradient(circle, rgba(245,166,35,0.12) 1px, transparent 1px)',
+      backgroundSize: '32px 32px',
+      WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%)',
+      maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%)',
+    }} />
+);
+
 const About = () => {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   return (
-    <div className="bg-[#09090b] text-white min-h-screen overflow-x-hidden">
+    <div className="bg-white text-gray-900 min-h-screen overflow-x-hidden">
       <Navbar />
 
       {/* Hero */}
-      <section className="relative pt-40 pb-20 px-6">
-        {/* Subtle CSS dot grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
+      <section className="relative pt-40 pb-24 px-6 overflow-hidden">
+        <AmbientOrbs />
+        <DotGrid />
+
+        {/* Decorative rings */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+          {[360, 500, 640, 780].map((size, i) => (
+            <div key={i} className="absolute rounded-full border border-amber-400/[0.07]"
+              style={{ width: size, height: size, top: -size/2, left: -size/2, animationDelay: `${i * 0.5}s` }} />
+          ))}
+        </div>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <ScrollReveal direction="up">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#111113] border border-white/[0.07] text-[#f5a623] text-[11px] font-medium uppercase tracking-wider mb-8">
-              <Sparkles size={12} /> {t('about.beyondStage')}
-            </div>
+           
+
+            {/* Gradient headline */}
             <h1 className="text-5xl lg:text-7xl font-bold leading-tight mb-6 tracking-tight">
-              {t('about.ourStory').split(' ')[0]} <span className="text-[#f5a623]">{t('about.ourStory').split(' ').slice(1).join(' ')}</span>
+              {t('about.ourStory').split(' ')[0]}{' '}
+              <span className="text-amber-500">{t('about.ourStory').split(' ').slice(1).join(' ')}</span>
             </h1>
-            <p className="text-zinc-500 text-lg max-w-2xl mx-auto leading-relaxed">
+
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed">
               {t('about.storyDesc')}
             </p>
+
+           
           </ScrollReveal>
+        </div>
+
+        {/* Bottom amber gradient fade */}
+        <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+      </section>
+
+      {/* Stats bar */}
+      <section className="relative py-8 px-6 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-amber-50 via-white to-amber-50" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-300/50 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-amber-300/50 to-transparent" />
+        <div className="max-w-4xl mx-auto relative z-10">
+          <div className="grid grid-cols-3 gap-8 text-center">
+            {[
+              { value: '500+', label: 'MCs Empowered' },
+              { value: '10K+', label: 'Sessions Completed' },
+              { value: '94%', label: 'Satisfaction Rate' },
+            ].map((stat, i) => (
+              <motion.div key={i}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}>
+                <p className="text-3xl font-bold text-amber-500">{stat.value}</p>
+                <p className="text-[12px] text-gray-400 mt-1 uppercase tracking-wider">{stat.label}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Quote */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="py-20 px-6 relative overflow-hidden">
+        {/* Large decorative quote mark bg */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+          <span className="text-[280px] font-black text-amber-500/[0.035] leading-none select-none" style={{ fontFamily: 'Georgia, serif' }}>"</span>
+        </div>
+
+        <div className="max-w-4xl mx-auto text-center relative z-10">
           <ScrollReveal>
             <div className="relative">
-              <Quote size={80} className="text-[#f5a623]/10 absolute -top-8 -left-8 lg:-left-16" />
-              <h2 className="text-3xl lg:text-4xl font-semibold text-white leading-relaxed max-w-3xl mx-auto relative z-10">
+              <Quote size={56} className="text-amber-400/20 absolute -top-6 -left-6 lg:-left-10" />
+              <h2 className="text-3xl lg:text-4xl font-semibold text-gray-800 leading-relaxed max-w-3xl mx-auto relative z-10">
                 "{t('about.quote')}"
               </h2>
               <div className="mt-8 flex items-center justify-center gap-3">
-                <div className="h-px w-10 bg-[#f5a623]/40" />
-                <span className="text-[11px] font-medium text-zinc-600 uppercase tracking-widest">{t('about.philosophy')}</span>
-                <div className="h-px w-10 bg-[#f5a623]/40" />
+                <div className="h-px w-10 bg-amber-400/40" />
+                <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest">{t('about.philosophy')}</span>
+                <div className="h-px w-10 bg-amber-400/40" />
               </div>
             </div>
           </ScrollReveal>
@@ -79,41 +151,71 @@ const About = () => {
       </section>
 
       {/* Mission */}
-      <section className="py-20 border-y border-white/[0.06] px-6">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-20 px-6 relative overflow-hidden">
+        {/* Section background tint */}
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-50/60 via-white to-orange-50/30 pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-200 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-amber-200 to-transparent" />
+
+        {/* Corner decorative circles */}
+        <div className="absolute top-8 right-8 w-24 h-24 rounded-full border-2 border-amber-200/40 pointer-events-none" />
+        <div className="absolute top-12 right-12 w-12 h-12 rounded-full border border-amber-300/30 pointer-events-none" />
+        <div className="absolute bottom-8 left-8 w-16 h-16 rounded-full border-2 border-amber-200/30 pointer-events-none" />
+
+        <div className="max-w-6xl mx-auto relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <ScrollReveal direction="left">
               <div className="relative">
-                <div className="aspect-square rounded-3xl overflow-hidden border border-white/[0.07] bg-[#111113]">
+                {/* Decorative ring behind image */}
+                <div className="absolute -inset-4 rounded-[2.5rem] border-2 border-amber-200/30 pointer-events-none" />
+                <div className="absolute -inset-8 rounded-[3rem] border border-amber-100/50 pointer-events-none" />
+
+                <div className="aspect-square rounded-3xl overflow-hidden border border-amber-200/30 shadow-xl shadow-amber-100/50 bg-amber-50">
                   <LazyImage src={mcImage} className="w-full h-full object-cover" />
                 </div>
-                <div className="absolute -bottom-6 -right-4 lg:-right-8 bg-[#f5a623] p-6 rounded-2xl text-black z-20">
+
+                {/* Stats badge */}
+                <div className="absolute -bottom-6 -right-4 lg:-right-8 bg-amber-500 p-6 rounded-2xl text-black z-20 shadow-lg shadow-amber-500/30">
                   <div className="text-4xl font-bold mb-0.5">500+</div>
                   <div className="text-[10px] font-semibold uppercase tracking-widest">MCs Empowered</div>
                 </div>
+
+                {/* Small decorative dot */}
+                <div className="absolute -top-3 -left-3 w-6 h-6 rounded-full bg-amber-400 shadow-md shadow-amber-400/40" />
               </div>
             </ScrollReveal>
 
             <ScrollReveal direction="right">
               <div>
-                <h2 className="text-3xl lg:text-4xl font-bold mb-10 tracking-tight">
-                  {t('about.whyWeExist').split(' ').slice(0, 2).join(' ')} <span className="text-[#f5a623]">{t('about.whyWeExist').split(' ').slice(2).join(' ')}</span>
-                </h2>
-                <div className="space-y-8">
+                {/* Amber left border accent */}
+                <div className="border-l-4 border-amber-400 pl-5 mb-8">
+                  <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-gray-900">
+                    {t('about.whyWeExist').split(' ').slice(0, 2).join(' ')}{' '}
+                    <span className="text-amber-500">{t('about.whyWeExist').split(' ').slice(2).join(' ')}</span>
+                  </h2>
+                </div>
+
+                <div className="space-y-6">
                   {[
-                    { icon: <Target size={20} />, color: "text-[#f5a623] bg-[#f5a623]/[0.08] border-[#f5a623]/20", title: t('about.solvingGap'), desc: t('about.solvingGapDesc') },
-                    { icon: <Globe size={20} />, color: "text-blue-400 bg-blue-500/[0.08] border-blue-500/20", title: t('about.communityImpact'), desc: t('about.communityImpactDesc') },
-                    { icon: <Heart size={20} />, color: "text-purple-400 bg-purple-500/[0.08] border-purple-500/20", title: t('about.ourPassion'), desc: t('about.ourPassionDesc') },
+                    { icon: <Target size={20} />, color: "text-amber-600 bg-amber-50 border-amber-200", title: t('about.solvingGap'), desc: t('about.solvingGapDesc') },
+                    { icon: <Globe size={20} />, color: "text-blue-600 bg-blue-50 border-blue-200", title: t('about.communityImpact'), desc: t('about.communityImpactDesc') },
+                    { icon: <Heart size={20} />, color: "text-purple-600 bg-purple-50 border-purple-200", title: t('about.ourPassion'), desc: t('about.ourPassionDesc') },
                   ].map((item, i) => (
-                    <div key={i} className="flex gap-5">
+                    <SpotlightCard
+                      key={i}
+                      spotlightColor="rgba(245,166,35,0.08)"
+                      spotlightSize={250}
+                      className="flex gap-4 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-100 transition-all duration-300"
+                      style={{ opacity: 1 }}
+                    >
                       <div className={`w-10 h-10 shrink-0 rounded-xl flex items-center justify-center border ${item.color}`}>
                         {item.icon}
                       </div>
                       <div>
-                        <h3 className="text-[15px] font-semibold text-white mb-1.5">{item.title}</h3>
-                        <p className="text-zinc-500 text-[13px] leading-relaxed">{item.desc}</p>
+                        <h3 className="text-[14px] font-semibold text-gray-900 mb-1">{item.title}</h3>
+                        <p className="text-gray-500 text-[13px] leading-relaxed">{item.desc}</p>
                       </div>
-                    </div>
+                    </SpotlightCard>
                   ))}
                 </div>
               </div>
@@ -123,82 +225,79 @@ const About = () => {
       </section>
 
       {/* Team */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-20 px-6 relative overflow-hidden">
+        {/* Subtle dot grid */}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: 'radial-gradient(circle, rgba(245,166,35,0.08) 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+          }} />
+
+        {/* Large amber blob top */}
+        <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse, rgba(245,166,35,0.06) 0%, transparent 70%)', filter: 'blur(30px)' }} />
+
+        <div className="max-w-6xl mx-auto relative z-10">
           <ScrollReveal direction="up">
             <div className="text-center mb-14">
-              <h2 className="text-3xl lg:text-4xl font-bold mb-3 tracking-tight">
-                {t('about.teamTitlePrefix')} <span className="text-[#f5a623]">{t('about.teamTitleSuffix')}</span>
+              {/* Decorative line above title */}
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <div className="h-px w-12 bg-amber-400/50" />
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                <div className="h-px w-12 bg-amber-400/50" />
+              </div>
+              <h2 className="text-3xl lg:text-4xl font-bold mb-3 tracking-tight text-gray-900">
+                {t('about.teamTitlePrefix')}{' '}
+                <span className="text-amber-500">{t('about.teamTitleSuffix')}</span>
               </h2>
-              <p className="text-zinc-500 text-[14px] max-w-xl mx-auto">{t('about.teamDesc')}</p>
+              <p className="text-gray-500 text-[14px] max-w-xl mx-auto">{t('about.teamDesc')}</p>
             </div>
           </ScrollReveal>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {teamMembers.map((member, i) => (
               <ScrollReveal key={member.id} delay={i * 0.08}>
-                <motion.div
-                  whileHover={{ y: -5, rotate: 0.3 }}
-                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                  className="group relative overflow-hidden cursor-default"
-                  style={{
-                    background: theme === 'light'
-                      ? 'linear-gradient(145deg, #f5f0e8 0%, #fafaf8 60%, #f8f8f5 100%)'
-                      : 'linear-gradient(145deg, #1a1710 0%, #111108 60%, #0e0e0b 100%)',
-                    border: '1px solid rgba(245,166,35,0.15)',
-                    borderRadius: '4px',
-                    boxShadow: theme === 'light'
-                      ? '0 4px 24px rgba(0,0,0,0.08), inset 0 1px 0 rgba(245,166,35,0.08)'
-                      : '0 4px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(245,166,35,0.08)',
-                  }}
+                <SpotlightCard
+                  spotlightColor="rgba(245,166,35,0.10)"
+                  spotlightSize={300}
+                  className="group relative overflow-hidden rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-lg hover:shadow-amber-100/60 hover:border-amber-200/60 transition-all duration-300 cursor-default"
                 >
-                  {/* Grain texture overlay */}
-                  <div className="absolute inset-0 pointer-events-none opacity-[0.04] mix-blend-overlay"
-                    style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")', backgroundSize: '128px' }} />
+                  {/* Top amber accent strip */}
+                  <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400/60 to-transparent" />
 
-                  {/* Top tape strip */}
-                  <div className="absolute top-0 inset-x-0 h-[3px]"
-                    style={{ background: 'linear-gradient(90deg, transparent 5%, rgba(245,166,35,0.5) 30%, rgba(245,166,35,0.5) 70%, transparent 95%)' }} />
-
-                  {/* Photo — polaroid style with thick bottom padding */}
-                  <div className="relative mx-5 mt-5 mb-0 overflow-hidden"
-                    style={{ border: '3px solid rgba(255,255,255,0.06)', borderBottom: 'none', borderRadius: '2px 2px 0 0' }}>
-                    <div className="aspect-[4/3] overflow-hidden">
-                      <LazyImage src={member.image} className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                        style={{ filter: 'sepia(0.15) contrast(1.05) brightness(0.95)' }} />
+                  {/* Photo */}
+                  <div className="relative mx-4 mt-5 overflow-hidden rounded-xl border border-gray-100">
+                    <div className="aspect-[4/3] overflow-hidden bg-amber-50">
+                      <LazyImage
+                        src={member.image}
+                        className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                        style={{ filter: 'sepia(0.05) contrast(1.02)' }}
+                      />
                     </div>
-                    {/* Film scanline overlay */}
-                    <div className="absolute inset-0 pointer-events-none"
-                      style={{ background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)' }} />
                     {/* Social hover overlay */}
-                    <div className="absolute inset-0 bg-[#0e0e0b]/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+                    <div className="absolute inset-0 bg-gray-900/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3 rounded-xl">
                       {Object.entries(member.socials).map(([key, link]) => (
                         <a key={key} href={link}
-                          className="w-9 h-9 flex items-center justify-center text-zinc-300 hover:text-[#f5a623] transition-colors"
-                          style={{ background: 'rgba(245,166,35,0.08)', border: '1px solid rgba(245,166,35,0.2)', borderRadius: '2px' }}>
+                          className="w-9 h-9 flex items-center justify-center text-white hover:text-amber-400 bg-white/10 hover:bg-amber-400/20 border border-white/20 rounded-lg transition-colors">
                           <SocialIcon type={key} />
                         </a>
                       ))}
                     </div>
                   </div>
 
-                  {/* Polaroid caption area */}
-                  <div className="mx-5 mb-5 px-3 pt-3 pb-4"
-                    style={{ background: 'rgba(245,166,35,0.03)', border: '3px solid rgba(255,255,255,0.06)', borderTop: 'none', borderRadius: '0 0 2px 2px' }}>
-                    <p className="text-[9px] text-[#f5a623]/70 uppercase tracking-[0.2em] font-medium mb-1.5">{member.specialty}</p>
-                    <h3 className="text-[15px] font-bold text-white/90 mb-0.5 leading-tight" style={{ fontVariant: 'small-caps', letterSpacing: '0.01em' }}>{member.name}</h3>
-                    <p className="text-[10px] text-zinc-600 mb-3 tracking-wide">{member.role}</p>
-                    <p className="text-zinc-500 text-[12px] leading-relaxed italic">{member.bio}</p>
+                  {/* Caption */}
+                  <div className="p-4 pb-5">
+                    <p className="text-[10px] text-amber-500 uppercase tracking-[0.15em] font-semibold mb-1">{member.specialty}</p>
+                    <h3 className="text-[15px] font-bold text-gray-900 mb-0.5">{member.name}</h3>
+                    <p className="text-[11px] text-gray-400 mb-2">{member.role}</p>
+                    <p className="text-gray-500 text-[12px] leading-relaxed">{member.bio}</p>
                   </div>
 
-                  {/* Stamp number bottom-right */}
-                  <div className="absolute bottom-4 right-5 flex flex-col items-center opacity-30 group-hover:opacity-60 transition-opacity">
-                    <span className="text-[18px] font-black tabular-nums leading-none" style={{ color: '#f5a623', fontFamily: 'serif', textShadow: '0 0 8px rgba(245,166,35,0.4)' }}>
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <div className="w-5 h-px mt-0.5" style={{ background: 'rgba(245,166,35,0.5)' }} />
+                  {/* Number badge */}
+                  <div className="absolute bottom-4 right-4 text-[18px] font-black text-amber-400/25 group-hover:text-amber-400/50 transition-colors" style={{ fontFamily: 'serif' }}>
+                    {String(i + 1).padStart(2, '0')}
                   </div>
-                </motion.div>
+                </SpotlightCard>
               </ScrollReveal>
             ))}
           </div>
@@ -206,23 +305,53 @@ const About = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-16 px-6">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-16 px-6 relative overflow-hidden">
+        {/* Amber gradient bg */}
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-white to-orange-50 pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-300/60 to-transparent" />
+
+        {/* Decorative circles */}
+        <div className="absolute top-1/2 left-8 -translate-y-1/2 w-32 h-32 rounded-full border-2 border-amber-200/40 pointer-events-none" />
+        <div className="absolute top-1/2 left-16 -translate-y-1/2 w-16 h-16 rounded-full bg-amber-400/[0.06] pointer-events-none" />
+        <div className="absolute top-1/2 right-8 -translate-y-1/2 w-24 h-24 rounded-full border-2 border-amber-200/40 pointer-events-none" />
+        <div className="absolute top-1/2 right-16 -translate-y-1/2 w-12 h-12 rounded-full bg-amber-400/[0.06] pointer-events-none" />
+
+        <div className="max-w-6xl mx-auto relative z-10">
           <ScrollReveal>
-            <div className="bg-[#111113] border border-white/[0.07] rounded-3xl p-12 lg:p-20 text-center">
-              <h2 className="text-3xl lg:text-5xl font-bold mb-8 tracking-tight">
-                {t('about.ctaTitlePrefix')} <br /><span className="text-[#f5a623]">{t('about.ctaTitleSuffix')}</span>
+            <SpotlightCard
+              spotlightColor="rgba(245,166,35,0.09)"
+              spotlightSize={400}
+              className="bg-white border border-amber-200/50 rounded-3xl p-12 lg:p-20 text-center shadow-xl shadow-amber-100/40"
+            >
+              {/* Sparkles decoration */}
+              <div className="flex justify-center mb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-600 text-[11px] font-semibold">
+                  <Sparkles size={11} /> Join the Community
+                </div>
+              </div>
+
+              <h2 className="text-3xl lg:text-5xl font-bold mb-4 tracking-tight text-gray-900">
+                {t('about.ctaTitlePrefix')}{' '}
+                <br />
+                <span className="text-amber-500">{t('about.ctaTitleSuffix')}</span>
               </h2>
+              <p className="text-gray-400 text-[14px] mb-8 max-w-md mx-auto">Cùng hàng nghìn MC chuyên nghiệp nâng cao kỹ năng với AI.</p>
+
               <div className="flex flex-wrap justify-center gap-4">
-                <button onClick={() => setIsContactModalOpen(true)}
-                  className="px-8 py-3 bg-[#f5a623] text-black font-semibold text-[14px] rounded-xl hover:bg-[#e09520] transition-colors">
+                <button
+                  onClick={() => setIsContactModalOpen(true)}
+                  className="px-8 py-3 bg-amber-500 text-white font-semibold text-[14px] rounded-xl hover:bg-amber-600 transition-colors shadow-md shadow-amber-500/25"
+                >
                   {t('contact.sendMessage')}
                 </button>
-                <Link to="/" className="px-8 py-3 rounded-xl border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] font-medium text-[14px] transition-colors">
+                <Link
+                  to="/"
+                  className="px-8 py-3 rounded-xl border border-gray-200 text-gray-600 hover:text-gray-900 hover:border-gray-300 font-medium text-[14px] transition-colors"
+                >
                   {t('common.backToHome')}
                 </Link>
               </div>
-            </div>
+            </SpotlightCard>
           </ScrollReveal>
         </div>
       </section>

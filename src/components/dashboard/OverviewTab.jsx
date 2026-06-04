@@ -11,6 +11,7 @@ import { Zap, TrendingUp, Mic, Award, BarChart3, PieChart as PieIcon, ChevronRig
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import SessionCard from "./SessionCard";
+import SpotlightCard from '../ui/SpotlightCard';
 
 const fadeUp = {
   initial: { opacity: 0, y: 16 },
@@ -43,7 +44,8 @@ const OverviewTab = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
         {/* Area Chart */}
-        <motion.div {...fadeUp} className="lg:col-span-8 bg-[#111113] border border-white/[0.07] rounded-2xl p-6">
+        <motion.div {...fadeUp} className="lg:col-span-8">
+          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6">
           <div className="flex justify-between items-center mb-6">
             <div>
               <h3 className="text-[14px] font-semibold text-white flex items-center gap-2">
@@ -92,6 +94,7 @@ const OverviewTab = ({
               </AreaChart>
             </ResponsiveContainer>
           </div>
+          </SpotlightCard>
         </motion.div>
 
         {/* Roadmap card — dark style, no orange bg */}
@@ -99,8 +102,9 @@ const OverviewTab = ({
           initial={{ opacity: 0, x: 16 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="lg:col-span-4 bg-[#111113] border border-white/[0.07] rounded-2xl p-6 flex flex-col relative overflow-hidden"
+          className="lg:col-span-4"
         >
+          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 flex flex-col relative overflow-hidden">
           <div className="absolute top-0 left-6 right-6 h-px"
             style={{ background: 'linear-gradient(90deg, transparent, rgba(245,166,35,0.3), transparent)' }} />
 
@@ -134,6 +138,7 @@ const OverviewTab = ({
             className="mt-6 w-full py-2.5 rounded-xl bg-white/[0.05] border border-white/[0.08] text-zinc-300 text-[12px] font-semibold hover:bg-white/[0.08] hover:border-white/[0.14] transition-all flex items-center justify-center gap-2">
             {t('dashboard.viewDetailedPath')} <ChevronRight size={13} />
           </Link>
+          </SpotlightCard>
         </motion.div>
       </div>
 
@@ -149,15 +154,16 @@ const OverviewTab = ({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.2 + i * 0.05, ease: [0.16, 1, 0.3, 1] }}
-            className="p-4 bg-[#111113] border border-white/[0.07] rounded-2xl flex items-center gap-3"
           >
-            <div className={`w-9 h-9 rounded-xl flex items-center justify-center border shrink-0 ${bg}`}>
-              <Icon size={15} className={color} />
-            </div>
-            <div>
-              <p className="text-[10px] text-zinc-600 uppercase tracking-wider">{label}</p>
-              <p className="text-[14px] font-semibold text-white">{value}</p>
-            </div>
+            <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="p-4 bg-[#111113] border border-white/[0.07] rounded-2xl flex items-center gap-3">
+              <div className={`w-9 h-9 rounded-xl flex items-center justify-center border shrink-0 ${bg}`}>
+                <Icon size={15} className={color} />
+              </div>
+              <div>
+                <p className="text-[10px] text-zinc-600 uppercase tracking-wider">{label}</p>
+                <p className="text-[14px] font-semibold text-white">{value}</p>
+              </div>
+            </SpotlightCard>
           </motion.div>
         ))}
       </div>
@@ -166,7 +172,8 @@ const OverviewTab = ({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
         {/* Radar */}
-        <motion.div {...fadeUp} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 flex flex-col items-center">
+        <motion.div {...fadeUp}>
+          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 flex flex-col items-center">
           <div className="w-full flex items-center gap-2 mb-4">
             <Award size={13} className="text-[#f5a623]" />
             <h4 className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">{t('dashboard.skillsMatrix')}</h4>
@@ -184,10 +191,12 @@ const OverviewTab = ({
           <p className="text-[11px] text-zinc-600 text-center mt-2 leading-relaxed bg-[#09090b] border border-white/[0.05] py-2 px-3 rounded-xl w-full">
             {t('dashboard.speedExcellent')}
           </p>
+          </SpotlightCard>
         </motion.div>
 
         {/* Bar */}
-        <motion.div {...fadeUp} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6">
+        <motion.div {...fadeUp}>
+          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6">
           <div className="flex items-center gap-2 mb-4">
             <BarChart3 size={13} className="text-indigo-400" />
             <h4 className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">{t('dashboard.trainingFocus')}</h4>
@@ -206,10 +215,12 @@ const OverviewTab = ({
               </BarChart>
             </ResponsiveContainer>
           </div>
+          </SpotlightCard>
         </motion.div>
 
         {/* Donut */}
-        <motion.div {...fadeUp} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 flex flex-col items-center">
+        <motion.div {...fadeUp}>
+          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 flex flex-col items-center">
           <div className="w-full flex items-center gap-2 mb-4">
             <PieIcon size={13} className="text-emerald-400" />
             <h4 className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">{t('dashboard.proficiency')}</h4>
@@ -247,6 +258,7 @@ const OverviewTab = ({
               </div>
             ))}
           </div>
+          </SpotlightCard>
         </motion.div>
       </div>
 
@@ -255,8 +267,8 @@ const OverviewTab = ({
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-        className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6"
       >
+        <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6">
         <div className="flex justify-between items-center mb-5 pb-4 border-b border-white/[0.05]">
           <h3 className="text-[14px] font-semibold text-white flex items-center gap-2">
             <TrendingUp size={14} className="text-[#f5a623]" />
@@ -289,6 +301,7 @@ const OverviewTab = ({
             </Link>
           </div>
         )}
+        </SpotlightCard>
       </motion.div>
 
     </div>

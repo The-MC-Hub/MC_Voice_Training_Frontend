@@ -8,6 +8,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 
 import Home from './pages/Home';
 import About from './pages/About';
+import ComingSoon from './pages/ComingSoon';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import TermsOfService from './pages/TermsOfService';
@@ -20,8 +21,6 @@ import Layout from './layout/MainLayout';
 
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Wallet = lazy(() => import('./pages/Wallet'));
-const Notifications = lazy(() => import('./pages/Notifications'));
-const Learning = lazy(() => import('./pages/Learning'));
 const Success = lazy(() => import('./pages/Success'));
 const Settings = lazy(() => import('./pages/Settings'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
@@ -29,13 +28,8 @@ const PaymentResult = lazy(() => import('./pages/PaymentResult'));
 const VoiceLibrary = lazy(() => import('./pages/VoiceLibrary'));
 const VoicePractice = lazy(() => import('./pages/VoicePractice'));
 const VoiceReport = lazy(() => import('./pages/VoiceReport'));
-const CoursesPublic = lazy(() => import('./pages/CoursesPublic'));
-const MilestoneDetail = lazy(() => import('./pages/MilestoneDetail'));
-const ReadingView = lazy(() => import('./pages/ReadingView'));
 const Community = lazy(() => import('./pages/Community'));
 const PaymentPage = lazy(() => import('./pages/PaymentPage'));
-const CoursesList = lazy(() => import('./pages/CoursesList'));
-const CourseDetail = lazy(() => import('./pages/CourseDetail'));
 
 
 const GuestRoute = ({ children }) => {
@@ -83,7 +77,7 @@ function App() {
                 }
               />
               <Route path="/about" element={<Wrap><About /></Wrap>} />
-              <Route path="/courses" element={<Wrap><CoursesPublic /></Wrap>} />
+              <Route path="/courses" element={<Wrap><ComingSoon title="Học Viện MC" description="Hệ thống khóa học MC chuyên nghiệp đang được xây dựng. Sẽ ra mắt sớm." /></Wrap>} />
               <Route path="/login" element={<GuestRoute><Wrap><Login /></Wrap></GuestRoute>} />
               <Route path="/forgot-password" element={<GuestRoute><Wrap><ForgotPassword /></Wrap></GuestRoute>} />
               <Route path="/register" element={<GuestRoute><Wrap><Register /></Wrap></GuestRoute>} />
@@ -102,7 +96,6 @@ function App() {
                     return <ProtectedRoute><Wrap><Dashboard /></Wrap></ProtectedRoute>;
                   })()}
                 />
-                <Route path="notifications" element={<ProtectedRoute><Wrap><Notifications /></Wrap></ProtectedRoute>} />
                 <Route path="settings" element={<ProtectedRoute><Wrap><Settings /></Wrap></ProtectedRoute>} />
                 <Route path="payment" element={<ProtectedRoute><Wrap><PaymentPage /></Wrap></ProtectedRoute>} />
 
@@ -118,16 +111,16 @@ function App() {
                 <Route path="voice/library" element={<Wrap><VoiceLibrary /></Wrap>} />
                 <Route path="voice/report/:sessionId" element={<ProtectedRoute><Wrap><VoiceReport /></Wrap></ProtectedRoute>} />
 
-                <Route path="learning" element={<Wrap><Learning /></Wrap>} />
-                <Route path="learning/milestone/:id" element={<ProtectedRoute><Wrap><MilestoneDetail /></Wrap></ProtectedRoute>} />
+                <Route path="learning" element={<Wrap><ComingSoon title="Lộ trình học tập" description="Lộ trình luyện tập MC theo từng cấp độ đang được phát triển. Sẽ ra mắt sớm." /></Wrap>} />
+                <Route path="learning/milestone/:id" element={<Wrap><ComingSoon title="Lộ trình học tập" description="Lộ trình luyện tập MC theo từng cấp độ đang được phát triển. Sẽ ra mắt sớm." /></Wrap>} />
                 <Route path="community" element={<Wrap><Community /></Wrap>} />
-                <Route path="courses" element={<ProtectedRoute><Wrap><CoursesList /></Wrap></ProtectedRoute>} />
-                <Route path="courses/:id" element={<ProtectedRoute><Wrap><CourseDetail /></Wrap></ProtectedRoute>} />
+                <Route path="courses" element={<Wrap><ComingSoon title="Khóa học MC" description="Hệ thống khóa học MC chuyên nghiệp đang được xây dựng. Sẽ ra mắt sớm." /></Wrap>} />
+                <Route path="courses/:id" element={<Wrap><ComingSoon title="Chi tiết khóa học" description="Hệ thống khóa học MC chuyên nghiệp đang được xây dựng. Sẽ ra mắt sớm." /></Wrap>} />
               </Route>
 
               {/* Full-screen curriculum views (outside MainLayout) */}
               <Route path="/m/voice/practice/:id" element={<ProtectedRoute><Wrap><VoicePractice /></Wrap></ProtectedRoute>} />
-              <Route path="/m/learning/guide/:id" element={<ProtectedRoute><Wrap><ReadingView /></Wrap></ProtectedRoute>} />
+              <Route path="/m/learning/guide/:id" element={<Wrap><ComingSoon title="Tài liệu học tập" description="Hệ thống tài liệu hướng dẫn đang được xây dựng. Sẽ ra mắt sớm." /></Wrap>} />
 
               <Route path="/payment/success" element={<ProtectedRoute><Wrap><PaymentResult /></Wrap></ProtectedRoute>} />
               <Route path="/payment/cancel" element={<ProtectedRoute><Wrap><PaymentResult /></Wrap></ProtectedRoute>} />

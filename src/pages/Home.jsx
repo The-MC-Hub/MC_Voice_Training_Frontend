@@ -17,6 +17,15 @@ import { fetchLessons } from '../controllers/voiceController';
 import LazyImage from '../components/ui/LazyImage';
 import ScrollToTop from '../components/ui/ScrollToTop';
 import ContactModal from '../components/modals/ContactModal';
+import SpotlightCard from '../components/ui/SpotlightCard';
+
+const CARD_HOVER_TRANSITION = { duration: 0.22, ease: [0.16, 1, 0.3, 1] };
+const DIFF_COLOR = {
+  EASY:   'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
+  MEDIUM: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+  HARD:   'text-red-400 bg-red-500/10 border-red-500/20',
+};
+const DIFF_LABEL = { EASY: 'Cơ bản', MEDIUM: 'Trung bình', HARD: 'Nâng cao' };
 
 // ─── Animation presets ────────────────────────────────────────────────────────
 const fadeUp = {
@@ -158,10 +167,10 @@ const CountMetric = ({ value, suffix = '', label }) => {
   const { count, ref } = useCountUp(numeric);
   return (
     <div ref={ref} className="text-center">
-      <p className="text-2xl font-bold text-white tabular-nums">
+      <p className="text-2xl font-bold text-amber-500 tabular-nums">
         {count.toLocaleString()}{suffix}
       </p>
-      <p className="text-[12px] text-zinc-500 mt-1">{label}</p>
+      <p className="text-[12px] text-gray-400 mt-1">{label}</p>
     </div>
   );
 };
@@ -184,11 +193,15 @@ const FaqItem = ({ q, a, index }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-      className={`border rounded-2xl overflow-hidden transition-colors ${open ? 'border-[#f5a623]/20 bg-[#111113]' : 'border-white/[0.07] bg-[#111113] hover:border-white/[0.12]'}`}
+    >
+    <SpotlightCard
+      spotlightColor="rgba(245,166,35,0.08)"
+      spotlightSize={280}
+      className={`border rounded-2xl overflow-hidden transition-all duration-200 ${open ? 'border-amber-200 bg-amber-50/50 shadow-sm' : 'border-gray-100 bg-white hover:border-amber-100 hover:shadow-sm'}`}
     >
       <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between p-5 text-left gap-4 group">
-        <span className={`text-[14px] font-medium transition-colors ${open ? 'text-white' : 'text-zinc-300 group-hover:text-white'}`}>{q}</span>
-        <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }} className={`shrink-0 transition-colors ${open ? 'text-[#f5a623]' : 'text-zinc-600'}`}>
+        <span className={`text-[14px] font-medium transition-colors ${open ? 'text-gray-900' : 'text-gray-700 group-hover:text-gray-900'}`}>{q}</span>
+        <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }} className={`shrink-0 transition-colors ${open ? 'text-amber-500' : 'text-gray-400'}`}>
           <ChevronDown size={16} />
         </motion.div>
       </button>
@@ -202,10 +215,11 @@ const FaqItem = ({ q, a, index }) => {
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
-            <p className="px-5 pb-5 text-[13px] text-zinc-400 leading-relaxed">{a}</p>
+            <p className="px-5 pb-5 text-[13px] text-gray-600 leading-relaxed">{a}</p>
           </motion.div>
         )}
       </AnimatePresence>
+    </SpotlightCard>
     </motion.div>
   );
 };
@@ -557,18 +571,25 @@ const Home = () => {
   const [copiedCert, setCopiedCert] = useState(false);
 
   return (
-    <div className="bg-[#09090b] text-white min-h-screen overflow-x-hidden">
+    <div className="bg-white text-gray-900 min-h-screen overflow-x-hidden">
       <Navbar />
 
       {/* ── 1. HERO ─────────────────────────────────────────────────────────── */}
       <section className="relative pt-32 pb-24 px-6 overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-amber-400 via-amber-500 to-amber-400" />
         <GridBackground />
         <SpotlightHero />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[280px] bg-[#f5a623]/[0.05] rounded-full blur-[80px] pointer-events-none" />
+        {/* Ambient orbs */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[280px] rounded-full blur-[80px] pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse, rgba(245,166,35,0.12) 0%, transparent 70%)' }} />
+        <div className="absolute top-20 -left-20 w-[350px] h-[350px] rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(251,191,36,0.07) 0%, transparent 70%)', filter: 'blur(40px)' }} />
+        <div className="absolute top-20 -right-20 w-[300px] h-[300px] rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%)', filter: 'blur(40px)' }} />
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <motion.div {...stagger(0)}>
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#f5a623]/25 bg-[#f5a623]/[0.06] text-[#f5a623] text-[11px] font-semibold uppercase tracking-widest mb-8">
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-200 bg-amber-50 text-amber-600 text-[11px] font-semibold uppercase tracking-widest mb-8">
               <Sparkles size={11} />
               {t('home.aiCoaching')}
             </span>
@@ -579,7 +600,7 @@ const Home = () => {
             <span className="text-[#f5a623]">{t('home.heroTitle2')}</span>
           </motion.h1>
 
-          <motion.p {...stagger(2)} className="text-zinc-400 text-lg max-w-xl mx-auto mb-10 leading-relaxed">
+          <motion.p {...stagger(2)} className="text-gray-500 text-lg max-w-xl mx-auto mb-10 leading-relaxed">
             {t('home.heroSubtitle')}
           </motion.p>
 
@@ -594,14 +615,14 @@ const Home = () => {
             </motion.button>
             <Link
               to="/m/voice/library"
-              className="flex items-center gap-2 px-6 py-3 rounded-xl border border-white/[0.1] text-zinc-300 text-[14px] font-medium hover:border-white/[0.18] hover:text-white transition-colors"
+              className="flex items-center gap-2 px-6 py-3 rounded-xl border border-gray-200 text-gray-600 text-[14px] font-medium hover:border-gray-300 hover:text-gray-900 transition-colors"
             >
               {t('home.browseLibrary')}
             </Link>
           </motion.div>
 
           {/* ── Metrics strip — count-up ── */}
-          <motion.div {...stagger(4)} className="flex justify-center gap-12 mt-16 pt-8 border-t border-white/[0.06]">
+          <motion.div {...stagger(4)} className="flex justify-center gap-12 mt-16 pt-8 border-t border-amber-100/20">
             <CountMetric value="2400" suffix="+" label={t('home.totalSessions') || 'Buổi luyện tập'} />
             <CountMetric value="94" suffix="%" label={t('home.accuracy') || 'Độ chính xác TB'} />
             <CountMetric value="50" suffix="+" label={t('home.extensiveLibrary') || 'Kịch bản'} />
@@ -610,13 +631,13 @@ const Home = () => {
       </section>
 
       {/* ── LOGO MARQUEE ────────────────────────────────────────────────────── */}
-      <section className="py-12 border-y border-white/[0.04] overflow-hidden">
+      <section className="py-12 border-y border-gray-100 overflow-hidden bg-gray-50/50">
         <div className="flex whitespace-nowrap">
           <div className="flex gap-20 animate-marquee shrink-0">
             {[...Array(2)].map((_, idx) => (
               <div key={idx} className="flex gap-20 items-center">
                 {['FPT EVENT', 'VINGROUP', 'TikTok', 'Senashow', 'Sun Group', 'Google'].map(brand => (
-                  <span key={brand} className="text-sm font-medium text-zinc-700 hover:text-zinc-400 transition-colors uppercase tracking-widest cursor-default">
+                  <span key={brand} className="text-sm font-medium text-gray-400 hover:text-gray-700 transition-colors uppercase tracking-widest cursor-default">
                     {brand}
                   </span>
                 ))}
@@ -627,12 +648,14 @@ const Home = () => {
       </section>
 
       {/* ── FEATURES ────────────────────────────────────────────────────────── */}
-      <section className="py-28 max-w-6xl mx-auto px-6 mt-12">
+      <section className="py-28 max-w-6xl mx-auto px-6 mt-12 relative">
+        <div className="absolute -top-20 right-0 w-[400px] h-[400px] rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(245,166,35,0.07) 0%, transparent 70%)', filter: 'blur(60px)' }} />
         <ScrollReveal direction="up">
           <div className="mb-16">
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-[#f5a623] mb-4">{t('home.whyChooseUs')}</p>
-            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mb-4">{t('home.coreAdvantage')}</h2>
-            <p className="text-zinc-400 max-w-lg leading-relaxed text-[15px]">{t('home.coreAdvantageDesc')}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-500 mb-4">{t('home.whyChooseUs')}</p>
+            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mb-4 text-gray-900">{t('home.coreAdvantage')}</h2>
+            <p className="text-gray-500 max-w-lg leading-relaxed text-[15px]">{t('home.coreAdvantageDesc')}</p>
           </div>
         </ScrollReveal>
 
@@ -658,12 +681,13 @@ const Home = () => {
             },
           ].map((f, i) => (
             <ScrollReveal key={i} delay={i * 0.12} direction="up">
-              <motion.div
-                whileHover={{ y: -6, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
-                className="relative group p-8 bg-[#111113] rounded-2xl overflow-hidden flex flex-col h-full cursor-default transition-colors duration-300"
-                style={{ border: '1px solid rgba(255,255,255,0.07)' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = f.accentColor + '33'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; }}
+              <SpotlightCard
+                spotlightColor={f.glow.replace('0.07)', '0.18)')}
+                spotlightSize={320}
+                className="relative group p-8 bg-white rounded-2xl overflow-hidden flex flex-col h-full cursor-default transition-all duration-300 shadow-sm hover:shadow-lg"
+                style={{ border: '1px solid rgba(0,0,0,0.06)' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = f.accentColor + '50'; e.currentTarget.style.boxShadow = `0 8px 30px ${f.glow}`; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.06)'; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)'; }}
               >
                 {/* Top accent line */}
                 <div className="absolute top-0 inset-x-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -684,11 +708,11 @@ const Home = () => {
                   </motion.div>
 
                   {/* Text */}
-                  <h3 className="text-[16px] font-semibold mb-3 text-white leading-snug">{f.title}</h3>
-                  <p className="text-zinc-500 text-[13px] leading-relaxed flex-1">{f.desc}</p>
+                  <h3 className="text-[16px] font-semibold mb-3 text-gray-900 leading-snug">{f.title}</h3>
+                  <p className="text-gray-500 text-[13px] leading-relaxed flex-1">{f.desc}</p>
 
                   {/* Metric row */}
-                  <div className="mt-8 pt-5 border-t border-white/[0.06] flex items-end justify-between">
+                  <div className="mt-8 pt-5 border-t border-gray-100 flex items-end justify-between">
                     <div>
                       <motion.p
                         initial={{ opacity: 0, y: 6 }}
@@ -700,7 +724,7 @@ const Home = () => {
                       >
                         {f.metric}
                       </motion.p>
-                      <p className="text-[10px] text-zinc-600 uppercase tracking-wider mt-1">{f.metricLabel}</p>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wider mt-1">{f.metricLabel}</p>
                     </div>
                     <motion.div
                       className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
@@ -710,7 +734,7 @@ const Home = () => {
                     </motion.div>
                   </div>
                 </div>
-              </motion.div>
+              </SpotlightCard>
             </ScrollReveal>
           ))}
         </div>
@@ -724,10 +748,10 @@ const Home = () => {
               <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#f5a623]/20 bg-[#f5a623]/[0.05] text-[#f5a623] text-[11px] font-semibold uppercase tracking-widest mb-5">
                 <BarChart3 size={10} /> Báo cáo AI
               </span>
-              <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mb-4 leading-snug">
-                Phân tích chi tiết <span className="text-[#f5a623]">từng tiêu chí</span>
+              <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mb-4 leading-snug text-gray-900">
+                Phân tích chi tiết <span className="text-amber-500">từng tiêu chí</span>
               </h2>
-              <p className="text-zinc-400 text-[15px] leading-relaxed mb-6">
+              <p className="text-gray-500 text-[15px] leading-relaxed mb-6">
                 Sau mỗi buổi luyện, AI trả về báo cáo gồm điểm 5 tiêu chí, feedback cụ thể và gợi ý cải thiện — không phải nhận xét chung chung.
               </p>
               <ul className="space-y-3">
@@ -737,7 +761,7 @@ const Home = () => {
                   'So sánh tiến trình qua các buổi luyện',
                   'Gợi ý mẹo luyện tập từ chuyên gia AI',
                 ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-2.5 text-[14px] text-zinc-400">
+                  <li key={i} className="flex items-start gap-2.5 text-[14px] text-gray-600">
                     <CheckCircle2 size={15} className="text-emerald-400 mt-0.5 shrink-0" />
                     {item}
                   </li>
@@ -763,13 +787,13 @@ const Home = () => {
         <section className="py-20 overflow-hidden">
           <div className="max-w-6xl mx-auto px-6 mb-10 flex items-end justify-between">
             <ScrollReveal direction="left">
-              <h2 className="text-3xl font-bold tracking-tight mb-2">Bài luyện đọc</h2>
-              <p className="text-zinc-500 text-[14px]">Chọn bài và bắt đầu luyện giọng ngay hôm nay.</p>
+              <h2 className="text-3xl font-bold tracking-tight mb-2 text-gray-900">Bài luyện đọc</h2>
+              <p className="text-gray-500 text-[14px]">Chọn bài và bắt đầu luyện giọng ngay hôm nay.</p>
             </ScrollReveal>
             <ScrollReveal direction="right">
               <Link
                 to={isAuthenticated ? "/m/voice/library" : "/login"}
-                className="flex items-center gap-1.5 text-[13px] font-medium text-zinc-400 hover:text-white transition-colors shrink-0"
+                className="flex items-center gap-1.5 text-[13px] font-medium text-gray-400 hover:text-gray-900 transition-colors shrink-0"
               >
                 Xem tất cả <ArrowRight size={14} />
               </Link>
@@ -782,17 +806,15 @@ const Home = () => {
                 <div key={i} className="flex gap-5 shrink-0">
                   {featuredLessons.map((lesson, idx) => {
                     const wordCount = lesson.content?.split(/\s+/).filter(Boolean).length || 0;
-                    const diffColor = lesson.difficulty === 'EASY' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
-                      : lesson.difficulty === 'MEDIUM' ? 'text-amber-400 bg-amber-500/10 border-amber-500/20'
-                      : 'text-red-400 bg-red-500/10 border-red-500/20';
-                    const diffLabel = lesson.difficulty === 'EASY' ? 'Cơ bản' : lesson.difficulty === 'MEDIUM' ? 'Trung bình' : lesson.difficulty === 'HARD' ? 'Nâng cao' : lesson.difficulty;
+                    const diffColor = DIFF_COLOR[lesson.difficulty] || DIFF_COLOR.HARD;
+                    const diffLabel = DIFF_LABEL[lesson.difficulty] || lesson.difficulty;
                     return (
                       <motion.div
                         key={`${i}-${idx}`}
                         whileHover={{ y: -6 }}
-                        transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                        transition={CARD_HOVER_TRANSITION}
                         onClick={() => navigate(isAuthenticated ? `/m/voice/practice/${lesson.id}` : '/login')}
-                        className="min-w-[340px] bg-[#111113] border border-white/[0.07] rounded-2xl overflow-hidden cursor-pointer hover:border-white/[0.16] transition-all duration-300 group flex flex-col"
+                        className="min-w-[340px] bg-white border border-gray-100 rounded-2xl overflow-hidden cursor-pointer hover:border-amber-200 hover:shadow-lg hover:shadow-amber-50 transition-all duration-300 group flex flex-col"
                       >
                         {/* Thumbnail */}
                         <div className="relative h-44 bg-[#09090b] overflow-hidden shrink-0">
@@ -802,16 +824,16 @@ const Home = () => {
                               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-[#0d0d0f]">
-                              <div className="w-12 h-12 rounded-2xl bg-[#f5a623]/[0.08] border border-[#f5a623]/15 flex items-center justify-center">
-                                <Mic size={22} className="text-[#f5a623]/60" />
+                            <div className="w-full h-full flex items-center justify-center bg-amber-50">
+                              <div className="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center">
+                                <Mic size={22} className="text-amber-400" />
                               </div>
                             </div>
                           )}
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#111113] via-[#111113]/20 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-transparent to-transparent" />
                           {/* Category pill — bottom left over gradient */}
                           <div className="absolute bottom-3 left-3">
-                            <span className="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-black/70 border border-white/[0.1] text-[#f5a623] backdrop-blur-sm uppercase tracking-widest">
+                            <span className="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-white/80 border border-amber-200/60 text-amber-600 backdrop-blur-sm uppercase tracking-widest shadow-sm">
                               {lesson.category || 'Luyện đọc'}
                             </span>
                           </div>
@@ -827,19 +849,19 @@ const Home = () => {
 
                         {/* Info */}
                         <div className="p-5 flex flex-col flex-1">
-                          <h4 className="text-[14px] font-semibold text-white leading-snug line-clamp-2 mb-2 group-hover:text-[#f5a623] transition-colors duration-200">
+                          <h4 className="text-[14px] font-semibold text-gray-900 leading-snug line-clamp-2 mb-2 group-hover:text-amber-500 transition-colors duration-200">
                             {lesson.title}
                           </h4>
                           {lesson.description && (
-                            <p className="text-[12px] text-zinc-500 line-clamp-2 leading-relaxed mb-4 flex-1">
+                            <p className="text-[12px] text-gray-500 line-clamp-2 leading-relaxed mb-4 flex-1">
                               {lesson.description}
                             </p>
                           )}
-                          <div className="flex items-center justify-between pt-3 border-t border-white/[0.06] mt-auto">
+                          <div className="flex items-center justify-between pt-3 border-t border-gray-100 mt-auto">
                             <div className="flex items-center gap-3">
                               <div className="flex items-center gap-1.5">
-                                <BookOpen size={11} className="text-zinc-600" />
-                                <span className="text-[11px] text-zinc-600">{wordCount} từ</span>
+                                <BookOpen size={11} className="text-gray-400" />
+                                <span className="text-[11px] text-gray-400">{wordCount} từ</span>
                               </div>
                             </div>
                             <span className="flex items-center gap-1 text-[11px] font-semibold text-[#f5a623] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -853,8 +875,8 @@ const Home = () => {
                 </div>
               ))}
             </div>
-            <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-[#09090b] to-transparent pointer-events-none z-10" />
-            <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-[#09090b] to-transparent pointer-events-none z-10" />
+            <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
+            <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
           </div>
         </section>
       )}
@@ -863,11 +885,11 @@ const Home = () => {
       <section className="py-24 max-w-6xl mx-auto px-6">
         <ScrollReveal direction="up">
           <div className="mb-12">
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.03] text-zinc-500 text-[11px] font-semibold uppercase tracking-widest mb-5">
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gray-200 bg-gray-50 text-gray-500 text-[11px] font-semibold uppercase tracking-widest mb-5">
               <MessageSquare size={10} /> Từ người dùng thật
             </span>
-            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight">
-              MC Hub đã giúp được <span className="text-[#f5a623]">họ</span>
+            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-gray-900">
+              MC Hub đã giúp được <span className="text-amber-500">họ</span>
             </h2>
           </div>
         </ScrollReveal>
@@ -875,10 +897,10 @@ const Home = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {testimonials.map((t, i) => (
             <ScrollReveal key={i} delay={i * 0.1}>
-              <motion.div
-                whileHover={{ y: -4 }}
-                transition={{ duration: 0.2 }}
-                className="p-6 bg-[#111113] border border-white/[0.07] rounded-2xl hover:border-white/[0.12] transition-all h-full flex flex-col"
+              <SpotlightCard
+                spotlightColor="rgba(245,166,35,0.09)"
+                spotlightSize={300}
+                className="p-6 bg-white border border-gray-100 rounded-2xl hover:border-amber-200 hover:shadow-md hover:shadow-amber-50 transition-all h-full flex flex-col"
               >
                 {/* Stars */}
                 <div className="flex gap-0.5 mb-4">
@@ -888,22 +910,22 @@ const Home = () => {
                 </div>
 
                 {/* Quote */}
-                <Quote size={18} className="text-zinc-700 mb-3" />
-                <p className="text-[13px] text-zinc-400 leading-relaxed flex-1 mb-5">"{t.quote}"</p>
+                <Quote size={18} className="text-amber-200 mb-3" />
+                <p className="text-[13px] text-gray-600 leading-relaxed flex-1 mb-5">"{t.quote}"</p>
 
                 {/* Author */}
-                <div className="flex items-center gap-3 pt-4 border-t border-white/[0.06]">
-                  <img src={t.avatar} alt={t.name} className="w-9 h-9 rounded-full object-cover border border-white/[0.1]" />
+                <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                  <img src={t.avatar} alt={t.name} className="w-9 h-9 rounded-full object-cover border border-gray-200" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-semibold text-white">{t.name}</p>
-                    <p className="text-[11px] text-zinc-600 truncate">{t.role}</p>
+                    <p className="text-[13px] font-semibold text-gray-900">{t.name}</p>
+                    <p className="text-[11px] text-gray-400 truncate">{t.role}</p>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-[10px] text-zinc-600 uppercase tracking-wider">Điểm đạt</p>
+                    <p className="text-[10px] text-gray-400 uppercase tracking-wider">Điểm đạt</p>
                     <p className="text-[14px] font-bold text-emerald-400">{t.score}</p>
                   </div>
                 </div>
-              </motion.div>
+              </SpotlightCard>
             </ScrollReveal>
           ))}
         </div>
@@ -912,7 +934,7 @@ const Home = () => {
       {/* ── ROADMAP ─────────────────────────────────────────────────────────── */}
       <section className="py-24 max-w-6xl mx-auto px-6">
         <ScrollReveal direction="up">
-          <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mb-16">{t('home.successRoadmap')}</h2>
+          <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mb-16 text-gray-900">{t('home.successRoadmap')}</h2>
         </ScrollReveal>
 
         <div className="space-y-10">
@@ -923,15 +945,15 @@ const Home = () => {
           ].map((item, i) => (
             <ScrollReveal key={i} delay={i * 0.12}>
               <div className="flex gap-8 items-start group">
-                <p className="text-[60px] font-bold leading-none text-zinc-800 select-none shrink-0 w-20 text-right group-hover:text-zinc-700 transition-colors">
+                <p className="text-[60px] font-bold leading-none text-amber-200 select-none shrink-0 w-20 text-right group-hover:text-amber-300 transition-colors">
                   {item.step}
                 </p>
-                <div className="pt-2 border-t border-white/[0.06] flex-1">
+                <div className="pt-2 border-t border-gray-200 flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[#f5a623]">{item.icon}</span>
-                    <h3 className="text-[16px] font-semibold">{item.title}</h3>
+                    <span className="text-amber-500">{item.icon}</span>
+                    <h3 className="text-[16px] font-semibold text-gray-900">{item.title}</h3>
                   </div>
-                  <p className="text-zinc-500 text-[14px] leading-relaxed max-w-lg">{item.desc}</p>
+                  <p className="text-gray-500 text-[14px] leading-relaxed max-w-lg">{item.desc}</p>
                 </div>
               </div>
             </ScrollReveal>
@@ -943,11 +965,11 @@ const Home = () => {
       <section className="py-24 max-w-3xl mx-auto px-6">
         <ScrollReveal direction="up">
           <div className="mb-10 text-center">
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.03] text-zinc-500 text-[11px] font-semibold uppercase tracking-widest mb-5">
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gray-200 bg-gray-50 text-gray-500 text-[11px] font-semibold uppercase tracking-widest mb-5">
               Câu hỏi thường gặp
             </span>
-            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight">
-              Bạn còn <span className="text-[#f5a623]">thắc mắc?</span>
+            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-gray-900">
+              Bạn còn <span className="text-amber-500">thắc mắc?</span>
             </h2>
           </div>
         </ScrollReveal>
@@ -963,7 +985,7 @@ const Home = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4, delay: 0.3 }}
-          className="mt-8 text-center text-[13px] text-zinc-600"
+          className="mt-8 text-center text-[13px] text-gray-500"
         >
           Vẫn còn câu hỏi?{' '}
           <Link to="/contact" className="text-[#f5a623] hover:underline">Liên hệ hỗ trợ →</Link>
@@ -973,7 +995,7 @@ const Home = () => {
       {/* ── CTA BANNER ──────────────────────────────────────────────────────── */}
       <section className="pb-24 px-6 max-w-6xl mx-auto">
         <ScrollReveal>
-          <div className="relative bg-[#111113] border border-white/[0.08] rounded-3xl overflow-hidden">
+          <div className="relative bg-amber-50 border border-amber-100 rounded-3xl overflow-hidden">
             {/* Top gold line */}
             <div className="absolute top-0 inset-x-0 h-px"
               style={{ background: 'linear-gradient(90deg, transparent 10%, rgba(245,166,35,0.45) 40%, rgba(245,166,35,0.45) 60%, transparent 90%)' }} />
@@ -990,7 +1012,7 @@ const Home = () => {
                   {t('home.readyToOwnMic')}{' '}
                   <span className="text-[#f5a623]">{t('home.theMic')}</span>
                 </h2>
-                <p className="text-zinc-400 text-[14px] leading-relaxed max-w-md mx-auto lg:mx-0">
+                <p className="text-gray-500 text-[14px] leading-relaxed max-w-md mx-auto lg:mx-0">
                   {t('home.ctaDesc')}
                 </p>
               </div>
@@ -998,24 +1020,24 @@ const Home = () => {
               {/* Right: buttons + social proof */}
               <div className="flex flex-col items-center lg:items-end gap-5 shrink-0">
                 <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                  <Link
+                    to="/m/payment"
+                    className="flex items-center justify-center gap-2 px-7 py-3 rounded-xl bg-[#f5a623] text-black text-[14px] font-semibold hover:bg-[#e09520] transition-colors shadow-lg shadow-[#f5a623]/15 whitespace-nowrap"
+                  >
+                    Xem gói <ArrowRight size={14} />
+                  </Link>
                   <motion.button
                     whileHover={{ y: -2 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => setIsContactModalOpen(true)}
-                    className="flex items-center justify-center gap-2 px-7 py-3 rounded-xl bg-[#f5a623] text-black text-[14px] font-semibold hover:bg-[#e09520] transition-colors shadow-lg shadow-[#f5a623]/15 whitespace-nowrap"
+                    className="flex items-center justify-center gap-2 px-7 py-3 rounded-xl border border-gray-200 text-gray-600 text-[14px] font-medium hover:border-gray-300 hover:text-gray-900 transition-colors whitespace-nowrap"
                   >
                     {t('home.sendMessage') || 'Liên hệ ngay'}
                   </motion.button>
-                  <Link
-                    to="/m/voice/library"
-                    className="flex items-center justify-center gap-2 px-7 py-3 rounded-xl border border-white/[0.1] text-zinc-300 text-[14px] font-medium hover:border-white/[0.2] hover:text-white transition-colors whitespace-nowrap"
-                  >
-                    {t('home.startLearning')} <ArrowRight size={14} />
-                  </Link>
                 </div>
                 {/* Social proof */}
-                <p className="text-[12px] text-zinc-600">
-                  Đã có <span className="text-zinc-400 font-medium">500+</span> MC tin dùng
+                <p className="text-[12px] text-gray-400">
+                  Đã có <span className="text-gray-600 font-medium">500+</span> MC tin dùng
                 </p>
               </div>
             </div>

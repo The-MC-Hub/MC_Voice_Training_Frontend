@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Mic, ChevronRight, BookOpen, Zap, Star } from "lucide-react";
+import SpotlightCard from '../ui/SpotlightCard';
 
 const CATEGORY_META = {
   WEDDING:      { label: "Đám cưới",     color: "text-pink-400 bg-pink-500/[0.08] border-pink-500/20" },
@@ -46,7 +47,7 @@ const SessionCard = ({ session, index, total, locale = "vi-VN" }) => {
 
   return (
     <Link to={`/m/voice/report/${id}`}>
-      <div className="m-5 group p-5 rounded-2xl border border-white/[0.06] bg-[#0e0e10] hover:border-[#f5a623]/25 hover:bg-[#f5a623]/[0.02] transition-all">
+      <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="m-5 group p-5 rounded-2xl border border-white/[0.06] bg-[#0e0e10] hover:border-[#f5a623]/25 hover:bg-[#f5a623]/[0.02] transition-all">
 
         {/* Row 1: icon + title + date */}
         <div className="flex items-start justify-between gap-3">
@@ -111,7 +112,7 @@ const SessionCard = ({ session, index, total, locale = "vi-VN" }) => {
           </span>
         </div>
 
-      </div>
+      </SpotlightCard>
     </Link>
   );
 };

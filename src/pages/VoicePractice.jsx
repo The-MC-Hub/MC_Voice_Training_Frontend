@@ -14,11 +14,10 @@ import { useAudioAnalyser } from '../hooks/useAudioAnalyser';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../store/useAuthStore';
-import { fetchLessonById, analyzePractice, fetchPracticeHistory } from '../controllers/voiceController';
+import { fetchLessonById, analyzePractice, fetchPracticeHistory, generateTTSAudio } from '../controllers/voiceController';
 import { ProgressBar, ProgressBarTrack, ProgressBarFill } from '@heroui/react';
 import TypewriterMarkdown from '../components/TypewriterMarkdown';
 import Navbar from '../components/Navbar';
-import PremiumModal from '../components/PremiumModal';
 
 const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60), s = seconds % 60;
@@ -45,13 +44,22 @@ const VoicePractice = () => {
     const [audioBlob, setAudioBlob]       = useState(null);
     const [audioUrl, setAudioUrl]         = useState(null);
     const [analyzing, setAnalyzing]       = useState(false);
+    const [analyzeProgress, setAnalyzeProgress] = useState(0);
+    const [analyzePhase, setAnalyzePhase]       = useState('');
+    const analyzeTimerRef = useRef(null);
     const [result, setResult]             = useState(null);
+
+    // TTS preview state
+    const [ttsLoading, setTtsLoading]     = useState(false);
+    const [ttsAudioUrl, setTtsAudioUrl]   = useState(null);
+    const [ttsVoice, setTtsVoice]         = useState('F1');
+    const [ttsError, setTtsError]         = useState(null);
+    const ttsAudioRef = useRef(null);
     const [error, setError]               = useState(null);
     const [history, setHistory]           = useState([]);
     const [currentPage, setCurrentPage]   = useState(1);
     const [recordingTime, setRecordingTime] = useState(0);
     const [totalPracticesCount, setTotalPracticesCount] = useState(0);
-    const [isPremiumModalOpen, setIsPremiumModalOpen]   = useState(false);
     const itemsPerPage = 4;
 
     // Script reader controls
@@ -128,6 +136,8 @@ const VoicePractice = () => {
     const timerRef          = useRef(null);
     const liveStreamRef     = useRef(null); // raw mic stream for analyser
 
+    const EMPTY_BARS = useMemo(() => new Array(36).fill(0), []);
+
     // Camera state
     const [cameraOn, setCameraOn]       = useState(false);
     const [cameraStream, setCameraStream] = useState(null);
@@ -171,11 +181,12 @@ const VoicePractice = () => {
 
     useEffect(() => () => {
         if (timerRef.current) clearInterval(timerRef.current);
+        if (analyzeTimerRef.current) clearInterval(analyzeTimerRef.current);
         mediaRecorderRef.current?.stream?.getTracks().forEach(t => t.stop());
     }, []);
 
     const startRecording = async () => {
-        if (!user?.isPremium && totalPracticesCount >= 5) { setIsPremiumModalOpen(true); return; }
+        if (!user?.isPremium && totalPracticesCount >= 5) { navigate('/m/payment'); return; }
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             liveStreamRef.current = stream; // expose to analyser
@@ -203,15 +214,49 @@ const VoicePractice = () => {
         }
     };
 
+    const ANALYZE_PHASES = [
+        { label: 'Đang tải âm thanh lên...',           target: 15 },
+        { label: 'Nhận dạng giọng nói...',             target: 35 },
+        { label: 'Phân tích ngữ điệu & nhịp điệu...', target: 55 },
+        { label: 'Phân tích chất lượng giọng...',      target: 75 },
+        { label: 'Tổng hợp & chấm điểm...',            target: 93 },
+    ];
+
+    const startAnalyzeProgress = () => {
+        setAnalyzeProgress(0);
+        setAnalyzePhase(ANALYZE_PHASES[0].label);
+        let phaseIdx = 0;
+        let current  = 0;
+        analyzeTimerRef.current = setInterval(() => {
+            const phase = ANALYZE_PHASES[phaseIdx];
+            if (current < phase.target) {
+                current = Math.min(current + (Math.random() * 1.2 + 0.4), phase.target);
+                setAnalyzeProgress(Math.round(current));
+            } else if (phaseIdx < ANALYZE_PHASES.length - 1) {
+                phaseIdx++;
+                setAnalyzePhase(ANALYZE_PHASES[phaseIdx].label);
+            }
+        }, 200);
+    };
+
+    const stopAnalyzeProgress = (success) => {
+        if (analyzeTimerRef.current) clearInterval(analyzeTimerRef.current);
+        if (success) {
+            setAnalyzePhase('Hoàn tất!');
+            setAnalyzeProgress(100);
+        }
+    };
+
     const handleAnalyze = async () => {
         if (!audioBlob) return;
         setAnalyzing(true); setError(null);
+        startAnalyzeProgress();
         try {
             const data = await analyzePractice(id, user.id, audioBlob);
             setResult({
-                accuracy_score:  data.accuracy_score  ?? data.accuracyScore  ?? 0,
-                rhythm_score:    data.rhythm_score    ?? data.rhythmScore    ?? 0,
-                speaking_rate_wpm: data.speaking_rate_wpm ?? data.speakingRateWpm ?? 0,
+                accuracy_score:    data.accuracy_score    ?? data.accuracyScore    ?? 0,
+                rhythm_score:      data.rhythm_score      ?? data.rhythmScore      ?? 0,
+                speaking_rate_wpm: data.speaking_rate_wpm ?? data.speakingRateWpm  ?? 0,
                 feedback_vi: data.feedback_vi ?? data.feedbackVi ?? "",
                 feedback_en: data.feedback_en ?? data.feedbackEn ?? "",
                 report_vi:   data.report_vi   ?? data.reportVi   ?? "",
@@ -219,18 +264,48 @@ const VoicePractice = () => {
                 tips_vi: data.tips_vi ?? data.expertTipsVi ?? [],
                 tips_en: data.tips_en ?? data.expertTipsEn ?? [],
                 text_spoken: data.text_spoken ?? data.textSpoken ?? "",
+                // Phase 1 extended
+                cer_rate:     data.cer_rate     ?? 0,
+                wer_rate:     data.wer_rate     ?? 0,
+                // Phase 2+3 extended
+                spectral_features: data.spectral_features ?? null,
+                pitch_contour:     data.pitch_contour     ?? null,
+                filler_words:      data.filler_words      ?? null,
+                voice_quality:     data.voice_quality     ?? null,
+                emotion_breakdown: data.emotion_breakdown ?? null,
                 status: "success",
             });
+            stopAnalyzeProgress(true);
             await fetchHistory();
         } catch (err) {
+            stopAnalyzeProgress(false);
             if (err.response?.status === 402 || err.response?.data?.code === "ERR_4005") {
-                setIsPremiumModalOpen(true);
+                navigate('/m/payment');
             }
             setError("AI Analysis failed. Please try again.");
         } finally { setAnalyzing(false); }
     };
 
     const resetPractice = () => { setAudioBlob(null); setAudioUrl(null); setResult(null); setError(null); setRecordingTime(0); };
+
+    const handleTTSPreview = async () => {
+        if (!lesson?.content) return;
+        // Revoke previous blob URL to free memory
+        if (ttsAudioUrl) URL.revokeObjectURL(ttsAudioUrl);
+        setTtsAudioUrl(null);
+        setTtsError(null);
+        setTtsLoading(true);
+        try {
+            const url = await generateTTSAudio(lesson.content, ttsVoice);
+            setTtsAudioUrl(url);
+            // Auto-play after generation
+            setTimeout(() => ttsAudioRef.current?.play(), 100);
+        } catch (err) {
+            setTtsError('Không thể tạo giọng nói AI. Kiểm tra AI service đang chạy.');
+        } finally {
+            setTtsLoading(false);
+        }
+    };
 
     const toggleCamera = useCallback(async () => {
         if (cameraOn) {
@@ -351,6 +426,44 @@ const VoicePractice = () => {
                                     </button>
                                 ))}
                             </div>
+
+                            {/* TTS Preview — nghe mẫu AI */}
+                            <div className="flex items-center gap-1.5">
+                                <select
+                                    value={ttsVoice}
+                                    onChange={e => setTtsVoice(e.target.value)}
+                                    disabled={ttsLoading}
+                                    className="bg-[#111113] border border-white/[0.08] text-zinc-400 text-[11px] py-1.5 px-2 rounded-lg focus:outline-none focus:border-white/20 cursor-pointer disabled:opacity-40"
+                                >
+                                    {['F1','F2','F3','F4','F5','M1','M2','M3','M4','M5'].map(v => (
+                                        <option key={v} value={v}>{v}</option>
+                                    ))}
+                                </select>
+                                <button
+                                    onClick={handleTTSPreview}
+                                    disabled={ttsLoading || !lesson?.content}
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/[0.1] text-zinc-300 text-[12px] font-medium hover:bg-white/[0.05] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                                >
+                                    {ttsLoading
+                                        ? <><Loader2 size={12} className="animate-spin" /> Đang tạo...</>
+                                        : <><Volume2 size={12} /> Nghe mẫu AI</>
+                                    }
+                                </button>
+                            </div>
+
+                            {/* Hidden audio player — auto-play after TTS generated */}
+                            {ttsAudioUrl && (
+                                <audio
+                                    ref={ttsAudioRef}
+                                    src={ttsAudioUrl}
+                                    controls
+                                    className="h-8 rounded-lg"
+                                    style={{ minWidth: 180, maxWidth: 220 }}
+                                />
+                            )}
+                            {ttsError && (
+                                <span className="text-[11px] text-red-400">{ttsError}</span>
+                            )}
 
                             {audioBlob && !analyzing && !result && (
                                 <button
@@ -668,7 +781,7 @@ const VoicePractice = () => {
 
                                     {/* Real-time waveform bars from mic */}
                                     <div className="flex items-end justify-center gap-[2px] h-10 mb-3 px-4 w-full max-w-[280px]">
-                                        {(recording ? bars : analyzing ? bars.map(() => Math.random() * 30 + 5) : new Array(36).fill(0)).map((val, i) => {
+                                        {(recording ? bars : analyzing ? bars.map(() => Math.random() * 30 + 5) : EMPTY_BARS).map((val, i) => {
                                             const h = recording
                                                 ? Math.max(2, Math.round(val * 0.36))   // 0–36px from live data
                                                 : analyzing
@@ -1224,13 +1337,29 @@ const VoicePractice = () => {
                                                     </div>
                                                     <div className="flex justify-between items-end">
                                                         <div>
-                                                            <p className="text-[10px] text-zinc-600 mb-0.5">{t('overallScore')}</p>
+                                                            <div className="flex items-center gap-1 mb-0.5">
+                                                                <span className="text-[10px] text-zinc-600">{t('overallScore')}</span>
+                                                                <div className="relative group/tt cursor-help">
+                                                                    <Info size={9} className="text-zinc-700" />
+                                                                    <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-48 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
+                                                                        Điểm tổng hợp = Clarity 45% + Energy 35% + Pace 20%
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                             <p className="text-lg font-bold text-white">
                                                                 {clampMetric(Number(h.accuracyScore||0)*0.45 + Number(h.rhythmScore||0)*0.35 + (Math.min(Number(h.speakingRateWpm||0),180)/180*20)).toFixed(1)}%
                                                             </p>
                                                         </div>
                                                         <div className="text-right">
-                                                            <p className="text-[10px] text-zinc-600 mb-0.5">WPM</p>
+                                                            <div className="flex items-center gap-1 mb-0.5">
+                                                                <span className="text-[10px] text-zinc-600">WPM</span>
+                                                                <div className="relative group/tt cursor-help">
+                                                                    <Info size={9} className="text-zinc-700" />
+                                                                    <div className="pointer-events-none absolute bottom-full right-0 mb-2 w-48 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-right">
+                                                                        Words Per Minute — tốc độ nói. MC chuyên nghiệp: 120-165 WPM.
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                             <p className="text-lg font-bold text-[#f5a623]">{Math.round(h.speakingRateWpm||0)}</p>
                                                         </div>
                                                     </div>
@@ -1314,6 +1443,123 @@ const VoicePractice = () => {
                                 </div>
                             </div>
 
+                            {/* Voice Quality — Phase 2+3 metrics */}
+                            {result && (result.voice_quality || result.spectral_features || result.filler_words) && (
+                                <div className="rounded-2xl border border-white/[0.07] bg-[#111113] p-5">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h3 className="text-[13px] font-semibold text-white">Voice Quality</h3>
+                                        <BarChart3 size={15} className="text-purple-400" />
+                                    </div>
+                                    <div className="space-y-3">
+                                        {result.voice_quality && (
+                                            <div className="grid grid-cols-3 gap-2">
+                                                {[
+                                                    { label: 'Jitter', value: result.voice_quality.jitter_pct, unit: '%', good: v => v < 1.0, warn: v => v < 2.0, color: v => v < 1.0 ? 'text-emerald-400' : v < 2.0 ? 'text-amber-400' : 'text-red-400', tooltip: 'Độ rung tần số cơ bản. < 1% = ổn định, 1-2% = chấp nhận được, > 2% = giọng run/không đều' },
+                                                    { label: 'Shimmer', value: result.voice_quality.shimmer_pct, unit: '%', color: v => v < 3.0 ? 'text-emerald-400' : v < 5.0 ? 'text-amber-400' : 'text-red-400', tooltip: 'Độ biến động biên độ. < 3% = tốt, 3-5% = bình thường, > 5% = giọng yếu hoặc mệt' },
+                                                    { label: 'HNR', value: result.voice_quality.hnr_db, unit: 'dB', color: v => v >= 15 ? 'text-emerald-400' : v >= 10 ? 'text-amber-400' : 'text-red-400', tooltip: 'Tỷ lệ hài âm/tạp âm (Harmonics-to-Noise Ratio). ≥ 15dB = giọng trong, 10-15dB = chấp nhận được, < 10dB = nhiều tạp âm' },
+                                                ].map(m => (
+                                                    <div key={m.label} className="p-3 rounded-xl bg-[#09090b] border border-white/[0.05] text-center">
+                                                        <div className="flex items-center justify-center gap-1 mb-1">
+                                                            <span className="text-[10px] text-zinc-600">{m.label}</span>
+                                                            {m.tooltip && (
+                                                                <div className="relative group/tt cursor-help">
+                                                                    <Info size={9} className="text-zinc-700" />
+                                                                    <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">
+                                                                        {m.tooltip}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <p className={`text-[15px] font-bold tabular-nums ${m.color(m.value)}`}>
+                                                            {(m.value ?? 0).toFixed(1)}<span className="text-[10px] text-zinc-600">{m.unit}</span>
+                                                        </p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                        {result.spectral_features && (
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <div className="p-3 rounded-xl bg-[#09090b] border border-white/[0.05]">
+                                                    <div className="flex items-center gap-1 mb-1">
+                                                        <span className="text-[10px] text-zinc-600">Spectral Centroid</span>
+                                                        <div className="relative group/tt cursor-help">
+                                                            <Info size={9} className="text-zinc-700" />
+                                                            <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">
+                                                                Trọng tâm phổ tần số. Giá trị cao hơn = giọng sáng, rõ hơn. Lý tưởng cho MC: ≥ 1500 Hz.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <p className={`text-[14px] font-bold tabular-nums ${(result.spectral_features.spectral_centroid_hz ?? 0) < 1500 ? 'text-amber-400' : 'text-emerald-400'}`}>
+                                                        {Math.round(result.spectral_features.spectral_centroid_hz ?? 0)}<span className="text-[10px] text-zinc-600"> Hz</span>
+                                                    </p>
+                                                </div>
+                                                <div className="p-3 rounded-xl bg-[#09090b] border border-white/[0.05]">
+                                                    <div className="flex items-center gap-1 mb-1">
+                                                        <span className="text-[10px] text-zinc-600">MFCC Stability</span>
+                                                        <div className="relative group/tt cursor-help">
+                                                            <Info size={9} className="text-zinc-700" />
+                                                            <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">
+                                                                Độ ổn định cấu trúc âm thanh (MFCC). ≥ 50/100 = phát âm nhất quán, ổn định. Thấp = phát âm không đều.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <p className={`text-[14px] font-bold tabular-nums ${(result.spectral_features.mfcc_stability_score ?? 0) >= 50 ? 'text-emerald-400' : 'text-amber-400'}`}>
+                                                        {(result.spectral_features.mfcc_stability_score ?? 0).toFixed(1)}<span className="text-[10px] text-zinc-600">/100</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
+                                        {result.pitch_contour && (
+                                            <div className="flex items-center gap-3 p-3 rounded-xl bg-[#09090b] border border-white/[0.05]">
+                                                <div className="flex items-center gap-1 w-24 shrink-0">
+                                                    <span className="text-[11px] text-zinc-500">Pitch Contour</span>
+                                                    <div className="relative group/tt cursor-help">
+                                                        <Info size={9} className="text-zinc-700" />
+                                                        <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
+                                                            Xu hướng cao độ giọng. Rising (↗) = giọng lên, thường hỏi. Falling (↘) = giọng xuống, khẳng định. Flat (→) = đều đặn.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span className={`text-[12px] font-semibold px-2 py-0.5 rounded-md ${
+                                                    result.pitch_contour.pitch_contour === 'rising' ? 'bg-cyan-500/10 text-cyan-400' :
+                                                    result.pitch_contour.pitch_contour === 'falling' ? 'bg-purple-500/10 text-purple-400' :
+                                                    'bg-amber-500/10 text-amber-400'
+                                                }`}>
+                                                    {result.pitch_contour.pitch_contour === 'rising' ? '↗ Rising' :
+                                                     result.pitch_contour.pitch_contour === 'falling' ? '↘ Falling' : '→ Flat'}
+                                                </span>
+                                                <span className="text-[11px] text-zinc-600 ml-auto tabular-nums">{(result.pitch_contour.pitch_slope ?? 0).toFixed(2)} st/s</span>
+                                            </div>
+                                        )}
+                                        {result.filler_words && result.filler_words.filler_count > 0 && (
+                                            <div className="p-3 rounded-xl bg-amber-500/[0.04] border border-amber-500/10">
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <div className="flex items-center gap-1">
+                                                        <span className="text-[11px] text-zinc-500">Filler Words</span>
+                                                        <div className="relative group/tt cursor-help">
+                                                            <Info size={9} className="text-zinc-700" />
+                                                            <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
+                                                                Từ đệm không cần thiết (ừm, ờ, thì là, kiểu như…). Nhiều filler words → giảm tính chuyên nghiệp. MC nên giảm xuống ≤ 2%.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <span className="text-[12px] font-semibold text-amber-400">{result.filler_words.filler_count} detected</span>
+                                                </div>
+                                                {result.filler_words.fillers_found?.length > 0 && (
+                                                    <div className="flex flex-wrap gap-1 mt-1">
+                                                        {result.filler_words.fillers_found.slice(0, 5).map((f, i) => (
+                                                            <span key={i} className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/15">
+                                                                {f.word} ×{f.count}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
                             {/* AI Analysis */}
                             <div className={`rounded-2xl border transition-all ${result ? 'border-white/[0.07] bg-[#111113]' : 'border-dashed border-white/[0.05] bg-[#111113]/50'}`}>
                                 <div className="flex items-center gap-2 px-5 py-4 border-b border-white/[0.05]">
@@ -1381,6 +1627,60 @@ const VoicePractice = () => {
                                                 </div>
                                             </div>
                                         )}
+                                    </div>
+                                ) : analyzing ? (
+                                    <div className="py-10 px-6 flex flex-col items-center">
+                                        {/* Phase icon */}
+                                        <div className="w-12 h-12 rounded-full bg-[#f5a623]/[0.08] border border-[#f5a623]/20 flex items-center justify-center mb-4">
+                                            <Loader2 size={20} className="text-[#f5a623] animate-spin" />
+                                        </div>
+
+                                        {/* Phase label */}
+                                        <AnimatePresence mode="wait">
+                                            <motion.p
+                                                key={analyzePhase}
+                                                initial={{ opacity: 0, y: 4 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -4 }}
+                                                transition={{ duration: 0.2 }}
+                                                className="text-[13px] font-medium text-white mb-4 text-center"
+                                            >
+                                                {analyzePhase}
+                                            </motion.p>
+                                        </AnimatePresence>
+
+                                        {/* Progress bar */}
+                                        <div className="w-full max-w-[240px] mb-3">
+                                            <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                                                <motion.div
+                                                    className="h-full rounded-full bg-gradient-to-r from-[#f5a623] to-[#f5a623]/70"
+                                                    animate={{ width: `${analyzeProgress}%` }}
+                                                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                                                />
+                                            </div>
+                                            <div className="flex justify-between mt-1.5">
+                                                <span className="text-[10px] text-zinc-600">AI đang xử lý</span>
+                                                <span className="text-[10px] font-semibold text-[#f5a623]">{analyzeProgress}%</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Phase steps */}
+                                        <div className="w-full max-w-[240px] space-y-1.5 mt-2">
+                                            {ANALYZE_PHASES.map((p, i) => {
+                                                const done = analyzeProgress >= p.target;
+                                                const active = analyzePhase === p.label;
+                                                return (
+                                                    <div key={i} className="flex items-center gap-2">
+                                                        <div className={`w-1.5 h-1.5 rounded-full shrink-0 transition-all duration-300 ${
+                                                            done ? 'bg-emerald-500' : active ? 'bg-[#f5a623] animate-pulse' : 'bg-zinc-700'
+                                                        }`} />
+                                                        <span className={`text-[11px] transition-colors duration-300 ${
+                                                            done ? 'text-emerald-500/70' : active ? 'text-zinc-300' : 'text-zinc-600'
+                                                        }`}>{p.label}</span>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
                                 ) : (
                                     <div className="py-12 text-center px-5">
@@ -1460,7 +1760,6 @@ const VoicePractice = () => {
                 </div>
             </main>
 
-            <PremiumModal isOpen={isPremiumModalOpen} onClose={() => setIsPremiumModalOpen(false)} onUpgradeSuccess={fetchHistory} />
         </div>
     );
 };

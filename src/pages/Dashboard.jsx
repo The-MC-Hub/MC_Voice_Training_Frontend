@@ -29,15 +29,22 @@ const Dashboard = () => {
   );
   const loading = dashLoading || practiceLoading;
 
-  const avgAccuracy = practiceHistory?.length
-    ? (practiceHistory.reduce((acc, p) => acc + (p.accuracy_score || 0), 0) / practiceHistory.length).toFixed(1)
-    : "0";
-  const totalPractices = practiceHistory?.length || 0;
-  const avgWpm = practiceHistory?.length
-    ? (practiceHistory.reduce((acc, p) => acc + (p.speaking_rate_wpm || 0), 0) / practiceHistory.length).toFixed(0)
-    : "0";
-  const level = Math.floor(totalPractices / 5) + 1;
-  const levelLabel = totalPractices > 10 ? t('dashboard.professional') : t('dashboard.training');
+  const { avgAccuracy, totalPractices, avgWpm, level, levelLabel } = useMemo(() => {
+    const total = practiceHistory?.length || 0;
+    const acc = total
+      ? (practiceHistory.reduce((s, p) => s + (p.accuracy_score || 0), 0) / total).toFixed(1)
+      : "0";
+    const wpm = total
+      ? (practiceHistory.reduce((s, p) => s + (p.speaking_rate_wpm || 0), 0) / total).toFixed(0)
+      : "0";
+    return {
+      avgAccuracy: acc,
+      totalPractices: total,
+      avgWpm: wpm,
+      level: Math.floor(total / 5) + 1,
+      levelLabel: total > 10 ? t('dashboard.professional') : t('dashboard.training'),
+    };
+  }, [practiceHistory, t]);
 
   const chartData = useMemo(() => {
     if (!practiceHistory?.length) return [];

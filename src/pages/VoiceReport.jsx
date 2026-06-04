@@ -57,11 +57,21 @@ const MetricBar = ({ label, value, maxValue = 100, color, tooltip }) => {
     );
 };
 
-const CriteriaBar = ({ label, value }) => {
+const CriteriaBar = ({ label, value, tooltip }) => {
     const sc = scoreColor(value);
     return (
         <div className="flex items-center gap-3">
-            <span className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider w-24 shrink-0">{label}</span>
+            <div className="flex items-center gap-1 w-24 shrink-0">
+                <span className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider">{label}</span>
+                {tooltip && (
+                    <div className="relative group/tt cursor-help">
+                        <Info size={9} className="text-zinc-700" />
+                        <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-44 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
+                            {tooltip}
+                        </div>
+                    </div>
+                )}
+            </div>
             <div className="flex-1 h-1.5 rounded-full bg-white/[0.05]">
                 <motion.div
                     initial={{ width: 0 }}
@@ -81,6 +91,14 @@ const CRITERIA_LABEL = {
     PACING:        'Tốc độ',
     EMOTION:       'Cảm xúc',
     ACCURACY:      'Chính xác',
+};
+
+const CRITERIA_TOOLTIP = {
+    PRONUNCIATION: 'Độ chính xác phát âm từng từ, âm tiết.',
+    RHYTHM:        'Nhịp điệu, ngữ điệu lên xuống đúng ngữ cảnh.',
+    PACING:        'Tốc độ nói có phù hợp mục tiêu WPM không.',
+    EMOTION:       'Mức độ cảm xúc, biểu cảm trong giọng nói.',
+    ACCURACY:      'Độ khớp giữa văn bản đọc và kịch bản gốc.',
 };
 
 const VoiceReport = () => {
@@ -112,6 +130,13 @@ const VoiceReport = () => {
                     text_spoken:      data.text_spoken ?? data.textSpoken ?? "",
                     createdAt:        data.createdAt,
                     lessonId:         data.lessonId,
+                    cer_rate:          data.cer_rate          ?? 0,
+                    wer_rate:          data.wer_rate          ?? 0,
+                    voice_quality:     data.voice_quality     ?? null,
+                    spectral_features: data.spectral_features ?? null,
+                    pitch_contour:     data.pitch_contour     ?? null,
+                    filler_words:      data.filler_words      ?? null,
+                    emotion_breakdown: data.emotion_breakdown ?? null,
                 };
                 setSession(n);
                 if (n.lessonId) setLesson(await fetchLessonById(n.lessonId));
@@ -153,7 +178,7 @@ const VoiceReport = () => {
     const criteriaEntries = useMemo(() => {
         const c = session?.criteria_scores;
         if (!c || typeof c !== 'object') return [];
-        return Object.entries(c).map(([k, v]) => ({ key: k, label: CRITERIA_LABEL[k] || k, value: Number(v) }));
+        return Object.entries(c).map(([k, v]) => ({ key: k, label: CRITERIA_LABEL[k] || k, value: Number(v), tooltip: CRITERIA_TOOLTIP[k] }));
     }, [session]);
 
     const dateStr = useMemo(() => {
@@ -217,12 +242,20 @@ const VoiceReport = () => {
 
                         <div className="grid grid-cols-2 gap-2.5">
                             {[
-                                { icon: BarChart3, label: t('voiceReport.coverage'), value: `${coverage.toFixed(0)}%`, color: 'text-cyan-400' },
-                                { icon: Clock,     label: t('voiceReport.paceSummary'), value: `${pace.toFixed(0)} WPM`, color: 'text-violet-400' },
-                            ].map(({ icon: Icon, label, value, color }) => (
+                                { icon: BarChart3, label: t('voiceReport.coverage'), value: `${coverage.toFixed(0)}%`, color: 'text-cyan-400', tooltip: 'Tỷ lệ % kịch bản đã đọc được. 100% = đọc đủ toàn bộ nội dung.' },
+                                { icon: Clock,     label: t('voiceReport.paceSummary'), value: `${pace.toFixed(0)} WPM`, color: 'text-violet-400', tooltip: 'Words Per Minute — tốc độ nói. MC chuyên nghiệp: 120-165 WPM.' },
+                            ].map(({ icon: Icon, label, value, color, tooltip }) => (
                                 <div key={label} className="bg-[#09090b] border border-white/[0.06] rounded-xl p-3">
                                     <Icon size={13} className={`${color} mb-1.5`} />
-                                    <p className="text-[10px] text-zinc-600 uppercase tracking-wider mb-1">{label}</p>
+                                    <div className="flex items-center gap-1 mb-1">
+                                        <p className="text-[10px] text-zinc-600 uppercase tracking-wider">{label}</p>
+                                        <div className="relative group/tt cursor-help">
+                                            <Info size={9} className="text-zinc-700" />
+                                            <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-44 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
+                                                {tooltip}
+                                            </div>
+                                        </div>
+                                    </div>
                                     <p className={`text-[17px] font-bold ${color}`}>{value}</p>
                                 </div>
                             ))}
@@ -248,9 +281,123 @@ const VoiceReport = () => {
                                 <Target size={13} className="text-indigo-400" /> Điểm tiêu chí
                             </h3>
                             <div className="space-y-3.5">
-                                {criteriaEntries.map(({ key, label, value }) => (
-                                    <CriteriaBar key={key} label={label} value={value} />
+                                {criteriaEntries.map(({ key, label, value, tooltip }) => (
+                                    <CriteriaBar key={key} label={label} value={value} tooltip={tooltip} />
                                 ))}
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {/* Voice Quality — Phase 2+3 */}
+                    {(session?.voice_quality || session?.spectral_features || session?.filler_words || session?.pitch_contour) && (
+                        <motion.div {...fadeUp(0.18)} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6">
+                            <h3 className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5 mb-5">
+                                <BarChart3 size={13} className="text-purple-400" /> Chất lượng giọng nói
+                            </h3>
+                            <div className="space-y-3">
+                                {session.voice_quality && (
+                                    <div className="grid grid-cols-3 gap-2">
+                                        {[
+                                            { label: 'Jitter', value: session.voice_quality.jitter_pct, unit: '%', color: v => v < 1.0 ? 'text-emerald-400' : v < 2.0 ? 'text-amber-400' : 'text-red-400', tooltip: 'Độ rung tần số cơ bản. < 1% = ổn định, 1-2% = chấp nhận được, > 2% = giọng run/không đều' },
+                                            { label: 'Shimmer', value: session.voice_quality.shimmer_pct, unit: '%', color: v => v < 3.0 ? 'text-emerald-400' : v < 5.0 ? 'text-amber-400' : 'text-red-400', tooltip: 'Độ biến động biên độ. < 3% = tốt, 3-5% = bình thường, > 5% = giọng yếu hoặc mệt' },
+                                            { label: 'HNR', value: session.voice_quality.hnr_db, unit: 'dB', color: v => v >= 15 ? 'text-emerald-400' : v >= 10 ? 'text-amber-400' : 'text-red-400', tooltip: 'Tỷ lệ hài âm/tạp âm. ≥ 15dB = giọng trong, 10-15dB = chấp nhận được, < 10dB = nhiều tạp âm' },
+                                        ].map(m => (
+                                            <div key={m.label} className="p-3 rounded-xl bg-[#09090b] border border-white/[0.05] text-center">
+                                                <div className="flex items-center justify-center gap-1 mb-1">
+                                                    <span className="text-[10px] text-zinc-600">{m.label}</span>
+                                                    <div className="relative group/tt cursor-help">
+                                                        <Info size={9} className="text-zinc-700" />
+                                                        <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">
+                                                            {m.tooltip}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <p className={`text-[15px] font-bold tabular-nums ${m.color(m.value ?? 0)}`}>
+                                                    {(m.value ?? 0).toFixed(1)}<span className="text-[10px] text-zinc-600">{m.unit}</span>
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                                {session.spectral_features && (
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div className="p-3 rounded-xl bg-[#09090b] border border-white/[0.05]">
+                                            <div className="flex items-center gap-1 mb-1">
+                                                <span className="text-[10px] text-zinc-600">Spectral Centroid</span>
+                                                <div className="relative group/tt cursor-help">
+                                                    <Info size={9} className="text-zinc-700" />
+                                                    <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
+                                                        Trọng tâm phổ tần số. Giá trị cao hơn = giọng sáng, rõ hơn. Lý tưởng cho MC: ≥ 1500 Hz.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p className={`text-[14px] font-bold tabular-nums ${(session.spectral_features.spectral_centroid_hz ?? 0) < 1500 ? 'text-amber-400' : 'text-emerald-400'}`}>
+                                                {Math.round(session.spectral_features.spectral_centroid_hz ?? 0)}<span className="text-[10px] text-zinc-600"> Hz</span>
+                                            </p>
+                                        </div>
+                                        <div className="p-3 rounded-xl bg-[#09090b] border border-white/[0.05]">
+                                            <div className="flex items-center gap-1 mb-1">
+                                                <span className="text-[10px] text-zinc-600">MFCC Stability</span>
+                                                <div className="relative group/tt cursor-help">
+                                                    <Info size={9} className="text-zinc-700" />
+                                                    <div className="pointer-events-none absolute bottom-full right-0 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
+                                                        Độ ổn định cấu trúc âm thanh (MFCC). ≥ 50/100 = phát âm nhất quán, ổn định.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p className={`text-[14px] font-bold tabular-nums ${(session.spectral_features.mfcc_stability_score ?? 0) >= 50 ? 'text-emerald-400' : 'text-amber-400'}`}>
+                                                {(session.spectral_features.mfcc_stability_score ?? 0).toFixed(1)}<span className="text-[10px] text-zinc-600">/100</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+                                {session.pitch_contour && (
+                                    <div className="flex items-center gap-3 p-3 rounded-xl bg-[#09090b] border border-white/[0.05]">
+                                        <div className="flex items-center gap-1 w-24 shrink-0">
+                                            <span className="text-[11px] text-zinc-500">Pitch Contour</span>
+                                            <div className="relative group/tt cursor-help">
+                                                <Info size={9} className="text-zinc-700" />
+                                                <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
+                                                    Xu hướng cao độ giọng. Rising (↗) = giọng lên. Falling (↘) = giọng xuống. Flat (→) = đều đặn.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span className={`text-[12px] font-semibold px-2 py-0.5 rounded-md ${
+                                            session.pitch_contour.pitch_contour === 'rising' ? 'bg-cyan-500/10 text-cyan-400' :
+                                            session.pitch_contour.pitch_contour === 'falling' ? 'bg-purple-500/10 text-purple-400' :
+                                            'bg-amber-500/10 text-amber-400'
+                                        }`}>
+                                            {session.pitch_contour.pitch_contour === 'rising' ? '↗ Rising' :
+                                             session.pitch_contour.pitch_contour === 'falling' ? '↘ Falling' : '→ Flat'}
+                                        </span>
+                                        <span className="text-[11px] text-zinc-600 ml-auto tabular-nums">{(session.pitch_contour.pitch_slope ?? 0).toFixed(2)} st/s</span>
+                                    </div>
+                                )}
+                                {session.filler_words && session.filler_words.filler_count > 0 && (
+                                    <div className="p-3 rounded-xl bg-amber-500/[0.04] border border-amber-500/10">
+                                        <div className="flex items-center justify-between mb-1">
+                                            <div className="flex items-center gap-1">
+                                                <span className="text-[11px] text-zinc-500">Filler Words</span>
+                                                <div className="relative group/tt cursor-help">
+                                                    <Info size={9} className="text-zinc-700" />
+                                                    <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
+                                                        Từ đệm không cần thiết (ừm, ờ, thì là…). MC nên giảm xuống ≤ 2% tổng số từ.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span className="text-[12px] font-semibold text-amber-400">{session.filler_words.filler_count} detected</span>
+                                        </div>
+                                        {session.filler_words.fillers_found?.length > 0 && (
+                                            <div className="flex flex-wrap gap-1 mt-1">
+                                                {session.filler_words.fillers_found.slice(0, 5).map((f, i) => (
+                                                    <span key={i} className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/15">
+                                                        {f.word} ×{f.count}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </motion.div>
                     )}

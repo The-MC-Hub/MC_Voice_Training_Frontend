@@ -14,7 +14,8 @@
     "logout": "Logout",
     "noAlerts": "No new notifications",
     "markAllRead": "Mark all as read",
-    "orders": "My Orders"
+    "orders": "My Orders",
+    "pricing": "Pricing"
   },
   "voicePractice": {
     "analyzeNow": "Analyze Now",
