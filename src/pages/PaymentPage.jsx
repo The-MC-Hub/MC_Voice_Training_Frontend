@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   Sparkles, Check, ShieldCheck, CreditCard, Award, AlertCircle,
-  ArrowLeft, Zap, BookOpen, Globe, Copy, Lock, CheckCircle2
+  ArrowLeft, Zap, BookOpen, Globe, Lock, CheckCircle2
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
@@ -71,7 +71,6 @@ const PaymentPage = () => {
   const [error, setError] = useState(null);
   const [simulating, setSimulating] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [copiedMemo, setCopiedMemo] = useState(false);
   const pollRef = useRef(null);
 
   const fetchOrder = async (plan = selectedPlan) => {
@@ -123,13 +122,6 @@ const PaymentPage = () => {
     } finally {
       setSimulating(false);
     }
-  };
-
-  const copyMemo = () => {
-    if (!orderData?.memo) return;
-    navigator.clipboard.writeText(orderData.memo);
-    setCopiedMemo(true);
-    setTimeout(() => setCopiedMemo(false), 2000);
   };
 
   if (success) {
@@ -241,7 +233,7 @@ const PaymentPage = () => {
             {loading ? (
               <div className="flex-1 flex flex-col items-center justify-center gap-4 py-16">
                 <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#f5a623] border-t-transparent" />
-                <p className="text-[12px] text-gray-400">Đang tạo VietQR...</p>
+                <p className="text-[12px] text-gray-400">Đang tạo đơn hàng...</p>
               </div>
             ) : error ? (
               <div className="flex-1 flex flex-col items-center justify-center gap-4 py-16 text-center">
@@ -255,46 +247,32 @@ const PaymentPage = () => {
                 </button>
               </div>
             ) : orderData ? (
-              <div className="flex flex-col items-center gap-5 w-full">
-                {/* QR code */}
-                <div className="p-3 rounded-2xl bg-white shadow-xl">
-                  <img src={orderData.qrUrl} alt="VietQR" className="w-44 h-44 object-contain rounded-xl" />
+              <div className="flex flex-col items-center gap-6 w-full">
+                {/* Amount summary */}
+                <div className="w-full bg-white border border-gray-100 rounded-2xl p-5 text-center">
+                  <p className="text-[11px] text-gray-400 uppercase tracking-wider mb-1">Số tiền thanh toán</p>
+                  <p className="text-3xl font-bold text-gray-900">{orderData.amount?.toLocaleString("vi-VN")}đ</p>
+                  <p className="text-[12px] text-gray-400 mt-1">Gói {orderData.plan}</p>
                 </div>
 
-                {/* Bank info */}
-                <div className="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-2">
-                  <p className="text-[10px] font-medium uppercase tracking-wider text-gray-400 mb-3">Thông tin tài khoản</p>
-                  {[
-                    { label: "Chủ tài khoản", value: orderData.accountName },
-                    { label: "Ngân hàng", value: "MBBank" },
-                    { label: "Số tài khoản", value: orderData.accountNumber },
-                    { label: "Số tiền", value: orderData.amount?.toLocaleString("vi-VN") + "đ" },
-                  ].map(({ label, value }) => (
-                    <div key={label} className="flex justify-between items-center py-1 border-b border-gray-200 last:border-0">
-                      <span className="text-[11px] text-gray-400">{label}</span>
-                      <span className="text-[12px] font-semibold text-gray-700">{value}</span>
-                    </div>
-                  ))}
-                </div>
+                {/* PayOS button */}
+                <button
+                  onClick={() => { window.location.href = orderData.checkoutUrl; }}
+                  className="w-full py-4 bg-[#f5a623] hover:bg-[#e09515] text-white font-bold text-[15px] rounded-2xl transition-colors flex items-center justify-center gap-3 shadow-lg shadow-amber-200"
+                >
+                  <CreditCard size={18} />
+                  Thanh toán qua PayOS
+                </button>
 
-                {/* Memo */}
-                <div className="w-full">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-semibold text-[#f5a623] uppercase tracking-wider">Nội dung CK (bắt buộc)</span>
-                    <button
-                      onClick={copyMemo}
-                      className="flex items-center gap-1 text-[10px] text-gray-400 hover:text-[#f5a623] transition-colors"
-                    >
-                      {copiedMemo ? <><Check size={10} /> Đã copy</> : <><Copy size={10} /> Sao chép</>}
-                    </button>
-                  </div>
-                  <code
-                    onClick={copyMemo}
-                    className="block w-full text-center text-[13px] font-bold text-[#f5a623] py-2.5 px-3 rounded-xl bg-[#f5a623]/[0.05] border border-[#f5a623]/20 cursor-pointer select-all hover:bg-[#f5a623]/[0.08] transition-colors"
-                  >
-                    {orderData.memo}
-                  </code>
-                  <p className="text-[10px] text-gray-400 text-center mt-1.5">Nhấn để sao chép · Phải khớp chính xác</p>
+                <p className="text-[11px] text-gray-400 text-center leading-relaxed">
+                  Bạn sẽ được chuyển đến trang thanh toán PayOS an toàn.<br/>
+                  Hỗ trợ: Chuyển khoản ngân hàng, ví điện tử, QR Code.
+                </p>
+
+                {/* Trust signals */}
+                <div className="flex items-center gap-2 text-gray-400">
+                  <Lock size={11} />
+                  <span className="text-[11px]">Bảo mật SSL · Mã hoá end-to-end</span>
                 </div>
 
                 {/* Waiting indicator */}
