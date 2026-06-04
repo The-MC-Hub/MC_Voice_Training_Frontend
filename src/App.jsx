@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { useAuthStore } from './store/useAuthStore';
@@ -59,8 +59,14 @@ const RoleRoute = ({ children, allowedRoles }) => {
 const Wrap = ({ children }) => <PageTransition>{children}</PageTransition>;
 
 function App() {
-  const { role } = useAuthStore();
+  const { role, user, isAuthenticated, refreshUser } = useAuthStore();
   const location = useLocation();
+
+  useEffect(() => {
+    if (isAuthenticated && user && user.plan === undefined) {
+      refreshUser();
+    }
+  }, [isAuthenticated]);
 
   return (
     <ThemeProvider>

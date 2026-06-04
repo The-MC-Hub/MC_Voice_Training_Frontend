@@ -218,51 +218,81 @@ const PaymentPage = () => {
 
             {PLANS.map((plan) => {
               const isSelected = selectedPlan === plan.key;
+              const isCurrentPlan = user?.plan === plan.key;
               return (
                 <button
                   key={plan.key}
                   onClick={() => {
+                    if (isCurrentPlan) return;
                     setSelectedPlan(plan.key);
                     fetchOrder(plan.key);
                   }}
                   className={`w-full text-left p-5 rounded-2xl border transition-all duration-200 ${
-                    isSelected
+                    isCurrentPlan
+                      ? 'border-zinc-700 bg-zinc-900 cursor-default'
+                      : isSelected
                       ? `${plan.borderColor} bg-white ${plan.glowColor}`
-                      : "border-gray-200 bg-white hover:border-gray-200 hover:bg-gray-50"
+                      : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-[15px] font-bold text-gray-900">{plan.name}</span>
-                        {plan.badge && (
+                        <span className={`text-[15px] font-bold ${isCurrentPlan ? 'text-white' : 'text-gray-900'}`}>
+                          {plan.name}
+                        </span>
+                        {isCurrentPlan ? (
+                          <span className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-[#f5a623]/10 border-[#f5a623]/40 text-[#f5a623] flex items-center gap-1">
+                            <CheckCircle2 size={9} /> Gói hiện tại
+                          </span>
+                        ) : plan.badge && (
                           <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold ${plan.badgeColor}`}>
                             {plan.badge}
                           </span>
                         )}
                       </div>
                       <div className="flex items-baseline gap-1 mb-3">
-                        <span className={`text-2xl font-bold ${plan.highlight && isSelected ? 'text-[#f5a623]' : 'text-gray-900'}`}>
+                        <span className={`text-2xl font-bold ${isCurrentPlan ? 'text-zinc-400' : plan.highlight && isSelected ? 'text-[#f5a623]' : 'text-gray-900'}`}>
                           {plan.price}
                         </span>
-                        <span className="text-[11px] text-gray-400">{plan.period}</span>
+                        <span className={`text-[11px] ${isCurrentPlan ? 'text-zinc-600' : 'text-gray-400'}`}>{plan.period}</span>
                       </div>
                       <div className="grid grid-cols-2 gap-1.5">
                         {plan.features.map(({ icon: Icon, text }, i) => (
-                          <div key={i} className="flex items-center gap-1.5 text-gray-500">
-                            <Icon size={11} className="shrink-0 text-gray-400" />
+                          <div key={i} className={`flex items-center gap-1.5 ${isCurrentPlan ? 'text-zinc-500' : 'text-gray-500'}`}>
+                            <Icon size={11} className={`shrink-0 ${isCurrentPlan ? 'text-zinc-600' : 'text-gray-400'}`} />
                             <span className="text-[11px] leading-snug">{text}</span>
                           </div>
                         ))}
                       </div>
+                      {isCurrentPlan && (
+                        <div className="mt-3 pt-3 border-t border-zinc-700/60">
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="text-[11px] text-zinc-500">Lượt AI đã dùng</span>
+                            <span className={`text-[11px] font-semibold ${(user?.aiSessionsUsed ?? 0) >= 20 ? 'text-red-400' : 'text-zinc-300'}`}>
+                              {user?.aiSessionsUsed ?? 0}/20
+                            </span>
+                          </div>
+                          <div className="h-1.5 rounded-full bg-zinc-700 overflow-hidden">
+                            <div
+                              className="h-full rounded-full bg-[#f5a623] transition-all"
+                              style={{ width: `${Math.min(100, ((user?.aiSessionsUsed ?? 0) / 20) * 100)}%` }}
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    {/* Radio indicator */}
-                    <div className={`w-4 h-4 rounded-full border-2 shrink-0 mt-0.5 flex items-center justify-center transition-all ${
-                      isSelected ? 'border-[#f5a623] bg-[#f5a623]' : 'border-gray-400'
-                    }`}>
-                      {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-black" />}
-                    </div>
+                    {/* Right indicator */}
+                    {isCurrentPlan ? (
+                      <CheckCircle2 size={18} className="text-[#f5a623] shrink-0 mt-0.5" />
+                    ) : (
+                      <div className={`w-4 h-4 rounded-full border-2 shrink-0 mt-0.5 flex items-center justify-center transition-all ${
+                        isSelected ? 'border-[#f5a623] bg-[#f5a623]' : 'border-gray-400'
+                      }`}>
+                        {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-black" />}
+                      </div>
+                    )}
                   </div>
                 </button>
               );

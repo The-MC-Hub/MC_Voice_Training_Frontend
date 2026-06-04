@@ -47,13 +47,26 @@ const getStoredAuth = () => {
 const initial = getStoredAuth();
 
 export const useAuthStore = create((set, get) => ({
-  
+
   user: initial.user,
   token: initial.token,
   role: initial.role,
   isAuthenticated: initial.isAuthenticated,
   loading: false,
   error: null,
+
+  refreshUser: async () => {
+    const { token } = get();
+    if (!token) return;
+    try {
+      const res = await api.get('/auth/me', { headers: { Authorization: `Bearer ${token}` } });
+      const user = res.data?.data?.user;
+      if (!user) return;
+      const storage = localStorage.getItem('token') ? localStorage : sessionStorage;
+      storage.setItem('user', JSON.stringify(user));
+      set({ user, role: user.role });
+    } catch (_) {}
+  },
 
   
 
