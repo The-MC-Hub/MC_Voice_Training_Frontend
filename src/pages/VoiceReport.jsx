@@ -198,6 +198,12 @@ const VoiceReport = () => {
     return (
         <div className="min-h-screen bg-[#09090b] -mx-6 -mt-6 px-6 pt-6 pb-20 text-white">
 
+            {/* Demo disclaimer */}
+            <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-amber-500/[0.06] border border-amber-500/20 text-[11px] text-amber-400/80">
+                <span className="shrink-0">⚠</span>
+                <span>Đây là phiên bản demo — đôi khi chấm điểm chưa sát với năng lực thực tế của bạn.</span>
+            </div>
+
             {/* Header */}
             <motion.div {...fadeUp(0)} className="flex items-center gap-3 mb-8 pb-6 border-b border-white/[0.06]">
                 <button onClick={() => navigate(-1)}
