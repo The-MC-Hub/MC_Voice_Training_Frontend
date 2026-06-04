@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Zap, Loader2, Mic, ChevronLeft, ChevronRight } from "lucide-react"; // Mic kept for empty-state
+import { Zap, Loader2, Mic, ChevronLeft, ChevronRight } from "lucide-react";
+import UpgradeBanner from "../components/ui/UpgradeBanner";
 import SessionCard from "../components/dashboard/SessionCard";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -28,6 +29,13 @@ const Dashboard = () => {
     [user?.id]
   );
   const loading = dashLoading || practiceLoading;
+
+  // Plan usage for warning banner
+  const plan = user?.plan || 'FREE';
+  const aiUsed = user?.aiSessionsUsed ?? 0;
+  const aiLimit = plan === 'FREE' ? 5 : plan === 'BASIC' ? 20 : null; // null = unlimited
+  const usagePct = aiLimit ? (aiUsed / aiLimit) * 100 : 0;
+  const showLimitWarning = aiLimit && usagePct >= 80;
 
   const { avgAccuracy, totalPractices, avgWpm, level, levelLabel } = useMemo(() => {
     const total = practiceHistory?.length || 0;
@@ -218,6 +226,16 @@ const Dashboard = () => {
           </motion.div>
         ))}
       </div>
+
+      {/* Usage warning banner */}
+      {showLimitWarning && (
+        <UpgradeBanner
+          variant={usagePct >= 100 ? 'limit' : 'warning'}
+          plan={plan}
+          used={aiUsed}
+          limit={aiLimit}
+        />
+      )}
 
       {/* Tab bar */}
       <div className="border-b border-white/[0.06]">

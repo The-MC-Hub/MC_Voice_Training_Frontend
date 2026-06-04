@@ -18,6 +18,7 @@ import { fetchLessonById, analyzePractice, fetchPracticeHistory } from '../contr
 import { ProgressBar, ProgressBarTrack, ProgressBarFill } from '@heroui/react';
 import TypewriterMarkdown from '../components/TypewriterMarkdown';
 import Navbar from '../components/Navbar';
+import UpgradeBanner from '../components/ui/UpgradeBanner';
 
 const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60), s = seconds % 60;
@@ -358,6 +359,22 @@ const VoicePractice = () => {
     return (
         <div className="bg-[#09090b] min-h-screen text-white flex flex-col">
             <Navbar />
+
+            {/* Usage warning strip — shown at >= 80% usage */}
+            {(() => {
+                const plan = user?.plan || 'FREE';
+                const aiUsed = user?.aiSessionsUsed ?? 0;
+                const aiLimit = plan === 'FREE' ? 5 : plan === 'BASIC' ? 20 : null;
+                const usagePct = aiLimit ? (aiUsed / aiLimit) * 100 : 0;
+                if (aiLimit && usagePct >= 80) {
+                    return (
+                        <div className="fixed top-14 left-0 right-0 z-40">
+                            <UpgradeBanner variant="strip" plan={plan} used={aiUsed} limit={aiLimit} />
+                        </div>
+                    );
+                }
+                return null;
+            })()}
 
             <main className="flex-1 flex pt-14 min-h-[calc(100vh-3.5rem)] overflow-hidden">
                 {/* Sidebar — only when inside milestone */}

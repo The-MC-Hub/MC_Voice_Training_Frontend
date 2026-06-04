@@ -6,6 +6,7 @@ import { useApi } from "../hooks/useApi";
 import { fetchLessons, fetchPracticeHistory } from "../controllers/voiceController";
 import { useAuth } from "../hooks/useAuth";
 import PageBanner from '../components/ui/PageBanner';
+import UpgradeBanner from '../components/ui/UpgradeBanner';
 
 const VoiceLibrary = () => {
   const { t } = useTranslation();
@@ -141,12 +142,27 @@ const VoiceLibrary = () => {
             })}
           </div>
 
-          {/* AI card */}
-          <div className="mt-6 p-4 bg-[#111113] border border-white/[0.07] rounded-xl">
-            <Zap size={18} className="text-gold mb-2.5" />
-            <p className="text-[13px] font-semibold text-white mb-1.5">{t('voiceLibrary.aiCoaching')}</p>
-            <p className="text-[12px] text-zinc-500 leading-relaxed">{t('voiceLibrary.aiCoachingDesc')}</p>
-          </div>
+          {/* Upgrade upsell or AI card */}
+          {(() => {
+            const plan = user?.plan || 'FREE';
+            const aiUsed = user?.aiSessionsUsed ?? 0;
+            const aiLimit = plan === 'FREE' ? 5 : plan === 'BASIC' ? 20 : null;
+            const usagePct = aiLimit ? (aiUsed / aiLimit) * 100 : 0;
+            if (aiLimit && usagePct >= 60) {
+              return (
+                <div className="mt-6">
+                  <UpgradeBanner variant="inline" plan={plan} used={aiUsed} limit={aiLimit} />
+                </div>
+              );
+            }
+            return (
+              <div className="mt-6 p-4 bg-[#111113] border border-white/[0.07] rounded-xl">
+                <Zap size={18} className="text-gold mb-2.5" />
+                <p className="text-[13px] font-semibold text-white mb-1.5">{t('voiceLibrary.aiCoaching')}</p>
+                <p className="text-[12px] text-zinc-500 leading-relaxed">{t('voiceLibrary.aiCoachingDesc')}</p>
+              </div>
+            );
+          })()}
         </aside>
 
         {/* Main */}
