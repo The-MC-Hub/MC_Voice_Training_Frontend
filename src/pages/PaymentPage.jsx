@@ -67,6 +67,8 @@ const PLANS = [
   },
 ];
 
+const IS_DEV = import.meta.env.VITE_DEV_MODE === 'true';
+
 const PaymentPage = () => {
   const { user, updateUser } = useAuth();
   const navigate = useNavigate();
@@ -104,9 +106,10 @@ const PaymentPage = () => {
     pollRef.current = setInterval(async () => {
       try {
         const res = await api.get(`/payment/status/${user.id}`);
-        if (res.data?.data?.isPremium) {
+        const statusData = res.data?.data;
+        if (statusData?.isPremium) {
           clearInterval(pollRef.current);
-          updateUser({ isPremium: true });
+          updateUser({ isPremium: true, plan: statusData.plan, aiSessionsUsed: 0, planExpiresAt: statusData.planExpiresAt });
           setSuccess(true);
           toast.showSuccess("Thanh toán thành công! Tài khoản đã được nâng cấp.");
           setTimeout(() => navigate("/m/dashboard"), 2500);
@@ -119,8 +122,9 @@ const PaymentPage = () => {
   const handleSimulate = async () => {
     setSimulating(true);
     try {
-      await api.post(`/payment/simulate-success?userId=${user.id}&plan=${selectedPlan}`);
-      updateUser({ isPremium: true });
+      const simRes = await api.post(`/payment/simulate-success?userId=${user.id}&plan=${selectedPlan}`);
+      const simData = simRes.data?.data;
+      updateUser({ isPremium: true, plan: simData?.plan || selectedPlan, aiSessionsUsed: 0, planExpiresAt: simData?.planExpiresAt });
       setSuccess(true);
       toast.showSuccess("Kích hoạt thành công!");
       setTimeout(() => navigate("/m/dashboard"), 2500);
@@ -336,19 +340,21 @@ const PaymentPage = () => {
                   <span className="text-[11px] text-gray-400">Đang chờ xác nhận thanh toán...</span>
                 </div>
 
-                {/* Dev simulate button */}
-                <button
-                  onClick={handleSimulate}
-                  disabled={simulating}
-                  className="w-full py-2.5 bg-white border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-300 rounded-xl text-[11px] font-medium transition-colors flex items-center justify-center gap-2"
-                >
-                  {simulating ? (
-                    <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-gray-400 border-t-transparent" />
-                  ) : (
-                    <ShieldCheck size={13} />
-                  )}
-                  {simulating ? "Đang kích hoạt..." : "Simulate thanh toán (Dev)"}
-                </button>
+                {/* Dev simulate button — local only */}
+                {IS_DEV && (
+                  <button
+                    onClick={handleSimulate}
+                    disabled={simulating}
+                    className="w-full py-2.5 bg-white border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-300 rounded-xl text-[11px] font-medium transition-colors flex items-center justify-center gap-2"
+                  >
+                    {simulating ? (
+                      <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-gray-400 border-t-transparent" />
+                    ) : (
+                      <ShieldCheck size={13} />
+                    )}
+                    {simulating ? "Đang kích hoạt..." : "Simulate thanh toán (Dev)"}
+                  </button>
+                )}
               </div>
             ) : null}
           </div>
