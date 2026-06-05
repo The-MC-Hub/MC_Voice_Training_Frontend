@@ -105,8 +105,6 @@ function App() {
                 <Route path="settings" element={<ProtectedRoute><Wrap><Settings /></Wrap></ProtectedRoute>} />
                 <Route path="payment" element={<ProtectedRoute><Wrap><PaymentPage /></Wrap></ProtectedRoute>} />
 
-                <Route path="admin" element={<RoleRoute allowedRoles={['admin']}><Wrap><AdminDashboard /></Wrap></RoleRoute>} />
-                <Route path="admin/:section" element={<RoleRoute allowedRoles={['admin']}><Wrap><AdminDashboard /></Wrap></RoleRoute>} />
 
 
 
@@ -124,7 +122,9 @@ function App() {
                 <Route path="courses/:id" element={<Wrap><ComingSoon title="Chi tiết khóa học" description="Hệ thống khóa học MC chuyên nghiệp đang được xây dựng. Sẽ ra mắt sớm." /></Wrap>} />
               </Route>
 
-              {/* Full-screen curriculum views (outside MainLayout) */}
+              {/* Full-screen views (outside MainLayout — no Navbar/Footer) */}
+              <Route path="/m/admin" element={<RoleRoute allowedRoles={['admin']}><Wrap><AdminDashboard /></Wrap></RoleRoute>} />
+              <Route path="/m/admin/:section" element={<RoleRoute allowedRoles={['admin']}><Wrap><AdminDashboard /></Wrap></RoleRoute>} />
               <Route path="/m/voice/practice/:id" element={<ProtectedRoute><Wrap><VoicePractice /></Wrap></ProtectedRoute>} />
               <Route path="/m/learning/guide/:id" element={<Wrap><ComingSoon title="Tài liệu học tập" description="Hệ thống tài liệu hướng dẫn đang được xây dựng. Sẽ ra mắt sớm." /></Wrap>} />
 
