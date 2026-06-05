@@ -8,4 +8,13 @@ export const academyService = {
   completeLesson: (courseId, lessonId) => api.post(`/courses/${courseId}/lessons/${lessonId}/complete`),
   completeReading: (courseId, readingId) => api.post(`/courses/${courseId}/readings/${readingId}/complete`),
   submitQuiz: (courseId, answers) => api.post(`/courses/${courseId}/quiz/submit`, { answers }),
+  admin: {
+    getMilestones: async () => ({ data: [] }),
+    getGuides: async () => ({ data: [] }),
+    getContents: async (milestoneId) => ({ data: [] }),
+    createMilestone: async (data) => ({ data: {} }),
+    deleteMilestone: async (id) => ({ data: {} }),
+    createContent: async (data) => ({ data: {} }),
+    deleteContent: async (id) => ({ data: {} })
+  }
 };

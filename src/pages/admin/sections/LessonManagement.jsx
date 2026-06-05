@@ -4,7 +4,7 @@ import { useApi } from "../../../hooks/useApi";
 import { fetchLessons } from "../../../controllers/voiceController";
 import api from "../../../services/api";
 
-const inputCls = "w-full bg-[#09090b] border border-white/[0.07] rounded-xl px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
+const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
 
 const LessonManagement = () => {
   const { data: lessons = [], refetch } = useApi(fetchLessons);
@@ -64,9 +64,9 @@ const LessonManagement = () => {
 
   const diffColor = (d) => {
     const v = d?.toLowerCase();
-    if (v === 'easy')   return 'bg-emerald-950/40 text-emerald-400 border-emerald-900/40';
-    if (v === 'medium') return 'bg-amber-950/40 text-amber-400 border-amber-900/40';
-    return 'bg-red-950/40 text-red-400 border-red-900/40';
+    if (v === 'easy')   return 'bg-emerald-100 text-black border-emerald-300';
+    if (v === 'medium') return 'bg-amber-100 text-black border-amber-300';
+    return 'bg-red-100 text-black border-red-300';
   };
 
   return (
@@ -77,52 +77,89 @@ const LessonManagement = () => {
           <p className="text-[12px] text-zinc-500 mt-0.5">Manage scripts, guidelines, difficulties, and practice assets for MC training.</p>
         </div>
         <button onClick={handleOpenAdd}
-          className="flex items-center gap-2 px-3 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[12px] font-semibold transition-colors">
+          className="flex items-center gap-2 px-3 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors">
           <Plus size={13} /> Add Practice Script
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {(lessons || []).map((lesson) => (
-          <div key={lesson.id} className="bg-[#111113] border border-white/[0.07] rounded-xl p-5 flex flex-col justify-between">
-            <div>
-              <div className="flex justify-between items-start mb-4">
-                <div className="w-9 h-9 rounded-xl bg-[#09090b] border border-white/[0.06] text-zinc-500 flex items-center justify-center">
-                  <Mic size={16} />
+      <div className="border overflow-hidden" style={{ borderColor: "var(--border-subtle)" }}>
+        {/* Table header */}
+        <div className="grid grid-cols-[2fr_1fr_1fr_80px_80px] gap-4 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider"
+          style={{ background: "var(--bg-surface)", color: "var(--text-muted)", borderBottom: "1px solid var(--border-subtle)" }}>
+          <span>Bài học</span>
+          <span>Danh mục</span>
+          <span>Độ khó</span>
+          <span className="text-right">Số từ</span>
+          <span className="text-center">Thao tác</span>
+        </div>
+
+        {/* Rows */}
+        {(lessons || []).map((lesson, idx) => (
+          <div key={lesson.id}
+            className="grid grid-cols-[2fr_1fr_1fr_80px_80px] gap-4 px-4 py-3 items-center text-[13px] transition-colors hover:bg-[--bg-elevated]"
+            style={{ borderBottom: idx < lessons.length - 1 ? "1px solid var(--border-subtle)" : "none" }}>
+
+            {/* Title + description */}
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 flex items-center justify-center shrink-0"
+                  style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}>
+                  <Mic size={13} style={{ color: "var(--text-muted)" }} />
                 </div>
-                <div className="flex items-center gap-1">
-                  <button onClick={() => handleOpenEdit(lesson)} title="Edit"
-                    className="p-1.5 rounded-lg text-zinc-500 hover:text-white border border-transparent hover:border-white/[0.07] transition-colors">
-                    <Edit size={13} />
-                  </button>
-                  <button onClick={() => handleDelete(lesson.id)} title="Delete"
-                    className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 border border-transparent hover:border-red-900/40 transition-colors">
-                    <Trash2 size={13} />
-                  </button>
-                </div>
+                <span className="font-medium truncate" style={{ color: "var(--text-primary)" }}>{lesson.title}</span>
               </div>
-              <h3 className="font-semibold text-white text-[14px] leading-snug mb-2">{lesson.title}</h3>
-              <div className="flex items-center gap-2 text-[10px] text-zinc-500 uppercase mb-3">
-                <Tag size={9} /> {lesson.category}
-                <span className="text-zinc-700">•</span>
-                <span className={`px-1.5 py-0.5 rounded-md text-[9px] font-medium border ${diffColor(lesson.difficulty)}`}>{lesson.difficulty}</span>
-              </div>
-              <p className="text-[12px] text-zinc-500 line-clamp-3 leading-relaxed">{lesson.description}</p>
+              {lesson.description && (
+                <p className="text-[11px] mt-0.5 truncate pl-9" style={{ color: "var(--text-muted)" }}>{lesson.description}</p>
+              )}
             </div>
-            <div className="pt-3 border-t border-white/[0.06] mt-4 flex justify-between items-center text-[10px] text-zinc-600">
-              <span>{lesson.content ? lesson.content.split(/\s+/).length : 0} words</span>
-              <button onClick={() => handleOpenEdit(lesson)} className="text-[#f5a623] hover:text-[#e09520] font-medium transition-colors">
-                Configure
+
+            {/* Category */}
+            <div className="flex items-center gap-1 text-[11px]" style={{ color: "var(--text-muted)" }}>
+              <Tag size={10} />
+              <span className="uppercase tracking-wide">{lesson.category}</span>
+            </div>
+
+            {/* Difficulty */}
+            <div>
+              <span className={`px-2 py-0.5 text-[10px] font-semibold border ${diffColor(lesson.difficulty)}`}>
+                {lesson.difficulty}
+              </span>
+            </div>
+
+            {/* Word count */}
+            <div className="text-right text-[12px]" style={{ color: "var(--text-muted)" }}>
+              {lesson.content ? lesson.content.split(/\s+/).length : 0}
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center justify-center gap-1">
+              <button onClick={() => handleOpenEdit(lesson)} title="Edit"
+                className="p-1.5 border border-transparent hover:border-white/[0.07] transition-colors"
+                style={{ color: "var(--text-muted)" }}
+                onMouseEnter={e => e.currentTarget.style.color = "var(--text-primary)"}
+                onMouseLeave={e => e.currentTarget.style.color = "var(--text-muted)"}>
+                <Edit size={13} />
+              </button>
+              <button onClick={() => handleDelete(lesson.id)} title="Delete"
+                className="p-1.5 border border-transparent hover:border-[--border-subtle] hover:text-[--text-primary] transition-colors"
+                style={{ color: "var(--text-muted)" }}>
+                <Trash2 size={13} />
               </button>
             </div>
           </div>
         ))}
+
+        {lessons?.length === 0 && (
+          <div className="py-12 text-center text-[13px]" style={{ color: "var(--text-muted)" }}>
+            Chưa có bài học nào
+          </div>
+        )}
       </div>
 
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70">
-          <div className="w-full max-w-lg bg-[#111113] border border-white/[0.07] rounded-2xl shadow-2xl overflow-hidden">
+          <div className="w-full max-w-lg bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden">
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div className="flex justify-between items-center border-b border-white/[0.06] pb-4">
                 <h3 className="text-[14px] font-semibold text-white flex items-center gap-2">
@@ -170,9 +207,9 @@ const LessonManagement = () => {
                   <div className="flex gap-1.5">
                     {["Easy", "Medium", "Hard"].map(lv => (
                       <button key={lv} type="button" onClick={() => setFormData({...formData, difficulty: lv})}
-                        className={`flex-1 py-1.5 rounded-lg text-[10px] font-medium border transition-colors ${
+                        className={`flex-1 py-1.5 text-[10px] font-medium border transition-colors ${
                           formData.difficulty === lv
-                            ? 'bg-[#f5a623] text-black border-[#f5a623]'
+                            ? 'bg-[gold] text-black border-[gold]'
                             : 'bg-[#09090b] border-white/[0.07] text-zinc-500 hover:border-white/[0.14]'
                         }`}>
                         {lv}
@@ -182,7 +219,7 @@ const LessonManagement = () => {
                 </div>
                 <div className="space-y-1">
                   <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Cover Image</label>
-                  <label className="w-full h-[34px] bg-[#09090b] border border-white/[0.07] rounded-xl px-3 flex items-center gap-2 text-zinc-500 cursor-pointer hover:border-white/[0.14] transition-colors overflow-hidden">
+                  <label className="w-full h-[34px] bg-[#09090b] border border-white/[0.07] px-3 flex items-center gap-2 text-zinc-500 cursor-pointer hover:border-white/[0.14] transition-colors overflow-hidden">
                     <ImageIcon size={13} />
                     <span className="text-[11px] truncate">{thumbnail ? thumbnail.name : "Choose File"}</span>
                     <input type="file" hidden onChange={e => setThumbnail(e.target.files[0])} accept="image/*" />
@@ -192,11 +229,11 @@ const LessonManagement = () => {
 
               <div className="pt-3 border-t border-white/[0.06] flex gap-2">
                 <button type="button" onClick={() => setIsModalOpen(false)}
-                  className="flex-1 py-2 bg-[#09090b] border border-white/[0.07] text-zinc-400 rounded-xl text-[12px] font-medium hover:border-white/[0.14] transition-colors">
+                  className="flex-1 py-2 bg-[#09090b] border border-white/[0.07] text-zinc-400 text-[12px] font-medium hover:border-white/[0.14] transition-colors">
                   Cancel
                 </button>
                 <button disabled={loading} type="submit"
-                  className="flex-1 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[12px] font-semibold transition-colors flex items-center justify-center gap-1.5">
+                  className="flex-1 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors flex items-center justify-center gap-1.5">
                   <Check size={13} />
                   {loading ? "Saving..." : "Save Lesson"}
                 </button>

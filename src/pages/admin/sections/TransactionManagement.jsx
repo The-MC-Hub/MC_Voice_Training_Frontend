@@ -1,17 +1,17 @@
 import React, { useState, useMemo } from "react";
-import { Download, CheckCircle2, Clock, XCircle, TrendingUp, Filter } from "lucide-react";
+import { Download, CheckCircle2, Clock, XCircle, TrendingUp, Filter, ArrowUpDown } from "lucide-react";
 
 const fmt = (v) => (v ?? 0).toLocaleString("vi-VN");
 
 const STATUS_CONFIG = {
-  COMPLETED: { label: "Hoàn thành", color: "bg-emerald-50 text-emerald-700 border-emerald-200", icon: CheckCircle2 },
-  PENDING:   { label: "Đang chờ",   color: "bg-amber-50 text-amber-700 border-amber-200",     icon: Clock },
-  FAILED:    { label: "Thất bại",   color: "bg-red-50 text-red-700 border-red-200",           icon: XCircle },
+  COMPLETED: { label: "Hoàn thành", color: "bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]", icon: CheckCircle2 },
+  PENDING:   { label: "Đang chờ",   color: "bg-gold/10 text-gold border-gold/30",     icon: Clock },
+  FAILED:    { label: "Thất bại",   color: "bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]",           icon: XCircle },
 };
 
 const PLAN_CONFIG = {
-  BASIC:  { color: "bg-blue-50 text-blue-700 border-blue-200" },
-  FULL:   { color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+  BASIC:  { color: "bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]" },
+  FULL:   { color: "bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]" },
   ANNUAL: { color: "bg-gold/10 text-gold border-gold/30" },
   FREE:   { color: "bg-[--bg-elevated] text-[--text-muted] border-[--border-subtle]" },
 };
@@ -19,20 +19,36 @@ const PLAN_CONFIG = {
 const TransactionManagement = ({ transactions, revenueStats }) => {
   const [filterStatus, setFilterStatus] = useState("ALL");
   const [search, setSearch] = useState("");
+  const [sortConfig, setSortConfig] = useState({ key: "createdAt", order: "desc" }); // desc = NEWEST
 
   const filtered = useMemo(() => {
     if (!transactions) return [];
-    return transactions.filter(t => {
+    let res = transactions.filter(t => {
       const matchStatus = filterStatus === "ALL" || t.status === filterStatus;
       const q = search.toLowerCase();
       const matchSearch = !q
         || t.userName?.toLowerCase().includes(q)
         || t.userEmail?.toLowerCase().includes(q)
         || t.plan?.toLowerCase().includes(q)
+        || t.memo?.toLowerCase().includes(q)
         || String(t.orderCode || "").includes(q);
       return matchStatus && matchSearch;
     });
-  }, [transactions, filterStatus, search]);
+
+    res.sort((a, b) => {
+      if (sortConfig.key === "amount") {
+        return sortConfig.order === "asc" ? (a.amount || 0) - (b.amount || 0) : (b.amount || 0) - (a.amount || 0);
+      }
+      if (sortConfig.key === "createdAt") {
+        const dA = new Date(a.createdAt || 0).getTime();
+        const dB = new Date(b.createdAt || 0).getTime();
+        return sortConfig.order === "asc" ? dA - dB : dB - dA;
+      }
+      return 0;
+    });
+
+    return res;
+  }, [transactions, filterStatus, search, sortConfig]);
 
   const statusRevenue = revenueStats?.revenueByStatus || {};
   const countByStatus = revenueStats?.countByStatus || {};
@@ -61,7 +77,7 @@ const TransactionManagement = ({ transactions, revenueStats }) => {
         </div>
         <button
           onClick={exportCSV}
-          className="flex items-center gap-2 px-3 py-2 bg-[--bg-surface] border border-[--border-subtle] hover:border-[--border-subtle] text-[--text-primary] rounded-xl text-[12px] font-medium transition-colors"
+          className="flex items-center gap-2 px-3 py-2 bg-[--bg-surface] border border-[--border-subtle] hover:border-[--border-subtle] text-[--text-primary] text-[12px] font-medium transition-colors"
         >
           <Download size={13} /> Xuất CSV
         </button>
@@ -75,12 +91,12 @@ const TransactionManagement = ({ transactions, revenueStats }) => {
             <div
               key={key}
               onClick={() => setFilterStatus(filterStatus === key ? "ALL" : key)}
-              className={`bg-[--bg-surface] border rounded-xl p-4 cursor-pointer transition-all ${
+              className={`bg-[--bg-surface] border p-4 cursor-pointer transition-all ${
                 filterStatus === key ? "border-gold/40 ring-1 ring-gold/20" : "border-[--border-subtle] hover:border-[--border-subtle]"
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
-                <Icon size={14} className={key === "COMPLETED" ? "text-emerald-600" : key === "PENDING" ? "text-amber-600" : "text-red-600"} />
+                <Icon size={14} className={key === "COMPLETED" ? "text-[--text-primary]" : key === "PENDING" ? "text-gold" : "text-[--text-primary]"} />
                 <span className="text-[11px] font-semibold uppercase tracking-wider text-[--text-secondary]">{cfg.label}</span>
               </div>
               <div className="text-xl font-bold text-[--text-primary]">{fmt(statusRevenue[key])} <span className="text-[10px] text-[--text-muted] font-normal">VND</span></div>
@@ -92,14 +108,14 @@ const TransactionManagement = ({ transactions, revenueStats }) => {
 
       {/* Revenue by plan */}
       {revenueStats?.revenueByPlan && Object.keys(revenueStats.revenueByPlan).length > 0 && (
-        <div className="bg-[--bg-surface] border border-[--border-subtle] rounded-xl p-4">
+        <div className=" mt-4 bg-[--bg-surface] border border-[--border-subtle] p-4">
           <div className="flex items-center gap-2 mb-4">
             <TrendingUp size={14} className="text-[--text-muted]" />
             <span className="text-[13px] font-semibold text-[--text-primary]">Doanh thu theo gói (hoàn thành)</span>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {Object.entries(revenueStats.revenueByPlan).map(([plan, revenue]) => (
-              <div key={plan} className={`rounded-xl p-3 border ${PLAN_CONFIG[plan]?.color || "bg-[--bg-elevated] text-[--text-secondary] border-[--border-subtle]"}`}>
+              <div key={plan} className={`p-3 border ${PLAN_CONFIG[plan]?.color || "bg-[--bg-elevated] text-[--text-secondary] border-[--border-subtle]"}`}>
                 <div className="text-[10px] font-bold uppercase tracking-wider mb-1">{plan}</div>
                 <div className="text-[15px] font-bold">{fmt(revenue)}</div>
                 <div className="text-[10px] opacity-70">VND</div>
@@ -109,35 +125,55 @@ const TransactionManagement = ({ transactions, revenueStats }) => {
         </div>
       )}
 
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-        <input
-          type="text"
-          placeholder="Tìm theo tên, email, gói, mã đơn..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="flex-1 bg-[--bg-surface] border border-[--border-subtle] focus:border-[--border-subtle] rounded-xl px-3 py-2 text-[13px] text-[--text-primary] placeholder:text-zinc-400 outline-none transition-colors"
-        />
-        <div className="flex items-center gap-2">
-          <Filter size={13} className="text-[--text-muted]" />
-          {["ALL", "COMPLETED", "PENDING", "FAILED"].map(s => (
-            <button
-              key={s}
-              onClick={() => setFilterStatus(s)}
-              className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors border ${
-                filterStatus === s
-                  ? "bg-gold/10 text-gold border-gold/30"
-                  : "text-[--text-muted] border-[--border-subtle] hover:text-[--text-primary]"
-              }`}
+      {/* Filters & Sort */}
+      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+        <div className="flex items-center gap-3 w-full sm:w-auto flex-1">
+          <input
+            type="text"
+            placeholder="Tìm theo tên, email, gói, nội dung, mã đơn..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="flex-1 min-w-[250px] bg-[--bg-surface] border border-[--border-subtle] focus:border-[--border-subtle] px-3 py-2 text-[13px] text-[--text-primary] placeholder:text-zinc-400 outline-none transition-colors"
+          />
+        </div>
+        <div className="flex items-center gap-3 overflow-x-auto pb-1 sm:pb-0 w-full sm:w-auto">
+          <div className="flex items-center gap-2 border-r border-[--border-subtle] pr-3 shrink-0">
+            <Filter size={13} className="text-[--text-muted]" />
+            {["ALL", "COMPLETED", "PENDING", "FAILED"].map(s => (
+              <button
+                key={s}
+                onClick={() => setFilterStatus(s)}
+                className={`px-3 py-1.5 text-[11px] font-medium transition-colors border whitespace-nowrap ${
+                  filterStatus === s
+                    ? "bg-gold/10 text-gold border-gold/30"
+                    : "text-[--text-muted] border-[--border-subtle] hover:text-[--text-primary]"
+                }`}
+              >
+                {s === "ALL" ? "Tất cả" : STATUS_CONFIG[s]?.label}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <ArrowUpDown size={13} className="text-[--text-muted]" />
+            <select
+              value={`${sortConfig.key}-${sortConfig.order}`}
+              onChange={e => {
+                const [k, o] = e.target.value.split("-");
+                setSortConfig({ key: k, order: o });
+              }}
+              className="bg-[--bg-surface] border border-[--border-subtle] text-[11px] text-[--text-secondary] px-2 py-1.5 outline-none cursor-pointer hover:border-[--text-muted]"
             >
-              {s === "ALL" ? "Tất cả" : STATUS_CONFIG[s]?.label}
-            </button>
-          ))}
+              <option value="createdAt-desc">Mới nhất trước</option>
+              <option value="createdAt-asc">Cũ nhất trước</option>
+              <option value="amount-desc">Số tiền: Cao → Thấp</option>
+              <option value="amount-asc">Số tiền: Thấp → Cao</option>
+            </select>
+          </div>
         </div>
       </div>
 
       {/* Table */}
-      <div className="bg-[--bg-surface] border border-[--border-subtle] rounded-xl overflow-x-auto">
+      <div className="bg-[--bg-surface] border border-[--border-subtle] overflow-x-auto">
         <table className="w-full text-left border-collapse text-[12px]">
           <thead>
             <tr className="bg-[--bg-elevated] border-b border-[--border-subtle] text-[--text-muted] uppercase text-[10px] font-semibold tracking-wider">
@@ -146,15 +182,17 @@ const TransactionManagement = ({ transactions, revenueStats }) => {
               <th className="px-4 py-3">Gói</th>
               <th className="px-4 py-3">Số tiền</th>
               <th className="px-4 py-3">Trạng thái</th>
+              <th className="px-4 py-3">Nội dung (Memo)</th>
               <th className="px-4 py-3">Bank Ref</th>
               <th className="px-4 py-3 text-right">Ngày tạo</th>
+              <th className="px-4 py-3 text-right">Hoàn thành</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[--border-subtle] text-[--text-secondary]">
             {!transactions ? (
-              <tr><td colSpan={7} className="px-4 py-8 text-center text-[--text-muted]">Đang tải...</td></tr>
+              <tr><td colSpan={9} className="px-4 py-8 text-center text-[--text-muted]">Đang tải...</td></tr>
             ) : filtered.length === 0 ? (
-              <tr><td colSpan={7} className="px-4 py-8 text-center text-[--text-muted]">Không có giao dịch nào</td></tr>
+              <tr><td colSpan={9} className="px-4 py-8 text-center text-[--text-muted]">Không có giao dịch nào</td></tr>
             ) : filtered.map((t, i) => {
               const statusCfg = STATUS_CONFIG[t.status] || {};
               const planCfg = PLAN_CONFIG[t.plan] || {};
@@ -170,7 +208,7 @@ const TransactionManagement = ({ transactions, revenueStats }) => {
                   </td>
                   <td className="px-4 py-3">
                     {t.plan ? (
-                      <span className={`inline-flex px-2 py-0.5 rounded-md text-[10px] font-bold border uppercase ${planCfg.color || "bg-[--bg-elevated] text-[--text-secondary] border-[--border-subtle]"}`}>
+                      <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold border uppercase ${planCfg.color || "bg-[--bg-elevated] text-[--text-secondary] border-[--border-subtle]"}`}>
                         {t.plan}
                       </span>
                     ) : <span className="text-[--text-muted]">—</span>}
@@ -179,14 +217,22 @@ const TransactionManagement = ({ transactions, revenueStats }) => {
                     {fmt(t.amount)} <span className="text-[10px] text-[--text-muted] font-normal">VND</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium border ${statusCfg.color || "bg-[--bg-elevated] text-[--text-muted] border-[--border-subtle]"}`}>
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium border ${statusCfg.color || "bg-[--bg-elevated] text-[--text-muted] border-[--border-subtle]"}`}>
                       {statusCfg.label || t.status}
                     </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="text-[11px] text-[--text-secondary] max-w-[150px] truncate" title={t.memo}>
+                      {t.memo || "—"}
+                    </div>
                   </td>
                   <td className="px-4 py-3 font-mono text-[11px] text-[--text-muted]">
                     {t.bankRef || "—"}
                   </td>
                   <td className="px-4 py-3 text-right text-[--text-muted] text-[11px]">{date}</td>
+                  <td className="px-4 py-3 text-right text-[--text-muted] text-[11px]">
+                    {t.completedAt ? new Date(t.completedAt).toLocaleDateString("vi-VN", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" }) : "—"}
+                  </td>
                 </tr>
               );
             })}

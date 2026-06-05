@@ -46,7 +46,7 @@ const BookingManagement = ({ bookings }) => {
                   <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-semibold border ${
                     b.status?.toLowerCase() === 'completed' ? 'bg-emerald-950/40 text-emerald-400 border-emerald-900/40' : 
                     b.status?.toLowerCase() === 'pending' ? 'bg-amber-950/40 text-amber-400 border-amber-900/40' :
-                    b.status?.toLowerCase() === 'accepted' ? 'bg-blue-950/40 text-blue-400 border-blue-900/40' :
+                    b.status?.toLowerCase() === 'accepted' ? 'bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]' :
                     b.status?.toLowerCase() === 'cancelled' || b.status?.toLowerCase() === 'rejected' ? 'bg-red-950/40 text-red-400 border-red-900/40' :
                     'bg-slate-900 text-slate-500 border-slate-800'
                   }`}>

@@ -7,7 +7,7 @@ import {
 import { academyService } from '../../services/academyService';
 import { fetchLessons } from '../../controllers/voiceController';
 
-const inputCls = "w-full bg-[#09090b] border border-white/[0.07] rounded-xl px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
+const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
 
 const AcademyManager = () => {
   const [milestones, setMilestones] = useState([]);
@@ -168,7 +168,7 @@ const AcademyManager = () => {
 
   if (loading) return (
     <div className="flex flex-col items-center justify-center py-20 gap-3 text-zinc-500">
-      <div className="w-8 h-8 border-2 border-t-[#f5a623] border-white/[0.07] rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-t-[gold] border-white/[0.07] animate-spin" />
       <p className="text-[12px]">Loading Academy Curriculum...</p>
     </div>
   );
@@ -181,7 +181,7 @@ const AcademyManager = () => {
           <p className="text-[12px] text-zinc-500 mt-0.5">Curate academic learning stages, assign content blocks, and arrange training pathways.</p>
         </div>
         <button onClick={() => setIsEditingMilestone(true)}
-          className="flex items-center gap-2 px-3 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[12px] font-semibold transition-colors">
+          className="flex items-center gap-2 px-3 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors">
           <Plus size={13} /> New Milestone Stage
         </button>
       </div>
@@ -191,17 +191,17 @@ const AcademyManager = () => {
           const isExpanded = !!expandedMilestones[m.id];
           const contents = milestoneContents[m.id] || [];
           return (
-            <div key={m.id} className={`bg-[#111113] rounded-xl border overflow-hidden transition-colors ${isExpanded ? 'border-white/[0.10]' : 'border-white/[0.07]'}`}>
+            <div key={m.id} className={`bg-[#111113] border overflow-hidden transition-colors ${isExpanded ? 'border-white/[0.10]' : 'border-white/[0.07]'}`}>
               <div onClick={() => toggleExpand(m.id)}
                 className="px-4 py-3.5 flex justify-between items-center cursor-pointer select-none hover:bg-white/[0.02] transition-colors">
                 <div className="flex items-center gap-3">
-                  <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-semibold text-[11px] border ${isExpanded ? 'bg-[#f5a623]/[0.08] text-[#f5a623] border-[#f5a623]/20' : 'bg-[#09090b] text-zinc-500 border-white/[0.06]'}`}>
+                  <div className={`w-7 h-7 flex items-center justify-center font-semibold text-[11px] border ${isExpanded ? 'bg-[gold]/[0.08] text-[gold] border-[gold]/20' : 'bg-[#09090b] text-zinc-500 border-white/[0.06]'}`}>
                     {index + 1}
                   </div>
                   <div>
                     <h3 className="font-semibold text-white text-[13px]">{m.title}</h3>
                     <div className="flex items-center gap-2 text-[10px] text-zinc-500 mt-0.5">
-                      <span className="text-[#f5a623]">{m.level}</span>
+                      <span className="text-[gold]">{m.level}</span>
                       <span>·</span>
                       <span>{contents.length} items</span>
                     </div>
@@ -209,10 +209,10 @@ const AcademyManager = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <button onClick={(e) => handleDeleteMilestone(m.id, e)}
-                    className="p-1.5 rounded-lg text-zinc-600 hover:text-red-400 border border-transparent hover:border-red-900/40 transition-colors">
+                    className="p-1.5 text-zinc-600 hover:text-[--text-primary] border border-transparent hover:border-[--border-subtle] transition-colors">
                     <Trash2 size={12} />
                   </button>
-                  <ChevronDown size={14} className={`text-zinc-500 transition-transform duration-200 ${isExpanded ? 'rotate-180 text-[#f5a623]' : ''}`} />
+                  <ChevronDown size={14} className={`text-zinc-500 transition-transform duration-200 ${isExpanded ? 'rotate-180 text-[gold]' : ''}`} />
                 </div>
               </div>
 
@@ -221,7 +221,7 @@ const AcademyManager = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-[10px] text-zinc-600 uppercase tracking-wider font-medium">Syllabus Items</span>
                     <button onClick={() => handleAddContent(m.id)}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#09090b] border border-white/[0.07] hover:border-white/[0.14] text-white rounded-lg text-[11px] font-medium transition-colors">
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#09090b] border border-white/[0.07] hover:border-white/[0.14] text-white text-[11px] font-medium transition-colors">
                       <Plus size={10} /> Assign Content
                     </button>
                   </div>
@@ -232,15 +232,15 @@ const AcademyManager = () => {
                         const isPractice = content.type === 'VOICE_PRACTICE';
                         return (
                           <div key={content.id} onClick={() => handleViewContentDetails(content)}
-                            className="flex justify-between items-center p-3 rounded-xl bg-[#09090b] border border-white/[0.06] hover:border-white/[0.12] cursor-pointer transition-colors group">
+                            className="flex justify-between items-center p-3 bg-[#09090b] border border-white/[0.06] hover:border-white/[0.12] cursor-pointer transition-colors group">
                             <div className="flex items-center gap-3">
-                              <div className={`w-7 h-7 rounded-lg flex items-center justify-center border shrink-0 ${isPractice ? 'bg-blue-950/40 text-blue-400 border-blue-900/40' : 'bg-[#09090b] text-zinc-500 border-white/[0.07]'}`}>
+                              <div className={`w-7 h-7 flex items-center justify-center border shrink-0 ${isPractice ? 'bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]' : 'bg-[#09090b] text-zinc-500 border-white/[0.07]'}`}>
                                 {isPractice ? <Play size={11} /> : <BookOpen size={11} />}
                               </div>
                               <div>
                                 <p className="font-medium text-zinc-200 text-[12px]">{content.title}</p>
                                 <div className="flex items-center gap-2 mt-0.5">
-                                  <span className={`text-[8px] font-medium px-1.5 py-0.5 rounded border ${isPractice ? 'bg-blue-950/20 text-blue-400 border-blue-900/40' : 'bg-[#09090b] text-zinc-500 border-white/[0.06]'}`}>
+                                  <span className={`text-[8px] font-medium px-1.5 py-0.5 border ${isPractice ? 'bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]' : 'bg-[#09090b] text-zinc-500 border-white/[0.06]'}`}>
                                     {isPractice ? 'PRACTICE' : 'GUIDE'}
                                   </span>
                                   <span className="text-[10px] text-zinc-500 flex items-center gap-1">
@@ -252,18 +252,18 @@ const AcademyManager = () => {
                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity" onClick={e => e.stopPropagation()}>
                               {idx > 0 && (
                                 <button onClick={() => handleMoveContent(m.id, content.id, 'up')}
-                                  className="p-1 rounded-lg border border-white/[0.06] hover:text-[#f5a623] transition-colors">
+                                  className="p-1 border border-white/[0.06] hover:text-[gold] transition-colors">
                                   <ChevronUp size={11} />
                                 </button>
                               )}
                               {idx < contents.length - 1 && (
                                 <button onClick={() => handleMoveContent(m.id, content.id, 'down')}
-                                  className="p-1 rounded-lg border border-white/[0.06] hover:text-[#f5a623] transition-colors">
+                                  className="p-1 border border-white/[0.06] hover:text-[gold] transition-colors">
                                   <ChevronDown size={11} />
                                 </button>
                               )}
                               <button onClick={() => handleDeleteContent(content.id)}
-                                className="p-1 rounded-lg border border-white/[0.06] hover:text-red-400 hover:border-red-900/40 transition-colors">
+                                className="p-1 border border-white/[0.06] hover:text-[--text-primary] hover:border-[--border-subtle] transition-colors">
                                 <Trash2 size={11} />
                               </button>
                             </div>
@@ -272,7 +272,7 @@ const AcademyManager = () => {
                       })}
                     </div>
                   ) : (
-                    <div className="text-center py-6 border border-dashed border-white/[0.06] rounded-xl">
+                    <div className="text-center py-6 border border-dashed border-white/[0.06]">
                       <p className="text-[11px] text-zinc-600 italic">No syllabus modules assigned yet.</p>
                     </div>
                   )}
@@ -286,7 +286,7 @@ const AcademyManager = () => {
       {/* Milestone Editor Modal */}
       {isEditingMilestone && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70">
-          <div className="w-full max-w-md bg-[#111113] border border-white/[0.07] rounded-2xl shadow-2xl overflow-hidden">
+          <div className="w-full max-w-md bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden">
             <form onSubmit={handleSaveMilestone} className="p-6 space-y-4">
               <h3 className="text-[14px] font-semibold text-white border-b border-white/[0.06] pb-4">New Stage Milestone</h3>
               <div className="space-y-1">
@@ -310,11 +310,11 @@ const AcademyManager = () => {
               </div>
               <div className="pt-3 border-t border-white/[0.06] flex gap-2">
                 <button type="button" onClick={() => setIsEditingMilestone(false)}
-                  className="flex-1 py-2 bg-[#09090b] border border-white/[0.07] text-zinc-400 rounded-xl text-[12px] font-medium hover:border-white/[0.14] transition-colors">
+                  className="flex-1 py-2 bg-[#09090b] border border-white/[0.07] text-zinc-400 text-[12px] font-medium hover:border-white/[0.14] transition-colors">
                   Cancel
                 </button>
                 <button type="submit"
-                  className="flex-1 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[12px] font-semibold transition-colors">
+                  className="flex-1 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors">
                   Save Milestone
                 </button>
               </div>
@@ -326,7 +326,7 @@ const AcademyManager = () => {
       {/* Add Content Modal */}
       {isAddingContent && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70">
-          <div className="w-full max-w-4xl bg-[#111113] border border-white/[0.07] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="w-full max-w-4xl bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div className="flex justify-between items-center p-5 border-b border-white/[0.06]">
               <div>
                 <h3 className="text-[14px] font-semibold text-white">Assign Curriculum Content</h3>
@@ -350,7 +350,7 @@ const AcademyManager = () => {
                           voiceScriptId: t === 'VOICE_PRACTICE' ? (scripts[0]?.id || '') : '',
                           readingGuideId: t === 'READING_GUIDE' ? (guides[0]?.id || '') : ''
                         })}
-                        className={`p-3 rounded-xl border cursor-pointer transition-colors ${contentFormData.type === t ? 'bg-[#f5a623]/[0.08] border-[#f5a623]/20 text-white' : 'bg-[#09090b] border-white/[0.07] text-zinc-500 hover:border-white/[0.14]'}`}>
+                        className={`p-3 border cursor-pointer transition-colors ${contentFormData.type === t ? 'bg-[gold]/[0.08] border-[gold]/20 text-white' : 'bg-[#09090b] border-white/[0.07] text-zinc-500 hover:border-white/[0.14]'}`}>
                         <Icon size={13} className="mb-1.5" />
                         <p className="text-[11px] font-semibold uppercase tracking-wide">{label}</p>
                         <p className="text-[10px] text-zinc-600 mt-0.5">{desc}</p>
@@ -395,7 +395,7 @@ const AcademyManager = () => {
                       placeholder="15m" className={inputCls + " w-20 text-center"} />
                     {durationPresets.map(preset => (
                       <button key={preset} type="button" onClick={() => setContentFormData({...contentFormData, duration: preset})}
-                        className={`px-2 py-1 text-[10px] rounded-lg border transition-colors ${contentFormData.duration === preset ? 'bg-[#f5a623]/[0.08] text-[#f5a623] border-[#f5a623]/20' : 'bg-[#09090b] border-white/[0.07] text-zinc-500 hover:border-white/[0.14]'}`}>
+                        className={`px-2 py-1 text-[10px] border transition-colors ${contentFormData.duration === preset ? 'bg-[gold]/[0.08] text-[gold] border-[gold]/20' : 'bg-[#09090b] border-white/[0.07] text-zinc-500 hover:border-white/[0.14]'}`}>
                         {preset}
                       </button>
                     ))}
@@ -404,11 +404,11 @@ const AcademyManager = () => {
 
                 <div className="pt-3 border-t border-white/[0.06] flex gap-2">
                   <button type="button" onClick={() => setIsAddingContent(false)}
-                    className="flex-1 py-2 bg-[#09090b] border border-white/[0.07] text-zinc-400 rounded-xl text-[12px] font-medium hover:border-white/[0.14] transition-colors">
+                    className="flex-1 py-2 bg-[#09090b] border border-white/[0.07] text-zinc-400 text-[12px] font-medium hover:border-white/[0.14] transition-colors">
                     Cancel
                   </button>
                   <button type="submit"
-                    className="flex-1 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[12px] font-semibold transition-colors">
+                    className="flex-1 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors">
                     Assign Content
                   </button>
                 </div>
@@ -420,7 +420,7 @@ const AcademyManager = () => {
                 {livePreviewData ? (
                   <div className="space-y-4">
                     <div>
-                      <span className={`text-[9px] font-medium px-2 py-0.5 rounded-md border ${livePreviewData.displayType === 'VOICE_PRACTICE' ? 'bg-blue-950/20 text-blue-400 border-blue-900/40' : 'bg-[#09090b] text-zinc-500 border-white/[0.06]'}`}>
+                      <span className={`text-[9px] font-medium px-2 py-0.5 border ${livePreviewData.displayType === 'VOICE_PRACTICE' ? 'bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]' : 'bg-[#09090b] text-zinc-500 border-white/[0.06]'}`}>
                         {livePreviewData.displayType === 'VOICE_PRACTICE' ? 'VOICE SCRIPT' : 'THEORY GUIDE'}
                       </span>
                       <h4 className="text-[13px] font-semibold text-white mt-2 leading-snug">{livePreviewData.title}</h4>
@@ -441,7 +441,7 @@ const AcademyManager = () => {
                     </div>
                     <div>
                       <label className="text-[9px] text-zinc-600 uppercase flex items-center gap-1 mb-1.5"><FileText size={9} /> Script content</label>
-                      <div className="bg-[#111113] border border-white/[0.06] rounded-xl p-3 text-[11px] text-zinc-400 leading-relaxed max-h-36 overflow-y-auto whitespace-pre-wrap">
+                      <div className="bg-[#111113] border border-white/[0.06] p-3 text-[11px] text-zinc-400 leading-relaxed max-h-36 overflow-y-auto whitespace-pre-wrap">
                         {livePreviewData.content || "Empty content."}
                       </div>
                     </div>
@@ -460,10 +460,10 @@ const AcademyManager = () => {
       {/* Preview Modal */}
       {isPreviewModalOpen && selectedContentDetails && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70">
-          <div className="w-full max-w-xl bg-[#111113] border border-white/[0.07] rounded-2xl shadow-2xl overflow-hidden">
+          <div className="w-full max-w-xl bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden">
             <div className="flex justify-between items-center p-5 border-b border-white/[0.06]">
               <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-xl flex items-center justify-center border ${selectedContentDetails.type === 'VOICE_PRACTICE' ? 'bg-blue-950/40 text-blue-400 border-blue-900/40' : 'bg-[#09090b] text-zinc-500 border-white/[0.07]'}`}>
+                <div className={`w-8 h-8 flex items-center justify-center border ${selectedContentDetails.type === 'VOICE_PRACTICE' ? 'bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]' : 'bg-[#09090b] text-zinc-500 border-white/[0.07]'}`}>
                   {selectedContentDetails.type === 'VOICE_PRACTICE' ? <Play size={13} /> : <BookOpen size={13} />}
                 </div>
                 <div>
@@ -477,7 +477,7 @@ const AcademyManager = () => {
             </div>
 
             <div className="p-5 space-y-4">
-              <div className="grid grid-cols-3 gap-3 bg-[#09090b] border border-white/[0.06] rounded-xl p-3 text-[12px]">
+              <div className="grid grid-cols-3 gap-3 bg-[#09090b] border border-white/[0.06] p-3 text-[12px]">
                 <div>
                   <span className="text-[9px] text-zinc-600 uppercase flex items-center gap-1"><Tag size={9} /> Category</span>
                   <p className="text-zinc-300 font-medium mt-0.5">{selectedContentDetails.category || "General"}</p>
@@ -499,13 +499,13 @@ const AcademyManager = () => {
 
               <div>
                 <label className="text-[9px] text-zinc-600 uppercase flex items-center gap-1 mb-1.5"><FileText size={9} /> Practice text</label>
-                <div className="bg-[#09090b] border border-white/[0.06] rounded-xl p-4 max-h-56 overflow-y-auto text-[12px] text-zinc-300 leading-relaxed whitespace-pre-wrap">
+                <div className="bg-[#09090b] border border-white/[0.06] p-4 max-h-56 overflow-y-auto text-[12px] text-zinc-300 leading-relaxed whitespace-pre-wrap">
                   {selectedContentDetails.content || "No practice text configured."}
                 </div>
               </div>
 
               <button onClick={() => setIsPreviewModalOpen(false)}
-                className="w-full py-2.5 bg-[#09090b] border border-white/[0.07] hover:border-white/[0.14] text-zinc-300 rounded-xl text-[12px] font-medium transition-colors">
+                className="w-full py-2.5 bg-[#09090b] border border-white/[0.07] hover:border-white/[0.14] text-zinc-300 text-[12px] font-medium transition-colors">
                 Close Preview
               </button>
             </div>

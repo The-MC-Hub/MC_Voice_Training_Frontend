@@ -18,6 +18,7 @@ import LazyImage from '../components/ui/LazyImage';
 import ScrollToTop from '../components/ui/ScrollToTop';
 import ContactModal from '../components/modals/ContactModal';
 import SpotlightCard from '../components/ui/SpotlightCard';
+import SocialFeedCarousel from '../components/ui/SocialFeedCarousel';
 
 const CARD_HOVER_TRANSITION = { duration: 0.22, ease: [0.16, 1, 0.3, 1] };
 const DIFF_COLOR = {
@@ -1043,6 +1044,13 @@ const Home = () => {
             </div>
           </div>
         </ScrollReveal>
+      </section>
+
+      {/* ── Social Feed ──────────────────────────────────────────────────── */}
+      <section className="py-14 px-4 bg-gray-50 border-t border-gray-100">
+        <div className="max-w-5xl mx-auto">
+          <SocialFeedCarousel />
+        </div>
       </section>
 
       <Footer />

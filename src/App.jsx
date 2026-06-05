@@ -18,6 +18,7 @@ import ContactUs from './pages/ContactUs';
 import Onboarding from './pages/Onboarding';
 import ForgotPassword from './pages/ForgotPassword';
 import Layout from './layout/MainLayout';
+import AdSidebar from './components/ui/AdSidebar';
 
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Wallet = lazy(() => import('./pages/Wallet'));
@@ -58,9 +59,12 @@ const RoleRoute = ({ children, allowedRoles }) => {
 
 const Wrap = ({ children }) => <PageTransition>{children}</PageTransition>;
 
+const NO_SIDEBAR_PATHS = ['/m/admin', '/m/voice/practice', '/login', '/register', '/onboarding'];
+
 function App() {
   const { role, user, isAuthenticated, refreshUser } = useAuthStore();
   const location = useLocation();
+  const noSidebar = NO_SIDEBAR_PATHS.some(p => location.pathname.startsWith(p));
 
   useEffect(() => {
     if (isAuthenticated && user && user.plan === undefined) {
@@ -70,7 +74,8 @@ function App() {
 
   return (
     <ThemeProvider>
-      <div className="app-container">
+      <div className="app-container" style={noSidebar ? {} : { paddingRight: '180px' }}>
+        <AdSidebar />
         <Suspense fallback={<PageLoader />}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>

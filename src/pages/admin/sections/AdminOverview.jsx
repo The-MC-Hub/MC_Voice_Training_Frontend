@@ -17,7 +17,7 @@ const TIP = {
   itemStyle:    { color: "var(--text-primary)", fontSize: 13 },
 };
 
-const PLAN_COLORS = { BASIC: "#3B82F6", FULL: "#10B981", ANNUAL: "#f5a623", FREE: "#52525b" };
+const PLAN_COLORS = { BASIC: "#3B82F6", FULL: "#10B981", ANNUAL: "gold", FREE: "#52525b" };
 
 // ── KPI card ─────────────────────────────────────────────────────────────────
 const KPI = ({ label, value, sub, icon: Icon, color, isMoney, delta }) => (
@@ -75,7 +75,7 @@ const AdminOverview = ({ stats, revenueData, revenueStats, userData, totalUsers 
 
       {/* ── KPI grid ──────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPI label="Tong nguoi dung"      value={stats[0]?.value} icon={stats[0]?.icon ?? Users}       color={stats[0]?.color ?? "text-blue-400"}   sub={stats[0]?.trend} />
+        <KPI label="Tong nguoi dung"      value={stats[0]?.value} icon={stats[0]?.icon ?? Users}       color={stats[0]?.color ?? "text-[--text-primary]"}   sub={stats[0]?.trend} />
         <KPI label="GD thanh cong"        value={stats[1]?.value} icon={stats[1]?.icon ?? CheckCircle2} color={stats[1]?.color ?? "text-emerald-400"} sub={stats[1]?.trend} />
         <KPI label="Tong giao dich"       value={stats[2]?.value} icon={stats[2]?.icon ?? CreditCard}  color={stats[2]?.color ?? "text-amber-400"}  sub={stats[2]?.trend} />
         <KPI label="Doanh thu thuc te"    value={stats[3]?.value} icon={stats[3]?.icon ?? TrendingUp}  color={stats[3]?.color ?? "text-purple-400"} sub={stats[3]?.trend} isMoney />
@@ -83,11 +83,11 @@ const AdminOverview = ({ stats, revenueData, revenueStats, userData, totalUsers 
 
       {/* ── Revenue by status ─────────────────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <RevCard icon={CheckCircle2} label="Hoan thanh" colorCls="text-emerald-400" borderCls="border-emerald-200"
+        <RevCard icon={CheckCircle2} label="Hoan thanh" colorCls="text-emerald-400" borderCls="border-[--border-subtle]"
           revenue={statusRevenue.COMPLETED} count={countByStatus.COMPLETED} />
-        <RevCard icon={Clock}        label="Dang cho"   colorCls="text-amber-400"   borderCls="border-amber-200"
+        <RevCard icon={Clock}        label="Dang cho"   colorCls="text-amber-400"   borderCls="border-gold/30"
           revenue={statusRevenue.PENDING}   count={countByStatus.PENDING} />
-        <RevCard icon={XCircle}      label="That bai"   colorCls="text-red-400"     borderCls="border-red-200"
+        <RevCard icon={XCircle}      label="That bai"   colorCls="text-red-400"     borderCls="border-[--border-subtle]"
           revenue={statusRevenue.FAILED}    count={countByStatus.FAILED} />
       </div>
 
@@ -116,16 +116,16 @@ const AdminOverview = ({ stats, revenueData, revenueStats, userData, totalUsers 
                 <AreaChart data={revenueData} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
                   <defs>
                     <linearGradient id="gRev" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%"  stopColor="#f5a623" stopOpacity={0.18} />
-                      <stop offset="95%" stopColor="#f5a623" stopOpacity={0} />
+                      <stop offset="5%"  stopColor="gold" stopOpacity={0.18} />
+                      <stop offset="95%" stopColor="gold" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
                   <XAxis dataKey="name" stroke="#52525b" fontSize={12} tickLine={false} axisLine={false} dy={8} />
                   <YAxis stroke="#52525b" fontSize={11} tickLine={false} axisLine={false} tickFormatter={fmtM} width={36} />
-                  <Tooltip {...TIP} cursor={{ stroke: "#f5a623", strokeWidth: 1, strokeDasharray: "3 3" }}
+                  <Tooltip {...TIP} cursor={{ stroke: "gold", strokeWidth: 1, strokeDasharray: "3 3" }}
                     formatter={(v) => [`${fmt(v)} VND`, "Doanh thu"]} />
-                  <Area type="monotone" dataKey="revenue" stroke="#f5a623" fill="url(#gRev)" strokeWidth={2} dot={false} />
+                  <Area type="monotone" dataKey="revenue" stroke="gold" fill="url(#gRev)" strokeWidth={2} dot={false} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>

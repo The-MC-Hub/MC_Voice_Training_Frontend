@@ -22,7 +22,7 @@ const TIP_STYLE = {
 const LABEL_STYLE = { color: "var(--text-muted)", fontSize: 11 };
 const ITEM_STYLE  = { color: "var(--text-primary)", fontSize: 12 };
 
-const PLAN_COLORS = { FREE:"#52525b", BASIC:"#3B82F6", FULL:"#10B981", ANNUAL:"#f5a623" };
+const PLAN_COLORS = { FREE:"#52525b", BASIC:"#3B82F6", FULL:"#10B981", ANNUAL:"gold" };
 const ROLE_COLORS = { MC:"#3B82F6", CLIENT:"#10B981", ADMIN:"#EF4444" };
 
 // ── reusable card shell ───────────────────────────────────────────────────────
@@ -67,7 +67,7 @@ const Tabs = ({ value, onChange, options }) => (
       <button key={o.value} onClick={() => onChange(o.value)}
         className={`px-3 py-1 rounded-md text-[11px] font-medium transition-all ${
           value === o.value
-            ? "bg-[#f5a623] text-black"
+            ? "bg-[gold] text-black"
             : "text-[--text-muted] hover:text-[--text-primary]"
         }`}>
         {o.label}
@@ -125,14 +125,14 @@ const AnalyticsSection = ({ analytics }) => {
 
       {/* ── KPI row ──────────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Stat label="Người dùng hôm nay" value={a.registrationsToday} icon={Users}     color="text-blue-400"   sub="Đăng ký mới" />
+        <Stat label="Người dùng hôm nay" value={a.registrationsToday} icon={Users}     color="text-[--text-primary]"   sub="Đăng ký mới" />
         <Stat label="Đăng nhập hôm nay"  value={a.loginsToday}        icon={Activity}  color="text-emerald-400" sub="Phiên hoạt động" />
-        <Stat label="Luyện tập hôm nay"  value={a.sessionsToday}      icon={Mic}       color="text-[#f5a623]"  sub="Sessions AI" />
+        <Stat label="Luyện tập hôm nay"  value={a.sessionsToday}      icon={Mic}       color="text-[gold]"  sub="Sessions AI" />
         <Stat label="Người dùng Premium" value={a.premiumUsers}       icon={Star}      color="text-purple-400" sub="Đang trả phí" />
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Stat label="Tổng người dùng"     value={a.totalUsers}          icon={Users}     color="text-blue-400"   sub="Toàn thời gian" />
+        <Stat label="Tổng người dùng"     value={a.totalUsers}          icon={Users}     color="text-[--text-primary]"   sub="Toàn thời gian" />
         <Stat label="Active (7 ngày)"     value={a.activeUsersLast7d}   icon={UserCheck} color="text-emerald-400" sub="Có đăng nhập" />
         <Stat label="Tổng đăng nhập 30n"  value={a.totalLogins30d}      icon={Zap}       color="text-amber-400"  sub="30 ngày qua" />
         <Stat label="Luyện tập 30 ngày"   value={a.totalSessions30d}    icon={TrendingUp} color="text-indigo-400" sub="Sessions AI" />
@@ -191,7 +191,7 @@ const AnalyticsSection = ({ analytics }) => {
                 <YAxis stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} width={28} />
                 <Tooltip contentStyle={TIP_STYLE} labelStyle={LABEL_STYLE} itemStyle={ITEM_STYLE}
                   formatter={v => [fmt(v), "Sessions"]} />
-                <Bar dataKey="count" fill="#f5a623" radius={[3, 3, 0, 0]} fillOpacity={0.85} />
+                <Bar dataKey="count" fill="gold" radius={[3, 3, 0, 0]} fillOpacity={0.85} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -262,7 +262,7 @@ const AnalyticsSection = ({ analytics }) => {
                     <Bar dataKey="count" radius={[3,3,0,0]}>
                       {(a.loginsByHour30d || []).map((entry, i) => {
                         const isTop = peakHours.some(p => p.hour === entry.hour);
-                        return <Cell key={i} fill={isTop ? "#f5a623" : "#3B82F6"} fillOpacity={isTop ? 1 : 0.5} />;
+                        return <Cell key={i} fill={isTop ? "gold" : "#3B82F6"} fillOpacity={isTop ? 1 : 0.5} />;
                       })}
                     </Bar>
                   </BarChart>
@@ -273,7 +273,7 @@ const AnalyticsSection = ({ analytics }) => {
               <div className="mt-3 flex flex-wrap gap-2">
                 <span className="text-[10px] text-[--text-muted] uppercase tracking-wider self-center">Top giờ:</span>
                 {peakHours.map((p, i) => (
-                  <span key={i} className="px-2 py-0.5 rounded-md bg-[#f5a623]/10 border border-[#f5a623]/20 text-[#f5a623] text-[11px] font-medium">
+                  <span key={i} className="px-2 py-0.5 rounded-md bg-[gold]/10 border border-[gold]/20 text-[gold] text-[11px] font-medium">
                     {p.hour} · {fmt(p.count)} lượt
                   </span>
                 ))}
@@ -307,9 +307,9 @@ const AnalyticsSection = ({ analytics }) => {
                   <span className="text-[13px] font-semibold text-[--text-primary]">{fmt(e.value)}</span>
                 </div>
               ))}
-              <div className="flex justify-between items-center px-3 py-1.5 rounded-lg bg-[#f5a623]/[0.05] border border-[#f5a623]/15">
+              <div className="flex justify-between items-center px-3 py-1.5 rounded-lg bg-[gold]/[0.05] border border-[gold]/15">
                 <span className="text-[11px] text-[--text-muted]">Active 7 ngày</span>
-                <span className="text-[13px] font-semibold text-[#f5a623]">{fmt(a.activeUsersLast7d)}</span>
+                <span className="text-[13px] font-semibold text-[gold]">{fmt(a.activeUsersLast7d)}</span>
               </div>
             </div>
           </div>

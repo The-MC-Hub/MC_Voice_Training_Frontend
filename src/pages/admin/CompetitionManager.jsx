@@ -3,7 +3,7 @@ import { Trophy, Plus, Edit2, Trash2, Calendar, ToggleLeft, ToggleRight, X, Chec
 import { fetchAdminCompetitions, addCompetition, updateCompetition, deleteCompetition } from "../../controllers/communityController";
 import { fetchLessons } from "../../controllers/voiceController";
 
-const inputCls = "w-full bg-[#09090b] border border-white/[0.07] rounded-xl px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
+const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
 
 const CompetitionManager = () => {
   const [competitions, setCompetitions] = useState([]);
@@ -84,7 +84,7 @@ const CompetitionManager = () => {
           <p className="text-[12px] text-zinc-500 mt-0.5">Configure daily or weekly speech battle competitions and script references.</p>
         </div>
         <button onClick={handleOpenCreate}
-          className="flex items-center gap-2 px-3 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[12px] font-semibold transition-colors">
+          className="flex items-center gap-2 px-3 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors">
           <Plus size={13} /> New Contest Arena
         </button>
       </div>
@@ -92,19 +92,19 @@ const CompetitionManager = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {competitions.length > 0 ? (
           competitions.map((comp) => (
-            <div key={comp.id} className="bg-[#111113] border border-white/[0.07] rounded-xl p-5 flex flex-col justify-between">
+            <div key={comp.id} className="bg-[#111113] border border-white/[0.07] p-5 flex flex-col justify-between">
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className={`px-2 py-0.5 rounded-lg text-[10px] font-medium border ${comp.active ? "text-emerald-400 border-emerald-900/40 bg-emerald-950/20" : "text-zinc-500 border-white/[0.07] bg-[#09090b]"}`}>
+                  <span className={`px-2 py-0.5 text-[10px] font-medium border ${comp.active ? "text-emerald-400 border-emerald-900/40 bg-emerald-950/20" : "text-zinc-500 border-white/[0.07] bg-[#09090b]"}`}>
                     {comp.active ? "ACTIVE" : "INACTIVE"}
                   </span>
-                  <span className="text-[10px] text-zinc-500 font-mono bg-[#09090b] border border-white/[0.06] px-2 py-0.5 rounded-lg">{comp.type}</span>
+                  <span className="text-[10px] text-zinc-500 font-mono bg-[#09090b] border border-white/[0.06] px-2 py-0.5">{comp.type}</span>
                 </div>
                 <div>
                   <h3 className="text-[14px] font-semibold text-white truncate mb-1">{comp.title}</h3>
                   <p className="text-[12px] text-zinc-500 line-clamp-3 leading-relaxed">{comp.description}</p>
                 </div>
-                <div className="bg-[#09090b] border border-white/[0.06] rounded-xl p-3">
+                <div className="bg-[#09090b] border border-white/[0.06] p-3">
                   <span className="text-[9px] text-zinc-600 uppercase tracking-wider flex items-center gap-1 mb-1">
                     <BookOpen size={9} /> Script Reference
                   </span>
@@ -117,11 +117,11 @@ const CompetitionManager = () => {
                 </span>
                 <div className="flex items-center gap-1.5">
                   <button onClick={() => handleOpenEdit(comp)} title="Edit"
-                    className="p-1.5 rounded-lg text-zinc-500 hover:text-white border border-white/[0.06] hover:border-white/[0.14] transition-colors">
+                    className="p-1.5 text-zinc-500 hover:text-white border border-white/[0.06] hover:border-white/[0.14] transition-colors">
                     <Edit2 size={12} />
                   </button>
                   <button onClick={() => handleDelete(comp.id)} title="Delete"
-                    className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 border border-white/[0.06] hover:border-red-900/40 transition-colors">
+                    className="p-1.5 text-zinc-500 hover:text-[--text-primary] border border-white/[0.06] hover:border-[--border-subtle] transition-colors">
                     <Trash2 size={12} />
                   </button>
                 </div>
@@ -129,7 +129,7 @@ const CompetitionManager = () => {
             </div>
           ))
         ) : (
-          <div className="col-span-full text-center py-14 bg-[#111113] border border-white/[0.07] rounded-xl">
+          <div className="col-span-full text-center py-14 bg-[#111113] border border-white/[0.07]">
             <Trophy size={32} className="text-zinc-700 mx-auto mb-3" />
             <p className="text-zinc-500 text-[12px]">No Arenas Registered. Click "New Contest Arena" to start.</p>
           </div>
@@ -139,7 +139,7 @@ const CompetitionManager = () => {
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70">
-          <div className="w-full max-w-lg bg-[#111113] border border-white/[0.07] rounded-2xl shadow-2xl overflow-hidden">
+          <div className="w-full max-w-lg bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden">
             <button onClick={() => setIsModalOpen(false)} className="absolute right-4 top-4 text-zinc-500 hover:text-white transition-colors">
               <X size={17} />
             </button>
@@ -180,7 +180,7 @@ const CompetitionManager = () => {
                 <div className="flex items-end justify-between pb-0.5">
                   <span className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Active</span>
                   <button type="button" onClick={() => setActive(!active)}
-                    className={`transition-colors ${active ? "text-[#f5a623]" : "text-zinc-600"}`}>
+                    className={`transition-colors ${active ? "text-[gold]" : "text-zinc-600"}`}>
                     {active ? <ToggleRight size={28} /> : <ToggleLeft size={28} />}
                   </button>
                 </div>
@@ -199,11 +199,11 @@ const CompetitionManager = () => {
 
               <div className="pt-3 border-t border-white/[0.06] flex gap-2">
                 <button type="button" onClick={() => setIsModalOpen(false)}
-                  className="flex-1 py-2 bg-[#09090b] border border-white/[0.07] text-zinc-400 rounded-xl text-[12px] font-medium hover:border-white/[0.14] transition-colors">
+                  className="flex-1 py-2 bg-[#09090b] border border-white/[0.07] text-zinc-400 text-[12px] font-medium hover:border-white/[0.14] transition-colors">
                   Cancel
                 </button>
                 <button type="submit"
-                  className="flex-1 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[12px] font-semibold transition-colors flex items-center justify-center gap-1.5">
+                  className="flex-1 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors flex items-center justify-center gap-1.5">
                   <Check size={13} /> Save Arena
                 </button>
               </div>
