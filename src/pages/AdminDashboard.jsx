@@ -84,26 +84,26 @@ const AdminDashboard = () => {
 
   return (
     // fixed inset-0 — escape hoàn toàn khỏi MainLayout bg-white + padding
-    <div className="admin-dark fixed inset-0 z-[100] flex overflow-hidden" style={{ backgroundColor: '#09090b', color: '#fafafa' }}>
+    <div className="fixed inset-0 z-[100] flex overflow-hidden bg-[--bg-base] text-[--text-primary]">
 
       {/* ── Sidebar ─────────────────────────────────────────────────────── */}
-      <aside className="w-[220px] shrink-0 flex flex-col border-r border-white/[0.06] bg-[#0d0d0f]">
+      <aside className="w-[220px] shrink-0 flex flex-col border-r border-[--border-subtle] bg-[--bg-surface]">
         {/* Logo */}
-        <div className="px-5 py-5 border-b border-white/[0.06]">
+        <div className="px-5 py-5 border-b border-[--border-subtle]">
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-lg bg-[#f5a623] flex items-center justify-center">
               <Settings size={14} className="text-black" />
             </div>
             <div>
-              <p className="text-[13px] font-bold text-white leading-none">MCHub</p>
-              <p className="text-[10px] text-zinc-500 mt-0.5">Admin Control</p>
+              <p className="text-[13px] font-bold text-[--text-primary] leading-none">MCHub</p>
+              <p className="text-[10px] text-[--text-muted] mt-0.5">Admin Control</p>
             </div>
           </div>
         </div>
 
         {/* Nav */}
         <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
-          <p className="text-[9px] text-zinc-600 uppercase tracking-widest font-semibold px-3 py-2">Menu</p>
+          <p className="text-[9px] text-[--text-muted] uppercase tracking-widest font-semibold px-3 py-2">Menu</p>
           {NAV_ITEMS.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
@@ -111,7 +111,7 @@ const AdminDashboard = () => {
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all text-left ${
                 section === id
                   ? "bg-[#f5a623]/[0.12] text-[#f5a623] border border-[#f5a623]/20"
-                  : "text-zinc-400 hover:text-white hover:bg-white/[0.05] border border-transparent"
+                  : "text-[--text-secondary] hover:text-[--text-primary] hover:bg-[--bg-elevated] border border-transparent"
               }`}
             >
               <Icon size={15} className={section === id ? "text-[#f5a623]" : ""} />
@@ -121,10 +121,10 @@ const AdminDashboard = () => {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-white/[0.06]">
+        <div className="p-4 border-t border-[--border-subtle]">
           <div className="flex items-center gap-2 px-2">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[11px] text-zinc-500">Hệ thống hoạt động</span>
+            <span className="text-[11px] text-[--text-muted]">Hệ thống hoạt động</span>
           </div>
         </div>
       </aside>
@@ -133,15 +133,15 @@ const AdminDashboard = () => {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
         {/* Top bar */}
-        <header className="shrink-0 h-14 flex items-center justify-between px-7 border-b border-white/[0.06] bg-[#09090b]/95 backdrop-blur-sm">
+        <header className="shrink-0 h-14 flex items-center justify-between px-7 border-b border-[--border-subtle] bg-[--bg-base]/95 backdrop-blur-sm">
           <div className="flex items-center gap-3">
-            {currentItem && <currentItem.icon size={17} className="text-zinc-500" />}
-            <h1 className="text-[15px] font-semibold text-white">{currentItem?.label || "Tổng quan"}</h1>
-            <span className="h-4 w-px bg-white/[0.1]" />
-            <span className="text-[12px] text-zinc-500">Dữ liệu thực tế từ MongoDB</span>
+            {currentItem && <currentItem.icon size={17} className="text-[--text-muted]" />}
+            <h1 className="text-[15px] font-semibold text-[--text-primary]">{currentItem?.label || "Tổng quan"}</h1>
+            <span className="h-4 w-px bg-[--border-subtle]" />
+            <span className="text-[12px] text-[--text-muted]">Dữ liệu thực tế từ MongoDB</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="px-2.5 py-1 rounded-md bg-emerald-950/50 border border-emerald-900/40 text-[11px] text-emerald-400 font-medium">
+            <div className="px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-[11px] text-emerald-700 font-medium">
               Live
             </div>
           </div>

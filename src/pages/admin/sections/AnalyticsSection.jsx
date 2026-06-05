@@ -14,25 +14,25 @@ const fmt   = (v) => (v ?? 0).toLocaleString("vi-VN");
 const empty = (arr) => !arr || arr.length === 0;
 
 const TIP_STYLE = {
-  backgroundColor: "#111113",
-  border: "1px solid rgba(255,255,255,0.08)",
+  backgroundColor: "var(--bg-surface)",
+  border: "1px solid var(--border-subtle)",
   borderRadius: "10px",
   padding: "0.55rem 0.85rem",
 };
-const LABEL_STYLE = { color: "#a1a1aa", fontSize: 11 };
-const ITEM_STYLE  = { color: "#fafafa", fontSize: 12 };
+const LABEL_STYLE = { color: "var(--text-muted)", fontSize: 11 };
+const ITEM_STYLE  = { color: "var(--text-primary)", fontSize: 12 };
 
 const PLAN_COLORS = { FREE:"#52525b", BASIC:"#3B82F6", FULL:"#10B981", ANNUAL:"#f5a623" };
 const ROLE_COLORS = { MC:"#3B82F6", CLIENT:"#10B981", ADMIN:"#EF4444" };
 
 // ── reusable card shell ───────────────────────────────────────────────────────
 const Card = ({ title, subtitle, icon: Icon, children, className = "" }) => (
-  <div className={`bg-[#111113] border border-white/[0.07] rounded-xl p-5 ${className}`}>
+  <div className={`bg-[--bg-surface] border border-[--border-subtle] rounded-xl p-5 ${className}`}>
     <div className="flex items-center gap-2 mb-4">
-      {Icon && <Icon size={15} className="text-zinc-500 shrink-0" />}
+      {Icon && <Icon size={15} className="text-[--text-muted] shrink-0" />}
       <div>
-        <h3 className="text-[13px] font-semibold text-white leading-none">{title}</h3>
-        {subtitle && <p className="text-[11px] text-zinc-600 mt-0.5">{subtitle}</p>}
+        <h3 className="text-[13px] font-semibold text-[--text-primary] leading-none">{title}</h3>
+        {subtitle && <p className="text-[11px] text-[--text-muted] mt-0.5">{subtitle}</p>}
       </div>
     </div>
     {children}
@@ -41,34 +41,34 @@ const Card = ({ title, subtitle, icon: Icon, children, className = "" }) => (
 
 // ── stat pill ────────────────────────────────────────────────────────────────
 const Stat = ({ label, value, icon: Icon, color, sub }) => (
-  <div className="bg-[#111113] border border-white/[0.07] rounded-xl p-4">
+  <div className="bg-[--bg-surface] border border-[--border-subtle] rounded-xl p-4">
     <div className="flex justify-between items-start mb-3">
-      <div className={`w-9 h-9 rounded-lg flex items-center justify-center bg-[#09090b] border border-white/[0.06] ${color}`}>
+      <div className={`w-9 h-9 rounded-lg flex items-center justify-center bg-[--bg-elevated] border border-[--border-subtle] ${color}`}>
         <Icon size={16} />
       </div>
-      {sub && <span className="text-[10px] text-zinc-600 text-right max-w-[90px] leading-tight">{sub}</span>}
+      {sub && <span className="text-[10px] text-[--text-muted] text-right max-w-[90px] leading-tight">{sub}</span>}
     </div>
-    <div className="text-[22px] font-bold text-white">{fmt(value)}</div>
-    <div className="text-[11px] text-zinc-500 mt-0.5 uppercase tracking-wider">{label}</div>
+    <div className="text-[22px] font-bold text-[--text-primary]">{fmt(value)}</div>
+    <div className="text-[11px] text-[--text-muted] mt-0.5 uppercase tracking-wider">{label}</div>
   </div>
 );
 
 // ── empty placeholder ────────────────────────────────────────────────────────
 const Empty = ({ h = 200 }) => (
-  <div className={`flex items-center justify-center text-zinc-700 text-[12px]`} style={{ height: h }}>
+  <div className={`flex items-center justify-center text-[--text-muted] text-[12px]`} style={{ height: h }}>
     Chưa có dữ liệu
   </div>
 );
 
 // ── tab buttons ───────────────────────────────────────────────────────────────
 const Tabs = ({ value, onChange, options }) => (
-  <div className="flex gap-1 bg-[#09090b] border border-white/[0.07] rounded-lg p-1 w-fit">
+  <div className="flex gap-1 bg-[--bg-elevated] border border-[--border-subtle] rounded-lg p-1 w-fit">
     {options.map(o => (
       <button key={o.value} onClick={() => onChange(o.value)}
         className={`px-3 py-1 rounded-md text-[11px] font-medium transition-all ${
           value === o.value
             ? "bg-[#f5a623] text-black"
-            : "text-zinc-500 hover:text-white"
+            : "text-[--text-muted] hover:text-[--text-primary]"
         }`}>
         {o.label}
       </button>
@@ -83,7 +83,7 @@ const AnalyticsSection = ({ analytics }) => {
 
   if (!analytics) {
     return (
-      <div className="flex items-center justify-center h-64 text-zinc-600 text-[13px]">
+      <div className="flex items-center justify-center h-64 text-[--text-muted] text-[13px]">
         Đang tải dữ liệu phân tích...
       </div>
     );
@@ -148,7 +148,7 @@ const AnalyticsSection = ({ analytics }) => {
       {/* ── Login trend ─────────────────────────────────────────────────── */}
       <Card title="Lượt đăng nhập" subtitle="Số phiên đăng nhập theo thời gian" icon={Activity}>
         <div className="flex items-center justify-between mb-4">
-          <span className="text-[11px] text-zinc-600">
+          <span className="text-[11px] text-[--text-muted]">
             {loginRange === "hour" ? "Hôm nay theo giờ" : loginRange === "month" ? "12 tháng gần nhất" : "30 ngày gần nhất"}
           </span>
           <Tabs value={loginRange} onChange={setLoginRange} options={[
@@ -165,10 +165,10 @@ const AnalyticsSection = ({ analytics }) => {
                     <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
-                <XAxis dataKey={loginKey} stroke="#52525b" fontSize={10} tickLine={false} axisLine={false} dy={8}
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+                <XAxis dataKey={loginKey} stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} dy={8}
                   tickFormatter={v => loginRange === "day" ? v.slice(5) : v} />
-                <YAxis stroke="#52525b" fontSize={10} tickLine={false} axisLine={false} width={28} />
+                <YAxis stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} width={28} />
                 <Tooltip contentStyle={TIP_STYLE} labelStyle={LABEL_STYLE} itemStyle={ITEM_STYLE}
                   formatter={v => [fmt(v), "Đăng nhập"]} />
                 <Area type="monotone" dataKey="count" stroke="#10B981" fill="url(#gradLogin)" strokeWidth={1.5} dot={false} />
@@ -181,7 +181,7 @@ const AnalyticsSection = ({ analytics }) => {
       {/* ── Session trend ────────────────────────────────────────────────── */}
       <Card title="Phiên luyện tập AI" subtitle="Số lần người dùng luyện giọng theo thời gian" icon={Mic}>
         <div className="flex items-center justify-between mb-4">
-          <span className="text-[11px] text-zinc-600">
+          <span className="text-[11px] text-[--text-muted]">
             {sessionRange === "hour" ? "Hôm nay theo giờ" : "30 ngày gần nhất"}
           </span>
           <Tabs value={sessionRange} onChange={setSessionRange} options={[
@@ -192,10 +192,10 @@ const AnalyticsSection = ({ analytics }) => {
           <div className="h-[240px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={sessionData} barSize={loginRange === "hour" ? 14 : 8}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
-                <XAxis dataKey={sessionKey} stroke="#52525b" fontSize={10} tickLine={false} axisLine={false} dy={8}
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+                <XAxis dataKey={sessionKey} stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} dy={8}
                   tickFormatter={v => sessionRange === "day" ? v.slice(5) : v} />
-                <YAxis stroke="#52525b" fontSize={10} tickLine={false} axisLine={false} width={28} />
+                <YAxis stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} width={28} />
                 <Tooltip contentStyle={TIP_STYLE} labelStyle={LABEL_STYLE} itemStyle={ITEM_STYLE}
                   formatter={v => [fmt(v), "Sessions"]} />
                 <Bar dataKey="count" fill="#f5a623" radius={[3, 3, 0, 0]} fillOpacity={0.85} />
@@ -218,10 +218,10 @@ const AnalyticsSection = ({ analytics }) => {
                       <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
-                  <XAxis dataKey="date" stroke="#52525b" fontSize={10} tickLine={false} axisLine={false} dy={8}
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+                  <XAxis dataKey="date" stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} dy={8}
                     tickFormatter={v => v.slice(5)} interval={4} />
-                  <YAxis stroke="#52525b" fontSize={10} tickLine={false} axisLine={false} width={24} />
+                  <YAxis stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} width={24} />
                   <Tooltip contentStyle={TIP_STYLE} labelStyle={LABEL_STYLE} itemStyle={ITEM_STYLE}
                     formatter={v => [fmt(v), "Người dùng mới"]} />
                   <Area type="monotone" dataKey="count" stroke="#3B82F6" fill="url(#gradUsers)" strokeWidth={1.5} dot={false} />
@@ -236,10 +236,10 @@ const AnalyticsSection = ({ analytics }) => {
             <div className="h-[200px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={a.newUsersByMonth} barSize={20}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
-                  <XAxis dataKey="month" stroke="#52525b" fontSize={10} tickLine={false} axisLine={false} dy={8}
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+                  <XAxis dataKey="month" stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} dy={8}
                     tickFormatter={v => v.slice(5)} />
-                  <YAxis stroke="#52525b" fontSize={10} tickLine={false} axisLine={false} width={24} />
+                  <YAxis stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} width={24} />
                   <Tooltip contentStyle={TIP_STYLE} labelStyle={LABEL_STYLE} itemStyle={ITEM_STYLE}
                     formatter={v => [fmt(v), "Người dùng mới"]} />
                   <Bar dataKey="count" fill="#3B82F6" radius={[3,3,0,0]} />
@@ -260,10 +260,10 @@ const AnalyticsSection = ({ analytics }) => {
               <div className="h-[220px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={a.loginsByHour30d} barSize={10}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
-                    <XAxis dataKey="hour" stroke="#52525b" fontSize={10} tickLine={false} axisLine={false} dy={8}
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+                    <XAxis dataKey="hour" stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} dy={8}
                       tickFormatter={v => v.slice(0,2)} interval={1} />
-                    <YAxis stroke="#52525b" fontSize={10} tickLine={false} axisLine={false} width={28} />
+                    <YAxis stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} width={28} />
                     <Tooltip contentStyle={TIP_STYLE} labelStyle={LABEL_STYLE} itemStyle={ITEM_STYLE}
                       formatter={v => [fmt(v), "Đăng nhập"]} />
                     <Bar dataKey="count" radius={[3,3,0,0]}>
@@ -278,7 +278,7 @@ const AnalyticsSection = ({ analytics }) => {
             )}
             {peakHours.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-2">
-                <span className="text-[10px] text-zinc-600 uppercase tracking-wider self-center">Top giờ:</span>
+                <span className="text-[10px] text-[--text-muted] uppercase tracking-wider self-center">Top giờ:</span>
                 {peakHours.map((p, i) => (
                   <span key={i} className="px-2 py-0.5 rounded-md bg-[#f5a623]/10 border border-[#f5a623]/20 text-[#f5a623] text-[11px] font-medium">
                     {p.hour} · {fmt(p.count)} lượt
@@ -306,16 +306,16 @@ const AnalyticsSection = ({ analytics }) => {
             </div>
             <div className="space-y-2 w-full mt-1">
               {activityData.map((e, i) => (
-                <div key={i} className="flex justify-between items-center px-3 py-2 rounded-lg bg-[#09090b] border border-white/[0.05]">
+                <div key={i} className="flex justify-between items-center px-3 py-2 rounded-lg bg-[--bg-elevated] border border-[--border-subtle]">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full" style={{ backgroundColor: e.fill }} />
-                    <span className="text-[12px] text-zinc-400">{e.name}</span>
+                    <span className="text-[12px] text-[--text-muted]">{e.name}</span>
                   </div>
-                  <span className="text-[13px] font-semibold text-white">{fmt(e.value)}</span>
+                  <span className="text-[13px] font-semibold text-[--text-primary]">{fmt(e.value)}</span>
                 </div>
               ))}
               <div className="flex justify-between items-center px-3 py-1.5 rounded-lg bg-[#f5a623]/[0.05] border border-[#f5a623]/15">
-                <span className="text-[11px] text-zinc-500">Active 7 ngày</span>
+                <span className="text-[11px] text-[--text-muted]">Active 7 ngày</span>
                 <span className="text-[13px] font-semibold text-[#f5a623]">{fmt(a.activeUsersLast7d)}</span>
               </div>
             </div>
@@ -342,19 +342,19 @@ const AnalyticsSection = ({ analytics }) => {
               </div>
               <div className="flex-1 space-y-2">
                 {planData.map((e, i) => (
-                  <div key={i} className="flex items-center justify-between px-3 py-2 rounded-lg bg-[#09090b] border border-white/[0.05]">
+                  <div key={i} className="flex items-center justify-between px-3 py-2 rounded-lg bg-[--bg-elevated] border border-[--border-subtle]">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: e.color }} />
-                      <span className="text-[12px] text-zinc-400 font-medium">{e.name}</span>
+                      <span className="text-[12px] text-[--text-muted] font-medium">{e.name}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="h-1 rounded-full bg-white/[0.06] w-20 overflow-hidden">
+                      <div className="h-1 rounded-full bg-[--bg-elevated] w-20 overflow-hidden">
                         <div className="h-full rounded-full" style={{
                           backgroundColor: e.color,
                           width: `${planData.reduce((s,x) => s+x.value, 0) > 0 ? Math.round(e.value / planData.reduce((s,x) => s+x.value, 0) * 100) : 0}%`
                         }} />
                       </div>
-                      <span className="text-[13px] font-bold text-white w-8 text-right">{fmt(e.value)}</span>
+                      <span className="text-[13px] font-bold text-[--text-primary] w-8 text-right">{fmt(e.value)}</span>
                     </div>
                   </div>
                 ))}
@@ -379,19 +379,19 @@ const AnalyticsSection = ({ analytics }) => {
               </div>
               <div className="flex-1 space-y-2">
                 {roleData.map((e, i) => (
-                  <div key={i} className="flex items-center justify-between px-3 py-2 rounded-lg bg-[#09090b] border border-white/[0.05]">
+                  <div key={i} className="flex items-center justify-between px-3 py-2 rounded-lg bg-[--bg-elevated] border border-[--border-subtle]">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: e.color }} />
-                      <span className="text-[12px] text-zinc-400 font-medium">{e.name}</span>
+                      <span className="text-[12px] text-[--text-muted] font-medium">{e.name}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="h-1 rounded-full bg-white/[0.06] w-20 overflow-hidden">
+                      <div className="h-1 rounded-full bg-[--bg-elevated] w-20 overflow-hidden">
                         <div className="h-full rounded-full" style={{
                           backgroundColor: e.color,
                           width: `${roleData.reduce((s,x) => s+x.value, 0) > 0 ? Math.round(e.value / roleData.reduce((s,x) => s+x.value, 0) * 100) : 0}%`
                         }} />
                       </div>
-                      <span className="text-[13px] font-bold text-white w-8 text-right">{fmt(e.value)}</span>
+                      <span className="text-[13px] font-bold text-[--text-primary] w-8 text-right">{fmt(e.value)}</span>
                     </div>
                   </div>
                 ))}
@@ -407,10 +407,10 @@ const AnalyticsSection = ({ analytics }) => {
           <div className="h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={a.loginsByMonth}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
-                <XAxis dataKey="month" stroke="#52525b" fontSize={10} tickLine={false} axisLine={false} dy={8}
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+                <XAxis dataKey="month" stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} dy={8}
                   tickFormatter={v => v.slice(5)} />
-                <YAxis stroke="#52525b" fontSize={10} tickLine={false} axisLine={false} width={32} />
+                <YAxis stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} width={32} />
                 <Tooltip contentStyle={TIP_STYLE} labelStyle={LABEL_STYLE} itemStyle={ITEM_STYLE}
                   formatter={v => [fmt(v), "Đăng nhập"]} />
                 <Line type="monotone" dataKey="count" stroke="#10B981" strokeWidth={2}
