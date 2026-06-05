@@ -90,6 +90,7 @@
 [data-theme='dark'] .bg-\[\#09090b\]\/90 { background-color: rgba(9,9,11,0.90) !important; }
 
 /* DEFAULT (light) overrides — remap dark tailwind classes to light equivalents */
+/* Exception: elements inside .admin-dark keep dark colors (via higher-specificity rules below) */
 .bg-\[\#09090b\],
 .bg-\[\#0e0e0b\],
 .bg-\[\#0e0e10\],
@@ -161,6 +162,58 @@
 /* Divide lines */
 .divide-white\/\[0\.06\] > * + *,
 .divide-white\/\[0\.08\] > * + * { border-color: rgba(0,0,0,0.08) !important; }
+
+/* ── ADMIN DARK THEME — overrides the light overrides above with higher specificity ── */
+.admin-dark.bg-\[\#09090b\],
+.admin-dark .bg-\[\#09090b\] { background-color: #09090b !important; }
+.admin-dark.bg-\[\#0d0d0f\],
+.admin-dark .bg-\[\#0d0d0f\] { background-color: #0d0d0f !important; }
+.admin-dark.bg-\[\#111113\],
+.admin-dark .bg-\[\#111113\] { background-color: #111113 !important; }
+.admin-dark.bg-\[\#1a1a1e\],
+.admin-dark .bg-\[\#1a1a1e\] { background-color: #1a1a1e !important; }
+.admin-dark.bg-\[\#09090b\]\/90,
+.admin-dark .bg-\[\#09090b\]\/90 { background-color: rgba(9,9,11,0.90) !important; }
+.admin-dark.bg-\[\#09090b\]\/95,
+.admin-dark .bg-\[\#09090b\]\/95 { background-color: rgba(9,9,11,0.95) !important; }
+
+.admin-dark .bg-white\/\[0\.02\] { background-color: rgba(255,255,255,0.02) !important; }
+.admin-dark .bg-white\/\[0\.03\] { background-color: rgba(255,255,255,0.03) !important; }
+.admin-dark .bg-white\/\[0\.04\] { background-color: rgba(255,255,255,0.04) !important; }
+.admin-dark .bg-white\/\[0\.05\] { background-color: rgba(255,255,255,0.05) !important; }
+.admin-dark .bg-white\/5         { background-color: rgba(255,255,255,0.05) !important; }
+.admin-dark .bg-white\/\[0\.06\] { background-color: rgba(255,255,255,0.06) !important; }
+.admin-dark .bg-white\/\[0\.07\] { background-color: rgba(255,255,255,0.07) !important; }
+.admin-dark .bg-white\/\[0\.08\] { background-color: rgba(255,255,255,0.08) !important; }
+.admin-dark .bg-white\/10        { background-color: rgba(255,255,255,0.10) !important; }
+.admin-dark .bg-white\/\[0\.1\]  { background-color: rgba(255,255,255,0.10) !important; }
+.admin-dark .bg-white\/20        { background-color: rgba(255,255,255,0.20) !important; }
+
+.admin-dark .text-white    { color: #fafafa !important; }
+.admin-dark .text-zinc-100 { color: #f4f4f5 !important; }
+.admin-dark .text-zinc-200 { color: #e4e4e7 !important; }
+.admin-dark .text-zinc-300 { color: #d4d4d8 !important; }
+.admin-dark .text-zinc-400 { color: #a1a1aa !important; }
+.admin-dark .text-zinc-500 { color: #71717a !important; }
+.admin-dark .text-zinc-600 { color: #52525b !important; }
+.admin-dark .text-zinc-700 { color: #3f3f46 !important; }
+
+.admin-dark .border-white\/\[0\.04\] { border-color: rgba(255,255,255,0.04) !important; }
+.admin-dark .border-white\/\[0\.05\] { border-color: rgba(255,255,255,0.05) !important; }
+.admin-dark .border-white\/\[0\.06\] { border-color: rgba(255,255,255,0.06) !important; }
+.admin-dark .border-white\/\[0\.07\] { border-color: rgba(255,255,255,0.07) !important; }
+.admin-dark .border-white\/\[0\.08\] { border-color: rgba(255,255,255,0.08) !important; }
+.admin-dark .border-white\/\[0\.1\]  { border-color: rgba(255,255,255,0.10) !important; }
+.admin-dark .border-white\/10        { border-color: rgba(255,255,255,0.10) !important; }
+.admin-dark .border-white\/\[0\.12\] { border-color: rgba(255,255,255,0.12) !important; }
+.admin-dark .border-white\/\[0\.14\] { border-color: rgba(255,255,255,0.14) !important; }
+.admin-dark .border-white\/\[0\.16\] { border-color: rgba(255,255,255,0.16) !important; }
+.admin-dark .border-white\/20        { border-color: rgba(255,255,255,0.20) !important; }
+
+.admin-dark .bg-zinc-950 { background-color: #09090b !important; }
+.admin-dark .bg-zinc-900 { background-color: #18181b !important; }
+.admin-dark .bg-zinc-800 { background-color: #27272a !important; }
+.admin-dark .bg-zinc-700 { background-color: #3f3f46 !important; }
 
 /* Placeholders */
 ::placeholder { color: #9ca3af !important; }

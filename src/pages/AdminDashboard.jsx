@@ -84,7 +84,7 @@ const AdminDashboard = () => {
 
   return (
     // fixed inset-0 — escape hoàn toàn khỏi MainLayout bg-white + padding
-    <div className="fixed inset-0 z-[100] flex bg-[#09090b] text-white overflow-hidden">
+    <div className="admin-dark fixed inset-0 z-[100] flex overflow-hidden" style={{ backgroundColor: '#09090b', color: '#fafafa' }}>
 
       {/* ── Sidebar ─────────────────────────────────────────────────────── */}
       <aside className="w-[220px] shrink-0 flex flex-col border-r border-white/[0.06] bg-[#0d0d0f]">
