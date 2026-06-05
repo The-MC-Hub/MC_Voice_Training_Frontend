@@ -85,64 +85,72 @@ const UserManagement = ({ users, handleVerify, handleSuspend }) => {
   const roleCls = (role) => ROLE_BADGE[(role || "client").toLowerCase()] || ROLE_BADGE.client;
 
   return (
-    <div className="space-y-5 w-full">
+    <div className="space-y-6 w-full">
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-1">
         <div>
-          <h2 className="text-[15px] font-semibold text-gray-900">Quản lý người dùng</h2>
-          <p className="text-[12px] text-gray-400 mt-0.5">
-            Tổng {users?.length ?? 0} tài khoản · {counts.mc ?? 0} MC · {counts.client ?? 0} Client · {counts.admin ?? 0} Admin
+          <h2 className="text-[16px] font-semibold text-gray-900">Quản lý người dùng</h2>
+          <p className="text-[12px] text-gray-400 mt-1">
+            Tổng <span className="font-semibold text-gray-700">{users?.length ?? 0}</span> tài khoản
+            &nbsp;·&nbsp; <span className="text-blue-600 font-medium">{counts.mc ?? 0} MC</span>
+            &nbsp;·&nbsp; <span className="text-gray-600 font-medium">{counts.client ?? 0} Client</span>
+            &nbsp;·&nbsp; <span className="text-red-500 font-medium">{counts.admin ?? 0} Admin</span>
           </p>
         </div>
-        <div className="relative w-full sm:w-72">
+        <div className="relative w-full sm:w-80">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
           <input
             type="text"
             placeholder="Tìm theo tên, email, SĐT..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-white border border-gray-200 rounded-xl py-2 pl-9 pr-4 text-[12px] text-gray-900 focus:outline-none focus:border-gray-400 placeholder:text-gray-400"
+            className="w-full bg-white border border-gray-300 rounded-xl py-2.5 pl-9 pr-4 text-[13px] text-gray-900 focus:outline-none focus:border-gray-500 placeholder:text-gray-400 shadow-sm"
           />
         </div>
       </div>
 
       {/* Role filter tabs */}
-      <div className="flex gap-1.5">
-        {["ALL", "ADMIN", "MC", "CLIENT"].map(r => (
+      <div className="flex gap-2 flex-wrap">
+        {[
+          { key: "ALL",    label: `Tất cả`,  count: users?.length ?? 0, color: "bg-gray-900 text-white border-gray-900" },
+          { key: "ADMIN",  label: "Admin",   count: counts.admin ?? 0,  color: "bg-red-600 text-white border-red-600" },
+          { key: "MC",     label: "MC",      count: counts.mc ?? 0,     color: "bg-blue-600 text-white border-blue-600" },
+          { key: "CLIENT", label: "Client",  count: counts.client ?? 0, color: "bg-gray-600 text-white border-gray-600" },
+        ].map(({ key, label, count, color }) => (
           <button
-            key={r}
-            onClick={() => setFilterRole(r)}
-            className={`px-3 py-1.5 rounded-lg text-[11px] font-medium border transition-colors ${
-              filterRole === r
-                ? "bg-gray-900 text-white border-gray-900"
+            key={key}
+            onClick={() => setFilterRole(key)}
+            className={`px-4 py-2 rounded-xl text-[12px] font-semibold border transition-all shadow-sm ${
+              filterRole === key
+                ? color
                 : "bg-white text-gray-500 border-gray-200 hover:border-gray-400 hover:text-gray-700"
             }`}
           >
-            {r === "ALL" ? `Tất cả (${users?.length ?? 0})` : `${r} (${counts[r.toLowerCase()] ?? 0})`}
+            {label} <span className={`ml-1 text-[11px] font-bold ${filterRole === key ? "opacity-80" : "text-gray-400"}`}>({count})</span>
           </button>
         ))}
       </div>
 
       {/* Table */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-x-auto">
+      <div className="bg-white border border-gray-200 rounded-2xl overflow-x-auto shadow-sm">
         <table className="w-full text-left border-collapse text-[12px]">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-100 text-gray-400 uppercase text-[10px] font-semibold tracking-wider">
-              <th className="px-4 py-3">Người dùng</th>
-              <th className="px-4 py-3">Vai trò</th>
-              <th className="px-4 py-3">Gói</th>
-              <th className="px-4 py-3">Trạng thái</th>
-              <th className="px-4 py-3">Chứng nhận</th>
-              <th className="px-4 py-3">Số điện thoại</th>
-              <th className="px-4 py-3">Ngày đăng ký</th>
-              <th className="px-4 py-3 text-right">Thao tác</th>
+            <tr className="bg-gray-50 border-b border-gray-200 text-gray-500 uppercase text-[10px] font-bold tracking-wider">
+              <th className="px-5 py-3.5">Người dùng</th>
+              <th className="px-5 py-3.5">Vai trò</th>
+              <th className="px-5 py-3.5">Gói</th>
+              <th className="px-5 py-3.5">Trạng thái</th>
+              <th className="px-5 py-3.5">Chứng nhận</th>
+              <th className="px-5 py-3.5">Số điện thoại</th>
+              <th className="px-5 py-3.5">Ngày đăng ký</th>
+              <th className="px-5 py-3.5 text-right">Thao tác</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-4 py-10 text-center text-gray-400 text-[12px]">
+                <td colSpan={8} className="px-6 py-12 text-center text-gray-400 text-[13px]">
                   Không tìm thấy người dùng
                 </td>
               </tr>
@@ -150,63 +158,63 @@ const UserManagement = ({ users, handleVerify, handleSuspend }) => {
             {filtered.map(u => (
               <tr key={u._id} className="hover:bg-gray-50 transition-colors">
                 {/* User info */}
-                <td className="px-4 py-3">
+                <td className="px-5 py-4">
                   <div className="flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-[12px] border ${roleCls(u.role)}`}>
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-[13px] border shrink-0 ${roleCls(u.role)}`}>
                       {u.name?.charAt(0)?.toUpperCase() || "?"}
                     </div>
                     <div>
-                      <span className="font-semibold text-gray-900 block leading-tight">{u.name || "—"}</span>
-                      <span className="text-[10px] text-gray-400 font-mono">{u.email}</span>
+                      <span className="font-semibold text-gray-900 block text-[13px] leading-snug">{u.name || "—"}</span>
+                      <span className="text-[11px] text-gray-400 font-mono">{u.email}</span>
                     </div>
                   </div>
                 </td>
                 {/* Role */}
-                <td className="px-4 py-3">
+                <td className="px-5 py-4">
                   <Badge cls={roleCls(u.role)}>{(u.role || "CLIENT").toUpperCase()}</Badge>
                 </td>
                 {/* Plan */}
-                <td className="px-4 py-3">
+                <td className="px-5 py-4">
                   <Badge cls={PLAN_BADGE[u.plan] || PLAN_BADGE.FREE}>{u.plan || "FREE"}</Badge>
                 </td>
                 {/* Status */}
-                <td className="px-4 py-3">
+                <td className="px-5 py-4">
                   {u.isActive ? (
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Active
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" /> Hoạt động
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium bg-red-50 text-red-700 border border-red-200">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-500" /> Suspended
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-red-50 text-red-700 border border-red-200">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" /> Bị khóa
                     </span>
                   )}
                 </td>
                 {/* Certification */}
-                <td className="px-4 py-3">
+                <td className="px-5 py-4">
                   {u.isVerified ? (
                     <Badge cls="bg-blue-50 text-blue-700 border-blue-200"><ShieldCheck size={10} /> Certified</Badge>
                   ) : (
-                    <span className="text-[11px] text-gray-400 italic">—</span>
+                    <span className="text-[11px] text-gray-300">—</span>
                   )}
                 </td>
                 {/* Phone */}
-                <td className="px-4 py-3">
-                  <span className="font-mono text-[11px] text-gray-700">{u.phoneNumber || "—"}</span>
+                <td className="px-5 py-4">
+                  <span className="font-mono text-[12px] text-gray-600">{u.phoneNumber || "—"}</span>
                 </td>
                 {/* Created at */}
-                <td className="px-4 py-3">
-                  <span className="text-[11px] text-gray-500">{fmtDate(u.createdAt)}</span>
+                <td className="px-5 py-4">
+                  <span className="text-[12px] text-gray-500">{fmtDate(u.createdAt)}</span>
                 </td>
                 {/* Actions */}
-                <td className="px-4 py-3 text-right">
-                  <div className="flex justify-end gap-1.5">
+                <td className="px-5 py-4 text-right">
+                  <div className="flex justify-end gap-2">
                     <button onClick={() => openDetail(u)} title="Xem chi tiết"
-                      className="p-1.5 rounded-lg bg-white text-gray-400 hover:text-gray-700 border border-gray-200 hover:border-gray-400 transition-colors">
-                      <Eye size={13} />
+                      className="p-2 rounded-lg bg-white text-gray-400 hover:text-gray-700 border border-gray-200 hover:border-gray-400 transition-colors">
+                      <Eye size={14} />
                     </button>
                     {u.role?.toLowerCase() === "mc" && (
                       <button onClick={() => handleVerify(u._id, u.isVerified)} title={u.isVerified ? "Thu hồi" : "Chứng nhận"}
-                        className={`p-1.5 rounded-lg border transition-colors ${
+                        className={`p-2 rounded-lg border transition-colors ${
                           u.isVerified
                             ? "bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100"
                             : "bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
