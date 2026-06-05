@@ -47,3 +47,8 @@ export const fetchAnalytics = async () => {
   const response = await api.get('/admin/analytics');
   return response.data.data || {};
 };
+
+export const fetchGrowthAnalytics = async () => {
+  const response = await api.get('/admin/growth-analytics');
+  return response.data.data || {};
+};

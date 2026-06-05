@@ -29,6 +29,7 @@ const NAV = [
   { id: "xu-huong",           label: "Xu hướng" },
   { id: "gio-cao-diem",       label: "Giờ cao điểm" },
   { id: "phan-bo",            label: "Phân bổ" },
+  { id: "phan-khuc",          label: "Phân khúc & Tăng trưởng" },
 ];
 
 // ── shared sub-components ────────────────────────────────────────────────────
@@ -629,9 +630,195 @@ const DistributionSection = ({ analytics }) => {
   );
 };
 
+const UserInsightsSection = ({ growthAnalytics }) => {
+  const g = growthAnalytics || {};
+
+  const funnelData = [
+    { name: "Tổng users", value: g.totalUsers || 0, color: "#52525b" },
+    { name: "Free", value: g.freeUsers || 0, color: "#71717a" },
+    { name: "Premium", value: g.premiumUsers || 0, color: "#f5a623" },
+    { name: "Basic", value: g.basicUsers || 0, color: "#3B82F6" },
+    { name: "Full", value: g.fullUsers || 0, color: "#10B981" },
+    { name: "Annual", value: g.annualUsers || 0, color: "#8b5cf6" },
+  ];
+
+  const segmentData = [
+    { name: "Hot", value: g.hotUsers || 0, color: "#f5a623", desc: "Đăng nhập 7 ngày + có luyện tập" },
+    { name: "Warm", value: g.warmUsers || 0, color: "#3B82F6", desc: "Đăng nhập 30 ngày hoặc có session" },
+    { name: "Cold", value: g.coldUsers || 0, color: "#52525b", desc: "Không hoạt động 30 ngày" },
+  ];
+
+  const segmentTotal = segmentData.reduce((s, x) => s + x.value, 0);
+
+  const cohortData = g.cohortRetention || [];
+
+  const revenueMetrics = [
+    { label: "ARPU",  value: g.arpu  || 0, desc: "Revenue per user",         color: "text-blue-500",    isMoney: true },
+    { label: "ARPPU", value: g.arppu || 0, desc: "Revenue per paying user",  color: "text-emerald-500", isMoney: true },
+    { label: "LTV",   value: g.ltv   || 0, desc: "Lifetime value (4 tháng)", color: "text-[#f5a623]",   isMoney: true },
+    { label: "MRR",   value: g.mrr   || 0, desc: "Monthly recurring rev.",   color: "text-purple-500",  isMoney: true },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* Row 1: KPI metrics */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* DAU/MAU */}
+        <div className="bg-[--bg-surface] border border-[--border-subtle] rounded-xl p-4 flex flex-col gap-3">
+          <div className="flex justify-between items-start">
+            <span className="text-[11px] text-[--text-muted] uppercase tracking-wider font-semibold">DAU/MAU</span>
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${(g.dauMauRatio || 0) >= 20 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-700 border border-amber-200'}`}>
+              {(g.dauMauRatio || 0) >= 20 ? 'Tốt' : 'Cải thiện'}
+            </span>
+          </div>
+          <div>
+            <span className="text-3xl font-bold text-[--text-primary]">{g.dauMauRatio || 0}</span>
+            <span className="text-[12px] text-[--text-muted] ml-1">%</span>
+          </div>
+          <div className="text-[11px] text-[--text-muted]">DAU: {fmt(g.dau)} · MAU: {fmt(g.mau)}</div>
+          <div className="h-1 bg-[--bg-elevated] rounded-full overflow-hidden">
+            <div className="h-full rounded-full bg-emerald-400 transition-all" style={{ width: `${Math.min(100, (g.dauMauRatio || 0) / 30 * 100)}%` }} />
+          </div>
+        </div>
+
+        {/* Conversion rate */}
+        <div className="bg-[--bg-surface] border border-[--border-subtle] rounded-xl p-4 flex flex-col gap-3">
+          <span className="text-[11px] text-[--text-muted] uppercase tracking-wider font-semibold">Tỷ lệ chuyển đổi</span>
+          <div>
+            <span className="text-3xl font-bold text-[--text-primary]">{g.conversionRate || 0}</span>
+            <span className="text-[12px] text-[--text-muted] ml-1">%</span>
+          </div>
+          <div className="text-[11px] text-[--text-muted]">{fmt(g.premiumUsers)} / {fmt(g.totalUsers)} users</div>
+          <div className="h-1 bg-[--bg-elevated] rounded-full overflow-hidden">
+            <div className="h-full rounded-full bg-[#f5a623] transition-all" style={{ width: `${Math.min(100, (g.conversionRate || 0) / 20 * 100)}%` }} />
+          </div>
+        </div>
+
+        {/* User growth 7d */}
+        <div className="bg-[--bg-surface] border border-[--border-subtle] rounded-xl p-4 flex flex-col gap-3">
+          <span className="text-[11px] text-[--text-muted] uppercase tracking-wider font-semibold">Tăng trưởng 7 ngày</span>
+          <div className="flex items-baseline gap-1">
+            <span className="text-3xl font-bold text-[--text-primary]">{fmt(g.newUsers7d)}</span>
+            <span className="text-[11px] text-[--text-muted]">users mới</span>
+          </div>
+          <div className={`text-[12px] font-semibold flex items-center gap-1 ${(g.userGrowthRate || 0) >= 0 ? 'text-emerald-500' : 'text-red-400'}`}>
+            {(g.userGrowthRate || 0) >= 0 ? '▲' : '▼'} {Math.abs(g.userGrowthRate || 0)}%
+            <span className="text-[11px] font-normal text-[--text-muted]">so tuần trước</span>
+          </div>
+        </div>
+
+        {/* Feature adoption */}
+        <div className="bg-[--bg-surface] border border-[--border-subtle] rounded-xl p-4 flex flex-col gap-3">
+          <span className="text-[11px] text-[--text-muted] uppercase tracking-wider font-semibold">Feature Adoption</span>
+          <div>
+            <span className="text-3xl font-bold text-[--text-primary]">{g.featureAdoptionRate || 0}</span>
+            <span className="text-[12px] text-[--text-muted] ml-1">%</span>
+          </div>
+          <div className="text-[11px] text-[--text-muted]">Luyện tập trong 7 ngày đầu</div>
+          <div className="h-1 bg-[--bg-elevated] rounded-full overflow-hidden">
+            <div className="h-full rounded-full bg-indigo-400 transition-all" style={{ width: `${Math.min(100, g.featureAdoptionRate || 0)}%` }} />
+          </div>
+        </div>
+      </div>
+
+      {/* Row 2: Revenue metrics */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {revenueMetrics.map((m, i) => (
+          <div key={i} className="bg-[--bg-surface] border border-[--border-subtle] rounded-xl p-4">
+            <div className="text-[11px] text-[--text-muted] uppercase tracking-wider font-semibold mb-2">{m.label}</div>
+            <div className="flex items-baseline gap-1 mb-1">
+              <span className={`text-2xl font-bold ${m.color}`}>{fmtM(m.value)}</span>
+              <span className="text-[11px] text-[--text-muted]">VND</span>
+            </div>
+            <div className="text-[11px] text-[--text-muted]">{m.desc}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Row 3: Conversion funnel + User segments */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        {/* Funnel */}
+        <Card title="Phễu chuyển đổi" subtitle="Từ Free → Premium" icon={TrendingUp}>
+          <div className="space-y-2 mt-2">
+            {funnelData.map((f, i) => {
+              const pct = funnelData[0].value > 0 ? Math.round(f.value / funnelData[0].value * 100) : 0;
+              return (
+                <div key={i} className="flex items-center gap-3">
+                  <span className="text-[11px] text-[--text-muted] w-20 shrink-0 text-right">{f.name}</span>
+                  <div className="flex-1 h-6 bg-[--bg-elevated] rounded-lg overflow-hidden relative">
+                    <div className="h-full rounded-lg transition-all" style={{ width: `${pct}%`, backgroundColor: f.color, opacity: 0.85 }} />
+                    <span className="absolute inset-0 flex items-center justify-end pr-2 text-[11px] font-semibold text-[--text-primary]">{fmt(f.value)}</span>
+                  </div>
+                  <span className="text-[11px] text-[--text-muted] w-10 shrink-0">{pct}%</span>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+
+        {/* User segments */}
+        <Card title="Phân khúc người dùng" subtitle="Hot / Warm / Cold dựa trên engagement" icon={Users}>
+          <div className="space-y-3 mt-2">
+            {segmentData.map((s, i) => {
+              const pct = segmentTotal > 0 ? Math.round(s.value / segmentTotal * 100) : 0;
+              return (
+                <div key={i} className="flex flex-col gap-1">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: s.color }} />
+                      <span className="text-[13px] font-semibold text-[--text-primary]">{s.name}</span>
+                      <span className="text-[11px] text-[--text-muted]">{s.desc}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[13px] font-bold text-[--text-primary]">{fmt(s.value)}</span>
+                      <span className="text-[11px] text-[--text-muted]">{pct}%</span>
+                    </div>
+                  </div>
+                  <div className="h-1.5 bg-[--bg-elevated] rounded-full overflow-hidden">
+                    <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: s.color }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="mt-4 p-3 rounded-lg bg-[--bg-elevated] border border-[--border-subtle]">
+            <p className="text-[11px] text-[--text-muted]">
+              <span className="font-semibold text-[#f5a623]">Gợi ý quảng cáo:</span> Target "Warm" users (chưa convert) với offer giảm giá 20%. Target "Cold" users với re-engagement email.
+            </p>
+          </div>
+        </Card>
+      </div>
+
+      {/* Row 4: Cohort retention */}
+      <Card title="Cohort Retention" subtitle="% người dùng đăng ký mỗi tháng còn active sau 30 ngày" icon={Activity}>
+        {cohortData.length === 0 ? <Empty h={120} /> : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-2">
+            {cohortData.map((c, i) => (
+              <div key={i} className="bg-[--bg-elevated] border border-[--border-subtle] rounded-xl p-4">
+                <div className="text-[12px] text-[--text-muted] mb-2">Cohort {c.month}</div>
+                <div className="flex items-baseline gap-1 mb-2">
+                  <span className="text-2xl font-bold" style={{ color: c.retentionRate >= 50 ? "#10B981" : c.retentionRate >= 20 ? "#f5a623" : "#EF4444" }}>
+                    {c.retentionRate}
+                  </span>
+                  <span className="text-[12px] text-[--text-muted]">%</span>
+                </div>
+                <div className="h-1.5 bg-[--bg-surface] rounded-full overflow-hidden mb-2">
+                  <div className="h-full rounded-full transition-all"
+                    style={{ width: `${c.retentionRate}%`, backgroundColor: c.retentionRate >= 50 ? "#10B981" : c.retentionRate >= 20 ? "#f5a623" : "#EF4444" }} />
+                </div>
+                <div className="text-[11px] text-[--text-muted]">{fmt(c.retained)} / {fmt(c.cohortSize)} còn active</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </Card>
+    </div>
+  );
+};
+
 // ── main component ────────────────────────────────────────────────────────────
 
-const DashboardSection = ({ stats, revenueData, revenueStats, userData, totalUsers, analytics }) => {
+const DashboardSection = ({ stats, revenueData, revenueStats, userData, totalUsers, analytics, growthAnalytics }) => {
   const [activeId, setActiveId] = useState("tong-quan");
 
   useEffect(() => {
@@ -711,6 +898,11 @@ const DashboardSection = ({ stats, revenueData, revenueStats, userData, totalUse
         <section id="phan-bo" className="pt-2 pb-8">
           <h2 className="text-[13px] font-bold text-gray-400 uppercase tracking-widest mb-4">Phân bổ</h2>
           <DistributionSection analytics={analytics} />
+        </section>
+
+        <section id="phan-khuc" className="pt-2 pb-8">
+          <h2 className="text-[13px] font-bold text-gray-400 uppercase tracking-widest mb-4">Phân khúc & Tăng trưởng</h2>
+          <UserInsightsSection growthAnalytics={growthAnalytics} />
         </section>
 
       </div>

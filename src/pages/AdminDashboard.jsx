@@ -4,7 +4,7 @@ import { useApi } from "../hooks/useApi";
 import {
   fetchAllUsers, verifyMC, suspendUser,
   fetchAllTransactions, fetchRevenueStats,
-  fetchDashboardStats, fetchAnalytics,
+  fetchDashboardStats, fetchAnalytics, fetchGrowthAnalytics,
 } from "../controllers/adminController";
 import {
   Users, ShieldCheck, BookOpen, LayoutGrid, CreditCard,
@@ -36,6 +36,7 @@ const AdminDashboard = () => {
   const { data: revenueStats }                        = useApi(fetchRevenueStats);
   const { data: dashStats    }                        = useApi(fetchDashboardStats);
   const { data: analytics    }                        = useApi(fetchAnalytics);
+  const { data: growthAnalytics }                     = useApi(fetchGrowthAnalytics);
 
   const handleVerify = async (id, cur) => {
     const u = users?.find(x => (x._id || x.id) === id);
@@ -110,7 +111,7 @@ const AdminDashboard = () => {
               <button
                 key={id}
                 onClick={() => navigate(`/m/admin/${id}`)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all text-left ${
+                className={`w-full mt-4 flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all text-left ${
                   isActive
                     ? "bg-[#f5a623]/[0.12] text-[#f5a623] border border-[#f5a623]/20"
                     : "text-[--text-secondary] hover:text-[--text-primary] hover:bg-[--bg-elevated] border border-transparent"
@@ -158,6 +159,7 @@ const AdminDashboard = () => {
               userData={userData}
               totalUsers={dashStats?.totalUsers ?? users?.length ?? 0}
               analytics={analytics}
+              growthAnalytics={growthAnalytics}
             />
           )}
           {resolvedSection !== "dashboard" && (

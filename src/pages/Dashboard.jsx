@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Zap, Loader2, Mic, ChevronLeft, ChevronRight } from "lucide-react";
+import { Zap, Loader2, Mic, ChevronLeft, ChevronRight, Crown, Sparkles } from "lucide-react";
 import UpgradeBanner from "../components/ui/UpgradeBanner";
 import SessionCard from "../components/dashboard/SessionCard";
 import { Link } from "react-router-dom";
@@ -237,6 +237,25 @@ const Dashboard = () => {
         />
       )}
 
+      {/* Upgrade ad banner for FREE users (not near limit) */}
+      {plan === 'FREE' && !showLimitWarning && (
+        <div className="rounded-2xl border border-gold/20 bg-linear-to-r from-gold/4 to-gold/1 p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+            <Crown size={18} className="text-gold" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[14px] font-semibold text-white mb-0.5">Nâng cấp để luyện tập không giới hạn</p>
+            <p className="text-[12px] text-zinc-500">Gói Basic 199k/tháng — 20 lần AI coaching, toàn bộ bài học, báo cáo chi tiết.</p>
+          </div>
+          <Link
+            to="/m/payment"
+            className="shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-gold text-black text-[13px] font-semibold hover:bg-amber-400 transition-colors whitespace-nowrap"
+          >
+            <Sparkles size={14} /> Nâng cấp ngay
+          </Link>
+        </div>
+      )}
+
       {/* Tab bar */}
       <div className="border-b border-white/[0.06]">
         <div className="flex gap-1">
@@ -339,6 +358,14 @@ const Dashboard = () => {
               <div className="py-16 text-center border border-dashed border-white/[0.06] rounded-xl">
                 <Mic size={28} className="mx-auto text-zinc-800 mb-3" />
                 <p className="text-[13px] text-zinc-600 mb-4">{t('dashboard.noSessions')}</p>
+                {plan === 'FREE' && (
+                  <Link
+                    to="/m/payment"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gold/10 border border-gold/20 text-gold text-[12px] font-semibold hover:bg-gold/20 transition-colors"
+                  >
+                    <Crown size={12} /> Nâng cấp Basic để luyện tập không giới hạn
+                  </Link>
+                )}
               </div>
             )}
           </div>
