@@ -81,15 +81,8 @@ const AnalyticsSection = ({ analytics }) => {
   const [loginRange, setLoginRange] = useState("day");
   const [sessionRange, setSessionRange] = useState("day");
 
-  if (!analytics) {
-    return (
-      <div className="flex items-center justify-center h-64 text-[--text-muted] text-[13px]">
-        Đang tải dữ liệu phân tích...
-      </div>
-    );
-  }
-
-  const a = analytics;
+  // Fallback to empty object — render charts with empty data instead of blocking
+  const a = analytics || {};
 
   // pick right dataset based on tab
   const loginData = loginRange === "hour"  ? a.loginsByHour
