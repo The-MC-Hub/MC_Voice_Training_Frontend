@@ -8,7 +8,7 @@ import {
     Loader2, BookOpen, ArrowLeft, AudioLines, BarChart3,
     Clock, Sparkles, Info, Calendar, Video, Target, ListChecks, FileText,
     AlignLeft, AlignCenter, AlignRight, Type, Minus, Plus, Moon, Sun, Gauge, ChevronDown, ChevronUp, Settings2,
-    Camera, CameraOff, Volume1, AlertTriangle
+    Camera, CameraOff, Volume1, Volume2, AlertTriangle
 } from 'lucide-react';
 import { useAudioAnalyser } from '../hooks/useAudioAnalyser';
 import { motion, AnimatePresence } from 'framer-motion';
