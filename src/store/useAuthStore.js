@@ -168,7 +168,8 @@ export const useAuthStore = create((set, get) => ({
   
   updateUser: (updatedUser) => {
     const merged = { ...get().user, ...updatedUser };
-    localStorage.setItem('user', JSON.stringify(merged));
+    const storage = localStorage.getItem('token') ? localStorage : sessionStorage;
+    storage.setItem('user', JSON.stringify(merged));
     set({ user: merged, role: merged.role });
   },
 

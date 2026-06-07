@@ -82,7 +82,7 @@ function getDefaultPlan(userPlan) {
 }
 
 const PaymentPage = () => {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, refreshUser } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -155,6 +155,7 @@ const PaymentPage = () => {
         if (statusData?.isPremium) {
           clearInterval(pollRef.current);
           updateUser({ isPremium: true, plan: statusData.plan, aiSessionsUsed: 0, planExpiresAt: statusData.planExpiresAt });
+          await refreshUser();
           setSuccess(true);
           toast.showSuccess("Thanh toán thành công! Tài khoản đã được nâng cấp.");
           setTimeout(() => navigate("/m/dashboard"), 2500);
@@ -170,6 +171,7 @@ const PaymentPage = () => {
       const simRes = await api.post(`/payment/simulate-success?userId=${user.id}&plan=${selectedPlan}`);
       const simData = simRes.data?.data;
       updateUser({ isPremium: true, plan: simData?.plan || selectedPlan, aiSessionsUsed: 0, planExpiresAt: simData?.planExpiresAt });
+      await refreshUser();
       setSuccess(true);
       toast.showSuccess("Kích hoạt thành công!");
       setTimeout(() => navigate("/m/dashboard"), 2500);

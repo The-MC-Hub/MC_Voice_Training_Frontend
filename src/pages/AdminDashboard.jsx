@@ -75,12 +75,11 @@ const AdminDashboard = () => {
     return [
       { name: 'MC', value: r.mc || 0, color: '#3B82F6' },
       { name: 'Client', value: r.client || 0, color: '#10B981' },
-      { name: 'Admin', value: r.admin || 0, color: '#f5a623' },
     ];
   }, [users]);
 
   const stats = [
-    { label: "Tổng người dùng", value: dashStats?.totalUsers ?? users?.length ?? 0, icon: Users, color: "text-blue-500", trend: "Đã đăng ký" },
+    { label: "Tổng người dùng", value: dashStats?.totalUsers ?? (users?.filter(u => (u.role || '').toLowerCase() !== 'admin').length ?? 0), icon: Users, color: "text-blue-500", trend: "Đã đăng ký" },
     { label: "Giao dịch thành công", value: dashStats?.completedTransactions ?? 0, icon: ShieldCheck, color: "text-emerald-500", trend: `Chờ: ${dashStats?.pendingTransactions ?? 0} · Lỗi: ${dashStats?.failedTransactions ?? 0}` },
     { label: "Tổng giao dịch", value: dashStats?.totalTransactions ?? transactions?.length ?? 0, icon: CreditCard, color: "text-amber-500", trend: "Toàn hệ thống" },
     { label: "Doanh thu thực tế", value: dashStats?.totalRevenue ?? revenueStats?.totalRevenue ?? 0, icon: BarChart2, color: "text-purple-500", trend: "Giao dịch hoàn thành", isMoney: true },
