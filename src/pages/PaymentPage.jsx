@@ -60,7 +60,7 @@ function adaptPlans(apiPlans) {
 const COMPARISON_ROWS = [
   { feature: "Bài luyện tập", FREE: "Xem trước", BASIC: "50 bài", FULL: "50 bài", ANNUAL: "50 bài + ưu tiên mới" },
   { feature: "Chủ đề MC", FREE: "—", BASIC: "MC Đám cưới", FULL: "3 chủ đề", ANNUAL: "3 chủ đề + Beta" },
-  { feature: "AI coaching/tháng", FREE: "5 lượt", BASIC: "10 lượt", FULL: "Không giới hạn", ANNUAL: "Không giới hạn" },
+  { feature: "AI coaching/tháng", FREE: "5 lượt", BASIC: "20 lượt", FULL: "Không giới hạn", ANNUAL: "Không giới hạn" },
   { feature: "Phân tích giọng (Clarity, Energy, Pace)", FREE: "❌", BASIC: "✓ Cơ bản", FULL: "✓ Chi tiết", ANNUAL: "✓ Chi tiết" },
   { feature: "WER · CER · Jitter · HNR", FREE: "❌", BASIC: "❌", FULL: "✓", ANNUAL: "✓" },
   { feature: "Biểu đồ tiến độ & lịch sử", FREE: "❌", BASIC: "❌", FULL: "✓", ANNUAL: "✓" },
@@ -376,7 +376,7 @@ const PaymentPage = () => {
                         {isCurrentPlan && user?.plan !== "FREE" && (
                           <div className="mt-3 pt-3 border-t border-gray-200">
                             {(() => {
-                              const limit = user?.plan === 'BASIC' ? 10 : null;
+                              const limit = user?.plan === 'BASIC' ? 20 : null;
                               const used = user?.aiSessionsUsed ?? 0;
                               if (!limit) return <p className="text-[11px] text-gray-400">Không giới hạn lượt AI</p>;
                               return <>
@@ -544,20 +544,6 @@ const PaymentPage = () => {
                     <span className="text-[11px] text-gray-400">Đang chờ xác nhận thanh toán...</span>
                   </div>
 
-                  {IS_DEV && (
-                    <button
-                      onClick={handleSimulate}
-                      disabled={simulating}
-                      className="w-full py-2.5 bg-white border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-300 rounded-xl text-[11px] font-medium transition-colors flex items-center justify-center gap-2"
-                    >
-                      {simulating ? (
-                        <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-gray-400 border-t-transparent" />
-                      ) : (
-                        <ShieldCheck size={13} />
-                      )}
-                      {simulating ? "Đang kích hoạt..." : "Simulate thanh toán (Dev)"}
-                    </button>
-                  )}
                 </div>
               ) : null}
             </div>

@@ -19,7 +19,7 @@ const UPSELL_CARDS = {
       accent: '#f5a623',
       tag: 'Phổ biến nhất',
       title: 'Phân tích AI không giới hạn',
-      desc: 'Gói FREE chỉ có 5 lượt/tháng. Basic cho bạn 20 lượt + báo cáo chi tiết.',
+      desc: 'Gói FREE chỉ có 5 lượt tổng. Basic cho bạn 20 lượt/tháng + báo cáo chi tiết.',
       cta: 'Nâng lên Basic',
     },
     {

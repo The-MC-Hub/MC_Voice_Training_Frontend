@@ -190,7 +190,7 @@ const Settings = () => {
     name: user?.name || "",
     email: user?.email || "",
     phoneNumber: user?.phoneNumber || "",
-    avatar: user?.avatar || "",
+    avatar: (user?.avatar && !user.avatar.includes('.') && !user.avatar.startsWith('http')) ? user.avatar : "",
   });
 
   const [securityData, setSecurityData] = useState({
@@ -465,7 +465,7 @@ const Settings = () => {
                     <div className="shrink-0">
                       <p className={labelCls + " mb-2"}>Avatar</p>
                       <div className="w-16 h-16 rounded-2xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center text-[36px] leading-none select-none">
-                        {profileData.avatar || user?.avatar || "🎤"}
+                        {(() => { const a = profileData.avatar || user?.avatar || "🎤"; return (a.includes('.') || a.startsWith('http')) ? "🎤" : a; })()}
                       </div>
                     </div>
                     {/* Picker */}
@@ -473,7 +473,7 @@ const Settings = () => {
                       <p className={labelCls + " mb-2"}>Chọn emoji đại diện</p>
                       <EmojiAvatarPicker
                         compact
-                        selected={profileData.avatar || user?.avatar}
+                        selected={(() => { const a = profileData.avatar || user?.avatar || ""; return (a.includes('.') || a.startsWith('http')) ? "" : a; })()}
                         onSelect={(emoji) => setProfileData(prev => ({ ...prev, avatar: emoji }))}
                       />
                     </div>
@@ -925,22 +925,26 @@ const Settings = () => {
               </form>
 
               {/* Session + Danger Zone */}
-              <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm flex flex-col gap-4">
-                {/* Logout */}
-                <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+              <div className="bg-white border border-red-100 rounded-2xl overflow-hidden shadow-sm">
+                {/* Header */}
+                <div className="px-5 py-3 bg-red-50 border-b border-red-100 flex items-center gap-2">
+                  <LogOut size={13} className="text-red-500" />
+                  <p className="text-[11px] font-semibold text-red-600 uppercase tracking-wide">Phiên làm việc</p>
+                </div>
+                {/* Logout row */}
+                <div className="p-5  items-center justify-between gap-4">
                   <div>
-                    <p className="text-[13px] font-medium text-gray-800">Đăng xuất</p>
-                    <p className="text-[11px] text-gray-500 mt-0.5">Kết thúc phiên làm việc hiện tại</p>
+                    <p className="text-[13px] font-semibold text-gray-800">Đăng xuất khỏi tài khoản</p>
+                    <p className="text-[11px] text-gray-500 mt-1">Kết thúc phiên hiện tại và quay về trang đăng nhập.</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => { logout(); navigate('/'); }}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 text-gray-600 text-[12px] font-medium hover:bg-gray-50 transition-colors"
+                    className="mt-4 shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 active:scale-95 text-white text-[12px] font-semibold transition-all duration-150"
                   >
-                    <LogOut size={14} /> Đăng xuất
+                    <LogOut size={13} /> Đăng xuất
                   </button>
                 </div>
-              
               </div>
             </div>
           </div>

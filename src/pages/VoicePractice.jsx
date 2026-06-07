@@ -35,7 +35,7 @@ const VoicePractice = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const mId = new URLSearchParams(location.search).get('mId');
-    const { user } = useAuthStore();
+    const { user, refreshUser } = useAuthStore();
     const { t, i18n: i18nInstance } = useTranslation();
     const evalLanguage = i18nInstance.language;
 
@@ -181,7 +181,10 @@ const VoicePractice = () => {
     }, []);
 
     const startRecording = async () => {
-        if (!user?.isPremium && totalPracticesCount >= 5) { navigate('/m/payment'); return; }
+        const plan = user?.plan || 'FREE';
+        const aiUsed = user?.aiSessionsUsed ?? 0;
+        if (plan === 'FREE' && aiUsed >= 5) { navigate('/m/payment'); return; }
+        if (plan === 'BASIC' && aiUsed >= 20) { navigate('/m/payment'); return; }
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             liveStreamRef.current = stream; // expose to analyser
@@ -271,7 +274,7 @@ const VoicePractice = () => {
                 status: "success",
             });
             stopAnalyzeProgress(true);
-            await fetchHistory();
+            await Promise.all([fetchHistory(), refreshUser()]);
         } catch (err) {
             stopAnalyzeProgress(false);
             if (err.response?.status === 402 || err.response?.data?.code === "ERR_4005") {
@@ -360,6 +363,7 @@ const VoicePractice = () => {
         <div className="bg-[#09090b] min-h-screen text-white flex flex-col">
             <Navbar />
 
+            <main className="flex-1 flex flex-col pt-14 min-h-[calc(100vh-3.5rem)] overflow-hidden">
             {/* Usage warning strip — shown at >= 80% usage */}
             {(() => {
                 const plan = user?.plan || 'FREE';
@@ -367,16 +371,11 @@ const VoicePractice = () => {
                 const aiLimit = plan === 'FREE' ? 5 : plan === 'BASIC' ? 20 : null;
                 const usagePct = aiLimit ? (aiUsed / aiLimit) * 100 : 0;
                 if (aiLimit && usagePct >= 80) {
-                    return (
-                        <div className="fixed top-14 left-0 right-0 z-40">
-                            <UpgradeBanner variant="strip" plan={plan} used={aiUsed} limit={aiLimit} />
-                        </div>
-                    );
+                    return <UpgradeBanner variant="strip" plan={plan} used={aiUsed} limit={aiLimit} />;
                 }
                 return null;
             })()}
-
-            <main className="flex-1 flex pt-14 min-h-[calc(100vh-3.5rem)] overflow-hidden">
+            <div className="flex-1 flex overflow-hidden">
                 {/* Sidebar — only when inside milestone */}
                 {mId && (
                     <aside className="hidden xl:flex w-72 border-r border-white/[0.07] bg-[#111113] flex-col sticky top-14 h-[calc(100vh-3.5rem)] shrink-0 overflow-hidden">
@@ -1812,8 +1811,8 @@ const VoicePractice = () => {
                         </div>
                     </div>
                 </div>
+            </div>
             </main>
-
         </div>
     );
 };
