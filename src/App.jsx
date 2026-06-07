@@ -67,6 +67,10 @@ function App() {
   const noSidebar = NO_SIDEBAR_PATHS.some(p => location.pathname.startsWith(p));
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  useEffect(() => {
     if (isAuthenticated && user && user.plan === undefined) {
       refreshUser();
     }
