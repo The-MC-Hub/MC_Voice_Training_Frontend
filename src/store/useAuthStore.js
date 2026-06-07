@@ -116,25 +116,36 @@ export const useAuthStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const res = await api.post('/auth/register', userData);
-      
-      const { token, user } = res.data.data;
-
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-
-      set({
-        user,
-        token,
-        role: user.role,
-        isAuthenticated: true,
-        loading: false,
-        error: null,
-      });
-
-      return { token, user };
+      set({ loading: false, error: null });
+      // Backend returns { requiresVerification: true, email } — no auto-login
+      return res.data.data;
     } catch (err) {
       const message = err.response?.data?.message || 'Registration failed';
       set({ loading: false, error: message });
+      throw err;
+    }
+  },
+
+  verifyOtp: async (email, code) => {
+    set({ loading: true, error: null });
+    try {
+      const res = await api.post('/auth/verify-otp', { email, code });
+      const { token, user } = res.data.data;
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      set({ user, token, role: user.role, isAuthenticated: true, loading: false, error: null });
+      return { token, user };
+    } catch (err) {
+      const message = err.response?.data?.message || 'Mã OTP không đúng';
+      set({ loading: false, error: message });
+      throw err;
+    }
+  },
+
+  resendOtp: async (email) => {
+    try {
+      await api.post('/auth/resend-otp', { email });
+    } catch (err) {
       throw err;
     }
   },

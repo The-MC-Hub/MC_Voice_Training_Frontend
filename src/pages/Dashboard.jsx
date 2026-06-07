@@ -212,7 +212,7 @@ const Dashboard = () => {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
-            className="p-5 bg-[#111113] border border-white/[0.07] rounded-2xl hover:border-white/[0.12] transition-colors"
+            className="p-5 bg-[#111113] border border-white/[0.07] rounded-2xl hover:border-white/[0.14] hover:-translate-y-0.5 transition-all"
           >
             <div className="flex justify-between items-start mb-3">
               <span className="text-[10px] text-zinc-600 uppercase tracking-wider font-semibold">{s.label}</span>
@@ -239,7 +239,7 @@ const Dashboard = () => {
 
       {/* Upgrade ad banner for FREE users (not near limit) */}
       {plan === 'FREE' && !showLimitWarning && (
-        <div className="rounded-2xl border border-gold/20 bg-linear-to-r from-gold/4 to-gold/1 p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div className="rounded-2xl border border-gold/20 bg-linear-to-r from-amber-500/6 to-transparent p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
             <Crown size={18} className="text-gold" />
           </div>

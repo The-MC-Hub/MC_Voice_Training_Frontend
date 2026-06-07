@@ -190,6 +190,7 @@ const Settings = () => {
     name: user?.name || "",
     email: user?.email || "",
     phoneNumber: user?.phoneNumber || "",
+    avatar: user?.avatar || "",
   });
 
   const [securityData, setSecurityData] = useState({
@@ -456,27 +457,50 @@ const Settings = () => {
               </div>
 
               <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
-                {/* Fields section */}
-                <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-5">
-                  <div className="space-y-1.5">
-                    <label className={labelCls}>{t('settings.displayName')}</label>
-                    <div className={inputWrapCls}>
-                      <User size={15} className="text-gray-400 shrink-0" />
-                      <input type="text" name="name" className={inputCls} value={profileData.name} onChange={handleProfileChange} />
+                {/* Avatar + Fields */}
+                <div className="p-6 space-y-5">
+                  {/* Avatar row */}
+                  <div className="flex items-start gap-5">
+                    {/* Current avatar display */}
+                    <div className="shrink-0">
+                      <p className={labelCls + " mb-2"}>Avatar</p>
+                      <div className="w-16 h-16 rounded-2xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center text-[36px] leading-none select-none">
+                        {profileData.avatar || user?.avatar || "🎤"}
+                      </div>
+                    </div>
+                    {/* Picker */}
+                    <div className="flex-1 min-w-0">
+                      <p className={labelCls + " mb-2"}>Chọn emoji đại diện</p>
+                      <EmojiAvatarPicker
+                        compact
+                        selected={profileData.avatar || user?.avatar}
+                        onSelect={(emoji) => setProfileData(prev => ({ ...prev, avatar: emoji }))}
+                      />
                     </div>
                   </div>
-                  <div className="space-y-1.5">
-                    <label className={labelCls}>{t('settings.phoneNumber')}</label>
-                    <div className={inputWrapCls}>
-                      <Phone size={15} className="text-gray-400 shrink-0" />
-                      <input type="tel" name="phoneNumber" className={inputCls} value={profileData.phoneNumber} onChange={handleProfileChange} placeholder="+84 9xx xxx xxxx" />
+
+                  {/* Fields row */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2 border-t border-gray-100">
+                    <div className="space-y-1.5">
+                      <label className={labelCls}>{t('settings.displayName')}</label>
+                      <div className={inputWrapCls}>
+                        <User size={15} className="text-gray-400 shrink-0" />
+                        <input type="text" name="name" className={inputCls} value={profileData.name} onChange={handleProfileChange} />
+                      </div>
                     </div>
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className={labelCls}>{t('settings.emailAddress')}</label>
-                    <div className={`${inputWrapCls} opacity-50`}>
-                      <Mail size={15} className="text-gray-400 shrink-0" />
-                      <input type="email" name="email" className={`${inputCls} cursor-not-allowed`} value={profileData.email} disabled />
+                    <div className="space-y-1.5">
+                      <label className={labelCls}>{t('settings.phoneNumber')}</label>
+                      <div className={inputWrapCls}>
+                        <Phone size={15} className="text-gray-400 shrink-0" />
+                        <input type="tel" name="phoneNumber" className={inputCls} value={profileData.phoneNumber} onChange={handleProfileChange} placeholder="+84 9xx xxx xxxx" />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className={labelCls}>{t('settings.emailAddress')}</label>
+                      <div className={`${inputWrapCls} opacity-50`}>
+                        <Mail size={15} className="text-gray-400 shrink-0" />
+                        <input type="email" name="email" className={`${inputCls} cursor-not-allowed`} value={profileData.email} disabled />
+                      </div>
                     </div>
                   </div>
                 </div>

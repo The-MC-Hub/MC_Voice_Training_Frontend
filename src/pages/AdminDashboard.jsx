@@ -4,7 +4,7 @@ import { verifyMC, suspendUser } from "../controllers/adminController";
 import { useAdminData } from "../hooks/useAdminData";
 import {
   Users, ShieldCheck, BookOpen, LayoutGrid, CreditCard,
-  BarChart2, Award, Trophy, Settings, Terminal, LogOut, Megaphone,
+  BarChart2, Award, Trophy, Settings, Terminal, LogOut, Megaphone, Package, Bell,
 } from "lucide-react";
 
 import DashboardSection, { DASHBOARD_NAV } from "./admin/sections/DashboardSection";
@@ -16,6 +16,8 @@ import AcademyManager from "./admin/AcademyManager";
 import CompetitionManager from "./admin/CompetitionManager";
 import ServerLogs from "./admin/sections/ServerLogs";
 import MarketingManager from "./admin/sections/MarketingManager";
+import PlanManager from "./admin/PlanManager";
+import NotificationManager from "./admin/sections/NotificationManager";
 
 const NAV_ITEMS = [
   { id: "dashboard", label: "Dashboard", icon: LayoutGrid },
@@ -26,6 +28,8 @@ const NAV_ITEMS = [
   { id: "competitions", label: "Thi đấu", icon: Trophy },
   { id: "logs", label: "Server Logs", icon: Terminal },
   { id: "marketing", label: "Marketing", icon: Megaphone },
+  { id: "plans", label: "Gói & Giảm giá", icon: Package },
+  { id: "notifications", label: "Thông báo", icon: Bell },
 ];
 
 const AdminDashboard = () => {
@@ -169,7 +173,7 @@ const AdminDashboard = () => {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
         {/* Top bar */}
-        <header className="shrink-0 h-14 flex items-center justify-between px-7 border-b border-[--border-subtle] bg-[--bg-base]/95 backdrop-blur-sm">
+        <header className=" mx-4 shrink-0 h-14 flex items-center justify-between px-7 border-b border-[--border-subtle] bg-[--bg-base]/95 backdrop-blur-sm">
           <div className="flex items-center gap-3">
             {currentItem && <currentItem.icon size={17} className="text-[--text-muted]" />}
             <h1 className="text-[15px] font-semibold text-[--text-primary]">{currentItem?.label || "Dashboard"}</h1>
@@ -198,12 +202,14 @@ const AdminDashboard = () => {
           {resolvedSection === "logs" && <ServerLogs />}
           {resolvedSection !== "dashboard" && resolvedSection !== "logs" && (
             <div className="p-7 space-y-6">
-              {resolvedSection === "users" && <UserManagement users={users} handleVerify={handleVerify} handleSuspend={handleSuspend} />}
+              {resolvedSection === "users" && <UserManagement users={users} handleVerify={handleVerify} handleSuspend={handleSuspend} onRefresh={refetchAll} />}
               {resolvedSection === "lessons" && <LessonManagement />}
               {resolvedSection === "transactions" && <TransactionManagement transactions={transactions} revenueStats={revenueStats} />}
               {resolvedSection === "academy" && <AcademyManager />}
               {resolvedSection === "competitions" && <CompetitionManager />}
               {resolvedSection === "marketing" && <MarketingManager />}
+              {resolvedSection === "plans" && <PlanManager />}
+              {resolvedSection === "notifications" && <NotificationManager />}
             </div>
           )}
         </div>

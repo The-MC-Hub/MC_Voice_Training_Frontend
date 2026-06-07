@@ -217,99 +217,80 @@ const VoiceLibrary = () => {
             {t('voiceLibrary.showing')} <span className="text-white">{filteredLessons.length}</span> {t('voiceLibrary.results')}
           </p>
 
-          {/* Lesson grid */}
+          {/* Lesson list */}
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className="h-64 rounded-2xl bg-white/3 animate-pulse" />
+            <div className="flex flex-col gap-2">
+              {[1, 2, 3, 4, 5].map(i => (
+                <div key={i} className="h-20 rounded-xl bg-white/3 animate-pulse" />
               ))}
             </div>
           ) : currentItems.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {currentItems.map((lesson) => {
+            <div className="flex flex-col gap-2">
+              {currentItems.map((lesson, idx) => {
                 const stats = getLessonStats(lesson.id);
+                const wordCount = lesson.content?.split(' ').length || 0;
                 return (
                   <div
                     key={lesson.id}
-                    className="flex flex-col bg-[#111113] border border-white/[0.07] rounded-2xl hover:border-white/[0.14] hover:bg-[#141416] transition-colors group overflow-hidden"
+                    className="flex items-center gap-4 px-4 py-3.5 bg-[#111113] border border-white/[0.07] rounded-xl hover:border-white/[0.14] hover:bg-[#141416] transition-all group cursor-pointer"
+                    onClick={() => navigate(isAuthenticated ? `/m/voice/practice/${lesson.id}` : '/login')}
                   >
-                    {/* Thumbnail */}
-                    <div className="relative w-full aspect-video bg-[#0d0d0f] overflow-hidden shrink-0">
+                    {/* Thumbnail / icon */}
+                    <div className="relative w-14 h-14 rounded-lg bg-[#0d0d0f] border border-white/[0.06] overflow-hidden shrink-0 flex items-center justify-center">
                       {lesson.thumbnailUrl ? (
-                        <img
-                          src={lesson.thumbnailUrl}
-                          alt={lesson.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
+                        <img src={lesson.thumbnailUrl} alt={lesson.title} className="w-full h-full object-cover" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <Mic size={28} className="text-zinc-800" />
-                        </div>
+                        <Mic size={20} className="text-zinc-700" />
                       )}
-
-                      {/* Video badge */}
                       {lesson.videoUrl && (
-                        <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-sm border border-white/10 text-[10px] font-medium text-gold">
-                          <Video size={10} />
-                          Video
+                        <div className="absolute bottom-0.5 right-0.5 w-4 h-4 rounded flex items-center justify-center bg-black/80">
+                          <Video size={8} className="text-gold" />
                         </div>
-                      )}
-
-                      {/* Difficulty badge */}
-                      <span className={`absolute top-2 left-2 text-[10px] font-medium px-1.5 py-0.5 rounded border backdrop-blur-sm bg-black/50 ${difficultyStyle(lesson.difficulty)}`}>
-                        {lesson.difficulty}
-                      </span>
-
-                      {/* Best score badge */}
-                      {stats.total > 0 && (
-                        <span className="absolute bottom-2 right-2 text-[10px] font-medium px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 backdrop-blur-sm">
-                          {stats.best.toFixed(0)}%
-                        </span>
                       )}
                     </div>
 
-                    {/* Body */}
-                    <div className="flex flex-col flex-1 p-4">
-                      {/* Category + word count */}
-                      <div className="flex items-center gap-3 text-[11px] text-zinc-600 mb-2">
-                        <span className="flex items-center gap-1">
-                          <Tag size={9} className="text-gold" />
+                    {/* Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded border ${difficultyStyle(lesson.difficulty)}`}>
+                          {lesson.difficulty}
+                        </span>
+                        <span className="text-[11px] text-zinc-600 flex items-center gap-1">
+                          <Tag size={9} className="text-gold/60" />
                           {CATEGORY_LABEL[lesson.category] || lesson.category}
                         </span>
-                        <span className="flex items-center gap-1">
+                        <span className="text-[11px] text-zinc-600 flex items-center gap-1">
                           <FileText size={9} />
-                          {lesson.content?.split(' ').length || 0} {t('voiceLibrary.words')}
+                          {wordCount} từ
                         </span>
                         {stats.total > 0 && (
-                          <span className="flex items-center gap-1 text-gold">
+                          <span className="text-[11px] text-gold flex items-center gap-1">
                             <History size={9} />
                             {stats.total}×
                           </span>
                         )}
                       </div>
-
-                      {/* Title */}
-                      <h3 className="text-[14px] font-semibold text-white leading-snug mb-2 line-clamp-2">
-                        {lesson.title}
-                      </h3>
-
-                      {/* Description */}
+                      <h3 className="text-[13px] font-semibold text-white leading-snug truncate">{lesson.title}</h3>
                       {lesson.description && (
-                        <p className="text-[12px] text-zinc-500 leading-relaxed line-clamp-2 mb-3">
-                          {lesson.description}
-                        </p>
+                        <p className="text-[11px] text-zinc-600 truncate mt-0.5">{lesson.description}</p>
                       )}
+                    </div>
 
-                      {/* CTA */}
-                      <div className="mt-auto pt-3 border-t border-white/6">
-                        <button
-                          onClick={() => navigate(isAuthenticated ? `/m/voice/practice/${lesson.id}` : '/login')}
-                          className="w-full flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-gold text-black text-[12px] font-semibold hover:bg-gold-hover transition-colors"
-                        >
-                          <Zap size={13} />
-                          {t('common.start')}
-                        </button>
-                      </div>
+                    {/* Right: score + CTA */}
+                    <div className="flex items-center gap-3 shrink-0">
+                      {stats.total > 0 && (
+                        <div className="text-right hidden sm:block">
+                          <p className="text-[16px] font-bold text-emerald-400 tabular-nums leading-none">{stats.best.toFixed(0)}%</p>
+                          <p className="text-[10px] text-zinc-600 mt-0.5">Điểm cao nhất</p>
+                        </div>
+                      )}
+                      <button
+                        onClick={(e) => { e.stopPropagation(); navigate(isAuthenticated ? `/m/voice/practice/${lesson.id}` : '/login'); }}
+                        className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gold/10 border border-gold/20 text-gold text-[12px] font-semibold hover:bg-gold hover:text-black transition-all opacity-0 group-hover:opacity-100"
+                      >
+                        <PlayCircle size={13} />
+                        {t('common.start')}
+                      </button>
                     </div>
                   </div>
                 );

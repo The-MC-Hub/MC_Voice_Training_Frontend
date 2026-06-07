@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap");
 
 @import "tailwindcss";
 @import "@heroui/react/styles";
@@ -6,6 +6,8 @@
 @theme {
   --color-gold: #f5a623;
   --color-gold-hover: #e09520;
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, monospace;
 }
 
 /* THE MC HUB - DESIGN SYSTEM */
@@ -162,6 +164,19 @@
 /* Divide lines */
 .divide-white\/\[0\.06\] > * + *,
 .divide-white\/\[0\.08\] > * + * { border-color: rgba(0,0,0,0.08) !important; }
+
+/* ── PHOTO PANEL — image overlay sections in Login/Register (always dark) ── */
+.photo-panel .text-white    { color: #ffffff !important; }
+.photo-panel .text-white\/40 { color: rgba(255,255,255,0.40) !important; }
+.photo-panel .text-white\/50 { color: rgba(255,255,255,0.50) !important; }
+.photo-panel .text-white\/60 { color: rgba(255,255,255,0.60) !important; }
+.photo-panel .text-white\/65 { color: rgba(255,255,255,0.65) !important; }
+.photo-panel .text-white\/70 { color: rgba(255,255,255,0.70) !important; }
+.photo-panel .text-white\/75 { color: rgba(255,255,255,0.75) !important; }
+.photo-panel .bg-white\/10  { background-color: rgba(255,255,255,0.10) !important; }
+.photo-panel .bg-white\/20  { background-color: rgba(255,255,255,0.20) !important; }
+.photo-panel .border-white\/20 { border-color: rgba(255,255,255,0.20) !important; }
+.photo-panel .border-white\/40 { border-color: rgba(255,255,255,0.40) !important; }
 
 /* ── ADMIN DARK THEME — overrides the light overrides above with higher specificity ── */
 .admin-dark.bg-\[\#09090b\],
@@ -546,19 +561,30 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
 .mr-auto { margin-right: auto; }
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: "Outfit", ui-sans-serif, system-ui, sans-serif;
   background-color: var(--bg-base);
   color: var(--text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "kern" 1, "liga" 1;
 }
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: "Outfit", ui-sans-serif, system-ui, sans-serif;
   font-weight: 700;
   color: var(--text-primary);
-  letter-spacing: -0.03em;
-  line-height: 1.2;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+/* Tabular numbers for data/metrics */
+.tabular-nums,
+[class*="font-mono"],
+.font-mono {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
 }
 
 /* Script Reading Font */

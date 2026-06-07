@@ -1,68 +1,123 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Mic, Star } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "../store/useAuthStore";
 
 const ROLE_REDIRECT = { admin: "/m/dashboard", mc: "/m/dashboard", client: "/m/dashboard" };
 
-// Floating particles background
-const Particles = () => {
-  const particles = Array.from({ length: 28 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 2 + 1,
-    dur: Math.random() * 8 + 6,
-    delay: Math.random() * 4,
-    opacity: Math.random() * 0.25 + 0.05,
-  }));
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {particles.map(p => (
-        <motion.div
-          key={p.id}
-          className="absolute rounded-full bg-[#f5a623]"
-          style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size, opacity: p.opacity }}
-          animate={{ y: [-12, 12, -12], opacity: [p.opacity, p.opacity * 2.5, p.opacity] }}
-          transition={{ duration: p.dur, delay: p.delay, repeat: Infinity, ease: "easeInOut" }}
-        />
-      ))}
-      {/* subtle grid */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)`,
-          backgroundSize: '48px 48px',
-        }}
-      />
-    </div>
-  );
-};
+const testimonials = [
+  { name: "Nguyễn Minh Khoa", role: "MC Đám cưới", score: "91%", quote: "Điểm phát âm tăng từ 64 lên 91 chỉ sau 2 tuần luyện tập." },
+  { name: "Trần Thị Bảo Châu", role: "Dẫn chương trình TV", score: "88%", quote: "Tiện nhất là luyện lúc 11 giờ đêm mà không cần ai chấm điểm." },
+  { name: "Lê Đức Anh", role: "MC Sự kiện doanh nghiệp", score: "85%", quote: "Phân tích nhịp điệu và tốc độ nói rất chính xác." },
+];
 
-// Animated input field
-const FloatingInput = ({ icon: Icon, label, error, ...props }) => {
-  const [focused, setFocused] = useState(false);
-  const hasValue = props.value?.length > 0;
+const LeftPanel = () => {
+  const [activeIdx, setActiveIdx] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => setActiveIdx(i => (i + 1) % testimonials.length), 4500);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">{label}</label>
-      <motion.div
-        animate={error ? { x: [0, -6, 6, -4, 4, 0] } : {}}
-        transition={{ duration: 0.35 }}
-        className={`flex items-center gap-2.5 px-3 py-2.5 bg-[#09090b] border rounded-xl transition-all duration-200 ${
-          focused ? 'border-[#f5a623]/50 shadow-[0_0_0_3px_rgba(245,166,35,0.08)]' : error ? 'border-red-500/40' : 'border-white/[0.07] hover:border-white/[0.12]'
-        }`}
-      >
-        <Icon size={15} className={`shrink-0 transition-colors ${focused ? 'text-[#f5a623]' : 'text-zinc-600'}`} />
-        <input
-          className="bg-transparent border-none outline-none flex-1 text-[14px] text-white placeholder:text-zinc-700"
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          {...props}
-        />
-      </motion.div>
+    <div className="photo-panel relative w-full h-full overflow-hidden flex flex-col justify-between p-10 lg:p-14">
+      {/* Background */}
+      <img
+        src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&q=80"
+        alt="MC on stage"
+        className="absolute inset-0 w-full h-full object-cover object-center"
+      />
+      {/* Strong overlay: dark on bottom 60% so text is always readable */}
+      <div className="absolute inset-0 bg-black/55" />
+      <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/30 to-transparent" />
+
+      {/* Top: Logo */}
+      <div className="relative z-10">
+        <Link to="/" className="inline-flex items-center gap-1.5 group">
+          <span className="text-[18px] font-bold text-white tracking-tight">MC</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mb-0.5 group-hover:scale-110 transition-transform" />
+          <span className="text-[18px] font-bold text-white tracking-tight">Hub</span>
+        </Link>
+      </div>
+
+      {/* Bottom: headline + testimonial */}
+      <div className="relative z-10 space-y-6">
+        <div>
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-400 uppercase tracking-widest mb-4">
+            <Mic size={11} /> AI Voice Training Platform
+          </span>
+          <h2 className="text-[28px] lg:text-[36px] font-bold text-white leading-[1.2] tracking-tight drop-shadow-lg">
+            Luyện giọng MC<br />chuyên nghiệp —<br />
+            <span className="text-amber-400">mọi lúc, mọi nơi.</span>
+          </h2>
+        </div>
+
+        {/* Testimonial card */}
+        <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-5 shadow-xl">
+          <div className="flex gap-0.5 mb-3">
+            {[...Array(5)].map((_, i) => <Star key={i} size={11} className="text-amber-400 fill-amber-400" />)}
+          </div>
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={activeIdx}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="text-[13px] text-white leading-relaxed mb-4 font-medium"
+            >
+              "{testimonials[activeIdx].quote}"
+            </motion.p>
+          </AnimatePresence>
+          <div className="flex items-center justify-between">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`a-${activeIdx}`}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+              >
+                <p className="text-[13px] font-semibold text-white">{testimonials[activeIdx].name}</p>
+                <p className="text-[11px] text-white/70">{testimonials[activeIdx].role}</p>
+              </motion.div>
+            </AnimatePresence>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`s-${activeIdx}`}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                className="text-right"
+              >
+                <p className="text-[24px] font-bold text-emerald-400 tabular-nums leading-none">{testimonials[activeIdx].score}</p>
+                <p className="text-[10px] text-white/65 mt-0.5">Điểm đạt</p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          <div className="flex gap-1.5 mt-4">
+            {testimonials.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveIdx(i)}
+                className={`h-1 rounded-full transition-all duration-300 ${i === activeIdx ? 'w-6 bg-amber-400' : 'w-1.5 bg-white/30 hover:bg-white/50'}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div className="flex items-center gap-6">
+          {[{ value: "500+", label: "MC tin dùng" }, { value: "94%", label: "Độ chính xác" }, { value: "50+", label: "Kịch bản" }].map(s => (
+            <div key={s.label}>
+              <p className="text-[20px] font-bold text-white tabular-nums leading-none">{s.value}</p>
+              <p className="text-[11px] text-white/65 mt-0.5">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
@@ -87,202 +142,134 @@ const Login = () => {
     try {
       localStorage.setItem('rememberMe', rememberMe);
       const res = await login(email, password, rememberMe);
-      navigate(ROLE_REDIRECT[res.user?.role] || "/m/dashboard", { replace: true });
-    } catch {}
+      navigate(ROLE_REDIRECT[res.user?.role?.toLowerCase()] || "/m/dashboard", { replace: true });
+    } catch (err) {
+      const msg = err.response?.data?.message || "";
+      if (msg.startsWith("EMAIL_NOT_VERIFIED:")) {
+        const unverifiedEmail = msg.replace("EMAIL_NOT_VERIFIED:", "");
+        navigate("/register?verify=" + encodeURIComponent(unverifiedEmail));
+      }
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-[#09090b] relative overflow-hidden">
-      <Particles />
+    <div className="min-h-screen flex">
+      {/* Left image panel */}
+      <div className="hidden lg:block lg:w-[52%] xl:w-[54%] shrink-0 sticky top-0 h-screen">
+        <LeftPanel />
+      </div>
 
-      {/* Gold glow orb */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%)' }} />
-
-      <motion.div
-        initial={{ opacity: 0, y: 24, scale: 0.97 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-md relative z-10"
-      >
-        {/* Logo */}
+      {/* Right form panel */}
+      <div className="flex-1 bg-white flex items-center justify-center px-6 py-16 overflow-y-auto">
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.4 }}
-          className="text-center mb-6"
+          initial={{ opacity: 0, x: 24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full max-w-sm"
         >
-          <Link to="/" className="inline-flex items-center gap-1.5 group">
-            <motion.span
-              className="text-xl font-bold text-white tracking-tight"
-              whileHover={{ letterSpacing: '0.05em' }}
-              transition={{ duration: 0.2 }}
-            >MC</motion.span>
-            <motion.span
-              className="w-2 h-2 rounded-full bg-[#f5a623] mb-0.5"
-              animate={{ scale: [1, 1.3, 1] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.span
-              className="text-xl font-bold text-white tracking-tight"
-              whileHover={{ letterSpacing: '0.05em' }}
-              transition={{ duration: 0.2 }}
-            >Hub</motion.span>
-          </Link>
-          <motion.h2
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="mt-4 text-2xl font-bold text-white tracking-tight"
-          >{t('auth.welcomeBack')}</motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.25 }}
-            className="mt-1 text-[14px] text-zinc-500"
-          >{t('auth.signInDesc')}</motion.p>
-        </motion.div>
+          {/* Mobile logo */}
+          <div className="lg:hidden mb-8 flex items-center gap-1.5">
+            <span className="text-[18px] font-bold text-gray-900 tracking-tight">MC</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mb-0.5" />
+            <span className="text-[18px] font-bold text-gray-900 tracking-tight">Hub</span>
+          </div>
 
-        {/* Card */}
-        <motion.div
-          animate={shake ? { x: [-8, 8, -6, 6, 0] } : {}}
-          transition={{ duration: 0.4 }}
-          className="bg-[#111113] border border-white/[0.07] rounded-2xl p-7 shadow-[0_24px_80px_rgba(0,0,0,0.5)]"
-          style={{ backdropFilter: 'blur(12px)' }}
-        >
-          {/* Gold top accent */}
-          <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#f5a623]/30 to-transparent" />
+          <div className="mb-8">
+            <h1 className="text-[30px] font-bold text-gray-900 tracking-tight leading-tight mb-2">{t('auth.welcomeBack')}</h1>
+            <p className="text-[14px] text-gray-500">{t('auth.signInDesc')}</p>
+          </div>
 
           <AnimatePresence>
             {error && (
               <motion.div
                 initial={{ opacity: 0, height: 0, marginBottom: 0 }}
-                animate={{ opacity: 1, height: 'auto', marginBottom: 24 }}
+                animate={{ opacity: 1, height: 'auto', marginBottom: 20 }}
                 exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-                className="bg-red-500/[0.08] border border-red-500/20 text-red-400 text-[13px] rounded-xl p-3 text-center overflow-hidden"
+                className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-xl p-3 text-center overflow-hidden"
               >
                 {error}
               </motion.div>
             )}
           </AnimatePresence>
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            <motion.div initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
-              <FloatingInput
-                icon={Mail} label={t('auth.email')} error={!!error}
-                type="email" placeholder="you@mchub.com"
-                value={email} onChange={(e) => setEmail(e.target.value)}
-                required autoComplete="email"
-              />
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.36 }}>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">{t('auth.password')}</label>
-                <div className={`flex items-center gap-2.5 px-3 py-2.5 bg-[#09090b] border rounded-xl transition-all duration-200 border-white/[0.07] hover:border-white/[0.12] focus-within:border-[#f5a623]/50 focus-within:shadow-[0_0_0_3px_rgba(245,166,35,0.08)]`}>
-                  <Lock size={15} className="text-zinc-600 shrink-0" />
-                  <input
-                    type={showPass ? "text" : "password"}
-                    placeholder="••••••••"
-                    className="bg-transparent border-none outline-none flex-1 text-[14px] text-white placeholder:text-zinc-700"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required autoComplete="current-password"
-                  />
-                  <motion.button
-                    type="button"
-                    whileTap={{ scale: 0.85 }}
-                    onClick={() => setShowPass(!showPass)}
-                    className="text-zinc-600 hover:text-zinc-400 transition-colors"
-                  >
-                    <AnimatePresence mode="wait">
-                      <motion.span key={showPass ? 'off' : 'on'} initial={{ opacity: 0, rotate: -15 }} animate={{ opacity: 1, rotate: 0 }} exit={{ opacity: 0, rotate: 15 }} transition={{ duration: 0.15 }}>
-                        {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
-                      </motion.span>
-                    </AnimatePresence>
-                  </motion.button>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.42 }}
-              className="flex items-center justify-between">
-              <label className="flex items-center gap-2 cursor-pointer select-none group">
-                <motion.div
-                  onClick={() => setRememberMe(!rememberMe)}
-                  whileTap={{ scale: 0.9 }}
-                  className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                    rememberMe ? "bg-[#f5a623] border-[#f5a623]" : "border-white/[0.16] bg-transparent hover:border-white/30"
-                  }`}
-                >
-                  <AnimatePresence>
-                    {rememberMe && (
-                      <motion.svg initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0, opacity: 0 }} transition={{ duration: 0.15 }} width="9" height="7" viewBox="0 0 9 7" fill="none">
-                        <path d="M1 3.5L3.5 6L8 1" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </motion.svg>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-                <span className="text-[13px] text-zinc-400 group-hover:text-zinc-300 transition-colors">{t('auth.rememberMe')}</span>
-              </label>
-              <Link to="/forgot-password" className="text-[13px] text-zinc-500 hover:text-[#f5a623] transition-colors">
-                {t('auth.forgotPassword')}
-              </Link>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.48 }}>
-              <motion.button
-                type="submit"
-                disabled={loading}
-                whileHover={{ scale: loading ? 1 : 1.01, boxShadow: loading ? 'none' : '0 0 20px rgba(245,166,35,0.25)' }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full py-2.5 rounded-xl bg-[#f5a623] text-black text-[14px] font-semibold transition-colors disabled:opacity-50 flex items-center justify-center gap-2 overflow-hidden relative"
-              >
-                <AnimatePresence mode="wait">
-                  {loading ? (
-                    <motion.span key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                      className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                  ) : (
-                    <motion.span key="text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                      className="flex items-center gap-2">
-                      {t('auth.signIn')} <ArrowRight size={16} />
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </motion.button>
-            </motion.div>
-          </form>
-
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}
-            className="mt-5 pt-4 border-t border-white/[0.05] text-center space-y-1.5"
+          <motion.form
+            onSubmit={handleLogin}
+            animate={shake ? { x: [-8, 8, -6, 6, 0] } : {}}
+            transition={{ duration: 0.4 }}
+            className="space-y-4"
           >
-            <p className="text-[13px] text-zinc-500">
-              {t('auth.noAccount')}{" "}
-              <Link to="/register" className="text-[#f5a623] hover:underline font-medium transition-colors">
-                {t('auth.registerHere')}
-              </Link>
-            </p>
-            <p className="text-[12px] text-zinc-600">
-              {t('auth.areYouMC')}{" "}
-              <Link to="/register" className="text-[#f5a623] hover:underline transition-colors">
-                {t('auth.joinAsTalent')}
-              </Link>
-            </p>
-          </motion.div>
-        </motion.div>
+            {/* Email */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[13px] font-semibold text-gray-700">{t('auth.email')}</label>
+              <div className="flex items-center gap-2.5 px-3.5 py-3 bg-gray-50 border border-gray-200 rounded-xl focus-within:border-amber-400 focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(245,166,35,0.12)] transition-all">
+                <Mail size={15} className="text-gray-400 shrink-0" />
+                <input
+                  type="email" placeholder="you@mchub.com" autoComplete="email" required
+                  className="bg-transparent border-none outline-none flex-1 text-[14px] text-gray-900 placeholder:text-gray-400"
+                  value={email} onChange={e => setEmail(e.target.value)}
+                />
+              </div>
+            </div>
 
-        {/* Floating badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.65 }}
-          className="flex items-center justify-center gap-1.5 mt-6"
-        >
-          <Sparkles size={11} className="text-[#f5a623]/40" />
-          <span className="text-[11px] text-zinc-700">MC Hub Voice Training Platform</span>
+            {/* Password */}
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-[13px] font-semibold text-gray-700">{t('auth.password')}</label>
+                <Link to="/forgot-password" className="text-[12px] text-amber-600 hover:text-amber-700 font-medium transition-colors">
+                  {t('auth.forgotPassword')}
+                </Link>
+              </div>
+              <div className="flex items-center gap-2.5 px-3.5 py-3 bg-gray-50 border border-gray-200 rounded-xl focus-within:border-amber-400 focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(245,166,35,0.12)] transition-all">
+                <Lock size={15} className="text-gray-400 shrink-0" />
+                <input
+                  type={showPass ? "text" : "password"} placeholder="••••••••"
+                  autoComplete="current-password" required
+                  className="bg-transparent border-none outline-none flex-1 text-[14px] text-gray-900 placeholder:text-gray-400"
+                  value={password} onChange={e => setPassword(e.target.value)}
+                />
+                <button type="button" onClick={() => setShowPass(!showPass)} className="text-gray-400 hover:text-gray-600 transition-colors">
+                  {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Remember */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button" onClick={() => setRememberMe(!rememberMe)}
+                className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${rememberMe ? 'bg-amber-500 border-amber-500' : 'border-gray-300 bg-white'}`}
+              >
+                {rememberMe && (
+                  <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
+                    <path d="M1 3.5L3.5 6L8 1" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </button>
+              <span className="text-[13px] text-gray-500 select-none">{t('auth.rememberMe')}</span>
+            </div>
+
+            {/* Submit */}
+            <motion.button
+              type="submit" disabled={loading}
+              whileHover={{ scale: loading ? 1 : 1.01, boxShadow: loading ? 'none' : '0 4px 20px rgba(245,166,35,0.3)' }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 disabled:opacity-50 flex items-center justify-center gap-2 transition-all mt-1"
+            >
+              {loading
+                ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                : <>{t('auth.signIn')} <ArrowRight size={16} /></>
+              }
+            </motion.button>
+          </motion.form>
+
+          <p className="text-center text-[13px] text-gray-500 mt-7 pt-6 border-t border-gray-100">
+            {t('auth.noAccount')}{" "}
+            <Link to="/register" className="text-amber-600 hover:text-amber-700 font-semibold transition-colors">
+              {t('auth.registerHere')}
+            </Link>
+          </p>
         </motion.div>
-      </motion.div>
+      </div>
     </div>
   );
 };

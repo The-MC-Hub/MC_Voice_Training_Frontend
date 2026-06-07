@@ -26,7 +26,10 @@ const Navbar = () => {
     navigate('/');
   };
 
+  const isDark = location.pathname.startsWith('/m/');
+
   const isActive = (path) => {
+    if (path === '/') return location.pathname === '/';
     if (path === '/m/dashboard') return location.pathname === path;
     if (path === '/about') return location.pathname === path;
     return location.pathname.startsWith(path);
@@ -35,25 +38,34 @@ const Navbar = () => {
   const NavLink = ({ to, children }) => (
     <Link
       to={to}
-      className={`relative text-[13px] font-medium transition-colors duration-150 ${
-        isActive(to) ? 'text-gray-900 font-semibold' : 'text-gray-500 hover:text-gray-800'
+      className={`relative text-[13px] font-medium transition-all duration-200 pb-[2px] ${
+        isActive(to)
+          ? isDark
+            ? 'text-white font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-amber-500 after:rounded-full'
+            : 'text-gray-900 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-amber-500 after:rounded-full'
+          : isDark
+            ? 'text-zinc-400 hover:text-white'
+            : 'text-gray-500 hover:text-gray-900'
       }`}
     >
       {children}
-      
     </Link>
   );
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 h-14 bg-white/90 backdrop-blur-md border-b border-black/[0.08] shadow-sm">
+      <nav className={`fixed top-0 left-0 right-0 z-50 h-14 backdrop-blur-md border-b ${
+        isDark
+          ? 'bg-[#09090b]/90 border-white/6'
+          : 'bg-white/90 border-black/8 shadow-sm'
+      }`}>
         <div className="max-w-6xl mx-auto h-full px-6 flex items-center justify-between gap-8">
 
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-1 shrink-0 group">
-            <span className="text-[15px] font-bold text-gray-900 tracking-tight">MC</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mb-0.5" />
-            <span className="text-[15px] font-bold text-gray-900 tracking-tight">Hub</span>
+          <Link to="/" className="flex items-center gap-1 shrink-0 group transition-opacity hover:opacity-80">
+            <span className={`text-[16px] font-bold tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>MC</span>
+            <span className="w-[5px] h-[5px] rounded-full bg-amber-500 mb-0.5 group-hover:scale-110 transition-transform" />
+            <span className={`text-[16px] font-bold tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>Hub</span>
           </Link>
 
           {/* Desktop Nav — centered */}
@@ -72,7 +84,6 @@ const Navbar = () => {
                 <NavLink to="/about">{t('navbar.about')}</NavLink>
                 <NavLink to="/m/dashboard">{t('navbar.dashboard')}</NavLink>
                 <NavLink to="/m/voice/library">{t('navbar.training')}</NavLink>
-                <NavLink to="/m/courses">{t('navbar.courses')}</NavLink>
                 <Link
                   to="/m/payment"
                   className="text-[13px] font-semibold text-[#f5a623] hover:text-[#e09520] transition-colors"
@@ -106,7 +117,7 @@ const Navbar = () => {
                     const isUrl = av && av.startsWith('http');
                     const isEmoji = av && !av.includes('.') && av.length <= 4;
                     return (
-                      <div className="w-7 h-7 rounded-full bg-gray-100 ring-1 ring-black/10 flex items-center justify-center shrink-0 text-base leading-none">
+                      <div className={`w-7 h-7 rounded-full ring-1 flex items-center justify-center shrink-0 text-base leading-none ${isDark ? 'bg-white/10 ring-white/10' : 'bg-gray-100 ring-black/10'}`}>
                         {isUrl
                           ? <img src={av} alt="avatar" className="w-full h-full object-cover rounded-full" />
                           : isEmoji
@@ -116,7 +127,7 @@ const Navbar = () => {
                       </div>
                     );
                   })()}
-                  <span className="hidden lg:block text-[13px] font-medium text-gray-600 mx-1">
+                  <span className={`hidden lg:block text-[13px] font-medium mx-1 ${isDark ? 'text-zinc-300' : 'text-gray-600'}`}>
                     {user?.name?.split(' ')[0]}
                   </span>
                   {user?.isPremium ? (
@@ -130,7 +141,7 @@ const Navbar = () => {
                   )}
                   <Link
                     to="/m/settings"
-                    className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+                    className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${isDark ? 'text-zinc-500 hover:text-white hover:bg-white/[0.07]' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'}`}
                   >
                     <Settings size={16} />
                   </Link>
@@ -141,7 +152,7 @@ const Navbar = () => {
             {/* Mobile hamburger */}
             <button
               onClick={() => setIsMobileMenuOpen(v => !v)}
-              className="flex md:hidden w-8 h-8 items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+              className={`flex md:hidden w-8 h-8 items-center justify-center rounded-lg transition-colors ${isDark ? 'text-zinc-500 hover:text-white hover:bg-white/[0.07]' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'}`}
             >
               {isMobileMenuOpen ? <X size={16} /> : <Menu size={16} />}
             </button>

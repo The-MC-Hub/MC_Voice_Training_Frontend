@@ -149,35 +149,31 @@ function FullCarousel({ posts }) {
             }}
             initial="enter" animate="center" exit="exit"
             transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col sm:flex-row"
+            className="flex flex-col"
           >
-            {/* Image */}
-            <div className="sm:w-[38%] sm:h-[270px] overflow-hidden bg-gray-50 shrink-0">
+            {/* Image — large, full width, 16:9 */}
+            <div className="w-full aspect-video overflow-hidden bg-gray-50">
               {post.image
                 ? <img src={post.image} alt="" className="w-full h-full object-cover" />
-                : <div className="w-full h-full flex items-center justify-center min-h-[270px]">
+                : <div className="w-full h-full flex items-center justify-center">
                     <Facebook size={48} className="text-gold/15" />
                   </div>
               }
             </div>
 
             {/* Content */}
-            <div className="flex flex-col justify-between p-4 sm:p-6 flex-1">
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gold/8 text-gold text-[11px] font-semibold uppercase tracking-wider">
-                    <Facebook size={10} /> Fanpage
-                  </span>
-                  <span className="text-[11px] text-gray-400">#{idx + 1} / {posts.length}</span>
-                </div>
-                <p className="text-[13px] text-gray-700 leading-relaxed line-clamp-5">{post.description}</p>
+            <div className="flex flex-col gap-3 p-4">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gold/8 text-gold text-[11px] font-semibold uppercase tracking-wider">
+                  <Facebook size={10} /> Fanpage
+                </span>
+                <span className="text-[11px] text-gray-400">#{idx + 1} / {posts.length}</span>
               </div>
-              <div className="mt-5">
-                <a href={post.fbLink} target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gold hover:bg-[#1565d8] text-white text-[12px] font-semibold transition-colors">
-                  <Facebook size={14} /> Xem bài đăng gốc <ExternalLink size={11} />
-                </a>
-              </div>
+              <p className="text-[13px] text-gray-700 leading-relaxed line-clamp-3">{post.description}</p>
+              <a href={post.fbLink} target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-gold hover:bg-amber-600 text-white text-[12px] font-semibold transition-colors self-start">
+                <Facebook size={14} /> Xem bài đăng gốc <ExternalLink size={11} />
+              </a>
             </div>
           </motion.div>
         </AnimatePresence>

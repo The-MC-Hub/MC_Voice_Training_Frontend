@@ -404,6 +404,17 @@ const VoicePractice = () => {
                             <p className="text-[12px] text-zinc-500 mt-0.5">
                                 {lesson?.category} · {lesson?.difficulty} {t('common.level') || 'Level'}
                             </p>
+                            {(() => {
+                              if (!history.length) return null;
+                              const best = Math.max(...history.map(h =>
+                                clampMetric(Number(h.accuracyScore||0)*0.45 + Number(h.rhythmScore||0)*0.35 + (Math.min(Number(h.speakingRateWpm||0),180)/180*20))
+                              ));
+                              return (
+                                <span className="inline-flex items-center gap-1 mt-1 text-[11px] px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-400 font-semibold">
+                                  <Award size={10} /> Best: {best.toFixed(1)}%
+                                </span>
+                              );
+                            })()}
                         </div>
                         <div className="flex items-center gap-2 flex-wrap">
                             {/* Language toggle */}
@@ -659,10 +670,12 @@ const VoicePractice = () => {
                                 </AnimatePresence>
 
                                 {/* Mic area */}
-                                <div className={`flex flex-col items-center justify-center py-8 transition-all duration-300 ${
+                                <div className={`flex flex-col items-center justify-center py-8 transition-all duration-500 ${
                                     recording
-                                        ? 'bg-[#0d0d0f] shadow-[inset_0_0_60px_rgba(239,68,68,0.04)]'
-                                        : 'bg-[#0d0d0f]'
+                                        ? 'bg-[#0d0d0f] shadow-[inset_0_0_80px_rgba(239,68,68,0.06)] ring-1 ring-inset ring-red-500/10'
+                                        : analyzing
+                                            ? 'bg-[#0d0d0f] shadow-[inset_0_0_60px_rgba(245,166,35,0.04)] ring-1 ring-inset ring-amber-500/10'
+                                            : 'bg-[#0d0d0f]'
                                 }`}>
                                     {/* Recording gold border glow on outer container — handled via parent class */}
 
@@ -802,6 +815,25 @@ const VoicePractice = () => {
                                                 )}
                                             </motion.div>
                                         )}
+                                    </AnimatePresence>
+                                    <AnimatePresence>
+                                      {audioBlob && !analyzing && !result && (
+                                        <motion.div
+                                          initial={{ opacity: 0, y: 6 }}
+                                          animate={{ opacity: 1, y: 0 }}
+                                          exit={{ opacity: 0, y: 6 }}
+                                          transition={{ duration: 0.25 }}
+                                          className="w-full max-w-[280px] mt-2 px-4"
+                                        >
+                                          <p className="text-[10px] text-zinc-600 mb-1.5 text-center uppercase tracking-wider">Nghe lại trước khi gửi AI</p>
+                                          <audio
+                                            controls
+                                            src={audioUrl}
+                                            className="w-full h-8"
+                                            style={{ filter: 'invert(1) hue-rotate(180deg) brightness(0.8)', borderRadius: '6px' }}
+                                          />
+                                        </motion.div>
+                                      )}
                                     </AnimatePresence>
                                 </div>
 
@@ -1266,6 +1298,38 @@ const VoicePractice = () => {
                                             {t_vp('pastAttempts')}
                                             <span className="ml-2 text-[11px] text-zinc-600">({history.length})</span>
                                         </h3>
+                                        {history.length >= 2 && (() => {
+                                            const scores = [...history].reverse().slice(-8).map(h =>
+                                              clampMetric(Number(h.accuracyScore||0)*0.45 + Number(h.rhythmScore||0)*0.35 + (Math.min(Number(h.speakingRateWpm||0),180)/180*20))
+                                            );
+                                            const min = Math.min(...scores), max = Math.max(...scores);
+                                            const range = max - min || 1;
+                                            const W = 80, H = 28, pad = 3;
+                                            const pts = scores.map((s, i) => {
+                                              const x = pad + (i / (scores.length - 1)) * (W - pad * 2);
+                                              const y = H - pad - ((s - min) / range) * (H - pad * 2);
+                                              return `${x},${y}`;
+                                            }).join(' ');
+                                            const lastScore = scores[scores.length - 1];
+                                            const trend = scores.length >= 2 ? lastScore - scores[scores.length - 2] : 0;
+                                            return (
+                                              <div className="flex items-center gap-2">
+                                                <svg width={W} height={H} className="overflow-visible">
+                                                  <polyline points={pts} fill="none" stroke="rgba(245,166,35,0.4)" strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" />
+                                                  {scores.map((s, i) => {
+                                                    const x = pad + (i / (scores.length - 1)) * (W - pad * 2);
+                                                    const y = H - pad - ((s - min) / range) * (H - pad * 2);
+                                                    return i === scores.length - 1
+                                                      ? <circle key={i} cx={x} cy={y} r="3" fill="#f5a623" />
+                                                      : <circle key={i} cx={x} cy={y} r="1.5" fill="rgba(245,166,35,0.5)" />;
+                                                  })}
+                                                </svg>
+                                                <span className={`text-[11px] font-semibold ${trend >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                                  {trend >= 0 ? '↑' : '↓'}{Math.abs(trend).toFixed(1)}%
+                                                </span>
+                                              </div>
+                                            );
+                                        })()}
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         <AnimatePresence mode="popLayout">
@@ -1398,7 +1462,7 @@ const VoicePractice = () => {
                             </div>
 
                             {/* Voice Quality — Phase 2+3 metrics */}
-                            {result && (result.voice_quality || result.spectral_features || result.filler_words) && (
+                            {result && (result.voice_quality || result.spectral_features || result.filler_words || result.wer_rate > 0 || result.cer_rate > 0) && (
                                 <div className="rounded-2xl border border-white/[0.07] bg-[#111113] p-5">
                                     <div className="flex items-center justify-between mb-4">
                                         <h3 className="text-[13px] font-semibold text-white">Voice Quality</h3>
@@ -1509,6 +1573,29 @@ const VoicePractice = () => {
                                                     </div>
                                                 )}
                                             </div>
+                                        )}
+                                        {(result.wer_rate > 0 || result.cer_rate > 0) && (
+                                          <div className="grid grid-cols-2 gap-2">
+                                            {[
+                                              { label: 'WER', value: result.wer_rate, unit: '%', desc: 'Word Error Rate — tỷ lệ từ bị nhận dạng sai. MC chuyên nghiệp nên đạt < 15%. Càng thấp càng chính xác.', color: (v) => v < 15 ? 'text-emerald-400' : v < 30 ? 'text-amber-400' : 'text-red-400' },
+                                              { label: 'CER', value: result.cer_rate, unit: '%', desc: 'Character Error Rate — tỷ lệ ký tự bị nhận dạng sai. Phản ánh độ rõ từng âm. Tốt: < 10%.', color: (v) => v < 10 ? 'text-emerald-400' : v < 20 ? 'text-amber-400' : 'text-red-400' },
+                                            ].map(m => (
+                                              <div key={m.label} className="p-3 rounded-xl bg-[#09090b] border border-white/[0.05]">
+                                                <div className="flex items-center gap-1 mb-1">
+                                                  <span className="text-[10px] text-zinc-600">{m.label}</span>
+                                                  <div className="relative group/tt cursor-help">
+                                                    <Info size={9} className="text-zinc-700" />
+                                                    <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">
+                                                      {m.desc}
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <p className={`text-[15px] font-bold tabular-nums ${m.color(m.value)}`}>
+                                                  {(m.value ?? 0).toFixed(1)}<span className="text-[10px] text-zinc-600">{m.unit}</span>
+                                                </p>
+                                              </div>
+                                            ))}
+                                          </div>
                                         )}
                                     </div>
                                 </div>
@@ -1670,7 +1757,20 @@ const VoicePractice = () => {
                                             <div className="flex items-end justify-between mb-3">
                                                 <div>
                                                     <p className="text-[11px] text-zinc-600 mb-1">{t('overallScore')}</p>
-                                                    <p className="text-4xl font-bold text-white">{overallScore.toFixed(1)}<span className="text-xl text-zinc-400">%</span></p>
+                                                    <div className="flex items-end gap-3">
+                                                      <p className="text-4xl font-bold text-white">{overallScore.toFixed(1)}<span className="text-xl text-zinc-400">%</span></p>
+                                                      {(() => {
+                                                        if (history.length < 1) return null;
+                                                        const prev = clampMetric(Number(history[0].accuracyScore||0)*0.45 + Number(history[0].rhythmScore||0)*0.35 + (Math.min(Number(history[0].speakingRateWpm||0),180)/180*20));
+                                                        const delta = overallScore - prev;
+                                                        if (Math.abs(delta) < 0.1) return <span className="text-[11px] text-zinc-600 mb-1">= lần trước</span>;
+                                                        return (
+                                                          <span className={`text-[12px] font-semibold mb-1 ${delta > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                                                            {delta > 0 ? '↑' : '↓'} {Math.abs(delta).toFixed(1)}%
+                                                          </span>
+                                                        );
+                                                      })()}
+                                                    </div>
                                                 </div>
                                                 <span className={`text-[12px] font-semibold px-2.5 py-1 rounded-lg bg-white/[0.06] ${overallLevel.color}`}>
                                                     {overallLevel.label}

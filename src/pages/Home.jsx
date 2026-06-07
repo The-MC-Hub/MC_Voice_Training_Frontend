@@ -6,7 +6,7 @@ import {
   ChevronDown, Star, TrendingUp, CheckCircle2, BarChart3, AudioLines,
   MessageSquare, Quote
 } from 'lucide-react';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { motion, AnimatePresence, useInView, useMotionValue, useTransform } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ScrollReveal from '../components/animations/ScrollReveal';
@@ -38,46 +38,38 @@ const stagger = (i) => ({ ...fadeUp, transition: { ...fadeUp.transition, delay: 
 
 // ─── Cursor spotlight + stage lights for Hero ─────────────────────────────────
 const SpotlightHero = () => {
-  const [pos, setPos] = useState({ x: 50, y: 50 }); // percent
-  const rafRef = useRef(null);
-  const targetRef = useRef({ x: 50, y: 50 });
-  const currentRef = useRef({ x: 50, y: 50 });
-
-  const onMouseMove = useCallback((e) => {
-    const pct = {
-      x: (e.clientX / window.innerWidth) * 100,
-      y: (e.clientY / window.innerHeight) * 100,
-    };
-    targetRef.current = pct;
-  }, []);
+  const spotX = useMotionValue(50);
+  const spotY = useMotionValue(50);
+  const leftPct = useTransform(spotX, v => `${v}%`);
+  const topPct  = useTransform(spotY, v => `${v}%`);
 
   useEffect(() => {
-    window.addEventListener('mousemove', onMouseMove, { passive: true });
     const lerp = (a, b, t) => a + (b - a) * t;
+    let cur = { x: 50, y: 50 }, tgt = { x: 50, y: 50 }, raf;
+    const onMove = (e) => {
+      tgt = { x: (e.clientX / window.innerWidth) * 100, y: (e.clientY / window.innerHeight) * 100 };
+    };
     const tick = () => {
-      currentRef.current = {
-        x: lerp(currentRef.current.x, targetRef.current.x, 0.06),
-        y: lerp(currentRef.current.y, targetRef.current.y, 0.06),
-      };
-      setPos({ ...currentRef.current });
-      rafRef.current = requestAnimationFrame(tick);
+      cur = { x: lerp(cur.x, tgt.x, 0.06), y: lerp(cur.y, tgt.y, 0.06) };
+      spotX.set(cur.x);
+      spotY.set(cur.y);
+      raf = requestAnimationFrame(tick);
     };
-    rafRef.current = requestAnimationFrame(tick);
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      cancelAnimationFrame(rafRef.current);
-    };
-  }, [onMouseMove]);
+    window.addEventListener('mousemove', onMove, { passive: true });
+    raf = requestAnimationFrame(tick);
+    return () => { window.removeEventListener('mousemove', onMove); cancelAnimationFrame(raf); };
+  }, [spotX, spotY]);
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      {/* Cursor-following spotlight */}
-      <div
+      {/* Cursor-following spotlight — motion.div avoids React re-renders */}
+      <motion.div
         className="absolute w-[700px] h-[700px] rounded-full pointer-events-none"
         style={{
-          left: `${pos.x}%`,
-          top: `${pos.y}%`,
-          transform: 'translate(-50%, -50%)',
+          left: leftPct,
+          top: topPct,
+          x: '-50%',
+          y: '-50%',
           background: 'radial-gradient(circle, rgba(245,166,35,0.055) 0%, rgba(245,166,35,0.018) 40%, transparent 70%)',
           transition: 'none',
         }}
@@ -572,7 +564,7 @@ const Home = () => {
   const [copiedCert, setCopiedCert] = useState(false);
 
   return (
-    <div className="bg-white text-gray-900 min-h-screen overflow-x-hidden">
+    <div className="bg-white text-gray-900 min-h-[100dvh] overflow-x-hidden">
       <Navbar />
 
       {/* ── 1. HERO ─────────────────────────────────────────────────────────── */}
@@ -660,84 +652,90 @@ const Home = () => {
           </div>
         </ScrollReveal>
 
-        <div className="grid md:grid-cols-3 gap-5">
-          {[
-            {
-              icon: <Mic size={22} />, title: t('home.rhythmCoach'), desc: t('home.rhythmCoachDesc'),
+        {/* Asymmetric bento: 1 featured left (2 col) + 2 compact right stacked */}
+        <div className="grid md:grid-cols-5 gap-5">
+          {/* Featured card — 2 cols wide */}
+          {(() => {
+            const f = {
+              icon: <Mic size={24} />, title: t('home.rhythmCoach'), desc: t('home.rhythmCoachDesc'),
               iconColor: '#f5a623', iconBg: 'rgba(245,166,35,0.08)', iconBorder: 'rgba(245,166,35,0.2)',
               accentColor: '#f5a623', glow: 'rgba(245,166,35,0.07)',
-              metric: '94%', metricLabel: 'Avg accuracy',
-            },
-            {
-              icon: <Zap size={22} />, title: t('home.realTimeFeedback'), desc: t('home.realTimeFeedbackDesc'),
-              iconColor: '#60a5fa', iconBg: 'rgba(59,130,246,0.08)', iconBorder: 'rgba(59,130,246,0.2)',
-              accentColor: '#60a5fa', glow: 'rgba(59,130,246,0.07)',
-              metric: '<2s', metricLabel: 'Response time',
-            },
-            {
-              icon: <BookOpen size={22} />, title: t('home.extensiveLibrary'), desc: t('home.extensiveLibraryDesc'),
-              iconColor: '#a78bfa', iconBg: 'rgba(139,92,246,0.08)', iconBorder: 'rgba(139,92,246,0.2)',
-              accentColor: '#a78bfa', glow: 'rgba(139,92,246,0.07)',
-              metric: '500+', metricLabel: 'Scripts',
-            },
-          ].map((f, i) => (
-            <ScrollReveal key={i} delay={i * 0.12} direction="up">
-              <SpotlightCard
-                spotlightColor={f.glow.replace('0.07)', '0.18)')}
-                spotlightSize={320}
-                className="relative group p-8 bg-white rounded-2xl overflow-hidden flex flex-col h-full cursor-default transition-all duration-300 shadow-sm hover:shadow-lg"
-                style={{ border: '1px solid rgba(0,0,0,0.06)' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = f.accentColor + '50'; e.currentTarget.style.boxShadow = `0 8px 30px ${f.glow}`; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.06)'; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)'; }}
-              >
-                {/* Top accent line */}
-                <div className="absolute top-0 inset-x-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: `linear-gradient(90deg, transparent, ${f.accentColor}60, transparent)` }} />
-                {/* Corner glow */}
-                <div className="absolute top-0 left-0 w-40 h-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-full"
-                  style={{ background: `radial-gradient(ellipse at 0% 0%, ${f.glow} 0%, transparent 70%)` }} />
-
-                <div className="relative z-10 flex flex-col h-full">
-                  {/* Icon box */}
-                  <motion.div
-                    whileHover={{ scale: 1.08 }}
-                    transition={{ duration: 0.2 }}
-                    className="w-12 h-12 rounded-xl flex items-center justify-center mb-7 shrink-0"
-                    style={{ background: f.iconBg, border: `1px solid ${f.iconBorder}`, color: f.iconColor }}
-                  >
-                    {f.icon}
-                  </motion.div>
-
-                  {/* Text */}
-                  <h3 className="text-[16px] font-semibold mb-3 text-gray-900 leading-snug">{f.title}</h3>
-                  <p className="text-gray-500 text-[13px] leading-relaxed flex-1">{f.desc}</p>
-
-                  {/* Metric row */}
-                  <div className="mt-8 pt-5 border-t border-gray-100 flex items-end justify-between">
-                    <div>
-                      <motion.p
-                        initial={{ opacity: 0, y: 6 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: 0.1 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                        className="text-[26px] font-bold tabular-nums leading-none"
-                        style={{ color: f.accentColor }}
-                      >
-                        {f.metric}
-                      </motion.p>
-                      <p className="text-[10px] text-gray-400 uppercase tracking-wider mt-1">{f.metricLabel}</p>
+              metric: '94%', metricLabel: 'Độ chính xác TB',
+            };
+            return (
+              <ScrollReveal delay={0} direction="up" className="md:col-span-3">
+                <SpotlightCard
+                  spotlightColor="rgba(245,166,35,0.14)"
+                  spotlightSize={400}
+                  className="relative group p-8 bg-white rounded-2xl overflow-hidden flex flex-col h-full min-h-[280px] cursor-default transition-all duration-300 shadow-sm hover:shadow-xl"
+                  style={{ border: '1px solid rgba(0,0,0,0.06)' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#f5a62340'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(245,166,35,0.10)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.06)'; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)'; }}
+                >
+                  <div className="absolute top-0 inset-x-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ background: 'linear-gradient(90deg, transparent, rgba(245,166,35,0.5), transparent)' }} />
+                  <div className="absolute bottom-0 right-0 w-64 h-64 pointer-events-none opacity-30"
+                    style={{ background: 'radial-gradient(ellipse at 100% 100%, rgba(245,166,35,0.15) 0%, transparent 70%)' }} />
+                  <div className="relative z-10 flex flex-col h-full">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6"
+                      style={{ background: f.iconBg, border: `1px solid ${f.iconBorder}`, color: f.iconColor }}>
+                      {f.icon}
                     </div>
-                    <motion.div
-                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                      style={{ color: f.accentColor }}
-                    >
-                      <ArrowRight size={15} />
-                    </motion.div>
+                    <h3 className="text-[18px] font-semibold mb-3 text-gray-900 leading-snug">{f.title}</h3>
+                    <p className="text-gray-500 text-[14px] leading-relaxed flex-1 max-w-xs">{f.desc}</p>
+                    <div className="mt-8 pt-5 border-t border-gray-100 flex items-end justify-between">
+                      <div>
+                        <p className="text-[32px] font-bold tabular-nums leading-none text-amber-500">{f.metric}</p>
+                        <p className="text-[10px] text-gray-400 uppercase tracking-wider mt-1">{f.metricLabel}</p>
+                      </div>
+                      <ArrowRight size={16} className="text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
                   </div>
-                </div>
-              </SpotlightCard>
-            </ScrollReveal>
-          ))}
+                </SpotlightCard>
+              </ScrollReveal>
+            );
+          })()}
+
+          {/* Compact cards stacked — 2 cols */}
+          <div className="md:col-span-2 flex flex-col gap-5">
+            {[
+              {
+                icon: <Zap size={20} />, title: t('home.realTimeFeedback'), desc: t('home.realTimeFeedbackDesc'),
+                iconColor: '#60a5fa', iconBg: 'rgba(59,130,246,0.08)', iconBorder: 'rgba(59,130,246,0.2)',
+                accentColor: '#60a5fa', metric: '<2s', metricLabel: 'Phản hồi',
+              },
+              {
+                icon: <BookOpen size={20} />, title: t('home.extensiveLibrary'), desc: t('home.extensiveLibraryDesc'),
+                iconColor: '#a78bfa', iconBg: 'rgba(139,92,246,0.08)', iconBorder: 'rgba(139,92,246,0.2)',
+                accentColor: '#a78bfa', metric: '50+', metricLabel: 'Kịch bản',
+              },
+            ].map((f, i) => (
+              <ScrollReveal key={i} delay={(i + 1) * 0.12} direction="up" className="flex-1">
+                <SpotlightCard
+                  spotlightColor={`rgba(${i === 0 ? '59,130,246' : '139,92,246'},0.12)`}
+                  spotlightSize={250}
+                  className="relative group p-6 bg-white rounded-2xl overflow-hidden flex flex-col h-full cursor-default transition-all duration-300 shadow-sm hover:shadow-lg"
+                  style={{ border: '1px solid rgba(0,0,0,0.06)' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = f.accentColor + '40'; e.currentTarget.style.boxShadow = `0 8px 24px ${f.accentColor}12`; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.06)'; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)'; }}
+                >
+                  <div className="absolute top-0 inset-x-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ background: `linear-gradient(90deg, transparent, ${f.accentColor}50, transparent)` }} />
+                  <div className="relative z-10 flex flex-col h-full">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center"
+                        style={{ background: f.iconBg, border: `1px solid ${f.iconBorder}`, color: f.iconColor }}>
+                        {f.icon}
+                      </div>
+                      <p className="text-[22px] font-bold tabular-nums leading-none" style={{ color: f.accentColor }}>{f.metric}</p>
+                    </div>
+                    <h3 className="text-[14px] font-semibold mb-1.5 text-gray-900 leading-snug">{f.title}</h3>
+                    <p className="text-gray-400 text-[12px] leading-relaxed flex-1 line-clamp-2">{f.desc}</p>
+                  </div>
+                </SpotlightCard>
+              </ScrollReveal>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -895,40 +893,61 @@ const Home = () => {
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {testimonials.map((t, i) => (
-            <ScrollReveal key={i} delay={i * 0.1}>
-              <SpotlightCard
-                spotlightColor="rgba(245,166,35,0.09)"
-                spotlightSize={300}
-                className="p-6 bg-white border border-gray-100 rounded-2xl hover:border-amber-200 hover:shadow-md hover:shadow-amber-50 transition-all h-full flex flex-col"
-              >
-                {/* Stars */}
-                <div className="flex gap-0.5 mb-4">
-                  {[...Array(5)].map((_, j) => (
-                    <Star key={j} size={12} className="text-[#f5a623] fill-[#f5a623]" />
-                  ))}
+        {/* Asymmetric: featured (col-span-2) + 2 compact stacked */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          {/* Featured testimonial */}
+          <ScrollReveal className="md:col-span-3">
+            <SpotlightCard
+              spotlightColor="rgba(245,166,35,0.09)"
+              spotlightSize={380}
+              className="p-8 bg-white border border-gray-100 rounded-2xl hover:border-amber-200 hover:shadow-lg hover:shadow-amber-50/60 transition-all h-full flex flex-col"
+            >
+              <div className="flex gap-0.5 mb-5">
+                {[...Array(5)].map((_, j) => (
+                  <Star key={j} size={13} className="text-[#f5a623] fill-[#f5a623]" />
+                ))}
+              </div>
+              <Quote size={24} className="text-amber-200 mb-4" />
+              <p className="text-[15px] text-gray-700 leading-relaxed flex-1 mb-6">"{testimonials[0].quote}"</p>
+              <div className="flex items-center gap-3 pt-5 border-t border-gray-100">
+                <img src={testimonials[0].avatar} alt={testimonials[0].name} className="w-10 h-10 rounded-xl object-cover border border-gray-200" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-[14px] font-semibold text-gray-900">{testimonials[0].name}</p>
+                  <p className="text-[12px] text-gray-400">{testimonials[0].role}</p>
                 </div>
-
-                {/* Quote */}
-                <Quote size={18} className="text-amber-200 mb-3" />
-                <p className="text-[13px] text-gray-600 leading-relaxed flex-1 mb-5">"{t.quote}"</p>
-
-                {/* Author */}
-                <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
-                  <img src={t.avatar} alt={t.name} className="w-9 h-9 rounded-full object-cover border border-gray-200" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-semibold text-gray-900">{t.name}</p>
-                    <p className="text-[11px] text-gray-400 truncate">{t.role}</p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <p className="text-[10px] text-gray-400 uppercase tracking-wider">Điểm đạt</p>
-                    <p className="text-[14px] font-bold text-emerald-400">{t.score}</p>
-                  </div>
+                <div className="text-right shrink-0">
+                  <p className="text-[22px] font-bold text-emerald-500 tabular-nums leading-none">{testimonials[0].score}%</p>
+                  <p className="text-[10px] text-gray-400 mt-0.5">Điểm cao nhất</p>
                 </div>
-              </SpotlightCard>
-            </ScrollReveal>
-          ))}
+              </div>
+            </SpotlightCard>
+          </ScrollReveal>
+
+          {/* 2 compact stacked */}
+          <div className="md:col-span-2 flex flex-col gap-4">
+            {testimonials.slice(1).map((t, i) => (
+              <ScrollReveal key={i} delay={(i + 1) * 0.1} className="flex-1">
+                <SpotlightCard
+                  spotlightColor="rgba(245,166,35,0.07)"
+                  spotlightSize={240}
+                  className="p-6 bg-white border border-gray-100 rounded-2xl hover:border-amber-200 hover:shadow-md hover:shadow-amber-50 transition-all h-full flex flex-col"
+                >
+                  <div className="flex gap-0.5 mb-4">
+                    {[...Array(5)].map((_, j) => <Star key={j} size={11} className="text-[#f5a623] fill-[#f5a623]" />)}
+                  </div>
+                  <p className="text-[13px] text-gray-600 leading-relaxed flex-1 mb-4 line-clamp-4">"{t.quote}"</p>
+                  <div className="flex items-center gap-2.5 pt-3 border-t border-gray-100">
+                    <img src={t.avatar} alt={t.name} className="w-8 h-8 rounded-lg object-cover border border-gray-200" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[12px] font-semibold text-gray-900">{t.name}</p>
+                      <p className="text-[11px] text-gray-400 truncate">{t.role}</p>
+                    </div>
+                    <p className="text-[16px] font-bold text-emerald-500 tabular-nums shrink-0">{t.score}%</p>
+                  </div>
+                </SpotlightCard>
+              </ScrollReveal>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -963,34 +982,36 @@ const Home = () => {
       </section>
 
       {/* ── 2. FAQ ──────────────────────────────────────────────────────────── */}
-      <section className="py-24 max-w-3xl mx-auto px-6">
-        <ScrollReveal direction="up">
-          <div className="mb-10 text-center">
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gray-200 bg-gray-50 text-gray-500 text-[11px] font-semibold uppercase tracking-widest mb-5">
-              Câu hỏi thường gặp
-            </span>
-            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-gray-900">
-              Bạn còn <span className="text-amber-500">thắc mắc?</span>
-            </h2>
+      <section className="py-24 max-w-6xl mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
+          {/* Left: sticky header + contact CTA */}
+          <div className="lg:col-span-2">
+            <ScrollReveal direction="up">
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gray-200 bg-gray-50 text-gray-500 text-[11px] font-semibold uppercase tracking-widest mb-5">
+                Câu hỏi thường gặp
+              </span>
+              <h2 className="text-3xl font-bold tracking-tight text-gray-900 mt-4 mb-4">
+                Bạn còn <span className="text-amber-500">thắc mắc?</span>
+              </h2>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-8">
+                Câu trả lời cho những câu hỏi phổ biến nhất. Không tìm thấy? Liên hệ trực tiếp.
+              </p>
+              <Link
+                to="/contact"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 text-[13px] font-medium hover:border-amber-300 hover:text-amber-600 transition-colors"
+              >
+                Liên hệ hỗ trợ <ArrowRight size={13} />
+              </Link>
+            </ScrollReveal>
           </div>
-        </ScrollReveal>
 
-        <div className="space-y-2">
-          {faqs.map((faq, i) => (
-            <FaqItem key={i} q={faq.q} a={faq.a} index={i} />
-          ))}
+          {/* Right: accordion */}
+          <div className="lg:col-span-3 space-y-2">
+            {faqs.map((faq, i) => (
+              <FaqItem key={i} q={faq.q} a={faq.a} index={i} />
+            ))}
+          </div>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.3 }}
-          className="mt-8 text-center text-[13px] text-gray-500"
-        >
-          Vẫn còn câu hỏi?{' '}
-          <Link to="/contact" className="text-[#f5a623] hover:underline">Liên hệ hỗ trợ →</Link>
-        </motion.div>
       </section>
 
       {/* ── CTA BANNER ──────────────────────────────────────────────────────── */}
