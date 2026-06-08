@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import {
   Mail, Lock, User, Phone, ShieldCheck, ArrowRight,
   Eye, EyeOff, CheckCircle2, Mic, Zap, BarChart3, Award, RefreshCw,
+  BookOpen, Star, Crown,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "../store/useAuthStore";
@@ -11,68 +12,188 @@ import { useApi } from "../hooks/useApi";
 import { fetchUserRoles } from "../controllers/publicController";
 const ROLE_REDIRECT = { admin: "/m/dashboard", mc: "/m/dashboard", client: "/m/dashboard" };
 
-const features = [
-  { icon: Mic,       title: "AI phân tích giọng nói",   desc: "Nhận phản hồi chi tiết trên 5 tiêu chí trong 30 giây." },
-  { icon: BarChart3, title: "Theo dõi tiến trình",       desc: "Dashboard cá nhân với biểu đồ điểm số theo thời gian." },
-  { icon: Award,     title: "50+ kịch bản MC",           desc: "Đám cưới, sự kiện doanh nghiệp, talkshow truyền hình." },
+const SLIDE_FEATURES = [
+  { icon: Mic,      title: "AI phân tích giọng nói",   desc: "5 tiêu chí: phát âm, nhịp điệu, tốc độ, độ rõ ràng, cảm xúc" },
+  { icon: BarChart3,title: "Theo dõi tiến trình",       desc: "Biểu đồ điểm số theo thời gian, streak luyện tập hàng ngày" },
+  { icon: Award,    title: "50+ kịch bản MC",           desc: "Đám cưới, sự kiện doanh nghiệp, talkshow, lễ tốt nghiệp" },
+  { icon: BookOpen, title: "Lộ trình học cá nhân",      desc: "AI gợi ý bài học phù hợp trình độ và mục tiêu của bạn" },
 ];
 
-const RightPanel = () => (
-  <div className="photo-panel relative w-full h-full overflow-hidden flex flex-col justify-between p-10 lg:p-14">
-    <img
-      src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1200&q=80"
-      alt="Stage lights"
-      className="absolute inset-0 w-full h-full object-cover object-center"
-    />
-    {/* Strong overlay so text is readable */}
-    <div className="absolute inset-0 bg-black/65" />
-    <div className="absolute inset-0 bg-linear-to-b from-black/75 via-black/50 to-black/85" />
+const SLIDE_PLANS = [
+  { icon: Star,  tier: "FREE",  price: "Miễn phí",   perks: ["5 AI sessions", "10 bài học cơ bản"], badge: null },
+  { icon: Zap,   tier: "BASIC", price: "199k/tháng", perks: ["20 AI sessions/tháng", "50+ bài học"], badge: "Phổ biến" },
+  { icon: Crown, tier: "FULL",  price: "299k/tháng", perks: ["AI không giới hạn", "Toàn bộ tính năng"], badge: null },
+];
 
-    {/* Top: logo */}
-    <div className="relative z-10">
-      <Link to="/" className="inline-flex items-center gap-1.5 group">
-        <span className="text-[18px] font-bold text-white tracking-tight">MC</span>
-        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mb-0.5 group-hover:scale-110 transition-transform" />
-        <span className="text-[18px] font-bold text-white tracking-tight">Hub</span>
-      </Link>
-    </div>
+const SLIDE_TESTIMONIALS = [
+  { quote: "Điểm phát âm tăng từ 64 lên 91 chỉ sau 2 tuần.", name: "Nguyễn Minh Khoa", role: "MC Đám cưới" },
+  { quote: "Phân tích nhịp điệu rất chính xác, giúp tôi tự tin dẫn chương trình hơn.", name: "Trần Bảo Châu", role: "MC TV" },
+  { quote: "Luyện lúc 11 giờ đêm mà không cần ai chấm điểm.", name: "Lê Đức Anh", role: "MC Doanh nghiệp" },
+];
 
-    {/* Bottom content */}
-    <div className="relative z-10 space-y-6">
-      <div>
-        <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-400 uppercase tracking-widest mb-4">
-          <Zap size={11} /> Tham gia miễn phí
+const SLIDES = [
+  { key: "features", label: "✦ TÍNH NĂNG" },
+  { key: "pricing",  label: "✦ BẢNG GIÁ" },
+  { key: "reviews",  label: "✦ ĐÁNH GIÁ" },
+];
+
+const RightPanel = () => {
+  const [slideIdx, setSlideIdx] = useState(0);
+  const [testimonialIdx, setTestimonialIdx] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setSlideIdx(i => (i + 1) % SLIDES.length), 7000);
+    return () => clearInterval(t);
+  }, []);
+
+  useEffect(() => {
+    if (slideIdx !== 2) return;
+    const t = setInterval(() => setTestimonialIdx(i => (i + 1) % SLIDE_TESTIMONIALS.length), 5000);
+    return () => clearInterval(t);
+  }, [slideIdx]);
+
+  return (
+    <div className="photo-panel relative w-full h-full overflow-hidden flex flex-col justify-between p-10 lg:p-14">
+      <img
+        src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1200&q=80"
+        alt="Stage lights"
+        className="absolute inset-0 w-full h-full object-cover object-center"
+      />
+      <div className="absolute inset-0 bg-black/65" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/75 via-black/50 to-black/85" />
+
+      {/* Top: logo */}
+      <div className="relative z-10">
+        <Link to="/" className="inline-flex items-center gap-1.5 group">
+          <span className="text-[18px] font-bold text-white tracking-tight">MC</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mb-0.5 group-hover:scale-110 transition-transform" />
+          <span className="text-[18px] font-bold text-white tracking-tight">Hub</span>
+        </Link>
+      </div>
+
+      {/* Slide area */}
+      <div className="relative z-10 flex flex-col gap-5">
+        {/* Slide badge */}
+        <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-400 uppercase tracking-widest">
+          {SLIDES[slideIdx].label}
         </span>
-        <h2 className="text-[28px] lg:text-[34px] font-bold text-white leading-[1.2] tracking-tight drop-shadow-lg">
-          Bắt đầu hành trình<br />MC của bạn<br />
-          <span className="text-amber-400">hôm nay.</span>
-        </h2>
-      </div>
 
-      <div className="space-y-2.5">
-        {features.map((f, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.15 + i * 0.1, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-4 flex items-center gap-3.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-4 py-3"
-          >
-            <div className="w-9 h-9 rounded-lg bg-amber-500/25 border border-amber-400/40 flex items-center justify-center shrink-0">
-              <f.icon size={16} className="text-amber-300" />
-            </div>
-            <div>
-              <p className="text-[13px] font-semibold text-white leading-none mb-1">{f.title}</p>
-              <p className="text-[11px] text-white/75 leading-relaxed">{f.desc}</p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+        <div className="relative min-h-[220px]">
+          <AnimatePresence mode="wait">
+            {/* Slide 0 — Features */}
+            {slideIdx === 0 && (
+              <motion.div
+                key="features"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                className="space-y-4"
+              >
+                {SLIDE_FEATURES.map((f, i) => (
+                  <div key={i} className="flex items-center gap-3.5">
+                    <div className="w-8 h-8 rounded-lg bg-amber-500/25 border border-amber-400/40 flex items-center justify-center shrink-0">
+                      <f.icon size={15} className="text-amber-300" />
+                    </div>
+                    <div>
+                      <p className="text-[13px] font-semibold text-white leading-none mb-1">{f.title}</p>
+                      <p className="text-[11px] text-white/70 leading-relaxed">{f.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </motion.div>
+            )}
 
-      <p className="text-[12px] text-white/40">Đã có 500+ MC đang luyện tập trên nền tảng</p>
+            {/* Slide 1 — Pricing */}
+            {slideIdx === 1 && (
+              <motion.div
+                key="pricing"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                className="space-y-4"
+              >
+                {SLIDE_PLANS.map((p, i) => (
+                  <div key={i} className="flex items-center gap-4">
+                    <div className="w-8 h-8 rounded-lg bg-amber-500/25 border border-amber-400/40 flex items-center justify-center shrink-0">
+                      <p.icon size={15} className="text-amber-300" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <p className="text-[13px] font-bold text-white tracking-wide">{p.tier}</p>
+                        {p.badge && <span className="bg-amber-500/80 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">{p.badge}</span>}
+                      </div>
+                      <p className="text-[11px] text-white/65">{p.perks.join(' · ')}</p>
+                    </div>
+                    <p className="text-[12px] font-semibold text-amber-400 shrink-0">{p.price}</p>
+                  </div>
+                ))}
+              </motion.div>
+            )}
+
+            {/* Slide 2 — Testimonials */}
+            {slideIdx === 2 && (
+              <motion.div
+                key="reviews"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                className="flex flex-col gap-4"
+              >
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={testimonialIdx}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -12 }}
+                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <p className="text-[15px] text-white/90 leading-relaxed mb-5 italic">"{SLIDE_TESTIMONIALS[testimonialIdx].quote}"</p>
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-full bg-amber-500/30 border border-amber-400/50 flex items-center justify-center shrink-0">
+                        <Mic size={12} className="text-amber-300" />
+                      </div>
+                      <div>
+                        <p className="text-[12px] font-semibold text-white leading-none">{SLIDE_TESTIMONIALS[testimonialIdx].name}</p>
+                        <p className="text-[10px] text-white/55 mt-0.5">{SLIDE_TESTIMONIALS[testimonialIdx].role}</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+                {/* Testimonial dots */}
+                <div className="flex items-center justify-center gap-1.5">
+                  {SLIDE_TESTIMONIALS.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setTestimonialIdx(i)}
+                      className={`rounded-full transition-all ${i === testimonialIdx ? 'w-4 h-1.5 bg-amber-400' : 'w-1.5 h-1.5 bg-white/30 hover:bg-white/50'}`}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Slide indicator dots */}
+        <div className="flex items-center justify-between">
+          <p className="text-[12px] text-white/40">Đã có 500+ MC đang luyện tập</p>
+          <div className="flex items-center gap-1.5">
+            {SLIDES.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setSlideIdx(i)}
+                className={`rounded-full transition-all ${i === slideIdx ? 'w-4 h-1.5 bg-amber-400' : 'w-1.5 h-1.5 bg-white/30 hover:bg-white/50'}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const PasswordStrength = ({ password }) => {
   if (!password) return null;
