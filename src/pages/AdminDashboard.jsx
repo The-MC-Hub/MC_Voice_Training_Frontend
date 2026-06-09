@@ -181,7 +181,7 @@ const AdminDashboard = () => {
           </div>
           <div className="px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-[11px] text-emerald-700 font-medium">
             Live
-          </div>
+            </div>
         </header>
 
         {/* Scrollable / fill content */}
