@@ -197,10 +197,19 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
     if (!notifySubject.trim() || !notifyContent.trim()) return;
     setNotifyLoading(true);
     try {
-      await api.post(`/admin/users/${user._id}/notify-email`, { subject: notifySubject, content: notifyContent });
-      flashNotify("✓ Email đã được gửi thành công.");
+      await api.post("/admin/announcements", {
+        title: notifySubject,
+        emailSubject: notifySubject,
+        content: notifyContent,
+        type: "GENERAL",
+        targetPlans: [],
+        recipientIds: [user._id || user.id],
+      });
+      flashNotify("✓ Đã tạo bản nháp — vào Thông báo → Chờ duyệt để gửi.");
+      setNotifySubject("");
+      setNotifyContent("");
     } catch (err) {
-      flashNotify("✗ " + (err.response?.data?.message || "Gửi email thất bại."));
+      flashNotify("✗ " + (err.response?.data?.message || "Tạo thất bại."));
     } finally {
       setNotifyLoading(false);
     }
@@ -493,7 +502,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                 <div className="bg-amber-50 border border-amber-100 rounded-lg px-3 py-2.5 flex items-start gap-2">
                   <Mail size={12} className="text-amber-500 mt-0.5 shrink-0" />
                   <p className="text-[10px] text-amber-700 leading-relaxed">
-                    Email sẽ được gửi đến <strong>{user.email}</strong>
+                    Sẽ tạo bản nháp gửi đến <strong>{user.email}</strong> · Vào <strong>Thông báo → Chờ duyệt</strong> để xem xét và gửi thật.
                   </p>
                 </div>
 
@@ -502,7 +511,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                   className="w-full flex items-center justify-center gap-2 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg disabled:opacity-50 transition-colors"
                 >
                   {notifyLoading ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
-                  {notifyLoading ? "Đang gửi..." : "Gửi email"}
+                  {notifyLoading ? "Đang tạo..." : "Tạo bản nháp"}
                 </button>
               </form>
             </div>

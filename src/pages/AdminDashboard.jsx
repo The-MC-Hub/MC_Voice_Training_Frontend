@@ -4,7 +4,7 @@ import { verifyMC, suspendUser } from "../controllers/adminController";
 import { useAdminData } from "../hooks/useAdminData";
 import {
   Users, ShieldCheck, BookOpen, LayoutGrid, CreditCard,
-  BarChart2, Award, Trophy, Settings, Terminal, LogOut, Megaphone, Package, Bell,
+  BarChart2, Award, Trophy, Settings, Terminal, LogOut, Megaphone, Package, Bell, HelpCircle,
 } from "lucide-react";
 
 import DashboardSection, { DASHBOARD_NAV } from "./admin/sections/DashboardSection";
@@ -18,6 +18,7 @@ import ServerLogs from "./admin/sections/ServerLogs";
 import MarketingManager from "./admin/sections/MarketingManager";
 import PlanManager from "./admin/PlanManager";
 import NotificationManager from "./admin/sections/NotificationManager";
+import AdminGuide from "./admin/sections/AdminGuide";
 
 const NAV_ITEMS = [
   { id: "dashboard", label: "Dashboard", icon: LayoutGrid },
@@ -30,6 +31,7 @@ const NAV_ITEMS = [
   { id: "marketing", label: "Marketing", icon: Megaphone },
   { id: "plans", label: "Gói & Giảm giá", icon: Package },
   { id: "notifications", label: "Thông báo", icon: Bell },
+  { id: "guide", label: "Hướng dẫn", icon: HelpCircle },
 ];
 
 const AdminDashboard = () => {
@@ -209,6 +211,7 @@ const AdminDashboard = () => {
               {resolvedSection === "marketing" && <MarketingManager />}
               {resolvedSection === "plans" && <PlanManager />}
               {resolvedSection === "notifications" && <NotificationManager />}
+              {resolvedSection === "guide" && <AdminGuide />}
             </div>
           )}
         </div>

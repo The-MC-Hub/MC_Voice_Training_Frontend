@@ -455,10 +455,10 @@ function ComposeForm({ initial, onSave, onCancel }) {
       </div>
 
       <div>
-        <label className={labelCls}>
+        <div className={labelCls}>
           Nội dung email
           <span className="normal-case ml-2 text-zinc-600 font-normal">Dùng {"{{name}}"} để cá nhân hoá</span>
-        </label>
+        </div>
         <textarea
           className={inputCls + " resize-none font-mono text-[11px] leading-relaxed"}
           rows={8}
