@@ -35,10 +35,10 @@ const SocialIcon = ({ type }) => {
 const AmbientOrbs = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     {/* Large amber blob top-right */}
-    <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full"
+    <div className="hidden sm:block absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full"
       style={{ background: 'radial-gradient(circle, rgba(245,166,35,0.10) 0%, rgba(245,166,35,0.04) 50%, transparent 70%)', filter: 'blur(40px)' }} />
     {/* Medium blue-ish blob left */}
-    <div className="absolute top-1/3 -left-40 w-[400px] h-[400px] rounded-full"
+    <div className="hidden sm:block absolute top-1/3 -left-40 w-[400px] h-[400px] rounded-full"
       style={{ background: 'radial-gradient(circle, rgba(251,191,36,0.07) 0%, transparent 70%)', filter: 'blur(50px)' }} />
     {/* Small amber blob bottom */}
     <div className="absolute bottom-0 right-1/4 w-[300px] h-[300px] rounded-full"
@@ -84,7 +84,7 @@ const About = () => {
            
 
             {/* Gradient headline */}
-            <h1 className="text-5xl lg:text-7xl font-bold leading-tight mb-6 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-7xl font-bold leading-tight mb-6 tracking-tight">
               {t('about.ourStory').split(' ')[0]}{' '}
               <span className="text-amber-500">{t('about.ourStory').split(' ').slice(1).join(' ')}</span>
             </h1>
@@ -92,8 +92,16 @@ const About = () => {
             <p className="text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed">
               {t('about.storyDesc')}
             </p>
+          </ScrollReveal>
 
-           
+          <ScrollReveal direction="up" delay={0.2}>
+            <div className="mt-10 mx-auto max-w-3xl rounded-2xl overflow-hidden shadow-2xl shadow-amber-500/10 border border-amber-400/10">
+              <img
+                src="/ảnh bìa.png"
+                alt="The MC Hub — Cắt tiếng nói, Chạm tương lai"
+                className="w-full h-auto object-cover"
+              />
+            </div>
           </ScrollReveal>
         </div>
 
@@ -254,7 +262,7 @@ const About = () => {
             </div>
           </ScrollReveal>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {teamMembers.map((member, i) => (
               <ScrollReveal key={member.id} delay={i * 0.08}>
                 <SpotlightCard

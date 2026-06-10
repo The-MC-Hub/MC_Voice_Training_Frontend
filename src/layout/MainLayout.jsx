@@ -15,15 +15,14 @@ const MainLayout = () => {
       <div className="h-14 shrink-0" />
       <div className="flex flex-1 overflow-hidden">
         <main
-          className="flex-1 overflow-y-auto"
+          className={`flex-1 overflow-y-auto${showAd ? ' md:mr-45' : ''}`}
           style={{
             scrollbarWidth: 'thin',
             scrollbarColor: 'rgba(0,0,0,0.12) transparent',
-            marginRight: showAd ? '180px' : 0,
           }}
         >
           <div className="w-full min-h-full flex flex-col">
-            <section className="flex-1 p-4 lg:p-8">
+            <section className="flex-1 p-3 sm:p-4 lg:p-8">
               <Outlet />
             </section>
             <Footer />

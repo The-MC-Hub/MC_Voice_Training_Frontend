@@ -81,6 +81,7 @@ a{color:#f5a623;text-decoration:none;}
     <td align="right"><span style="display:inline-block;background:#f5a623;color:#000;font-size:10px;font-weight:700;padding:4px 10px;border-radius:4px;letter-spacing:0.8px;text-transform:uppercase;">${m.label}</span></td>
   </tr></table>
 </td></tr>
+<tr><td style="padding:0;"><img src="/ảnh bìa.png" alt="The MC Hub" style="width:100%;max-width:600px;height:auto;display:block;" /></td></tr>
 <tr><td style="background:linear-gradient(135deg,#0c0c0f 0%,#1a1a1e 100%);padding:32px;">
   <p style="color:rgba(255,255,255,0.5);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;">Thông báo từ MC Hub</p>
   <h1 style="color:#fff;font-size:24px;font-weight:800;line-height:1.2;letter-spacing:-0.5px;">Xin chào, <span style="color:#f5a623;">{{name}}</span> 👋</h1>

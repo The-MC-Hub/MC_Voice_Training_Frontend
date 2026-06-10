@@ -191,7 +191,7 @@ export default function AdSidebar() {
 
   return (
     <div
-      className="fixed top-14 right-0 bottom-0 z-40 flex flex-col overflow-y-auto"
+      className="hidden md:flex fixed top-14 right-0 bottom-0 z-40 flex-col overflow-y-auto"
       style={{
         width: '180px',
         background: '#ffffff',

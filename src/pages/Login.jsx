@@ -146,6 +146,7 @@ const Login = () => {
     } catch (err) {
       const msg = err.response?.data?.message || "";
       if (msg.startsWith("EMAIL_NOT_VERIFIED:")) {
+        clearError();
         const unverifiedEmail = msg.replace("EMAIL_NOT_VERIFIED:", "");
         navigate("/register?verify=" + encodeURIComponent(unverifiedEmail));
       }
@@ -187,7 +188,9 @@ const Login = () => {
                 exit={{ opacity: 0, height: 0, marginBottom: 0 }}
                 className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-xl p-3 text-center overflow-hidden"
               >
-                {error}
+                {error?.startsWith?.("EMAIL_NOT_VERIFIED:")
+                  ? "Email chưa được xác thực. Đang chuyển đến trang xác thực..."
+                  : error}
               </motion.div>
             )}
           </AnimatePresence>

@@ -588,7 +588,7 @@ const Home = () => {
             </span>
           </motion.div>
 
-          <motion.h1 {...stagger(1)} className="text-5xl lg:text-7xl font-bold tracking-tight leading-[1.08] mb-6">
+          <motion.h1 {...stagger(1)} className="text-3xl sm:text-4xl lg:text-7xl font-bold tracking-tight leading-[1.08] mb-6">
             {t('home.heroTitle1')}{' '}
             <span className="text-[#f5a623]">{t('home.heroTitle2')}</span>
           </motion.h1>
@@ -615,7 +615,7 @@ const Home = () => {
           </motion.div>
 
           {/* ── Metrics strip — count-up ── */}
-          <motion.div {...stagger(4)} className="flex justify-center gap-12 mt-16 pt-8 border-t border-amber-100/20">
+          <motion.div {...stagger(4)} className="flex justify-center gap-6 sm:gap-12 mt-12 sm:mt-16 pt-6 sm:pt-8 border-t border-amber-100/20">
             <CountMetric value="2400" suffix="+" label={t('home.totalSessions') || 'Buổi luyện tập'} />
             <CountMetric value="94" suffix="%" label={t('home.accuracy') || 'Độ chính xác TB'} />
             <CountMetric value="50" suffix="+" label={t('home.extensiveLibrary') || 'Kịch bản'} />
@@ -653,7 +653,7 @@ const Home = () => {
         </ScrollReveal>
 
         {/* Asymmetric bento: 1 featured left (2 col) + 2 compact right stacked */}
-        <div className="grid md:grid-cols-5 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-5">
           {/* Featured card — 2 cols wide */}
           {(() => {
             const f = {
@@ -813,7 +813,7 @@ const Home = () => {
                         whileHover={{ y: -6 }}
                         transition={CARD_HOVER_TRANSITION}
                         onClick={() => navigate(isAuthenticated ? `/m/voice/practice/${lesson.id}` : '/login')}
-                        className="min-w-[340px] bg-white border border-gray-100 rounded-2xl overflow-hidden cursor-pointer hover:border-amber-200 hover:shadow-lg hover:shadow-amber-50 transition-all duration-300 group flex flex-col"
+                        className="min-w-[280px] sm:min-w-[340px] bg-white border border-gray-100 rounded-2xl overflow-hidden cursor-pointer hover:border-amber-200 hover:shadow-lg hover:shadow-amber-50 transition-all duration-300 group flex flex-col"
                       >
                         {/* Thumbnail */}
                         <div className="relative h-44 bg-[#09090b] overflow-hidden shrink-0">
@@ -964,8 +964,8 @@ const Home = () => {
             { step: '03', title: t('home.step3Title'), desc: t('home.step3Desc'), icon: <Award size={16} /> },
           ].map((item, i) => (
             <ScrollReveal key={i} delay={i * 0.12}>
-              <div className="flex gap-8 items-start group">
-                <p className="text-[60px] font-bold leading-none text-amber-200 select-none shrink-0 w-20 text-right group-hover:text-amber-300 transition-colors">
+              <div className="flex gap-4 sm:gap-8 items-start group">
+                <p className="text-[40px] sm:text-[60px] font-bold leading-none text-amber-200 select-none shrink-0 w-20 text-right group-hover:text-amber-300 transition-colors">
                   {item.step}
                 </p>
                 <div className="pt-2 border-t border-gray-200 flex-1">
@@ -1024,7 +1024,7 @@ const Home = () => {
             {/* Subtle glow center */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-[#f5a623]/[0.04] rounded-full blur-[60px] pointer-events-none" />
 
-            <div className="relative z-10 px-10 py-16 lg:px-20 lg:py-20 flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+            <div className="relative z-10 px-6 py-10 sm:px-10 sm:py-16 lg:px-20 lg:py-20 flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
               {/* Left: icon + text */}
               <div className="flex-1 text-center lg:text-left">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#f5a623] text-black mb-6 shadow-lg shadow-[#f5a623]/20">

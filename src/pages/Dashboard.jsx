@@ -218,7 +218,7 @@ const Dashboard = () => {
               <span className="text-[10px] text-zinc-600 uppercase tracking-wider font-semibold">{s.label}</span>
               <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${s.tagColor}`}>{s.tag}</span>
             </div>
-            <p className="text-[26px] font-bold text-white leading-none mb-2">{s.value}</p>
+            <p className="text-[20px] sm:text-[26px] font-bold text-white leading-none mb-2">{s.value}</p>
             <div className="h-1 w-full bg-white/[0.04] rounded-full mb-2">
               <div className="h-full rounded-full transition-all" style={{ width: `${s.bar}%`, backgroundColor: s.barColor }} />
             </div>
