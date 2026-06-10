@@ -25,7 +25,7 @@ const ContactModal = ({ isOpen, onClose }) => {
           from_name: formData.name,
           reply_to: formData.email,
           message: formData.message,
-          to_email: 'letritrung2605@gmail.com'
+          to_email: 'themchubforwork@gmail.com'
         },
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       );
@@ -78,7 +78,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                     </div>
                     <div>
                       <p className="text-[10px] font-black uppercase opacity-50 tracking-tighter">Email</p>
-                      <p className="font-bold">letritrung2605@gmail.com</p>
+                      <p className="font-bold">themchubforwork@gmail.com</p>
                     </div>
                   </div>
 

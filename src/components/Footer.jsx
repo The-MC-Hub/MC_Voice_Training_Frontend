@@ -53,7 +53,7 @@ const Footer = () => {
               {[
                 { Icon: MapPin, text: "Đà Nẵng, Việt Nam" },
                 { Icon: Phone, text: "0912158715" },
-                { Icon: Mail, text: "letritrung2605@gmail.com" },
+                { Icon: Mail, text: "themchubforwork@gmail.com" },
               ].map(({ Icon, text }) => (
                 <li key={text} className="flex items-center gap-3 text-gray-500 text-[13px]">
                   <Icon size={14} className="text-amber-500 shrink-0" />

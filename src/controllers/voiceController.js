@@ -18,6 +18,11 @@ export const fetchLessons = async (options = {}) => {
     return response.data.data;
 };
 
+export const fetchFeaturedLessons = async (limit = 6) => {
+    const response = await api.get(`/voice/lessons/featured?limit=${limit}`);
+    return response.data.data;
+};
+
 export const fetchLessonById = async (id) => {
     const response = await api.get(`/voice/lessons/${id}`);
     return response.data.data;

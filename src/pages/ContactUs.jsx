@@ -55,7 +55,7 @@ const ContactUs = () => {
   };
 
   const contacts = [
-    { icon: Mail,   label: 'Email hỗ trợ',  value: 'letritrung2605@gmail.com', sub: 'Phản hồi trong 24–48 giờ' },
+    { icon: Mail,   label: 'Email hỗ trợ',  value: 'themchubforwork@gmail.com', sub: 'Phản hồi trong 24–48 giờ' },
     { icon: Phone,  label: 'Điện thoại',     value: '0912 158 715',             sub: 'Thứ 2 – Thứ 6, 8:00–17:00' },
     { icon: MapPin, label: 'Địa chỉ',        value: 'Đà Nẵng, Việt Nam',        sub: 'Văn phòng chính' },
     { icon: Clock,  label: 'Giờ hỗ trợ',     value: '8:00 – 22:00 hằng ngày',  sub: 'Kể cả cuối tuần' },

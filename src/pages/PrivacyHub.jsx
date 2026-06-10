@@ -268,7 +268,7 @@ const PrivacyHub = () => {
                 'Quyền di chuyển dữ liệu: Nhận dữ liệu ở định dạng có thể đọc được (JSON/CSV).',
                 'Quyền rút lại đồng ý: Bất kỳ lúc nào, không ảnh hưởng đến tính hợp pháp của xử lý trước đó.',
               ]} />
-              <p>Để thực hiện bất kỳ quyền nào, liên hệ: <span className="text-[#f5a623]">letritrung2605@gmail.com</span>. Chúng tôi sẽ phản hồi trong vòng 30 ngày.</p>
+              <p>Để thực hiện bất kỳ quyền nào, liên hệ: <span className="text-[#f5a623]">themchubforwork@gmail.com</span>. Chúng tôi sẽ phản hồi trong vòng 30 ngày.</p>
             </SectionBlock>
 
             <SectionBlock id="children" icon={Shield} title="10. Trẻ em & Vị thành niên">
@@ -304,7 +304,7 @@ const PrivacyHub = () => {
               <p>Nếu bạn có câu hỏi, lo ngại hoặc muốn thực hiện quyền bảo mật dữ liệu, liên hệ Người phụ trách bảo vệ dữ liệu (DPO):</p>
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
-                  { label: 'Email DPO', value: 'letritrung2605@gmail.com', icon: Mail },
+                  { label: 'Email DPO', value: 'themchubforwork@gmail.com', icon: Mail },
                   { label: 'Thời gian phản hồi', value: 'Trong vòng 30 ngày', icon: RefreshCw },
                   { label: 'Đối tượng áp dụng', value: 'Người dùng tại Việt Nam và quốc tế', icon: Globe },
                   { label: 'Khiếu nại', value: 'Bộ TT&TT Việt Nam (nếu không giải quyết được)', icon: AlertCircle },

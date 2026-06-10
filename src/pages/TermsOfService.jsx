@@ -273,7 +273,7 @@ const TermsOfService = () => {
               <p>Nếu bạn có câu hỏi về các Điều khoản Dịch vụ này, vui lòng liên hệ với chúng tôi:</p>
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
-                  { label: 'Email hỗ trợ', value: 'letritrung2605@gmail.com', icon: Mail },
+                  { label: 'Email hỗ trợ', value: 'themchubforwork@gmail.com', icon: Mail },
                   { label: 'Nền tảng', value: 'MC Hub Voice Training', icon: Globe },
                   { label: 'Phản hồi', value: 'Trong vòng 24–48 giờ làm việc', icon: RefreshCw },
                   { label: 'Ngôn ngữ hỗ trợ', value: 'Tiếng Việt & English', icon: CheckCircle2 },

@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Search, FileText, Award, Zap, Tag, History, Mic, PlayCircle, Video } from "lucide-react";
+import { Search, FileText, Award, Zap, Tag, History, Mic, PlayCircle, Video, TrendingUp, Flame } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useApi } from "../hooks/useApi";
-import { fetchLessons, fetchPracticeHistory } from "../controllers/voiceController";
+import { fetchLessons, fetchPracticeHistory, fetchFeaturedLessons } from "../controllers/voiceController";
 import { useAuth } from "../hooks/useAuth";
 import PageBanner from '../components/ui/PageBanner';
 import UpgradeBanner from '../components/ui/UpgradeBanner';
@@ -37,6 +37,7 @@ const VoiceLibrary = () => {
   const { data: practiceHistory, loading: historyLoading } = useApi(
     () => fetchPracticeHistory(user?.id), [user?.id]
   );
+  const { data: featuredLessons } = useApi(() => fetchFeaturedLessons(6), []);
 
   const loading = lessonsLoading || historyLoading;
   const lessons = allLessons || [];
@@ -98,6 +99,53 @@ const VoiceLibrary = () => {
           { value: history.length, label: t('voiceLibrary.practices') },
         ]}
       />
+
+      {/* Featured lessons */}
+      {featuredLessons?.length > 0 && (
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <Flame size={15} className="text-gold" />
+            <span className="text-[13px] font-semibold text-white">Bài đọc nổi bật</span>
+            <span className="text-[11px] text-zinc-600 ml-1">· Được luyện tập nhiều nhất</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {featuredLessons.map((lesson, i) => {
+              const stats = getLessonStats(lesson.id);
+              return (
+                <div
+                  key={lesson.id}
+                  onClick={() => navigate(isAuthenticated ? `/m/voice/practice/${lesson.id}` : '/login')}
+                  className="relative flex items-center gap-3 px-4 py-3 bg-[#111113] border border-white/[0.07] rounded-xl hover:border-gold/30 hover:bg-[#141416] transition-all cursor-pointer group"
+                >
+                  {/* Rank badge */}
+                  <div className={`shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-bold ${
+                    i === 0 ? 'bg-gold text-black' : i === 1 ? 'bg-zinc-400/20 text-zinc-300' : 'bg-zinc-700/30 text-zinc-500'
+                  }`}>
+                    {i + 1}
+                  </div>
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] font-semibold text-white truncate leading-snug">{lesson.title}</p>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className="text-[10px] text-zinc-600">{CATEGORY_LABEL[lesson.category] || lesson.category}</span>
+                      <span className="text-[10px] text-zinc-600">·</span>
+                      <span className={`text-[10px] font-medium ${lesson.difficulty === 'Hard' ? 'text-red-400' : lesson.difficulty === 'Medium' ? 'text-gold' : 'text-emerald-400'}`}>
+                        {lesson.difficulty}
+                      </span>
+                    </div>
+                  </div>
+                  {/* Practice count */}
+                  <div className="shrink-0 flex items-center gap-1 text-gold">
+                    <TrendingUp size={11} />
+                    <span className="text-[12px] font-bold tabular-nums">{lesson.practiceCount}</span>
+                    <span className="text-[10px] text-zinc-600">lượt</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <div className="flex flex-col lg:flex-row gap-6">
 
@@ -263,6 +311,12 @@ const VoiceLibrary = () => {
                           <FileText size={9} />
                           {wordCount} từ
                         </span>
+                        {lesson.practiceCount > 0 && (
+                          <span className="text-[11px] text-zinc-500 flex items-center gap-1">
+                            <TrendingUp size={9} className="text-gold/70" />
+                            {lesson.practiceCount} lượt
+                          </span>
+                        )}
                         {stats.total > 0 && (
                           <span className="text-[11px] text-gold flex items-center gap-1">
                             <History size={9} />
