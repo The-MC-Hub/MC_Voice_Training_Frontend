@@ -190,7 +190,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-8 max-w-6xl mx-auto">
+    <div className="flex flex-col gap-8 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <PageBanner
         icon={<Zap size={22} />}

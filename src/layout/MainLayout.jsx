@@ -22,7 +22,7 @@ const MainLayout = () => {
           }}
         >
           <div className="w-full min-h-full flex flex-col">
-            <section className="flex-1 p-3 sm:p-4 lg:p-8">
+            <section className="flex-1">
               <Outlet />
             </section>
             <Footer />

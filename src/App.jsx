@@ -78,7 +78,7 @@ function App() {
 
   return (
     <ThemeProvider>
-      <div className="app-container" style={noSidebar ? {} : { paddingRight: '180px' }}>
+      <div className={`app-container${noSidebar ? '' : ' md:pr-45'}`}>
         <AdSidebar />
         <Suspense fallback={<PageLoader />}>
           <AnimatePresence mode="wait">

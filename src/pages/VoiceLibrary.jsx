@@ -86,7 +86,7 @@ const VoiceLibrary = () => {
   const categories = [...new Set(lessons.map(l => l.category).filter(Boolean))].sort();
 
   return (
-    <div className="max-w-6xl mx-auto pb-16">
+    <div className="max-w-6xl mx-auto pb-16 px-4 sm:px-6">
 
       <PageBanner
         icon={<Mic size={22} />}

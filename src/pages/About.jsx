@@ -67,7 +67,7 @@ const About = () => {
       <Navbar />
 
       {/* Hero */}
-      <section className="relative pt-40 pb-24 px-6 overflow-hidden">
+      <section className="relative pt-24 sm:pt-40 pb-16 sm:pb-24 px-4 sm:px-6 overflow-hidden">
         <AmbientOrbs />
         <DotGrid />
 
@@ -115,19 +115,19 @@ const About = () => {
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-300/50 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-amber-300/50 to-transparent" />
         <div className="max-w-4xl mx-auto relative z-10">
-          <div className="grid grid-cols-3 gap-8 text-center">
+          <div className="grid grid-cols-3 gap-3 sm:gap-8 text-center">
             {[
-              { value: '500+', label: 'MCs Empowered' },
-              { value: '10K+', label: 'Sessions Completed' },
-              { value: '94%', label: 'Satisfaction Rate' },
+              { value: '500+', label: 'MCs' },
+              { value: '10K+', label: 'Sessions' },
+              { value: '94%', label: 'Satisfaction' },
             ].map((stat, i) => (
               <motion.div key={i}
                 initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}>
-                <p className="text-3xl font-bold text-amber-500">{stat.value}</p>
-                <p className="text-[12px] text-gray-400 mt-1 uppercase tracking-wider">{stat.label}</p>
+                <p className="text-xl sm:text-3xl font-bold text-amber-500">{stat.value}</p>
+                <p className="text-[10px] sm:text-[12px] text-gray-400 mt-1 uppercase tracking-wider">{stat.label}</p>
               </motion.div>
             ))}
           </div>
