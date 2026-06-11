@@ -194,7 +194,6 @@ const Navbar = () => {
                     <MobileNavLink to="/m/dashboard" label={t('navbar.dashboard')} active={isActive('/m/dashboard')} />
                     <MobileNavLink to="/m/voice/library" label={t('navbar.training')} active={isActive('/m/voice')} />
                     <MobileNavLink to="/m/courses" label={t('navbar.courses')} active={isActive('/m/courses')} />
-                    <MobileNavLink to="/m/community" label="Community" active={isActive('/m/community')} />
                     <MobileNavLink to="/m/payment" label={t('navbar.pricing')} active={isActive('/m/payment')} />
                   </>
                 )}

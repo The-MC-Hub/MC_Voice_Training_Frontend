@@ -35,13 +35,13 @@ const SocialIcon = ({ type }) => {
 const AmbientOrbs = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     {/* Large amber blob top-right */}
-    <div className="hidden sm:block absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full"
+    <div className="hidden sm:block absolute -top-32 -right-32 w-125 h-125 rounded-full"
       style={{ background: 'radial-gradient(circle, rgba(245,166,35,0.10) 0%, rgba(245,166,35,0.04) 50%, transparent 70%)', filter: 'blur(40px)' }} />
     {/* Medium blue-ish blob left */}
-    <div className="hidden sm:block absolute top-1/3 -left-40 w-[400px] h-[400px] rounded-full"
+    <div className="hidden sm:block absolute top-1/3 -left-40 w-100 h-100 rounded-full"
       style={{ background: 'radial-gradient(circle, rgba(251,191,36,0.07) 0%, transparent 70%)', filter: 'blur(50px)' }} />
     {/* Small amber blob bottom */}
-    <div className="absolute bottom-0 right-1/4 w-[300px] h-[300px] rounded-full"
+    <div className="absolute bottom-0 right-1/4 w-75 h-75 rounded-full"
       style={{ background: 'radial-gradient(circle, rgba(245,166,35,0.08) 0%, transparent 70%)', filter: 'blur(40px)' }} />
   </div>
 );
@@ -106,14 +106,14 @@ const About = () => {
         </div>
 
         {/* Bottom amber gradient fade */}
-        <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 inset-x-0 h-24 bg-linear-to-t from-white to-transparent pointer-events-none" />
       </section>
 
       {/* Stats bar */}
       <section className="relative py-8 px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-50 via-white to-amber-50" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-300/50 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-amber-300/50 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-r from-amber-50 via-white to-amber-50" />
+        <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-amber-300/50 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-amber-300/50 to-transparent" />
         <div className="max-w-4xl mx-auto relative z-10">
           <div className="grid grid-cols-3 gap-3 sm:gap-8 text-center">
             {[
@@ -161,9 +161,9 @@ const About = () => {
       {/* Mission */}
       <section className="py-20 px-6 relative overflow-hidden">
         {/* Section background tint */}
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-50/60 via-white to-orange-50/30 pointer-events-none" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-200 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-amber-200 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-br from-amber-50/60 via-white to-orange-50/30 pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-amber-200 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-amber-200 to-transparent" />
 
         {/* Corner decorative circles */}
         <div className="absolute top-8 right-8 w-24 h-24 rounded-full border-2 border-amber-200/40 pointer-events-none" />
@@ -242,7 +242,7 @@ const About = () => {
           }} />
 
         {/* Large amber blob top */}
-        <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full pointer-events-none"
+        <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-150 h-75 rounded-full pointer-events-none"
           style={{ background: 'radial-gradient(ellipse, rgba(245,166,35,0.06) 0%, transparent 70%)', filter: 'blur(30px)' }} />
 
         <div className="max-w-6xl mx-auto relative z-10">
@@ -271,11 +271,11 @@ const About = () => {
                   className="group relative overflow-hidden rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-lg hover:shadow-amber-100/60 hover:border-amber-200/60 transition-all duration-300 cursor-default"
                 >
                   {/* Top amber accent strip */}
-                  <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-amber-400/60 to-transparent" />
+                  <div className="absolute top-0 inset-x-0 h-1 bg-linear-to-r from-transparent via-amber-400/60 to-transparent" />
 
                   {/* Photo */}
                   <div className="relative mx-4 mt-5 overflow-hidden rounded-xl border border-gray-100">
-                    <div className="aspect-[4/3] overflow-hidden bg-amber-50">
+                    <div className="aspect-4/3 overflow-hidden bg-amber-50">
                       <LazyImage
                         src={member.image}
                         className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
@@ -295,9 +295,9 @@ const About = () => {
 
                   {/* Caption */}
                   <div className="p-4 pb-5">
-                    <p className="text-[10px] text-amber-500 uppercase tracking-[0.15em] font-semibold mb-1">{member.specialty}</p>
-                    <h3 className="text-[15px] font-bold text-gray-900 mb-0.5">{member.name}</h3>
-                    <p className="text-[11px] text-gray-400 mb-2">{member.role}</p>
+                    <p className="text-[10px] text-amber-500 uppercase tracking-wider font-semibold mb-1 truncate">{member.specialty}</p>
+                    <h3 className="text-[14px] font-bold text-gray-900 mb-0.5 leading-snug">{member.name}</h3>
+                    <p className="text-[11px] text-gray-400 mb-2 leading-snug">{member.role}</p>
                     <p className="text-gray-500 text-[12px] leading-relaxed">{member.bio}</p>
                   </div>
 
@@ -315,14 +315,14 @@ const About = () => {
       {/* CTA */}
       <section className="py-16 px-6 relative overflow-hidden">
         {/* Amber gradient bg */}
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-white to-orange-50 pointer-events-none" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-300/60 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-br from-amber-50 via-white to-orange-50 pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-amber-300/60 to-transparent" />
 
         {/* Decorative circles */}
         <div className="absolute top-1/2 left-8 -translate-y-1/2 w-32 h-32 rounded-full border-2 border-amber-200/40 pointer-events-none" />
-        <div className="absolute top-1/2 left-16 -translate-y-1/2 w-16 h-16 rounded-full bg-amber-400/[0.06] pointer-events-none" />
+        <div className="absolute top-1/2 left-16 -translate-y-1/2 w-16 h-16 rounded-full bg-amber-400/6 pointer-events-none" />
         <div className="absolute top-1/2 right-8 -translate-y-1/2 w-24 h-24 rounded-full border-2 border-amber-200/40 pointer-events-none" />
-        <div className="absolute top-1/2 right-16 -translate-y-1/2 w-12 h-12 rounded-full bg-amber-400/[0.06] pointer-events-none" />
+        <div className="absolute top-1/2 right-16 -translate-y-1/2 w-12 h-12 rounded-full bg-amber-400/6 pointer-events-none" />
 
         <div className="max-w-6xl mx-auto relative z-10">
           <ScrollReveal>

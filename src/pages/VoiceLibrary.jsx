@@ -149,12 +149,35 @@ const VoiceLibrary = () => {
 
       <div className="flex flex-col lg:flex-row gap-6">
 
-        {/* Sidebar */}
+        {/* Sidebar — vertical on lg+, horizontal scroll on mobile */}
         <aside className="lg:w-56 shrink-0">
           <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-wider mb-3">
             {t('voiceLibrary.practiceCategories')}
           </p>
-          <div className="flex flex-col gap-1">
+
+          {/* Mobile: horizontal scroll pill row */}
+          <div className="flex lg:hidden gap-2 overflow-x-auto pb-2 -mx-1 px-1" style={{ scrollbarWidth: 'none' }}>
+            {[{ cat: 'All', label: t('voiceLibrary.allScripts'), count: lessons.length },
+              ...categories.map(cat => ({ cat, label: CATEGORY_LABEL[cat] || cat.replace(/_/g, ' '), count: lessons.filter(l => l.category === cat).length }))
+            ].map(({ cat, label, count }) => {
+              const active = activeCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium whitespace-nowrap transition-colors ${
+                    active ? 'bg-gold/10 text-gold border border-gold/20' : 'text-zinc-400 bg-white/5 border border-white/8 hover:text-white'
+                  }`}
+                >
+                  {label}
+                  <span className={`text-[10px] px-1 rounded ${active ? 'text-gold' : 'text-zinc-600'}`}>{count}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Desktop: vertical list */}
+          <div className="hidden lg:flex flex-col gap-1">
             <button
               onClick={() => setActiveCategory("All")}
               className={`flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium transition-colors ${
@@ -190,27 +213,29 @@ const VoiceLibrary = () => {
             })}
           </div>
 
-          {/* Upgrade upsell or AI card */}
-          {(() => {
-            const plan = user?.plan || 'FREE';
-            const aiUsed = user?.aiSessionsUsed ?? 0;
-            const aiLimit = plan === 'FREE' ? 5 : plan === 'BASIC' ? 20 : null;
-            const usagePct = aiLimit ? (aiUsed / aiLimit) * 100 : 0;
-            if (aiLimit && usagePct >= 60) {
+          {/* Upgrade upsell or AI card — desktop only */}
+          <div className="hidden lg:block">
+            {(() => {
+              const plan = user?.plan || 'FREE';
+              const aiUsed = user?.aiSessionsUsed ?? 0;
+              const aiLimit = plan === 'FREE' ? 5 : plan === 'BASIC' ? 20 : null;
+              const usagePct = aiLimit ? (aiUsed / aiLimit) * 100 : 0;
+              if (aiLimit && usagePct >= 60) {
+                return (
+                  <div className="mt-6">
+                    <UpgradeBanner variant="inline" plan={plan} used={aiUsed} limit={aiLimit} />
+                  </div>
+                );
+              }
               return (
-                <div className="mt-6">
-                  <UpgradeBanner variant="inline" plan={plan} used={aiUsed} limit={aiLimit} />
+                <div className="mt-6 p-4 bg-[#111113] border border-white/[0.07] rounded-xl">
+                  <Zap size={18} className="text-gold mb-2.5" />
+                  <p className="text-[13px] font-semibold text-white mb-1.5">{t('voiceLibrary.aiCoaching')}</p>
+                  <p className="text-[12px] text-zinc-500 leading-relaxed">{t('voiceLibrary.aiCoachingDesc')}</p>
                 </div>
               );
-            }
-            return (
-              <div className="mt-6 p-4 bg-[#111113] border border-white/[0.07] rounded-xl">
-                <Zap size={18} className="text-gold mb-2.5" />
-                <p className="text-[13px] font-semibold text-white mb-1.5">{t('voiceLibrary.aiCoaching')}</p>
-                <p className="text-[12px] text-zinc-500 leading-relaxed">{t('voiceLibrary.aiCoachingDesc')}</p>
-              </div>
-            );
-          })()}
+            })()}
+          </div>
         </aside>
 
         {/* Main */}

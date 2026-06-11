@@ -20,7 +20,7 @@ const PageBanner = ({ icon, eyebrow, title, highlight, description, stats = [], 
         style={{ background: `radial-gradient(ellipse at 0% 0%, ${accentColor}12 0%, transparent 65%)` }}
       />
 
-      <div className="relative z-10 px-8 py-6 flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-10">
+      <div className="relative z-10 px-4 sm:px-8 py-4 sm:py-6 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-10">
 
         {/* Icon */}
         {icon && (
@@ -75,18 +75,18 @@ const PageBanner = ({ icon, eyebrow, title, highlight, description, stats = [], 
 
         {/* Stats */}
         {stats.length > 0 && (
-          <div className="flex items-center gap-5 shrink-0">
+          <div className="flex items-center gap-4 sm:gap-5 flex-wrap md:flex-nowrap shrink-0">
             {stats.map((s, i) => (
               <React.Fragment key={i}>
-                {i > 0 && <div className="w-px h-8 bg-white/[0.07]" />}
+                {i > 0 && <div className="hidden sm:block w-px h-8 bg-white/[0.07]" />}
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.2 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                  className="text-center"
+                  className="text-center min-w-12"
                 >
-                  <p className="text-2xl font-bold text-white tabular-nums">{s.value}</p>
-                  <p className="text-[10px] text-zinc-500 uppercase tracking-wider mt-0.5">{s.label}</p>
+                  <p className="text-xl sm:text-2xl font-bold text-white tabular-nums">{s.value}</p>
+                  <p className="text-[9px] sm:text-[10px] text-zinc-500 uppercase tracking-wider mt-0.5">{s.label}</p>
                 </motion.div>
               </React.Fragment>
             ))}

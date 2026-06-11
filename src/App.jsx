@@ -19,6 +19,7 @@ import Onboarding from './pages/Onboarding';
 import ForgotPassword from './pages/ForgotPassword';
 import Layout from './layout/MainLayout';
 import AdSidebar from './components/ui/AdSidebar';
+import PopularLessonsSidebar from './components/ui/PopularLessonsSidebar';
 
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Wallet = lazy(() => import('./pages/Wallet'));
@@ -78,7 +79,8 @@ function App() {
 
   return (
     <ThemeProvider>
-      <div className={`app-container${noSidebar ? '' : ' md:pr-45'}`}>
+      <div className={`app-container${noSidebar ? '' : ' md:pr-45 md:pl-45'}`}>
+        <PopularLessonsSidebar />
         <AdSidebar />
         <Suspense fallback={<PageLoader />}>
           <AnimatePresence mode="wait">
