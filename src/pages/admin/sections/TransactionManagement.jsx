@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
-import { Download, CheckCircle2, Clock, XCircle, TrendingUp, Filter, ArrowUpDown } from "lucide-react";
+import { Download, CheckCircle2, Clock, XCircle, TrendingUp, Filter, ArrowUpDown, CheckCheck } from "lucide-react";
+import api from "../../../services/api";
 
 const fmt = (v) => (v ?? 0).toLocaleString("vi-VN");
 
@@ -16,10 +17,27 @@ const PLAN_CONFIG = {
   FREE:   { color: "bg-[--bg-elevated] text-[--text-muted] border-[--border-subtle]" },
 };
 
-const TransactionManagement = ({ transactions, revenueStats }) => {
+const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
   const [filterStatus, setFilterStatus] = useState("ALL");
   const [search, setSearch] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: "createdAt", order: "desc" }); // desc = NEWEST
+  const [completing, setCompleting] = useState(null); // transactionId being completed
+  const [flash, setFlash] = useState("");
+  const showFlash = (msg) => { setFlash(msg); setTimeout(() => setFlash(""), 4000); };
+
+  const handleComplete = async (txId) => {
+    if (!window.confirm("Xác nhận hoàn thành giao dịch này và kích hoạt gói cho người dùng?")) return;
+    setCompleting(txId);
+    try {
+      await api.post(`/payment/admin/complete/${txId}`);
+      showFlash("Giao dịch đã được xác nhận. Gói người dùng đã kích hoạt.");
+      onRefresh?.();
+    } catch (err) {
+      showFlash(`Lỗi: ${err.response?.data?.message || "Không thể xác nhận giao dịch."}`);
+    } finally {
+      setCompleting(null);
+    }
+  };
 
   const filtered = useMemo(() => {
     if (!transactions) return [];
@@ -172,6 +190,13 @@ const TransactionManagement = ({ transactions, revenueStats }) => {
         </div>
       </div>
 
+      {/* Flash */}
+      {flash && (
+        <div className="bg-emerald-950/50 border border-emerald-800/50 text-emerald-400 text-[12px] px-4 py-3 rounded-lg">
+          {flash}
+        </div>
+      )}
+
       {/* Table */}
       <div className="bg-[--bg-surface] border border-[--border-subtle] overflow-x-auto">
         <table className="w-full text-left border-collapse text-[12px]">
@@ -186,13 +211,14 @@ const TransactionManagement = ({ transactions, revenueStats }) => {
               <th className="px-4 py-3">Bank Ref</th>
               <th className="px-4 py-3 text-right">Ngày tạo</th>
               <th className="px-4 py-3 text-right">Hoàn thành</th>
+              <th className="px-4 py-3 text-right">Thao tác</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[--border-subtle] text-[--text-secondary]">
             {!transactions ? (
-              <tr><td colSpan={9} className="px-4 py-8 text-center text-[--text-muted]">Đang tải...</td></tr>
+              <tr><td colSpan={10} className="px-4 py-8 text-center text-[--text-muted]">Đang tải...</td></tr>
             ) : filtered.length === 0 ? (
-              <tr><td colSpan={9} className="px-4 py-8 text-center text-[--text-muted]">Không có giao dịch nào</td></tr>
+              <tr><td colSpan={10} className="px-4 py-8 text-center text-[--text-muted]">Không có giao dịch nào</td></tr>
             ) : filtered.map((t, i) => {
               const statusCfg = STATUS_CONFIG[t.status] || {};
               const planCfg = PLAN_CONFIG[t.plan] || {};
@@ -232,6 +258,19 @@ const TransactionManagement = ({ transactions, revenueStats }) => {
                   <td className="px-4 py-3 text-right text-[--text-muted] text-[11px]">{date}</td>
                   <td className="px-4 py-3 text-right text-[--text-muted] text-[11px]">
                     {t.completedAt ? new Date(t.completedAt).toLocaleDateString("vi-VN", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" }) : "—"}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    {t.status === "PENDING" && (
+                      <button
+                        onClick={() => handleComplete(t.id)}
+                        disabled={completing === t.id}
+                        title="Xác nhận giao dịch thủ công"
+                        className="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-semibold bg-emerald-950/60 text-emerald-400 border border-emerald-800/50 hover:bg-emerald-900/60 transition-colors disabled:opacity-50"
+                      >
+                        <CheckCheck size={11} className={completing === t.id ? "animate-spin" : ""} />
+                        {completing === t.id ? "..." : "Xác nhận"}
+                      </button>
+                    )}
                   </td>
                 </tr>
               );

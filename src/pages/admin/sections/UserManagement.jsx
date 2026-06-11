@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   Search, CheckCircle, XCircle, ShieldAlert, ShieldCheck, Eye, Loader2,
   UserPlus, Mail, Key, Trash2, X, BarChart2, Bell, User as UserIcon,
-  TrendingUp, Zap, Clock, Award, Send, Sparkles, ChevronRight,
+  TrendingUp, Zap, Clock, Award, Send, Sparkles, ChevronRight, RefreshCw,
 } from "lucide-react";
 import { getMCProfile } from "../../../services/publicService";
 import api from "../../../services/api";
@@ -526,7 +526,18 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
 const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [filterRole, setFilterRole] = React.useState("ALL");
+  const [filterPlan, setFilterPlan] = React.useState("ALL");
+  const [sortBy, setSortBy] = React.useState("newest");
   const [selectedUser, setSelectedUser] = React.useState(null);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  // Auto-refresh on mount to pick up any new payments
+  useEffect(() => { onRefresh?.(); }, []);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try { await onRefresh?.(); } finally { setRefreshing(false); }
+  };
 
   // Add user modal
   const [showAddModal, setShowAddModal] = useState(false);
@@ -635,22 +646,39 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
 
   const filtered = React.useMemo(() => {
     if (!users) return [];
-    return users.filter(u => {
+    let list = users.filter(u => {
       const q = searchTerm.toLowerCase();
       const matchQ = !q
         || (u.name || "").toLowerCase().includes(q)
         || (u.email || "").toLowerCase().includes(q)
         || (u.phoneNumber || "").includes(q);
       const matchRole = filterRole === "ALL" || (u.role || "").toLowerCase() === filterRole.toLowerCase();
-      return matchQ && matchRole;
+      const matchPlan = filterPlan === "ALL" || (u.plan || "FREE").toUpperCase() === filterPlan;
+      return matchQ && matchRole && matchPlan;
     });
-  }, [users, searchTerm, filterRole]);
+    if (sortBy === "name") list = [...list].sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+    if (sortBy === "sessions") list = [...list].sort((a, b) => (b.aiSessionsUsed || 0) - (a.aiSessionsUsed || 0));
+    if (sortBy === "plan") {
+      const ORDER = { ANNUAL: 0, FULL: 1, BASIC: 2, FREE: 3 };
+      list = [...list].sort((a, b) => (ORDER[(a.plan || "FREE").toUpperCase()] ?? 9) - (ORDER[(b.plan || "FREE").toUpperCase()] ?? 9));
+    }
+    return list;
+  }, [users, searchTerm, filterRole, filterPlan, sortBy]);
 
   const counts = React.useMemo(() => {
     if (!users) return {};
     return users.reduce((acc, u) => {
       const r = (u.role || "client").toLowerCase();
       acc[r] = (acc[r] || 0) + 1;
+      return acc;
+    }, {});
+  }, [users]);
+
+  const planCounts = React.useMemo(() => {
+    if (!users) return {};
+    return users.reduce((acc, u) => {
+      const p = (u.plan || "FREE").toUpperCase();
+      acc[p] = (acc[p] || 0) + 1;
       return acc;
     }, {});
   }, [users]);
@@ -690,6 +718,11 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                 className="w-full bg-white border border-gray-200 rounded-xl py-2.5 pl-9 pr-4 text-[13px] focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 placeholder:text-gray-400 shadow-sm"
               />
             </div>
+            <button onClick={handleRefresh} disabled={refreshing}
+              className="flex items-center gap-1.5 px-3 py-2.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-500 text-[12px] font-medium rounded-lg transition-colors shrink-0 disabled:opacity-50"
+              title="Làm mới danh sách">
+              <RefreshCw size={13} className={refreshing ? 'animate-spin' : ''} />
+            </button>
             <button onClick={() => setShowAddModal(true)}
               className="flex items-center gap-1.5 px-3.5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg transition-colors shrink-0">
               <UserPlus size={13} /> Thêm
@@ -712,6 +745,35 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
               {label} <span className={`ml-1 text-[11px] ${filterRole === key ? "opacity-80" : "text-gray-400"}`}>({count})</span>
             </button>
           ))}
+        </div>
+
+        {/* Plan filter + Sort */}
+        <div className="flex items-center justify-between gap-3 pb-3 shrink-0 flex-wrap">
+          <div className="flex gap-1.5 flex-wrap">
+            {[
+              { key: "ALL", label: "Tất cả gói" },
+              { key: "FREE", label: "Free" },
+              { key: "BASIC", label: "Basic" },
+              { key: "FULL", label: "Full" },
+              { key: "ANNUAL", label: "Annual" },
+            ].map(({ key, label }) => (
+              <button key={key} onClick={() => setFilterPlan(key)}
+                className={`px-3 py-1 text-[11px] font-semibold border transition-all rounded-full ${
+                  filterPlan === key
+                    ? "bg-sky-500 text-white border-sky-500"
+                    : "bg-white text-gray-500 border-gray-200 hover:border-sky-300"
+                }`}>
+                {label}{key !== "ALL" && planCounts[key] != null ? ` (${planCounts[key]})` : ""}
+              </button>
+            ))}
+          </div>
+          <select value={sortBy} onChange={e => setSortBy(e.target.value)}
+            className="px-3 py-1.5 text-[12px] border border-gray-200 rounded-lg bg-white text-gray-600 focus:outline-none focus:border-amber-400 cursor-pointer shrink-0">
+            <option value="newest">Mới nhất</option>
+            <option value="name">Tên A→Z</option>
+            <option value="sessions">Sessions ↓</option>
+            <option value="plan">Gói cao nhất</option>
+          </select>
         </div>
 
         {/* Table */}

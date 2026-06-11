@@ -1,4 +1,7 @@
 const TTL_MS = 3 * 60 * 1000; // 3 minutes
+const TTL_SHORT_MS = 30 * 1000; // 30 seconds — for real-time data like users/transactions
+
+const SHORT_TTL_KEYS = new Set(['users', 'transactions']);
 
 export function cacheGet(key) {
   try {
@@ -12,7 +15,8 @@ export function cacheGet(key) {
 
 export function cacheSet(key, data) {
   try {
-    localStorage.setItem(`admin_cache_${key}`, JSON.stringify({ data, expiresAt: Date.now() + TTL_MS }));
+    const ttl = SHORT_TTL_KEYS.has(key) ? TTL_SHORT_MS : TTL_MS;
+    localStorage.setItem(`admin_cache_${key}`, JSON.stringify({ data, expiresAt: Date.now() + ttl }));
   } catch {}
 }
 

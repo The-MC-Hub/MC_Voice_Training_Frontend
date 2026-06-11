@@ -205,7 +205,7 @@ const AdminDashboard = () => {
             <div className="p-7 space-y-6">
               {resolvedSection === "users" && <UserManagement users={users} handleVerify={handleVerify} handleSuspend={handleSuspend} onRefresh={refetchAll} />}
               {resolvedSection === "lessons" && <LessonManagement />}
-              {resolvedSection === "transactions" && <TransactionManagement transactions={transactions} revenueStats={revenueStats} />}
+              {resolvedSection === "transactions" && <TransactionManagement transactions={transactions} revenueStats={revenueStats} onRefresh={refetchAll} />}
               {resolvedSection === "academy" && <AcademyManager />}
               {resolvedSection === "competitions" && <CompetitionManager />}
               {resolvedSection === "marketing" && <MarketingManager />}
