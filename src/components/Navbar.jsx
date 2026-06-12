@@ -84,6 +84,7 @@ const Navbar = () => {
                 <NavLink to="/about">{t('navbar.about')}</NavLink>
                 <NavLink to="/m/dashboard">{t('navbar.dashboard')}</NavLink>
                 <NavLink to="/m/voice/library">{t('navbar.training')}</NavLink>
+                <NavLink to="/m/courses">{t('navbar.courses')}</NavLink>
                 <Link
                   to="/m/payment"
                   className="text-[13px] font-semibold text-[#f5a623] hover:text-[#e09520] transition-colors"

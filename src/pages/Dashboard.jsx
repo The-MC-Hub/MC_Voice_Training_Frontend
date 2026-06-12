@@ -12,6 +12,7 @@ import { fetchPracticeHistory } from "../controllers/voiceController";
 import { useAuthStore } from "../store/useAuthStore";
 import OverviewTab from "../components/dashboard/OverviewTab";
 import PageBanner from '../components/ui/PageBanner';
+import Breadcrumb from '../components/ui/Breadcrumb';
 
 const Dashboard = () => {
   const { user } = useAuthStore();
@@ -191,6 +192,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col gap-8 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Breadcrumb items={[{ label: 'Bảng điều khiển' }]} />
 
       <PageBanner
         icon={<Zap size={22} />}

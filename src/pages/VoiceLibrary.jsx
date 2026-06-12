@@ -7,6 +7,7 @@ import { fetchLessons, fetchPracticeHistory, fetchFeaturedLessons } from "../con
 import { useAuth } from "../hooks/useAuth";
 import PageBanner from '../components/ui/PageBanner';
 import UpgradeBanner from '../components/ui/UpgradeBanner';
+import Breadcrumb from '../components/ui/Breadcrumb';
 
 const VoiceLibrary = () => {
   const { t } = useTranslation();
@@ -87,6 +88,7 @@ const VoiceLibrary = () => {
 
   return (
     <div className="max-w-6xl mx-auto pb-16 px-4 sm:px-6">
+      <Breadcrumb items={[{ label: 'Luyện tập' }]} />
 
       <PageBanner
         icon={<Mic size={22} />}

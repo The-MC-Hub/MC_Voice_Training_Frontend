@@ -44,6 +44,7 @@ import { updateMCProfile } from "../services/mcService";
 import MCProfileView from "../components/profile/MCProfileView";
 import { uploadMedia } from "../services/mediaService";
 import api from "../services/api";
+import Breadcrumb from '../components/ui/Breadcrumb';
 
 const inputCls = "flex-1 bg-transparent text-[13px] text-gray-800 placeholder:text-gray-400 focus:outline-none min-w-0";
 const inputWrapCls = "flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5 focus-within:border-amber-400 transition-colors";
@@ -409,6 +410,7 @@ const Settings = () => {
 
   return (
     <div className="space-y-8 pb-20 max-w-6xl mx-auto px-6">
+      <Breadcrumb items={[{ label: 'Cài đặt' }]} />
       <div className="border-b border-gray-200 pb-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-1">{t('settings.accountSettings')}</h1>
         <p className="text-[13px] text-gray-500">{t('settings.manageAccount')}</p>

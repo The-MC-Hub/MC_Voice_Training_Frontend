@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import api from "../services/api";
 import { useAuth } from "../hooks/useAuth";
 import { useToast } from "../components/ui/Toast";
+import Breadcrumb from '../components/ui/Breadcrumb';
 
 // Plan hierarchy order
 const PLAN_ORDER = { FREE: 0, BASIC: 1, FULL: 2, ANNUAL: 3 };
@@ -209,6 +210,7 @@ const PaymentPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       <div className="max-w-6xl mx-auto px-6 py-12 space-y-12">
+        <Breadcrumb items={[{ label: 'Bảng giá' }]} />
 
         {/* Back + Header */}
         <div>

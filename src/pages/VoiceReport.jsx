@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { fetchPracticeById, fetchLessonById } from '../controllers/voiceController';
+import Breadcrumb from '../components/ui/Breadcrumb';
 
 const clamp = (v) => Math.max(0, Math.min(100, Number(v || 0)));
 
@@ -197,6 +198,7 @@ const VoiceReport = () => {
 
     return (
         <div className="min-h-screen bg-[#09090b] -mx-6 -mt-6 px-6 pt-6 pb-20 text-white">
+            <Breadcrumb items={[{ label: 'Luyện tập', href: '/m/voice/library' }, { label: 'Báo cáo kết quả' }]} />
 
             {/* Demo disclaimer */}
             <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-amber-500/[0.06] border border-amber-500/20 text-[11px] text-amber-400/80">

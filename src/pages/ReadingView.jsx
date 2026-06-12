@@ -14,6 +14,7 @@ const ReadingView = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const mId = queryParams.get('mId');
+  const courseId = queryParams.get('courseId');
 
   const [guide, setGuide] = useState(null);
   const [milestone, setMilestone] = useState(null);
@@ -54,6 +55,18 @@ const ReadingView = () => {
     <div className="bg-[#09090b] min-h-screen text-white flex flex-col">
       <Navbar />
       <main className="flex-1 flex pt-24 min-h-screen overflow-hidden">
+        {/* Back to course breadcrumb when coming from course detail */}
+        {courseId && !mId && (
+          <div className="w-full border-b border-white/[0.06] px-6 py-3 flex items-center gap-2 bg-[#09090b] sticky top-24 z-10">
+            <button
+              onClick={() => navigate(`/m/courses/${courseId}`)}
+              className="flex items-center gap-1.5 text-zinc-500 hover:text-white transition-colors text-[12px] group"
+            >
+              <ArrowLeft size={13} className="group-hover:-translate-x-0.5 transition-transform" /> Quay lại khóa học
+            </button>
+          </div>
+        )}
+
         {/* Sidebar */}
         {mId && (
           <aside className="w-72 border-r border-white/[0.06] bg-[#09090b] flex flex-col sticky top-24 h-[calc(100vh-6rem)] shrink-0 overflow-hidden hidden lg:flex">

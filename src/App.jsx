@@ -32,6 +32,9 @@ const VoicePractice = lazy(() => import('./pages/VoicePractice'));
 const VoiceReport = lazy(() => import('./pages/VoiceReport'));
 const Community = lazy(() => import('./pages/Community'));
 const PaymentPage = lazy(() => import('./pages/PaymentPage'));
+const CoursesList = lazy(() => import('./pages/CoursesList'));
+const CourseDetail = lazy(() => import('./pages/CourseDetail'));
+const ReadingView = lazy(() => import('./pages/ReadingView'));
 
 
 const GuestRoute = ({ children }) => {
@@ -129,15 +132,15 @@ function App() {
                 <Route path="learning" element={<Wrap><ComingSoon title="Lộ trình học tập" description="Lộ trình luyện tập MC theo từng cấp độ đang được phát triển. Sẽ ra mắt sớm." /></Wrap>} />
                 <Route path="learning/milestone/:id" element={<Wrap><ComingSoon title="Lộ trình học tập" description="Lộ trình luyện tập MC theo từng cấp độ đang được phát triển. Sẽ ra mắt sớm." /></Wrap>} />
                 <Route path="community" element={<Wrap><Community /></Wrap>} />
-                <Route path="courses" element={<Wrap><ComingSoon title="Khóa học MC" description="Hệ thống khóa học MC chuyên nghiệp đang được xây dựng. Sẽ ra mắt sớm." /></Wrap>} />
-                <Route path="courses/:id" element={<Wrap><ComingSoon title="Chi tiết khóa học" description="Hệ thống khóa học MC chuyên nghiệp đang được xây dựng. Sẽ ra mắt sớm." /></Wrap>} />
+                <Route path="courses" element={<ProtectedRoute><Wrap><CoursesList /></Wrap></ProtectedRoute>} />
+                <Route path="courses/:id" element={<ProtectedRoute><Wrap><CourseDetail /></Wrap></ProtectedRoute>} />
               </Route>
 
               {/* Full-screen views (outside MainLayout — no Navbar/Footer) */}
               <Route path="/m/admin" element={<RoleRoute allowedRoles={['admin']}><Wrap><AdminDashboard /></Wrap></RoleRoute>} />
               <Route path="/m/admin/:section" element={<RoleRoute allowedRoles={['admin']}><Wrap><AdminDashboard /></Wrap></RoleRoute>} />
               <Route path="/m/voice/practice/:id" element={<ProtectedRoute><Wrap><VoicePractice /></Wrap></ProtectedRoute>} />
-              <Route path="/m/learning/guide/:id" element={<Wrap><ComingSoon title="Tài liệu học tập" description="Hệ thống tài liệu hướng dẫn đang được xây dựng. Sẽ ra mắt sớm." /></Wrap>} />
+              <Route path="/m/learning/guide/:id" element={<ProtectedRoute><Wrap><ReadingView /></Wrap></ProtectedRoute>} />
 
               <Route path="/payment/success" element={<ProtectedRoute><Wrap><PaymentResult /></Wrap></ProtectedRoute>} />
               <Route path="/payment/cancel" element={<ProtectedRoute><Wrap><PaymentResult /></Wrap></ProtectedRoute>} />

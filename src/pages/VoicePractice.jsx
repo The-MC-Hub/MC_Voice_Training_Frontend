@@ -63,6 +63,7 @@ import { ProgressBar, ProgressBarTrack, ProgressBarFill } from "@heroui/react";
 import TypewriterMarkdown from "../components/TypewriterMarkdown";
 import Navbar from "../components/Navbar";
 import UpgradeBanner from "../components/ui/UpgradeBanner";
+import Breadcrumb from '../components/ui/Breadcrumb';
 
 const formatTime = (seconds) => {
   const m = Math.floor(seconds / 60),
@@ -546,6 +547,7 @@ const VoicePractice = () => {
             }}
           >
             {/* Page header */}
+            <Breadcrumb items={[{ label: 'Luyện tập', href: '/m/voice/library' }, { label: lesson?.title || 'Bài luyện tập' }]} />
             <div className="flex flex-col lg:flex-row lg:items-center gap-4 justify-between mt-15 pb-5 border-b border-white/[0.07]">
               <div>
                 <h1 className="text-xl font-bold text-white tracking-tight">

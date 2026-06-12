@@ -12,6 +12,7 @@ import { fetchStats, fetchLeaderboards, fetchActiveArenas } from "../controllers
 import { useAuthStore } from "../store/useAuthStore";
 import PageLoader from "../components/ui/PageLoader";
 import PageBanner from '../components/ui/PageBanner';
+import Breadcrumb from '../components/ui/Breadcrumb';
 
 const getTierBadge = (tier) => {
   const base = "flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-medium border";
@@ -76,6 +77,7 @@ const Community = () => {
 
   return (
     <div className="max-w-6xl mx-auto pb-16 space-y-12">
+      <Breadcrumb items={[{ label: 'Cộng đồng' }]} />
       <PageBanner
         icon={<Users size={22} />}
         eyebrow={t('community.arenaTitle')}

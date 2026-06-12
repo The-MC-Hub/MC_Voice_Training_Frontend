@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { academyService } from '../services/academyService';
 import PageLoader from '../components/ui/PageLoader';
+import Breadcrumb from '../components/ui/Breadcrumb';
 
 const DIFFICULTY_MAP = {
   BEGINNER:     { label: 'Cơ Bản',   color: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/[0.06]' },
@@ -266,6 +267,7 @@ const CourseDetail = () => {
 
   return (
     <div className="max-w-6xl mx-auto pb-16 space-y-6">
+      <Breadcrumb items={[{ label: 'Khóa học', href: '/m/courses' }, { label: course?.title || 'Chi tiết khóa học' }]} />
       <button onClick={() => navigate(-1)}
         className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-[13px] group">
         <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform" />
