@@ -59,6 +59,7 @@ import {
   analyzePractice,
   fetchPracticeHistory,
 } from "../controllers/voiceController";
+import { academyService } from "../services/academyService";
 import { ProgressBar, ProgressBarTrack, ProgressBarFill } from "@heroui/react";
 import TypewriterMarkdown from "../components/TypewriterMarkdown";
 import Navbar from "../components/Navbar";
@@ -81,11 +82,13 @@ const VoicePractice = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const mId = new URLSearchParams(location.search).get("mId");
+  const courseId = new URLSearchParams(location.search).get("courseId");
   const { user, refreshUser } = useAuthStore();
   const { t, i18n: i18nInstance } = useTranslation();
   const evalLanguage = i18nInstance.language;
 
   const [lesson, setLesson] = useState(null);
+  const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [recording, setRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
@@ -222,6 +225,14 @@ const VoicePractice = () => {
       try {
         const data = await fetchLessonById(id);
         setLesson(data);
+        if (courseId) {
+          try {
+            const cRes = await academyService.getCourseDetail(courseId);
+            setCourse(cRes.data?.data || cRes.data);
+          } catch (e) {
+            console.error("Failed to fetch course:", e);
+          }
+        }
         await fetchHistory();
       } catch {
         setError("Failed to load lesson content");
@@ -547,7 +558,18 @@ const VoicePractice = () => {
             }}
           >
             {/* Page header */}
-            <Breadcrumb items={[{ label: 'Luyện tập', href: '/m/voice/library' }, { label: lesson?.title || 'Bài luyện tập' }]} />
+            <div className="mb-4">
+              <Breadcrumb items={
+                courseId ? [
+                  { label: 'Khóa học', href: '/m/courses' },
+                  { label: course?.title || 'Chi tiết khóa học', href: `/m/courses/${courseId}` },
+                  { label: lesson?.title || 'Bài luyện tập' }
+                ] : [
+                  { label: 'Luyện tập', href: '/m/voice/library' },
+                  { label: lesson?.title || 'Bài luyện tập' }
+                ]
+              } />
+            </div>
             <div className="flex flex-col lg:flex-row lg:items-center gap-4 justify-between mt-15 pb-5 border-b border-white/[0.07]">
               <div>
                 <h1 className="text-xl font-bold text-white tracking-tight">

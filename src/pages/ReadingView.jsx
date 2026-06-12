@@ -3,10 +3,11 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Clock, Share2, BookOpen, ChevronRight, CheckCircle2, Mic } from 'lucide-react';
 import { academyService } from '../services/academyService';
 import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Breadcrumb from '../components/ui/Breadcrumb';
 import PageLoader from '../components/ui/PageLoader';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import '../markdown.css';
 
 const ReadingView = () => {
   const { id } = useParams();
@@ -17,6 +18,7 @@ const ReadingView = () => {
   const courseId = queryParams.get('courseId');
 
   const [guide, setGuide] = useState(null);
+  const [course, setCourse] = useState(null);
   const [milestone, setMilestone] = useState(null);
   const [curriculum, setCurriculum] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,14 +27,18 @@ const ReadingView = () => {
     const fetchData = async () => {
       try {
         const guideRes = await academyService.getReadingGuide(id);
-        setGuide(guideRes.data);
+        console.log(guideRes.data.data || guideRes.data)
+        setGuide(guideRes.data.data || guideRes.data);
         if (mId) {
           const [mRes, cRes] = await Promise.all([
             academyService.getMilestone(mId),
             academyService.getMilestoneContents(mId)
           ]);
-          setMilestone(mRes.data);
-          setCurriculum(cRes.data);
+          setMilestone(mRes.data.data || mRes.data);
+          setCurriculum(cRes.data.data || cRes.data);
+        } else if (courseId) {
+          const cRes = await academyService.getCourseDetail(courseId);
+          setCourse(cRes.data?.data || cRes.data);
         }
       } catch (error) {
         console.error("Failed to fetch reading data:", error);
@@ -55,17 +61,6 @@ const ReadingView = () => {
     <div className="bg-[#09090b] min-h-screen text-white flex flex-col">
       <Navbar />
       <main className="flex-1 flex pt-24 min-h-screen overflow-hidden">
-        {/* Back to course breadcrumb when coming from course detail */}
-        {courseId && !mId && (
-          <div className="w-full border-b border-white/[0.06] px-6 py-3 flex items-center gap-2 bg-[#09090b] sticky top-24 z-10">
-            <button
-              onClick={() => navigate(`/m/courses/${courseId}`)}
-              className="flex items-center gap-1.5 text-zinc-500 hover:text-white transition-colors text-[12px] group"
-            >
-              <ArrowLeft size={13} className="group-hover:-translate-x-0.5 transition-transform" /> Quay lại khóa học
-            </button>
-          </div>
-        )}
 
         {/* Sidebar */}
         {mId && (
@@ -91,15 +86,13 @@ const ReadingView = () => {
                   <button
                     key={item.id}
                     onClick={() => handleSwitchLesson(item)}
-                    className={`w-full text-left p-3 rounded-xl transition-colors border flex items-center gap-3 ${
-                      isActive
-                        ? 'bg-[#f5a623]/[0.08] border-[#f5a623]/20 text-[#f5a623]'
-                        : 'border-transparent text-zinc-500 hover:bg-white/[0.04] hover:text-zinc-300'
-                    }`}
+                    className={`w-full text-left p-3 rounded-xl transition-colors border flex items-center gap-3 ${isActive
+                      ? 'bg-[#f5a623]/[0.08] border-[#f5a623]/20 text-[#f5a623]'
+                      : 'border-transparent text-zinc-500 hover:bg-white/[0.04] hover:text-zinc-300'
+                      }`}
                   >
-                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
-                      isActive ? 'bg-[#f5a623] text-black' : 'bg-[#111113] text-zinc-500'
-                    }`}>
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isActive ? 'bg-[#f5a623] text-black' : 'bg-[#111113] text-zinc-500'
+                      }`}>
                       {item.type === 'VOICE_PRACTICE' ? <Mic size={12} /> : <BookOpen size={12} />}
                     </div>
                     <div className="flex-1 overflow-hidden">
@@ -118,9 +111,19 @@ const ReadingView = () => {
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto h-[calc(100vh-6rem)]">
+
           <div className="max-w-3xl mx-auto px-6 lg:px-10 py-14">
+            {courseId && !mId && (
+              <div className="mb-8">
+                <Breadcrumb items={[
+                  { label: 'Khóa học', href: '/m/courses' }, 
+                  { label: course?.title || 'Chi tiết khóa học', href: `/m/courses/${courseId}` }, 
+                  { label: guide.title }
+                ]} />
+              </div>
+            )}
             {/* Header */}
-            <div className="space-y-6 mb-12">
+            <div className="mt-4 space-y-6 mb-12">
               <div className="flex items-center gap-3">
                 <span className="px-3 py-1 rounded-lg bg-[#f5a623]/[0.08] border border-[#f5a623]/20 text-[#f5a623] text-[11px] font-medium">
                   {guide.category || 'Academy Guide'}
@@ -149,7 +152,7 @@ const ReadingView = () => {
             </div>
 
             {/* Content */}
-            <article className="prose prose-invert prose-zinc max-w-none mb-16 prose-headings:font-bold prose-headings:tracking-tight prose-a:text-[#f5a623]">
+            <article className="premium-markdown mb-16">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {guide.content}
               </ReactMarkdown>

@@ -8,6 +8,7 @@ export const academyService = {
   completeLesson: (courseId, lessonId) => api.post(`/courses/${courseId}/lessons/${lessonId}/complete`),
   completeReading: (courseId, readingId) => api.post(`/courses/${courseId}/readings/${readingId}/complete`),
   submitQuiz: (courseId, answers) => api.post(`/courses/${courseId}/quiz/submit`, { answers }),
+  getReadingGuide: (id) => api.get(`/courses/reading-guides/${id}`),
   admin: {
     getMilestones: async () => ({ data: [] }),
     getGuides: async () => ({ data: [] }),
