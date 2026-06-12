@@ -63,7 +63,7 @@ const RoleRoute = ({ children, allowedRoles }) => {
 
 const Wrap = ({ children }) => <PageTransition>{children}</PageTransition>;
 
-const NO_SIDEBAR_PATHS = ['/m/admin', '/m/voice/practice', '/login', '/register', '/onboarding'];
+const NO_SIDEBAR_PATHS = ['/login', '/register'];
 
 function App() {
   const { role, user, isAuthenticated, refreshUser } = useAuthStore();
@@ -82,7 +82,7 @@ function App() {
 
   return (
     <ThemeProvider>
-      <div className={`app-container${noSidebar ? '' : ' md:pr-45 md:pl-45'}`}>
+      <div className={`app-container${noSidebar ? '' : ' has-sidebars'}`}>
         <PopularLessonsSidebar />
         <AdSidebar />
         <Suspense fallback={<PageLoader />}>
@@ -127,7 +127,6 @@ function App() {
                 <Route path="wallet" element={<RoleRoute allowedRoles={['mc', 'admin']}><Wrap><Wallet /></Wrap></RoleRoute>} />
 
                 <Route path="voice/library" element={<Wrap><VoiceLibrary /></Wrap>} />
-                <Route path="voice/report/:sessionId" element={<ProtectedRoute><Wrap><VoiceReport /></Wrap></ProtectedRoute>} />
 
                 <Route path="learning" element={<Wrap><ComingSoon title="Lộ trình học tập" description="Lộ trình luyện tập MC theo từng cấp độ đang được phát triển. Sẽ ra mắt sớm." /></Wrap>} />
                 <Route path="learning/milestone/:id" element={<Wrap><ComingSoon title="Lộ trình học tập" description="Lộ trình luyện tập MC theo từng cấp độ đang được phát triển. Sẽ ra mắt sớm." /></Wrap>} />
@@ -140,6 +139,7 @@ function App() {
               <Route path="/m/admin" element={<RoleRoute allowedRoles={['admin']}><Wrap><AdminDashboard /></Wrap></RoleRoute>} />
               <Route path="/m/admin/:section" element={<RoleRoute allowedRoles={['admin']}><Wrap><AdminDashboard /></Wrap></RoleRoute>} />
               <Route path="/m/voice/practice/:id" element={<ProtectedRoute><Wrap><VoicePractice /></Wrap></ProtectedRoute>} />
+              <Route path="/m/voice/report/:sessionId" element={<ProtectedRoute><Wrap><VoiceReport /></Wrap></ProtectedRoute>} />
               <Route path="/m/learning/guide/:id" element={<ProtectedRoute><Wrap><ReadingView /></Wrap></ProtectedRoute>} />
 
               <Route path="/payment/success" element={<ProtectedRoute><Wrap><PaymentResult /></Wrap></ProtectedRoute>} />

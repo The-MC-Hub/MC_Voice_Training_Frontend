@@ -510,7 +510,7 @@ const VoicePractice = () => {
     <div className="bg-[#09090b] min-h-screen text-white flex flex-col">
       <Navbar />
 
-      <main className="flex-1 flex flex-col pt-14 min-h-[calc(100vh-3.5rem)] overflow-hidden">
+      <main className="flex-1 flex flex-col pt-20 min-h-[calc(100vh-3.5rem)] overflow-hidden">
         {/* Usage warning strip — shown at >= 80% usage */}
         {(() => {
           const plan = user?.plan || "FREE";
@@ -558,19 +558,17 @@ const VoicePractice = () => {
             }}
           >
             {/* Page header */}
-            <div className="mb-4">
-              <Breadcrumb items={
-                courseId ? [
-                  { label: 'Khóa học', href: '/m/courses' },
-                  { label: course?.title || 'Chi tiết khóa học', href: `/m/courses/${courseId}` },
-                  { label: lesson?.title || 'Bài luyện tập' }
-                ] : [
-                  { label: 'Luyện tập', href: '/m/voice/library' },
-                  { label: lesson?.title || 'Bài luyện tập' }
-                ]
-              } />
-            </div>
-            <div className="flex flex-col lg:flex-row lg:items-center gap-4 justify-between mt-15 pb-5 border-b border-white/[0.07]">
+            <Breadcrumb items={
+              courseId ? [
+                { label: 'Khóa học', href: '/m/courses' },
+                { label: course?.title || 'Chi tiết khóa học', href: `/m/courses/${courseId}` },
+                { label: lesson?.title || 'Bài luyện tập' }
+              ] : [
+                { label: 'Luyện tập', href: '/m/voice/library' },
+                { label: lesson?.title || 'Bài luyện tập' }
+              ]
+            } />
+            <div className="flex flex-col lg:flex-row lg:items-center gap-4 justify-between pb-5 border-b border-white/[0.07]">
               <div>
                 <h1 className="text-xl font-bold text-white tracking-tight">
                   {lesson?.title}
@@ -2244,7 +2242,7 @@ const VoicePractice = () => {
                               animate={{ opacity: 1, y: 0 }}
                               exit={{ opacity: 0 }}
                               onClick={() =>
-                                navigate(`/m/voice/report/${h.id}`)
+                                navigate(`/m/voice/report/${h.id}${courseId ? `?courseId=${courseId}` : ''}`)
                               }
                               className="cursor-pointer p-4 rounded-xl bg-[#111113] border border-white/[0.07] hover:border-[#f5a623]/20 hover:bg-[#f5a623]/[0.02] transition-colors"
                             >

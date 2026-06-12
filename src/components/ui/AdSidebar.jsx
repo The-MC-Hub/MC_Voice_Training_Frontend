@@ -7,7 +7,7 @@ import { useAuthStore } from '../../store/useAuthStore';
 
 
 // Routes where ad sidebar should NOT appear
-const EXCLUDED_PATHS = ['/m/admin', '/m/voice/practice', '/login', '/register', '/onboarding'];
+const EXCLUDED_PATHS = ['/login', '/register'];
 
 const UPGRADE_ADS = {
   FREE: [
@@ -89,6 +89,7 @@ function saveSocialCache(data) {
 }
 
 function UpgradeCard({ ad }) {
+  if (!ad || !ad.icon) return null;
   const Icon = ad.icon;
   return (
     <div className="w-full bg-white border border-black/8 overflow-hidden">
@@ -177,7 +178,10 @@ export default function AdSidebar() {
       .catch(() => {});
   }, []);
 
-  const upgradeAds = UPGRADE_ADS[plan] || [];
+  const upgradeAds = UPGRADE_ADS[(plan || '').toUpperCase()] || [];
+
+  // Reset adIdx when plan/ads list changes to avoid out-of-bounds
+  useEffect(() => { setAdIdx(0); }, [plan]);
 
   // Rotate upgrade ad every 8s
   useEffect(() => {

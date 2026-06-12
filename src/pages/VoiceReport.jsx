@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import TypewriterMarkdown from '../components/TypewriterMarkdown';
 import {
     ChevronLeft, Zap, TrendingUp, AudioLines, BarChart3,
@@ -9,7 +9,9 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { fetchPracticeById, fetchLessonById } from '../controllers/voiceController';
+import { academyService } from '../services/academyService';
 import Breadcrumb from '../components/ui/Breadcrumb';
+import Navbar from '../components/Navbar';
 
 const clamp = (v) => Math.max(0, Math.min(100, Number(v || 0)));
 
@@ -106,11 +108,21 @@ const VoiceReport = () => {
     const { t, i18n } = useTranslation();
     const { sessionId } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
+    const courseId = new URLSearchParams(location.search).get('courseId');
     const [loading, setLoading] = useState(true);
     const [session, setSession] = useState(null);
     const [lesson, setLesson] = useState(null);
+    const [course, setCourse] = useState(null);
 
     const isVi = i18n.language.startsWith('vi');
+
+    useEffect(() => {
+        if (!courseId) return;
+        academyService.getCourseDetail(courseId)
+            .then(res => setCourse(res.data?.data || res.data))
+            .catch(() => {});
+    }, [courseId]);
 
     useEffect(() => {
         const load = async () => {
@@ -197,8 +209,21 @@ const VoiceReport = () => {
     );
 
     return (
-        <div className="min-h-screen bg-[#09090b] -mx-6 -mt-6 px-6 pt-6 pb-20 text-white">
-            <Breadcrumb items={[{ label: 'Luyện tập', href: '/m/voice/library' }, { label: 'Báo cáo kết quả' }]} />
+        <div className="min-h-screen bg-[#09090b] text-white">
+            <Navbar />
+            <div className="pt-20 px-6 pb-20">
+            <Breadcrumb items={
+                courseId ? [
+                    { label: 'Khóa học', href: '/m/courses' },
+                    { label: course?.title || 'Chi tiết khóa học', href: `/m/courses/${courseId}` },
+                    { label: lesson?.title || 'Bài luyện tập', href: session?.lessonId ? `/m/voice/practice/${session.lessonId}?courseId=${courseId}` : undefined },
+                    { label: 'Báo cáo kết quả' }
+                ] : [
+                    { label: 'Luyện tập', href: '/m/voice/library' },
+                    { label: lesson?.title || 'Bài luyện tập', href: session?.lessonId ? `/m/voice/practice/${session.lessonId}` : undefined },
+                    { label: 'Báo cáo kết quả' }
+                ]
+            } />
 
             {/* Demo disclaimer */}
             <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-amber-500/[0.06] border border-amber-500/20 text-[11px] text-amber-400/80">
@@ -486,6 +511,7 @@ const VoiceReport = () => {
                         </div>
                     </motion.div>
                 </div>
+            </div>
             </div>
         </div>
     );

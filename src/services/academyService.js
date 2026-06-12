@@ -9,6 +9,12 @@ export const academyService = {
   completeReading: (courseId, readingId) => api.post(`/courses/${courseId}/readings/${readingId}/complete`),
   submitQuiz: (courseId, answers) => api.post(`/courses/${courseId}/quiz/submit`, { answers }),
   getReadingGuide: (id) => api.get(`/courses/reading-guides/${id}`),
+
+  getHighlights: (guideId, userId) => api.get(`/highlights/reading-guides/${guideId}/users/${userId}`),
+  createHighlight: (data) => api.post('/highlights', data),
+  updateHighlight: (id, data) => api.put(`/highlights/${id}`, data),
+  deleteHighlight: (id) => api.delete(`/highlights/${id}`),
+
   admin: {
     getMilestones: async () => ({ data: [] }),
     getGuides: async () => ({ data: [] }),

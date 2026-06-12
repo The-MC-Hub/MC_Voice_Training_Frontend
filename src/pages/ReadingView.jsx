@@ -7,6 +7,11 @@ import Breadcrumb from '../components/ui/Breadcrumb';
 import PageLoader from '../components/ui/PageLoader';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import HighlightTooltip from '../components/reading/HighlightTooltip';
+import NotesSidebar from '../components/reading/NotesSidebar';
+import { useAuthStore } from '../store/useAuthStore';
+import { MessageSquare } from 'lucide-react';
 import '../markdown.css';
 
 const ReadingView = () => {
@@ -17,11 +22,17 @@ const ReadingView = () => {
   const mId = queryParams.get('mId');
   const courseId = queryParams.get('courseId');
 
+  const { user } = useAuthStore();
   const [guide, setGuide] = useState(null);
   const [course, setCourse] = useState(null);
   const [milestone, setMilestone] = useState(null);
   const [curriculum, setCurriculum] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Highlighting State
+  const [highlights, setHighlights] = useState([]);
+  const [isNotesOpen, setIsNotesOpen] = useState(false);
+  const [tooltipData, setTooltipData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +51,15 @@ const ReadingView = () => {
           const cRes = await academyService.getCourseDetail(courseId);
           setCourse(cRes.data?.data || cRes.data);
         }
+        
+        if (user) {
+          try {
+            const hlRes = await academyService.getHighlights(id, user.id);
+            setHighlights(hlRes.data?.data || hlRes.data || []);
+          } catch (e) {
+            console.error("Failed to fetch highlights", e);
+          }
+        }
       } catch (error) {
         console.error("Failed to fetch reading data:", error);
       } finally {
@@ -47,12 +67,60 @@ const ReadingView = () => {
       }
     };
     fetchData();
-  }, [id, mId]);
+  }, [id, mId, user]);
 
   const handleSwitchLesson = (lesson) => {
     if (lesson.type === 'VOICE_PRACTICE') navigate(`/m/voice/practice/${lesson.voiceScriptId}?mId=${mId}`);
     else if (lesson.type === 'READING_GUIDE') navigate(`/m/learning/guide/${lesson.readingGuideId}?mId=${mId}`);
   };
+
+  const handleMouseUp = (e) => {
+    // If clicking inside tooltip, do nothing
+    if (e.target.closest('.fixed.z-50')) return;
+
+    const selection = window.getSelection();
+    const text = selection.toString().trim();
+    if (text && text.length > 1) {
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      setTooltipData({
+        text,
+        position: { x: rect.left + rect.width / 2, y: rect.top }
+      });
+    } else {
+      setTooltipData(null);
+    }
+  };
+
+  const handleHighlight = async (colorHex) => {
+    if (!tooltipData || !user) return;
+    try {
+      const payload = {
+        userId: user.id,
+        readingGuideId: id,
+        selectedText: tooltipData.text,
+        colorHex: colorHex
+      };
+      const res = await academyService.createHighlight(payload);
+      setHighlights([res.data?.data || res.data, ...highlights]);
+      setTooltipData(null);
+      window.getSelection().removeAllRanges();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const processedContent = React.useMemo(() => {
+    if (!guide?.content) return '';
+    let content = guide.content;
+    highlights.forEach(hl => {
+      if (!hl.selectedText) return;
+      const safeText = hl.selectedText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const replacement = `<mark style="background-color: ${hl.colorHex}" class="highlight-mark rounded px-1">${hl.selectedText}</mark>`;
+      content = content.replace(new RegExp(safeText, 'g'), replacement);
+    });
+    return content;
+  }, [guide?.content, highlights]);
 
   if (loading) return <PageLoader />;
   if (!guide) return <div className="text-white text-center py-40">Guide not found.</div>;
@@ -60,6 +128,14 @@ const ReadingView = () => {
   return (
     <div className="bg-[#09090b] min-h-screen text-white flex flex-col">
       <Navbar />
+      <HighlightTooltip position={tooltipData?.position} onHighlight={handleHighlight} onClose={() => setTooltipData(null)} />
+      <NotesSidebar
+        isOpen={isNotesOpen}
+        onClose={() => setIsNotesOpen(false)}
+        highlights={highlights}
+        onHighlightDeleted={(hid) => setHighlights(prev => prev.filter(h => h.id !== hid))}
+        onHighlightUpdated={(hid, data) => setHighlights(prev => prev.map(h => h.id === hid ? { ...h, ...data } : h))}
+      />
       <main className="flex-1 flex pt-24 min-h-screen overflow-hidden">
 
         {/* Sidebar */}
@@ -145,6 +221,17 @@ const ReadingView = () => {
                     <p className="text-[11px] text-zinc-500">Industry Mentor</p>
                   </div>
                 </div>
+                <button 
+                  onClick={() => setIsNotesOpen(true)}
+                  className="w-9 h-9 rounded-xl bg-[#111113] border border-white/[0.07] flex items-center justify-center text-[#f5a623] hover:text-white transition-colors relative"
+                >
+                  <MessageSquare size={15} />
+                  {highlights.length > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#f5a623] text-black text-[9px] font-bold flex items-center justify-center rounded-full">
+                      {highlights.length}
+                    </span>
+                  )}
+                </button>
                 <button className="w-9 h-9 rounded-xl bg-[#111113] border border-white/[0.07] flex items-center justify-center text-zinc-500 hover:text-white transition-colors">
                   <Share2 size={15} />
                 </button>
@@ -152,9 +239,9 @@ const ReadingView = () => {
             </div>
 
             {/* Content */}
-            <article className="premium-markdown mb-16">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {guide.content}
+            <article className="premium-markdown mb-16 relative" onMouseUp={handleMouseUp}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+                {processedContent}
               </ReactMarkdown>
             </article>
 

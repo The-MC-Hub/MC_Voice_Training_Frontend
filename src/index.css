@@ -12,6 +12,14 @@
 
 /* THE MC HUB - DESIGN SYSTEM */
 
+/* App shell — reserve space for fixed left/right sidebars (180px each) */
+@media (min-width: 768px) {
+  .app-container.has-sidebars {
+    padding-left: 180px;
+    padding-right: 180px;
+  }
+}
+
 :root {
   /* Core Brand — Amber Gold */
   --accent-gold: #f59e0b;
