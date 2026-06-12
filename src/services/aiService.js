@@ -1,26 +1,26 @@
 import axios from "axios";
 
-const AI_URL = import.meta.env.VITE_AI_API_URL || "http://127.0.0.1:8001";
-
-const aiApi = axios.create({
-  baseURL: AI_URL,
+const backendApi = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080/api/v1",
   timeout: 30000,
+});
+
+backendApi.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
 });
 
 export const analyzeVoice = async (audioBlob, scriptText) => {
   const formData = new FormData();
-  formData.append("file", audioBlob, "recording.wav");
-  formData.append("script_origin", scriptText);
+  formData.append("audioFile", audioBlob, "recording.wav");
+  if (scriptText) formData.append("scriptOrigin", scriptText);
 
-  const response = await aiApi.post("/analyze-voice", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
+  const response = await backendApi.post("/voice/proxy/analyze-voice", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
   });
-
-  console.log("AI Analysis Response:", response.data);
 
   return response.data;
 };
 
-export default aiApi;
+export default backendApi;
