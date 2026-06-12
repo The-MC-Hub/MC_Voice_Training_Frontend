@@ -541,9 +541,11 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
 
   // Add user modal
   const [showAddModal, setShowAddModal] = useState(false);
-  const [addForm, setAddForm] = useState({ name: "", email: "", password: "", role: "CLIENT" });
+  const [addForm, setAddForm] = useState({ name: "", email: "", password: "", role: "CLIENT", phoneNumber: "", adminNote: "", plan: "", couponId: "" });
   const [addLoading, setAddLoading] = useState(false);
   const [addError, setAddError] = useState("");
+  const [discounts, setDiscounts] = useState([]);
+  const [discountsLoaded, setDiscountsLoaded] = useState(false);
 
   // Change password modal
   const [pwdModal, setPwdModal] = useState(null);
@@ -587,15 +589,31 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
     };
   }, []);
 
+  const openAddModal = async () => {
+    setShowAddModal(true);
+    if (!discountsLoaded) {
+      try {
+        const res = await api.get("/admin/plans/discounts");
+        setDiscounts((res.data.data || []).filter(d => d.active));
+        setDiscountsLoaded(true);
+      } catch {}
+    }
+  };
+
   const handleAddUser = async (e) => {
     e.preventDefault();
     setAddError("");
     if (!addForm.name || !addForm.email || !addForm.password) { setAddError("Vui lòng điền đầy đủ thông tin."); return; }
     setAddLoading(true);
     try {
-      await api.post("/admin/users", addForm);
+      const payload = { ...addForm };
+      if (!payload.plan) delete payload.plan;
+      if (!payload.couponId) delete payload.couponId;
+      if (!payload.phoneNumber) delete payload.phoneNumber;
+      if (!payload.adminNote) delete payload.adminNote;
+      await api.post("/admin/users", payload);
       setShowAddModal(false);
-      setAddForm({ name: "", email: "", password: "", role: "CLIENT" });
+      setAddForm({ name: "", email: "", password: "", role: "CLIENT", phoneNumber: "", adminNote: "", plan: "", couponId: "" });
       flash("Đã tạo tài khoản thành công.");
       onRefresh?.();
     } catch (err) {
@@ -723,7 +741,7 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
               title="Làm mới danh sách">
               <RefreshCw size={13} className={refreshing ? 'animate-spin' : ''} />
             </button>
-            <button onClick={() => setShowAddModal(true)}
+            <button onClick={openAddModal}
               className="flex items-center gap-1.5 px-3.5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg transition-colors shrink-0">
               <UserPlus size={13} /> Thêm
             </button>
@@ -895,13 +913,13 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
               <h2 className="text-[15px] font-semibold text-gray-900">Thêm tài khoản mới</h2>
               <button onClick={() => setShowAddModal(false)} className="text-gray-400 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100"><X size={16} /></button>
             </div>
-            <form onSubmit={handleAddUser} className="px-6 py-5 space-y-4">
+            <form onSubmit={handleAddUser} className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto">
               {addError && <div className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-lg p-3">{addError}</div>}
-              {[["Tên hiển thị", "name", "text", "Nguyễn Văn A"], ["Email", "email", "email", "user@example.com"], ["Mật khẩu", "password", "password", "Tối thiểu 6 ký tự"]].map(([label, key, type, ph]) => (
+              {[["Tên hiển thị", "name", "text", "Nguyễn Văn A", true], ["Email", "email", "email", "user@example.com", true], ["Mật khẩu", "password", "password", "Tối thiểu 6 ký tự", true], ["Số điện thoại", "phoneNumber", "tel", "0901234567", false]].map(([label, key, type, ph, req]) => (
                 <div key={key} className="space-y-1">
                   <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{label}</label>
                   <input type={type} value={addForm[key]} onChange={e => setAddForm(p => ({ ...p, [key]: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400" placeholder={ph} required />
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400" placeholder={ph} required={req} />
                 </div>
               ))}
               <div className="space-y-1">
@@ -913,7 +931,39 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                   <option value="ADMIN">Admin</option>
                 </select>
               </div>
-              <div className="flex justify-end gap-3 pt-2 border-t border-gray-100">
+              <div className="space-y-1">
+                <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Ghi chú nội bộ</label>
+                <textarea value={addForm.adminNote} onChange={e => setAddForm(p => ({ ...p, adminNote: e.target.value }))}
+                  rows={2} placeholder="Ghi chú cho admin (không hiển thị cho người dùng)..."
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 resize-none" />
+              </div>
+              {/* Plan activation */}
+              <div className="border border-amber-100 rounded-xl p-4 bg-amber-50/50 space-y-3">
+                <p className="text-[11px] font-semibold text-amber-700 uppercase tracking-wider">Kích hoạt gói ngay (tuỳ chọn)</p>
+                <select value={addForm.plan} onChange={e => setAddForm(p => ({ ...p, plan: e.target.value }))}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 bg-white">
+                  <option value="">— Không kích hoạt gói —</option>
+                  <option value="BASIC">BASIC (30 ngày)</option>
+                  <option value="FULL">FULL (30 ngày)</option>
+                  <option value="ANNUAL">ANNUAL (365 ngày)</option>
+                </select>
+                {addForm.plan && <p className="text-[11px] text-amber-600">Bypass PayOS — gói sẽ được kích hoạt ngay khi tạo tài khoản.</p>}
+              </div>
+              {/* Coupon */}
+              <div className="border border-sky-100 rounded-xl p-4 bg-sky-50/50 space-y-3">
+                <p className="text-[11px] font-semibold text-sky-700 uppercase tracking-wider">Tặng mã giảm giá (tuỳ chọn)</p>
+                <select value={addForm.couponId} onChange={e => setAddForm(p => ({ ...p, couponId: e.target.value }))}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-sky-400 bg-white">
+                  <option value="">— Không tặng coupon —</option>
+                  {discounts.map(d => (
+                    <option key={d.id} value={d.id}>
+                      {d.code} — {d.type === "PERCENT" ? `${d.discountValue}%` : `${d.discountValue.toLocaleString("vi-VN")}đ`} off{d.description ? ` · ${d.description}` : ""}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-[11px] text-sky-600">Coupon sẽ được đánh dấu đã sử dụng 1 lần.</p>
+              </div>
+              <div className="flex justify-end gap-3 pt-2 border-t border-gray-100 sticky bottom-0 bg-white pb-1">
                 <button type="button" onClick={() => setShowAddModal(false)} className="px-4 py-2 text-[12px] text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">Hủy</button>
                 <button type="submit" disabled={addLoading} className="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg disabled:opacity-50">
                   {addLoading ? "Đang tạo..." : "Tạo tài khoản"}
