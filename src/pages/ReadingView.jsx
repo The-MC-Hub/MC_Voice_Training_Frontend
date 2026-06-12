@@ -4,6 +4,7 @@ import { ArrowLeft, Clock, Share2, BookOpen, ChevronRight, CheckCircle2, Mic } f
 import { academyService } from '../services/academyService';
 import Navbar from '../components/Navbar';
 import Breadcrumb from '../components/ui/Breadcrumb';
+import celebrate from '../utils/celebrate';
 import PageLoader from '../components/ui/PageLoader';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -257,10 +258,18 @@ const ReadingView = () => {
                 </div>
               </div>
               <button
-                onClick={() => navigate(-1)}
+                onClick={async () => {
+                  if (courseId) {
+                    try { await academyService.completeReading(courseId, id); } catch {}
+                    celebrate('📖 Xuất sắc! Bạn đã hoàn thành bài đọc!');
+                    navigate(`/m/courses/${courseId}`);
+                  } else {
+                    navigate(-1);
+                  }
+                }}
                 className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] text-black rounded-xl text-[13px] font-semibold hover:bg-[#e09520] transition-colors shrink-0"
               >
-                Complete Unit <ChevronRight size={15} />
+                Hoàn thành bài đọc <ChevronRight size={15} />
               </button>
             </div>
           </div>

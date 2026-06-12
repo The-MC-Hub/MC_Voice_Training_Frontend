@@ -5,6 +5,14 @@ export const academyService = {
   getAllCourses: (type) => api.get('/courses', { params: type ? { type } : {} }),
   getCourseDetail: (id) => api.get(`/courses/${id}`),
   enrollCourse: (id) => api.post(`/courses/${id}/enroll`),
+  createCourseOrder: (courseId) => api.post(`/payment/course-order?courseId=${courseId}`),
+  updateCoursePricing: (courseId, { priceVnd, discountPercent }) => {
+    const params = new URLSearchParams();
+    if (priceVnd != null) params.set('priceVnd', priceVnd);
+    if (discountPercent != null) params.set('discountPercent', discountPercent);
+    return api.patch(`/admin/courses/${courseId}/pricing?${params.toString()}`);
+  },
+  getAllCoursesAdmin: () => api.get('/admin/courses'),
   completeLesson: (courseId, lessonId) => api.post(`/courses/${courseId}/lessons/${lessonId}/complete`),
   completeReading: (courseId, readingId) => api.post(`/courses/${courseId}/readings/${readingId}/complete`),
   submitQuiz: (courseId, answers) => api.post(`/courses/${courseId}/quiz/submit`, { answers }),

@@ -4,7 +4,7 @@ import { verifyMC, suspendUser } from "../controllers/adminController";
 import { useAdminData } from "../hooks/useAdminData";
 import {
   Users, ShieldCheck, BookOpen, LayoutGrid, CreditCard,
-  BarChart2, Award, Trophy, Settings, Terminal, LogOut, Megaphone, Package, Bell, HelpCircle,
+  BarChart2, Award, Trophy, Settings, Terminal, LogOut, Megaphone, Package, Bell, HelpCircle, GraduationCap,
 } from "lucide-react";
 
 import DashboardSection, { DASHBOARD_NAV } from "./admin/sections/DashboardSection";
@@ -19,6 +19,7 @@ import MarketingManager from "./admin/sections/MarketingManager";
 import PlanManager from "./admin/PlanManager";
 import NotificationManager from "./admin/sections/NotificationManager";
 import AdminGuide from "./admin/sections/AdminGuide";
+import CoursePricingManager from "./admin/sections/CoursePricingManager";
 
 const NAV_ITEMS = [
   { id: "dashboard", label: "Dashboard", icon: LayoutGrid },
@@ -26,6 +27,7 @@ const NAV_ITEMS = [
   { id: "lessons", label: "Bài học", icon: BookOpen },
   { id: "transactions", label: "Giao dịch", icon: CreditCard },
   { id: "academy", label: "Academy", icon: Award },
+  { id: "courses", label: "Khóa học", icon: GraduationCap },
   { id: "competitions", label: "Thi đấu", icon: Trophy },
   { id: "logs", label: "Server Logs", icon: Terminal },
   { id: "marketing", label: "Marketing", icon: Megaphone },
@@ -207,6 +209,7 @@ const AdminDashboard = () => {
               {resolvedSection === "lessons" && <LessonManagement />}
               {resolvedSection === "transactions" && <TransactionManagement transactions={transactions} revenueStats={revenueStats} onRefresh={refetchAll} />}
               {resolvedSection === "academy" && <AcademyManager />}
+              {resolvedSection === "courses" && <CoursePricingManager />}
               {resolvedSection === "competitions" && <CompetitionManager />}
               {resolvedSection === "marketing" && <MarketingManager />}
               {resolvedSection === "plans" && <PlanManager />}

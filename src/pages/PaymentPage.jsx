@@ -255,6 +255,15 @@ const PaymentPage = () => {
               </div>
             )}
 
+            {/* Course access note */}
+            <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 border border-amber-200">
+              <span className="text-[18px] shrink-0">🎓</span>
+              <p className="text-[12px] text-amber-800 leading-relaxed">
+                <span className="font-semibold">Toàn bộ khóa học MC</span> (lộ trình, bài đọc, trắc nghiệm, chứng chỉ) được bao gồm trong gói <span className="font-semibold">Basic trở lên</span>.
+                Người dùng Free vẫn có thể mua lẻ từng khóa với giá <span className="font-semibold">199.000đ/khóa</span> — sở hữu vĩnh viễn.
+              </p>
+            </div>
+
             {plansLoading ? (
               [1,2,3].map(i => (
                 <div key={i} className="w-full p-5 rounded-2xl border border-gray-200 bg-white animate-pulse">

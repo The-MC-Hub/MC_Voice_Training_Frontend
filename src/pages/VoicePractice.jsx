@@ -65,6 +65,7 @@ import TypewriterMarkdown from "../components/TypewriterMarkdown";
 import Navbar from "../components/Navbar";
 import UpgradeBanner from "../components/ui/UpgradeBanner";
 import Breadcrumb from '../components/ui/Breadcrumb';
+import celebrate from '../utils/celebrate';
 
 const formatTime = (seconds) => {
   const m = Math.floor(seconds / 60),
@@ -365,6 +366,11 @@ const VoicePractice = () => {
         status: "success",
       });
       stopAnalyzeProgress(true);
+      // Mark lesson complete in course enrollment (course context only)
+      if (courseId) {
+        academyService.completeLesson(courseId, id).catch(() => {});
+        celebrate('🎉 Tuyệt vời! Bạn đã hoàn thành bài luyện!');
+      }
       await Promise.all([fetchHistory(), refreshUser()]);
     } catch (err) {
       stopAnalyzeProgress(false);
