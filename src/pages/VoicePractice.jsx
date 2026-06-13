@@ -55,97 +55,6 @@ const VoicePractice = () => {
 
   return (
     <div className="bg-[#09090b] min-h-screen text-white flex flex-col">
-      {/* Analyzing overlay */}
-      <AnimatePresence>
-        {analyzing && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#09090b]/95 backdrop-blur-sm"
-          >
-            {/* Ambient glow */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#f5a623]/[0.04] blur-[120px]" />
-            </div>
-
-            <div className="relative flex flex-col items-center max-w-sm w-full px-8">
-              {/* Animated mic icon */}
-              <div className="relative flex items-center justify-center mb-8">
-                {[0, 1, 2].map((i) => (
-                  <motion.span
-                    key={i}
-                    className="absolute rounded-full border border-[#f5a623]/20"
-                    style={{ width: `${72 + i * 32}px`, height: `${72 + i * 32}px` }}
-                    animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0, 0.4] }}
-                    transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
-                  />
-                ))}
-                <div className="w-16 h-16 rounded-full bg-[#f5a623]/10 border-2 border-[#f5a623]/40 flex items-center justify-center shadow-[0_0_32px_rgba(245,166,35,0.15)]">
-                  <AudioLines size={28} className="text-[#f5a623] animate-pulse" />
-                </div>
-              </div>
-
-              {/* Phase label */}
-              <AnimatePresence mode="wait">
-                <motion.p
-                  key={analyzePhase}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.25 }}
-                  className="text-[15px] font-semibold text-white mb-1 text-center"
-                >
-                  {analyzePhase}
-                </motion.p>
-              </AnimatePresence>
-              <p className="text-[12px] text-zinc-500 mb-6 text-center">Phân tích giọng nói AI · Vui lòng chờ</p>
-
-              {/* Progress bar */}
-              <div className="w-full mb-3">
-                <div className="h-2 rounded-full bg-white/[0.06] overflow-hidden">
-                  <motion.div
-                    className="h-full rounded-full bg-gradient-to-r from-[#f5a623] to-[#f5a623]/70"
-                    animate={{ width: `${analyzeProgress}%` }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                  />
-                </div>
-                <div className="flex justify-between mt-1.5">
-                  <span className="text-[11px] text-zinc-600">Đang xử lý...</span>
-                  <span className="text-[12px] font-bold text-[#f5a623] tabular-nums">{analyzeProgress}%</span>
-                </div>
-              </div>
-
-              {/* Phase checklist */}
-              <div className="w-full space-y-2 mt-4">
-                {ANALYZE_PHASES.map((p, i) => {
-                  const done = analyzeProgress >= p.target;
-                  const active = analyzePhase === p.label;
-                  return (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.08 }}
-                      className="flex items-center gap-3"
-                    >
-                      <div className={`w-2 h-2 rounded-full shrink-0 transition-all duration-300 ${done ? "bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]" : active ? "bg-[#f5a623] animate-pulse" : "bg-zinc-700"}`} />
-                      <span className={`text-[12px] transition-colors duration-300 ${done ? "text-emerald-400/70 line-through decoration-emerald-500/40" : active ? "text-white font-medium" : "text-zinc-600"}`}>
-                        {p.label}
-                      </span>
-                      {done && (
-                        <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="ml-auto text-[10px] text-emerald-500">✓</motion.span>
-                      )}
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <Navbar />
 
       <main className="flex-1 flex flex-col pt-20 min-h-[calc(100vh-3.5rem)] overflow-hidden">
@@ -249,6 +158,70 @@ const VoicePractice = () => {
                     />
                   </div>
                 )}
+
+                {/* Analyzing progress — inline, below recorder */}
+                <AnimatePresence>
+                  {analyzing && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.3 }}
+                      className="rounded-2xl border border-[#f5a623]/20 bg-[#111113] p-5"
+                    >
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="relative flex items-center justify-center">
+                          {[0, 1].map((i) => (
+                            <motion.span key={i} className="absolute rounded-full border border-[#f5a623]/20"
+                              style={{ width: `${36 + i * 18}px`, height: `${36 + i * 18}px` }}
+                              animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0, 0.4] }}
+                              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
+                            />
+                          ))}
+                          <div className="w-9 h-9 rounded-full bg-[#f5a623]/10 border border-[#f5a623]/30 flex items-center justify-center">
+                            <AudioLines size={16} className="text-[#f5a623] animate-pulse" />
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <AnimatePresence mode="wait">
+                            <motion.p key={analyzePhase}
+                              initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
+                              transition={{ duration: 0.2 }}
+                              className="text-[13px] font-semibold text-white leading-tight"
+                            >{analyzePhase}</motion.p>
+                          </AnimatePresence>
+                          <p className="text-[11px] text-zinc-600 mt-0.5">Phân tích giọng nói AI · Vui lòng chờ</p>
+                        </div>
+                        <span className="text-[14px] font-bold text-[#f5a623] tabular-nums shrink-0">{analyzeProgress}%</span>
+                      </div>
+
+                      {/* Progress bar */}
+                      <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden mb-4">
+                        <motion.div className="h-full rounded-full bg-gradient-to-r from-[#f5a623] to-[#f5a623]/60"
+                          animate={{ width: `${analyzeProgress}%` }}
+                          transition={{ duration: 0.4, ease: "easeOut" }}
+                        />
+                      </div>
+
+                      {/* Phase checklist */}
+                      <div className="grid grid-cols-1 gap-1.5">
+                        {ANALYZE_PHASES.map((p, i) => {
+                          const done = analyzeProgress >= p.target;
+                          const active = analyzePhase === p.label;
+                          return (
+                            <div key={i} className="flex items-center gap-2">
+                              <div className={`w-1.5 h-1.5 rounded-full shrink-0 transition-all duration-300 ${done ? "bg-emerald-500" : active ? "bg-[#f5a623] animate-pulse" : "bg-zinc-700"}`} />
+                              <span className={`text-[11px] transition-colors duration-300 ${done ? "text-emerald-500/60 line-through" : active ? "text-zinc-200 font-medium" : "text-zinc-600"}`}>
+                                {p.label}
+                              </span>
+                              {done && <span className="ml-auto text-[10px] text-emerald-500">✓</span>}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 {/* Post-record: annotatable script panel */}
                 {result && lesson && (
