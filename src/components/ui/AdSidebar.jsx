@@ -7,7 +7,7 @@ import { useAuthStore } from '../../store/useAuthStore';
 
 
 // Routes where ad sidebar should NOT appear
-const EXCLUDED_PATHS = ['/login', '/register'];
+const EXCLUDED_PATHS = ['/login', '/register', '/m/admin'];
 
 const UPGRADE_ADS = {
   FREE: [

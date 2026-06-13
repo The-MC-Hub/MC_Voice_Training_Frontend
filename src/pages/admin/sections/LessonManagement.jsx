@@ -53,12 +53,12 @@ const LessonManagement = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this lesson?")) return;
+    if (!window.confirm("Ẩn bài học này? Bài học sẽ không hiển thị với người dùng nhưng dữ liệu được giữ lại.")) return;
     try {
       await api.delete(`/voice/admin/lessons/${id}`);
       refetch();
     } catch {
-      alert("Delete failed");
+      alert("Ẩn bài học thất bại");
     }
   };
 

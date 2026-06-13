@@ -4,7 +4,7 @@ import { verifyMC, suspendUser } from "../controllers/adminController";
 import { useAdminData } from "../hooks/useAdminData";
 import {
   Users, ShieldCheck, BookOpen, LayoutGrid, CreditCard,
-  BarChart2, Award, Trophy, Settings, Terminal, LogOut, Megaphone, Package, Bell, HelpCircle, GraduationCap,
+  BarChart2, Award, Trophy, Settings, Terminal, LogOut, Megaphone, Package, Bell, HelpCircle, GraduationCap, Shield,
 } from "lucide-react";
 
 import DashboardSection, { DASHBOARD_NAV } from "./admin/sections/DashboardSection";
@@ -20,6 +20,7 @@ import PlanManager from "./admin/PlanManager";
 import NotificationManager from "./admin/sections/NotificationManager";
 import AdminGuide from "./admin/sections/AdminGuide";
 import CoursePricingManager from "./admin/sections/CoursePricingManager";
+import SecurityLogs from "./admin/sections/SecurityLogs";
 
 const NAV_ITEMS = [
   { id: "dashboard", label: "Dashboard", icon: LayoutGrid },
@@ -34,6 +35,7 @@ const NAV_ITEMS = [
   { id: "plans", label: "Gói & Giảm giá", icon: Package },
   { id: "notifications", label: "Thông báo", icon: Bell },
   { id: "guide", label: "Hướng dẫn", icon: HelpCircle },
+  { id: "security-logs", label: "Security Logs", icon: Shield },
 ];
 
 const AdminDashboard = () => {
@@ -215,6 +217,7 @@ const AdminDashboard = () => {
               {resolvedSection === "plans" && <PlanManager />}
               {resolvedSection === "notifications" && <NotificationManager />}
               {resolvedSection === "guide" && <AdminGuide />}
+              {resolvedSection === "security-logs" && <SecurityLogs />}
             </div>
           )}
         </div>

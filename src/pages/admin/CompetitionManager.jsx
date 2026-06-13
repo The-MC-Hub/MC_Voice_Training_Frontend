@@ -67,7 +67,7 @@ const CompetitionManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this Arena?")) return;
+    if (!window.confirm("Xóa cuộc thi này? Hành động này không thể hoàn tác.")) return;
     try { await deleteCompetition(id); loadData(); }
     catch { alert("Failed to delete competition"); }
   };

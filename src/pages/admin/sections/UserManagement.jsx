@@ -645,14 +645,14 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
   };
 
   const handleDeleteUser = async (userId, userName) => {
-    if (!window.confirm(`Xóa tài khoản "${userName}"? Hành động không thể hoàn tác.`)) return;
+    if (!window.confirm(`Vô hiệu hóa tài khoản "${userName}"? Tài khoản sẽ bị khóa nhưng dữ liệu được giữ lại.`)) return;
     try {
       await api.delete(`/admin/users/${userId}`);
-      flash(`Đã xóa tài khoản ${userName}.`);
+      flash(`Đã vô hiệu hóa tài khoản ${userName}.`);
       if (selectedUser?._id === userId) setSelectedUser(null);
       onRefresh?.();
     } catch (err) {
-      flash(`Lỗi: ${err.response?.data?.message || "Không thể xóa tài khoản."}`);
+      flash(`Lỗi: ${err.response?.data?.message || "Không thể vô hiệu hóa tài khoản."}`);
     }
   };
 
@@ -867,8 +867,8 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                           className="p-1.5 bg-white text-gray-400 hover:text-gray-700 border border-gray-200 hover:border-gray-400 transition-colors rounded">
                           {u.isActive ? <XCircle size={12} /> : <CheckCircle size={12} />}
                         </button>
-                        <button onClick={() => handleDeleteUser(u._id, u.name)} title="Xóa"
-                          className="p-1.5 bg-white text-gray-400 hover:text-red-600 border border-gray-200 hover:border-red-300 transition-colors rounded">
+                        <button onClick={() => handleDeleteUser(u._id, u.name)} title="Vô hiệu hóa"
+                          className="p-1.5 bg-white text-gray-400 hover:text-orange-600 border border-gray-200 hover:border-orange-300 transition-colors rounded">
                           <Trash2 size={12} />
                         </button>
                       </div>

@@ -5,7 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { fetchFeaturedLessons } from '../../controllers/voiceController';
 
-const EXCLUDED_PATHS = ['/login', '/register'];
+const EXCLUDED_PATHS = ['/login', '/register', '/m/admin'];
 
 const CATEGORY_COLOR = {
   WEDDING: '#f59e0b',
