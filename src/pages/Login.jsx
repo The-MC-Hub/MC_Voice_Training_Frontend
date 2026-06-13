@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Mail, Lock, Eye, EyeOff, ArrowRight, Mic, Star } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Mic, Star, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "../store/useAuthStore";
 
@@ -122,6 +122,141 @@ const LeftPanel = () => {
   );
 };
 
+// ── Admin OTP Modal ──────────────────────────────────────────────────────────
+const AdminOtpModal = ({ adminEmail, rememberMe, onSuccess, onCancel }) => {
+  const { verifyAdminLoginOtp, loading, error, clearError } = useAuthStore();
+  const [digits, setDigits] = useState(["", "", "", "", "", ""]);
+  const [shake, setShake] = useState(false);
+  const inputs = useRef([]);
+
+  useEffect(() => {
+    inputs.current[0]?.focus();
+  }, []);
+
+  useEffect(() => {
+    if (error) { setShake(true); setTimeout(() => setShake(false), 400); }
+  }, [error]);
+
+  const handleDigit = (i, val) => {
+    if (!/^\d*$/.test(val)) return;
+    const next = [...digits];
+    next[i] = val.slice(-1);
+    setDigits(next);
+    if (val && i < 5) inputs.current[i + 1]?.focus();
+    if (next.every(d => d !== "")) {
+      submitOtp(next.join(""));
+    }
+  };
+
+  const handleKeyDown = (i, e) => {
+    if (e.key === "Backspace" && !digits[i] && i > 0) {
+      inputs.current[i - 1]?.focus();
+    }
+  };
+
+  const handlePaste = (e) => {
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (pasted.length === 6) {
+      setDigits(pasted.split(""));
+      inputs.current[5]?.focus();
+      submitOtp(pasted);
+    }
+  };
+
+  const submitOtp = async (code) => {
+    clearError();
+    try {
+      const res = await verifyAdminLoginOtp(adminEmail, code, rememberMe);
+      onSuccess(res);
+    } catch (_) {
+      setDigits(["", "", "", "", "", ""]);
+      inputs.current[0]?.focus();
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 16 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 16 }}
+        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-sm mx-4 bg-white rounded-2xl shadow-2xl overflow-hidden"
+      >
+        {/* Header */}
+        <div className="bg-amber-500 px-6 py-5 text-center">
+          <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+            <ShieldCheck size={22} className="text-white" />
+          </div>
+          <h2 className="text-[17px] font-bold text-white">Xác thực Admin</h2>
+          <p className="text-[12px] text-amber-100 mt-1">Mã OTP đã được gửi đến email của bạn</p>
+        </div>
+
+        <div className="px-6 py-6">
+          <p className="text-[13px] text-gray-500 text-center mb-5">
+            Nhập mã 6 chữ số để hoàn tất đăng nhập với tài khoản<br />
+            <span className="font-semibold text-gray-700">{adminEmail}</span>
+          </p>
+
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="bg-red-50 border border-red-200 text-red-600 text-[12px] rounded-xl p-2.5 text-center mb-4 overflow-hidden"
+              >
+                {error}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <motion.div
+            animate={shake ? { x: [-8, 8, -6, 6, 0] } : {}}
+            transition={{ duration: 0.35 }}
+            className="flex gap-2 justify-center mb-6"
+            onPaste={handlePaste}
+          >
+            {digits.map((d, i) => (
+              <input
+                key={i}
+                ref={el => inputs.current[i] = el}
+                type="text"
+                inputMode="numeric"
+                maxLength={1}
+                value={d}
+                onChange={e => handleDigit(i, e.target.value)}
+                onKeyDown={e => handleKeyDown(i, e)}
+                className={`w-11 h-13 text-center text-[20px] font-bold border-2 rounded-xl outline-none transition-all
+                  ${d ? 'border-amber-400 bg-amber-50 text-amber-700' : 'border-gray-200 bg-gray-50 text-gray-900'}
+                  focus:border-amber-400 focus:bg-white focus:shadow-[0_0_0_3px_rgba(245,166,35,0.15)]`}
+              />
+            ))}
+          </motion.div>
+
+          <button
+            onClick={() => submitOtp(digits.join(""))}
+            disabled={loading || digits.some(d => !d)}
+            className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 disabled:opacity-50 flex items-center justify-center gap-2 transition-all"
+          >
+            {loading
+              ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              : <><ShieldCheck size={15} /> Xác nhận</>
+            }
+          </button>
+
+          <button
+            onClick={onCancel}
+            className="w-full mt-3 py-2.5 text-[13px] text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            Huỷ đăng nhập
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
 const Login = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -131,6 +266,7 @@ const Login = () => {
   const [showPass, setShowPass] = useState(false);
   const [rememberMe, setRememberMe] = useState(() => localStorage.getItem('rememberMe') === 'true');
   const [shake, setShake] = useState(false);
+  const [adminOtp, setAdminOtp] = useState(null); // { email, rememberMe }
 
   useEffect(() => {
     if (error) { setShake(true); setTimeout(() => setShake(false), 400); }
@@ -142,6 +278,10 @@ const Login = () => {
     try {
       localStorage.setItem('rememberMe', rememberMe);
       const res = await login(email, password, rememberMe);
+      if (res?.requiresAdminOtp) {
+        setAdminOtp({ email: res.email, rememberMe });
+        return;
+      }
       navigate(ROLE_REDIRECT[res.user?.role?.toLowerCase()] || "/m/dashboard", { replace: true });
     } catch (err) {
       const msg = err.response?.data?.message || "";
@@ -154,6 +294,20 @@ const Login = () => {
   };
 
   return (
+    <>
+    <AnimatePresence>
+      {adminOtp && (
+        <AdminOtpModal
+          adminEmail={adminOtp.email}
+          rememberMe={adminOtp.rememberMe}
+          onSuccess={(res) => {
+            setAdminOtp(null);
+            navigate(ROLE_REDIRECT[res.user?.role?.toLowerCase()] || "/m/dashboard", { replace: true });
+          }}
+          onCancel={() => setAdminOtp(null)}
+        />
+      )}
+    </AnimatePresence>
     <div className="min-h-screen flex">
       {/* Left image panel */}
       <div className="hidden lg:block lg:w-[52%] xl:w-[54%] shrink-0 sticky top-0 h-screen">
@@ -274,6 +428,7 @@ const Login = () => {
         </motion.div>
       </div>
     </div>
+    </>
   );
 };
 

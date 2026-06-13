@@ -77,11 +77,14 @@ export const useAuthStore = create((set, get) => ({
       const res = await api.post('/auth/login', { email, password });
       const data = res.data.data;
 
-
+      // Admin 2FA: backend returns 202 with requiresAdminOtp flag
+      if (data?.requiresAdminOtp) {
+        set({ loading: false, error: null });
+        return { requiresAdminOtp: true, email: data.email };
+      }
 
       const { token, user } = data;
       const storage = rememberMe ? localStorage : sessionStorage;
-      
       if (rememberMe) {
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('user');
@@ -92,19 +95,33 @@ export const useAuthStore = create((set, get) => ({
       storage.setItem('token', token);
       storage.setItem('user', JSON.stringify(user));
 
-      set({
-        user,
-        token,
-        role: user.role,
-        isAuthenticated: true,
-        loading: false,
-        error: null,
-      });
-
+      set({ user, token, role: user.role, isAuthenticated: true, loading: false, error: null });
       return { token, user };
     } catch (err) {
       const message = err.response?.data?.message || 'Login failed';
       set({ loading: false, error: message, isAuthenticated: false });
+      throw err;
+    }
+  },
+
+  verifyAdminLoginOtp: async (email, code, rememberMe = true) => {
+    set({ loading: true, error: null });
+    try {
+      const res = await api.post('/auth/verify-admin-login-otp', { email, code });
+      const { token, user } = res.data.data;
+      const storage = rememberMe ? localStorage : sessionStorage;
+      if (rememberMe) {
+        sessionStorage.removeItem('token'); sessionStorage.removeItem('user');
+      } else {
+        localStorage.removeItem('token'); localStorage.removeItem('user');
+      }
+      storage.setItem('token', token);
+      storage.setItem('user', JSON.stringify(user));
+      set({ user, token, role: user.role, isAuthenticated: true, loading: false, error: null });
+      return { token, user };
+    } catch (err) {
+      const message = err.response?.data?.message || 'Mã OTP không đúng';
+      set({ loading: false, error: message });
       throw err;
     }
   },
