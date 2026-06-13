@@ -52,14 +52,27 @@ const truncateUA = (ua) => {
 
 const LogRow = ({ log }) => {
   const [expanded, setExpanded] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+  const [userLoading, setUserLoading] = useState(false);
   const actionColor = ACTION_COLORS[log.action] || 'text-zinc-400 bg-zinc-500/10 border-zinc-500/20';
   const isFailed = log.status === 'FAILED';
+
+  const handleExpand = () => {
+    setExpanded(e => !e);
+    if (!expanded && log.userId && !userInfo) {
+      setUserLoading(true);
+      api.get(`/admin/users/${log.userId}`)
+        .then(res => setUserInfo(res.data?.data || null))
+        .catch(() => setUserInfo(null))
+        .finally(() => setUserLoading(false));
+    }
+  };
 
   return (
     <>
       <tr
         className={`border-b border-[--border-subtle] hover:bg-[--bg-elevated] transition-colors cursor-pointer ${isFailed ? 'bg-red-500/[0.03]' : ''}`}
-        onClick={() => setExpanded(e => !e)}
+        onClick={handleExpand}
       >
         <td className="px-4 py-3 text-[11px] text-[--text-muted] font-mono whitespace-nowrap">
           {fmtDate(log.createdAt)}
@@ -87,31 +100,83 @@ const LogRow = ({ log }) => {
       {expanded && (
         <tr className="bg-[--bg-elevated] border-b border-[--border-subtle]">
           <td colSpan={7} className="px-6 py-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[12px]">
-              <div>
-                <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-1">User Agent</p>
-                <p className="text-[--text-secondary] break-all">{log.userAgent || '—'}</p>
-              </div>
-              {log.resourceId && (
+            <div className="space-y-4 text-[12px]">
+
+              {/* User Info Panel */}
+              {log.userId && (
+                <div className="p-3 bg-[--bg-base] border border-[--border-subtle] rounded-lg">
+                  <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-2">Thông tin người dùng</p>
+                  {userLoading ? (
+                    <p className="text-[--text-muted] text-[11px]">Đang tải...</p>
+                  ) : userInfo ? (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      <div>
+                        <p className="text-[10px] text-[--text-muted] mb-0.5">Họ tên</p>
+                        <p className="text-[--text-primary] font-medium">{userInfo.name || '—'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-[--text-muted] mb-0.5">Email</p>
+                        <p className="text-[--text-secondary] font-mono">{userInfo.email || '—'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-[--text-muted] mb-0.5">Số điện thoại</p>
+                        <p className="text-[--text-secondary]">{userInfo.phoneNumber || '—'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-[--text-muted] mb-0.5">Vai trò</p>
+                        <p className="text-[--text-secondary]">{userInfo.role || '—'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-[--text-muted] mb-0.5">Trạng thái</p>
+                        <p className={userInfo.isActive ? 'text-emerald-400' : 'text-red-400'}>
+                          {userInfo.isActive ? 'Hoạt động' : 'Bị khóa'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-[--text-muted] mb-0.5">Gói</p>
+                        <p className="text-[--text-secondary]">{userInfo.plan || 'FREE'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-[--text-muted] mb-0.5">Đăng ký</p>
+                        <p className="text-[--text-secondary]">{userInfo.createdAt ? new Date(userInfo.createdAt).toLocaleDateString('vi-VN') : '—'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-[--text-muted] mb-0.5">User ID</p>
+                        <p className="text-[--text-muted] font-mono text-[10px]">{log.userId}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-[--text-muted] text-[11px]">Không tìm thấy thông tin người dùng (có thể đã bị xóa)</p>
+                  )}
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-1">Resource ID</p>
-                  <p className="text-[--text-secondary] font-mono">{log.resource} / {log.resourceId}</p>
+                  <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-1">User Agent</p>
+                  <p className="text-[--text-secondary] break-all">{log.userAgent || '—'}</p>
                 </div>
-              )}
-              {log.details && (
-                <div className="md:col-span-2">
-                  <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-1">Details</p>
-                  <pre className="text-[--text-secondary] bg-[--bg-base] p-2 rounded-lg overflow-x-auto text-[11px]">
-                    {(() => { try { return JSON.stringify(JSON.parse(log.details), null, 2); } catch { return log.details; } })()}
-                  </pre>
-                </div>
-              )}
-              {log.errorMessage && (
-                <div className="md:col-span-2">
-                  <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-1">Lỗi</p>
-                  <p className="text-red-400 font-mono text-[11px]">{log.errorMessage}</p>
-                </div>
-              )}
+                {log.resourceId && (
+                  <div>
+                    <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-1">Resource ID</p>
+                    <p className="text-[--text-secondary] font-mono">{log.resource} / {log.resourceId}</p>
+                  </div>
+                )}
+                {log.details && (
+                  <div className="md:col-span-2">
+                    <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-1">Details</p>
+                    <pre className="text-[--text-secondary] bg-[--bg-base] p-2 rounded-lg overflow-x-auto text-[11px]">
+                      {(() => { try { return JSON.stringify(JSON.parse(log.details), null, 2); } catch { return log.details; } })()}
+                    </pre>
+                  </div>
+                )}
+                {log.errorMessage && (
+                  <div className="md:col-span-2">
+                    <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-1">Lỗi</p>
+                    <p className="text-red-400 font-mono text-[11px]">{log.errorMessage}</p>
+                  </div>
+                )}
+              </div>
             </div>
           </td>
         </tr>
