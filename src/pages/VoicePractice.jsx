@@ -154,74 +154,11 @@ const VoicePractice = () => {
                       handleAnalyze={handleAnalyze} resetPractice={resetPractice}
                       bars={bars} volumeLevel={volumeLevel} audioStatus={audioStatus} EMPTY_BARS={EMPTY_BARS}
                       cameraOn={cameraOn} videoRef={videoRef} toggleCamera={toggleCamera}
+                      analyzeProgress={analyzeProgress} analyzePhase={analyzePhase}
                       t_vp={t_vp}
                     />
                   </div>
                 )}
-
-                {/* Analyzing progress — inline, below recorder */}
-                <AnimatePresence>
-                  {analyzing && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.3 }}
-                      className="rounded-2xl border border-[#f5a623]/20 bg-[#111113] p-5"
-                    >
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="relative flex items-center justify-center">
-                          {[0, 1].map((i) => (
-                            <motion.span key={i} className="absolute rounded-full border border-[#f5a623]/20"
-                              style={{ width: `${36 + i * 18}px`, height: `${36 + i * 18}px` }}
-                              animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0, 0.4] }}
-                              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
-                            />
-                          ))}
-                          <div className="w-9 h-9 rounded-full bg-[#f5a623]/10 border border-[#f5a623]/30 flex items-center justify-center">
-                            <AudioLines size={16} className="text-[#f5a623] animate-pulse" />
-                          </div>
-                        </div>
-                        <div className="flex-1">
-                          <AnimatePresence mode="wait">
-                            <motion.p key={analyzePhase}
-                              initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
-                              transition={{ duration: 0.2 }}
-                              className="text-[13px] font-semibold text-white leading-tight"
-                            >{analyzePhase}</motion.p>
-                          </AnimatePresence>
-                          <p className="text-[11px] text-zinc-600 mt-0.5">Phân tích giọng nói AI · Vui lòng chờ</p>
-                        </div>
-                        <span className="text-[14px] font-bold text-[#f5a623] tabular-nums shrink-0">{analyzeProgress}%</span>
-                      </div>
-
-                      {/* Progress bar */}
-                      <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden mb-4">
-                        <motion.div className="h-full rounded-full bg-gradient-to-r from-[#f5a623] to-[#f5a623]/60"
-                          animate={{ width: `${analyzeProgress}%` }}
-                          transition={{ duration: 0.4, ease: "easeOut" }}
-                        />
-                      </div>
-
-                      {/* Phase checklist */}
-                      <div className="grid grid-cols-1 gap-1.5">
-                        {ANALYZE_PHASES.map((p, i) => {
-                          const done = analyzeProgress >= p.target;
-                          const active = analyzePhase === p.label;
-                          return (
-                            <div key={i} className="flex items-center gap-2">
-                              <div className={`w-1.5 h-1.5 rounded-full shrink-0 transition-all duration-300 ${done ? "bg-emerald-500" : active ? "bg-[#f5a623] animate-pulse" : "bg-zinc-700"}`} />
-                              <span className={`text-[11px] transition-colors duration-300 ${done ? "text-emerald-500/60 line-through" : active ? "text-zinc-200 font-medium" : "text-zinc-600"}`}>
-                                {p.label}
-                              </span>
-                              {done && <span className="ml-auto text-[10px] text-emerald-500">✓</span>}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
 
                 {/* Post-record: annotatable script panel */}
                 {result && lesson && (

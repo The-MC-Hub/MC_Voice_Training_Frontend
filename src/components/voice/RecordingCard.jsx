@@ -1,5 +1,6 @@
-import { Mic, Square, Play, RefreshCw, Zap, AudioLines, CheckCircle2, Volume1, Volume2, AlertTriangle, Camera, CameraOff } from "lucide-react";
+import { Mic, Square, RefreshCw, Zap, AudioLines, CheckCircle2, Volume1, Volume2, AlertTriangle, Camera, CameraOff } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ANALYZE_PHASES } from "../../hooks/useVoicePractice";
 
 export default function RecordingCard({
   recording, audioBlob, audioUrl, analyzing,
@@ -7,6 +8,7 @@ export default function RecordingCard({
   startRecording, stopRecording, handleAnalyze, resetPractice,
   bars, volumeLevel, audioStatus, EMPTY_BARS,
   cameraOn, videoRef, toggleCamera,
+  analyzeProgress, analyzePhase,
   t_vp,
 }) {
   return (
@@ -70,10 +72,73 @@ export default function RecordingCard({
           )}
         </AnimatePresence>
 
+        {/* Analyzing progress — shown instead of mic area */}
+        <AnimatePresence>
+          {analyzing && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.3 }}
+              className="px-5 py-5 border-b border-white/[0.07] bg-[#0d0d0f]"
+            >
+              {/* Header row */}
+              <div className="flex items-center gap-3 mb-3">
+                <div className="relative flex items-center justify-center shrink-0">
+                  {[0, 1].map((i) => (
+                    <motion.span key={i} className="absolute rounded-full border border-[#f5a623]/20"
+                      style={{ width: `${36 + i * 18}px`, height: `${36 + i * 18}px` }}
+                      animate={{ scale: [1, 1.2, 1], opacity: [0.35, 0, 0.35] }}
+                      transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
+                    />
+                  ))}
+                  <div className="w-9 h-9 rounded-full bg-[#f5a623]/10 border border-[#f5a623]/30 flex items-center justify-center">
+                    <AudioLines size={16} className="text-[#f5a623] animate-pulse" />
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <AnimatePresence mode="wait">
+                    <motion.p key={analyzePhase}
+                      initial={{ opacity: 0, y: 3 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -3 }}
+                      transition={{ duration: 0.2 }}
+                      className="text-[13px] font-semibold text-white truncate"
+                    >{analyzePhase}</motion.p>
+                  </AnimatePresence>
+                  <p className="text-[11px] text-zinc-600 mt-0.5">Phân tích giọng nói AI</p>
+                </div>
+                <span className="text-[14px] font-bold text-[#f5a623] tabular-nums shrink-0">{analyzeProgress}%</span>
+              </div>
+
+              {/* Progress bar */}
+              <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden mb-3">
+                <motion.div className="h-full rounded-full bg-gradient-to-r from-[#f5a623] to-[#f5a623]/60"
+                  animate={{ width: `${analyzeProgress}%` }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                />
+              </div>
+
+              {/* Phase checklist */}
+              <div className="space-y-1.5">
+                {ANALYZE_PHASES.map((p, i) => {
+                  const done = analyzeProgress >= p.target;
+                  const active = analyzePhase === p.label;
+                  return (
+                    <div key={i} className="flex items-center gap-2">
+                      <div className={`w-1.5 h-1.5 rounded-full shrink-0 transition-all duration-300 ${done ? "bg-emerald-500" : active ? "bg-[#f5a623] animate-pulse" : "bg-zinc-700"}`} />
+                      <span className={`text-[11px] transition-colors duration-300 ${done ? "text-emerald-500/60 line-through" : active ? "text-white font-medium" : "text-zinc-600"}`}>{p.label}</span>
+                      {done && <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="ml-auto text-[10px] text-emerald-500">✓</motion.span>}
+                    </div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Mic area */}
         <div className={`flex-1 flex flex-col items-center justify-center py-8 transition-all duration-500 ${
-          recording ? "bg-[#0d0d0f] shadow-[inset_0_0_80px_rgba(239,68,68,0.06)] ring-1 ring-inset ring-red-500/10"
-            : analyzing ? "bg-[#0d0d0f] shadow-[inset_0_0_60px_rgba(245,166,35,0.04)] ring-1 ring-inset ring-amber-500/10"
+          analyzing ? "hidden"
+            : recording ? "bg-[#0d0d0f] shadow-[inset_0_0_80px_rgba(239,68,68,0.06)] ring-1 ring-inset ring-red-500/10"
             : "bg-[#0d0d0f]"
         }`}>
           {/* Mic ring */}
