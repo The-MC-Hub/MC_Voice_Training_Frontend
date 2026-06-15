@@ -17,6 +17,7 @@ import HelpCenter from './pages/HelpCenter';
 import ContactUs from './pages/ContactUs';
 import Onboarding from './pages/Onboarding';
 import ForgotPassword from './pages/ForgotPassword';
+import VerifyEmail from './pages/VerifyEmail';
 import Layout from './layout/MainLayout';
 import AdSidebar from './components/ui/AdSidebar';
 import PopularLessonsSidebar from './components/ui/PopularLessonsSidebar';
@@ -101,6 +102,7 @@ function App() {
               <Route path="/login" element={<GuestRoute><Wrap><Login /></Wrap></GuestRoute>} />
               <Route path="/forgot-password" element={<GuestRoute><Wrap><ForgotPassword /></Wrap></GuestRoute>} />
               <Route path="/register" element={<GuestRoute><Wrap><Register /></Wrap></GuestRoute>} />
+              <Route path="/verify-email" element={<Wrap><VerifyEmail /></Wrap>} />
               <Route path="/terms" element={<Wrap><TermsOfService /></Wrap>} />
               <Route path="/privacy" element={<Wrap><PrivacyPolicy /></Wrap>} />
               <Route path="/help" element={<Wrap><HelpCenter /></Wrap>} />

@@ -197,7 +197,7 @@ const RightPanel = () => {
 
 const PasswordStrength = ({ password }) => {
   if (!password) return null;
-  const checks = [password.length >= 6, /[A-Z]/.test(password), /[0-9]/.test(password), /[^A-Za-z0-9]/.test(password)];
+  const checks = [password.length >= 8, /[A-Z]/.test(password), /[0-9]/.test(password), /[^A-Za-z0-9]/.test(password)];
   const score = checks.filter(Boolean).length;
   const barColors = ['bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-emerald-500'];
   const labels = ['Yếu', 'Trung bình', 'Khá', 'Mạnh'];
@@ -314,28 +314,56 @@ const OtpScreen = ({ email, onSuccess }) => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -24 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="flex flex-col items-center text-center py-6"
+      className="flex flex-col items-center text-center py-4"
     >
-      <div className="w-16 h-16 rounded-full bg-amber-50 border-2 border-amber-200 flex items-center justify-center mb-5">
-        <Mail size={28} className="text-amber-500" />
+      {/* Icon */}
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.1, type: "spring", damping: 14, stiffness: 260 }}
+        className="w-16 h-16 rounded-2xl bg-linear-to-br from-amber-400 to-amber-500 flex items-center justify-center mb-5 shadow-lg shadow-amber-200"
+      >
+        <Mail size={28} className="text-white" />
+      </motion.div>
+
+      <h3 className="text-[24px] font-bold text-gray-900 mb-1.5">Kiểm tra hộp thư của bạn</h3>
+      <p className="text-[13px] text-gray-500 mb-1">Chúng tôi đã gửi email đến</p>
+      <p className="text-[14px] font-semibold text-amber-600 mb-2">{email}</p>
+
+      {/* Magic link hint */}
+      <div className="w-full bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 mb-6 text-left">
+        <p className="text-[12px] text-emerald-700 font-medium mb-0.5">✅ Cách nhanh nhất</p>
+        <p className="text-[12px] text-emerald-600">Mở email và nhấn nút <strong>"Xác nhận email ngay"</strong> — tự động đăng nhập, không cần nhập mã.</p>
       </div>
-      <h3 className="text-[24px] font-bold text-gray-900 mb-2">Xác thực email</h3>
-      <p className="text-[13px] text-gray-500 mb-1">Nhập mã 6 số đã gửi đến</p>
-      <p className="text-[14px] font-semibold text-amber-600 mb-8">{email}</p>
+
+      {/* Divider */}
+      <div className="flex items-center gap-3 w-full mb-5">
+        <div className="flex-1 h-px bg-gray-200" />
+        <span className="text-[11px] text-gray-400 font-medium uppercase tracking-widest">Hoặc nhập mã OTP</span>
+        <div className="flex-1 h-px bg-gray-200" />
+      </div>
 
       {error && (
-        <div className="w-full bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-xl p-3 mb-4">
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          className="w-full bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-xl p-3 mb-4"
+        >
           {error}
-        </div>
+        </motion.div>
       )}
       {resendMsg && (
-        <div className="w-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[13px] rounded-xl p-3 mb-4">
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          className="w-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[13px] rounded-xl p-3 mb-4"
+        >
           {resendMsg}
-        </div>
+        </motion.div>
       )}
 
       {/* 6-digit input */}
-      <div className="flex gap-2.5 mb-8" onPaste={handlePaste}>
+      <div className="flex gap-2 mb-5" onPaste={handlePaste}>
         {digits.map((d, i) => (
           <input
             key={i}
@@ -346,7 +374,7 @@ const OtpScreen = ({ email, onSuccess }) => {
             value={d}
             onChange={e => handleDigit(i, e.target.value)}
             onKeyDown={e => handleKeyDown(i, e)}
-            className={`w-12 h-14 text-center text-[22px] font-bold border-2 rounded-xl transition-all outline-none
+            className={`w-11 h-13 text-center text-[20px] font-bold border-2 rounded-xl transition-all outline-none
               ${d ? 'border-amber-400 bg-amber-50 text-amber-700' : 'border-gray-200 bg-gray-50 text-gray-900'}
               focus:border-amber-400 focus:bg-white focus:shadow-[0_0_0_3px_rgba(245,166,35,0.12)]`}
           />
@@ -356,25 +384,42 @@ const OtpScreen = ({ email, onSuccess }) => {
       <button
         onClick={() => handleVerify(digits.join(""))}
         disabled={loading || digits.some(d => !d)}
-        className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 disabled:opacity-40 flex items-center justify-center gap-2 transition-all mb-4"
+        className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-40 flex items-center justify-center gap-2 transition-all mb-4"
       >
         {loading
           ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-          : <>Xác nhận <CheckCircle2 size={16} /></>
+          : <>Xác nhận mã <CheckCircle2 size={16} /></>
         }
       </button>
 
-      <button
-        onClick={handleResend}
-        disabled={resendCooldown > 0}
-        className="flex items-center gap-1.5 text-[13px] text-gray-500 hover:text-amber-600 disabled:opacity-40 transition-colors"
-      >
-        <RefreshCw size={13} />
-        {resendCooldown > 0 ? `Gửi lại sau ${resendCooldown}s` : "Gửi lại mã"}
-      </button>
+      <div className="flex items-center justify-between w-full">
+        <button
+          onClick={handleResend}
+          disabled={resendCooldown > 0}
+          className="flex items-center gap-1.5 text-[13px] text-gray-500 hover:text-amber-600 disabled:opacity-40 transition-colors"
+        >
+          <RefreshCw size={13} />
+          {resendCooldown > 0 ? `Gửi lại sau ${resendCooldown}s` : "Gửi lại email"}
+        </button>
+        <span className="text-[12px] text-gray-400">Hiệu lực 10 phút</span>
+      </div>
     </motion.div>
   );
 };
+
+// ── Avatar options (10 icons, emoji-based) ────────────────────────────────
+const AVATARS = [
+  { id: "mic",     emoji: "🎤", label: "Mic" },
+  { id: "star",    emoji: "⭐", label: "Star" },
+  { id: "crown",   emoji: "👑", label: "Crown" },
+  { id: "fire",    emoji: "🔥", label: "Fire" },
+  { id: "diamond", emoji: "💎", label: "Diamond" },
+  { id: "rocket",  emoji: "🚀", label: "Rocket" },
+  { id: "music",   emoji: "🎵", label: "Music" },
+  { id: "trophy",  emoji: "🏆", label: "Trophy" },
+  { id: "sparkle", emoji: "✨", label: "Sparkle" },
+  { id: "bolt",    emoji: "⚡", label: "Bolt" },
+];
 
 // ── Register ──────────────────────────────────────────────────────────────
 const Register = () => {
@@ -386,6 +431,7 @@ const Register = () => {
 
   const refParam = searchParams.get("ref") || "";
   const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "", phoneNumber: "", referralCode: refParam });
+  const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0].id);
   const [localError, setLocalError] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -401,9 +447,9 @@ const Register = () => {
     e.preventDefault();
     setLocalError("");
     if (form.password !== form.confirmPassword) { setLocalError(t('auth.passwordMismatch')); return; }
-    if (form.password.length < 6) { setLocalError(t('settings.passwordTooShort')); return; }
+    if (form.password.length < 8) { setLocalError("Mật khẩu phải có ít nhất 8 ký tự."); return; }
     try {
-      const payload = { name: form.name, email: form.email, password: form.password, phoneNumber: form.phoneNumber, role: "MC" };
+      const payload = { name: form.name, email: form.email, password: form.password, phoneNumber: form.phoneNumber, role: "MC", avatar: selectedAvatar };
       if (form.referralCode.trim()) payload.referralCode = form.referralCode.trim().toUpperCase();
       const res = await register(payload);
       setRegisteredEmail(res.email || form.email);
@@ -497,7 +543,7 @@ const Register = () => {
                   {/* Name + Phone row */}
                   <div className="grid grid-cols-2 gap-3">
                     <InputField label={t('auth.stageName')} icon={User}
-                      type="text" name="name" placeholder="MC Nathan"
+                      type="text" name="name" placeholder="Nguyễn Văn A"
                       value={form.name} onChange={set('name')} required />
                     <InputField label={t('auth.phoneNumber')} icon={Phone}
                       type="tel" name="phoneNumber" placeholder="+84 9xx xxx"
@@ -515,7 +561,7 @@ const Register = () => {
                       icon={Lock}
                       type={showPass ? "text" : "password"}
                       name="password"
-                      placeholder="Tối thiểu 6 ký tự"
+                      placeholder="Tối thiểu 8 ký tự"
                       value={form.password}
                       onChange={set('password')}
                       required
@@ -558,6 +604,29 @@ const Register = () => {
                     onChange={e => setForm(p => ({ ...p, referralCode: e.target.value.toUpperCase().slice(0, 5) }))}
                     maxLength={5}
                   />
+
+                  {/* Avatar picker */}
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[13px] font-semibold text-gray-700">Chọn avatar của bạn</label>
+                    <div className="grid grid-cols-5 gap-2">
+                      {AVATARS.map((av) => (
+                        <button
+                          key={av.id}
+                          type="button"
+                          onClick={() => setSelectedAvatar(av.id)}
+                          className={`flex flex-col items-center justify-center py-2.5 rounded-xl border-2 transition-all text-[22px] ${
+                            selectedAvatar === av.id
+                              ? 'border-amber-400 bg-amber-50 shadow-[0_0_0_3px_rgba(245,166,35,0.15)]'
+                              : 'border-gray-200 bg-gray-50 hover:border-amber-300 hover:bg-amber-50/50'
+                          }`}
+                          title={av.label}
+                        >
+                          {av.emoji}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-[11px] text-gray-400">Vào website sẽ có thêm nhiều lựa chọn hơn.</p>
+                  </div>
 
                   {/* Terms */}
                   <div className="flex items-start gap-3 pt-1">

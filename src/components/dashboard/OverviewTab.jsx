@@ -145,23 +145,29 @@ const OverviewTab = ({
       {/* Row 2: Quick metrics */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { icon: Flame, label: 'Streak hiện tại', value: `${Math.min(n, 7)} ngày`, color: 'text-orange-400', bg: 'bg-orange-500/[0.08] border-orange-500/20' },
-          { icon: Target, label: 'Mục tiêu tuần', value: `${Math.min(n, 5)}/5 phiên`, color: 'text-blue-400', bg: 'bg-blue-500/[0.08] border-blue-500/20' },
-          { icon: Clock, label: 'Thời gian luyện tập', value: `${(n * 12).toFixed(0)} phút`, color: 'text-violet-400', bg: 'bg-violet-500/[0.08] border-violet-500/20' },
-        ].map(({ icon: Icon, label, value, color, bg }, i) => (
+          { icon: Flame, label: 'Streak hiện tại', value: `${Math.min(n, 7)}`, unit: 'ngày', color: 'text-orange-400', bg: 'bg-orange-500/[0.08] border-orange-500/20', bar: Math.min(n, 7) / 30 * 100, barColor: '#f97316' },
+          { icon: Target, label: 'Mục tiêu tuần', value: `${Math.min(n, 5)}/5`, unit: 'phiên', color: 'text-blue-400', bg: 'bg-blue-500/[0.08] border-blue-500/20', bar: Math.min(n, 5) / 5 * 100, barColor: '#3b82f6' },
+          { icon: Clock, label: 'Thời gian luyện tập', value: `${(n * 12).toFixed(0)}`, unit: 'phút', color: 'text-violet-400', bg: 'bg-violet-500/[0.08] border-violet-500/20', bar: Math.min((n * 12) / 300 * 100, 100), barColor: '#8b5cf6' },
+        ].map(({ icon: Icon, label, value, unit, color, bg, bar, barColor }, i) => (
           <motion.div
             key={label}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.2 + i * 0.05, ease: [0.16, 1, 0.3, 1] }}
           >
-            <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="p-4 bg-[#111113] border border-white/[0.07] rounded-2xl flex items-center gap-3">
-              <div className={`w-9 h-9 rounded-xl flex items-center justify-center border shrink-0 ${bg}`}>
-                <Icon size={15} className={color} />
+            <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="p-5 bg-[#111113] border border-white/[0.07] rounded-2xl">
+              <div className="flex items-start justify-between mb-3">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center border shrink-0 ${bg}`}>
+                  <Icon size={18} className={color} />
+                </div>
               </div>
-              <div>
-                <p className="text-[10px] text-zinc-600 uppercase tracking-wider">{label}</p>
-                <p className="text-[14px] font-semibold text-white">{value}</p>
+              <div className="flex items-baseline gap-1.5 mb-1">
+                <span className="text-[28px] font-bold text-white leading-none">{value}</span>
+                <span className={`text-[13px] font-medium ${color}`}>{unit}</span>
+              </div>
+              <p className="text-[11px] text-zinc-600 mb-3">{label}</p>
+              <div className="h-1 w-full bg-white/[0.04] rounded-full">
+                <div className="h-full rounded-full transition-all" style={{ width: `${bar}%`, backgroundColor: barColor }} />
               </div>
             </SpotlightCard>
           </motion.div>
@@ -169,14 +175,16 @@ const OverviewTab = ({
       </div>
 
       {/* Row 3: Analytics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
 
         {/* Radar */}
-        <motion.div {...fadeUp}>
-          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 flex flex-col items-center">
-          <div className="w-full flex items-center gap-2 mb-4">
-            <Award size={13} className="text-[#f5a623]" />
-            <h4 className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">{t('dashboard.skillsMatrix')}</h4>
+        <motion.div {...fadeUp} className="h-full">
+          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="h-full bg-[#111113] border border-white/[0.07] rounded-2xl p-6 flex flex-col items-center">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
+              <Award size={13} className="text-[#f5a623]" />
+            </div>
+            <h4 className="text-[13px] font-semibold text-white">{t('dashboard.skillsMatrix')}</h4>
           </div>
           <div style={{ width: "100%", height: 210, minHeight: 210 }}>
             <ResponsiveContainer width="100%" height={210} minHeight={210}>
@@ -194,36 +202,83 @@ const OverviewTab = ({
           </SpotlightCard>
         </motion.div>
 
-        {/* Bar */}
+        {/* Heat map */}
         <motion.div {...fadeUp}>
-          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <BarChart3 size={13} className="text-indigo-400" />
-            <h4 className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">{t('dashboard.trainingFocus')}</h4>
+          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="h-full bg-[#111113] border border-white/[0.07] rounded-2xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
+                <BarChart3 size={13} className="text-indigo-400" />
+              </div>
+              <h4 className="text-[13px] font-semibold text-white">Lịch luyện tập</h4>
+            </div>
+            <span className="text-[11px] text-zinc-600">28 ngày qua</span>
           </div>
-          <div style={{ width: "100%", height: 195, minHeight: 195 }}>
-            <ResponsiveContainer width="100%" height={195} minHeight={195}>
-              <BarChart data={categoryStats.length ? categoryStats : [{ name: '—', count: 0 }]} layout="vertical" margin={{ left: -10, right: 16 }}>
-                <XAxis type="number" hide />
-                <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 11 }} width={80} />
-                <Tooltip cursor={{ fill: "rgba(255,255,255,0.02)" }} contentStyle={cleanTooltipStyle} />
-                <Bar dataKey="count" radius={[0, 6, 6, 0]} barSize={10}>
-                  {categoryStats.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={index % 2 === 0 ? "#6366f1" : "#8b5cf6"} />
+          {(() => {
+            const DAY_LABELS = ['T2','T3','T4','T5','T6','T7','CN'];
+            const WEEKS = 4;
+            const DAYS = 7;
+            const cells = [];
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            for (let i = WEEKS * DAYS - 1; i >= 0; i--) {
+              const d = new Date(today);
+              d.setDate(today.getDate() - i);
+              const key = d.toISOString().slice(0,10);
+              const count = (practiceHistory || []).filter(p => {
+                if (!p.created_at) return false;
+                return new Date(p.created_at).toISOString().slice(0,10) === key;
+              }).length;
+              cells.push({ key, count, date: d });
+            }
+            const maxCount = Math.max(...cells.map(c => c.count), 1);
+            const getColor = (count) => {
+              if (count === 0) return 'rgba(255,255,255,0.04)';
+              const ratio = count / maxCount;
+              if (ratio < 0.34) return 'rgba(245,166,35,0.25)';
+              if (ratio < 0.67) return 'rgba(245,166,35,0.55)';
+              return '#f5a623';
+            };
+            return (
+              <div>
+                <div className="grid grid-cols-7 gap-1 mb-1">
+                  {DAY_LABELS.map(d => (
+                    <span key={d} className="text-[9px] text-zinc-700 text-center uppercase tracking-wider">{d}</span>
                   ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+                </div>
+                <div className="grid grid-cols-7 gap-1">
+                  {cells.map(({ key, count, date }) => (
+                    <div
+                      key={key}
+                      title={`${date.toLocaleDateString('vi-VN', { day:'numeric', month:'short' })}: ${count} phiên`}
+                      className="aspect-square rounded-sm cursor-default transition-transform hover:scale-110"
+                      style={{ backgroundColor: getColor(count) }}
+                    />
+                  ))}
+                </div>
+                <div className="flex items-center justify-between mt-3">
+                  <span className="text-[10px] text-zinc-700">Ít hơn</span>
+                  <div className="flex gap-1">
+                    {['rgba(255,255,255,0.04)','rgba(245,166,35,0.25)','rgba(245,166,35,0.55)','#f5a623'].map((c,i) => (
+                      <div key={i} className="w-3 h-3 rounded-sm" style={{ backgroundColor: c }} />
+                    ))}
+                  </div>
+                  <span className="text-[10px] text-zinc-700">Nhiều hơn</span>
+                </div>
+              </div>
+            );
+          })()}
           </SpotlightCard>
         </motion.div>
 
         {/* Donut */}
         <motion.div {...fadeUp}>
-          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 flex flex-col items-center">
-          <div className="w-full flex items-center gap-2 mb-4">
-            <PieIcon size={13} className="text-emerald-400" />
-            <h4 className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">{t('dashboard.proficiency')}</h4>
+          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="h-full bg-[#111113] border border-white/[0.07] rounded-2xl p-6 flex flex-col items-center">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+              <PieIcon size={13} className="text-emerald-400" />
+            </div>
+            <h4 className="text-[13px] font-semibold text-white">{t('dashboard.proficiency')}</h4>
           </div>
           <div style={{ width: "100%", height: 180, minHeight: 180 }} className="relative">
             <ResponsiveContainer width="100%" height={180} minHeight={180}>

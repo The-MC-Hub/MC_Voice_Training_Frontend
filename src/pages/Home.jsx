@@ -170,16 +170,47 @@ const CountMetric = ({ value, suffix = '', label }) => {
 
 // ─── 2. FAQ Accordion ─────────────────────────────────────────────────────────
 const faqs = [
-  { q: 'AI phân tích giọng nói như thế nào?', a: 'Hệ thống ghi âm giọng đọc của bạn, sau đó AI so sánh với chuẩn MC chuyên nghiệp trên 5 tiêu chí: Phát âm, Nhịp điệu, Tốc độ, Cảm xúc và Độ chính xác. Kết quả trả về trong vòng 30 giây.' },
-  { q: 'Tài khoản miễn phí có những tính năng gì?', a: 'Miễn phí cho phép 5 buổi luyện tập/ngày, truy cập 20 kịch bản cơ bản, xem điểm tổng thể và feedback ngắn. Gói Premium mở khóa không giới hạn phiên, 50+ kịch bản nâng cao và báo cáo chi tiết PDF.' },
-  { q: 'Tôi cần thiết bị gì để sử dụng?', a: 'Chỉ cần trình duyệt Chrome/Firefox/Edge phiên bản mới nhất và microphone — laptop tích hợp hoặc USB mic đều hoạt động. Không cần cài phần mềm.' },
-  { q: 'Kết quả phân tích có chính xác không?', a: 'Mô hình AI được huấn luyện trên hàng nghìn mẫu giọng MC chuyên nghiệp người Việt. Độ chính xác đạt >90% so với đánh giá thủ công từ chuyên gia trong các bài kiểm thử nội bộ.' },
-  { q: 'Premium thanh toán như thế nào?', a: 'Chuyển khoản ngân hàng (MBBank). Sau khi chuyển đúng nội dung, hệ thống tự động kích hoạt trong vài phút. Gói Premium là một lần, không tự gia hạn.' },
-  { q: 'Dữ liệu giọng nói của tôi có bị lưu không?', a: 'File ghi âm chỉ dùng để phân tích trong phiên hiện tại và không lưu vĩnh viễn. Điểm số và lịch sử được lưu vào tài khoản của bạn. Xem Chính sách bảo mật để biết thêm.' },
+  {
+    icon: AudioLines,
+    q: 'AI phân tích giọng nói như thế nào?',
+    short: 'Ghi âm → AI so sánh chuẩn MC chuyên nghiệp trên 5 tiêu chí. Kết quả trong 30 giây.',
+    full: 'Hệ thống ghi âm giọng đọc của bạn, sau đó AI so sánh với chuẩn MC chuyên nghiệp trên 5 tiêu chí: Phát âm, Nhịp điệu, Tốc độ, Cảm xúc và Độ chính xác. Kết quả trả về trong vòng 30 giây.',
+  },
+  {
+    icon: Zap,
+    q: 'Tài khoản miễn phí có những tính năng gì?',
+    short: '5 buổi luyện/ngày, 20 kịch bản cơ bản, điểm tổng thể và feedback ngắn.',
+    full: 'Miễn phí cho phép 5 buổi luyện tập/ngày, truy cập 20 kịch bản cơ bản, xem điểm tổng thể và feedback ngắn. Gói Premium mở khóa không giới hạn phiên, 50+ kịch bản nâng cao và báo cáo chi tiết PDF.',
+  },
+  {
+    icon: Mic,
+    q: 'Tôi cần thiết bị gì để sử dụng?',
+    short: 'Trình duyệt Chrome/Firefox/Edge + microphone. Không cần cài phần mềm.',
+    full: 'Chỉ cần trình duyệt Chrome/Firefox/Edge phiên bản mới nhất và microphone — laptop tích hợp hoặc USB mic đều hoạt động. Không cần cài phần mềm.',
+  },
+  {
+    icon: BarChart3,
+    q: 'Kết quả phân tích có chính xác không?',
+    short: 'Mô hình huấn luyện từ hàng nghìn mẫu giọng MC Việt. Độ chính xác >90%.',
+    full: 'Mô hình AI được huấn luyện trên hàng nghìn mẫu giọng MC chuyên nghiệp người Việt. Độ chính xác đạt >90% so với đánh giá thủ công từ chuyên gia trong các bài kiểm thử nội bộ.',
+  },
+  {
+    icon: TrendingUp,
+    q: 'Premium thanh toán như thế nào?',
+    short: 'Chuyển khoản MBBank — hệ thống tự kích hoạt trong vài phút. Một lần, không tự gia hạn.',
+    full: 'Chuyển khoản ngân hàng (MBBank). Sau khi chuyển đúng nội dung, hệ thống tự động kích hoạt trong vài phút. Gói Premium là một lần, không tự gia hạn.',
+  },
+  {
+    icon: CheckCircle2,
+    q: 'Dữ liệu giọng nói của tôi có bị lưu không?',
+    short: 'File ghi âm chỉ dùng trong phiên hiện tại, không lưu vĩnh viễn.',
+    full: 'File ghi âm chỉ dùng để phân tích trong phiên hiện tại và không lưu vĩnh viễn. Điểm số và lịch sử được lưu vào tài khoản của bạn. Xem Chính sách bảo mật để biết thêm.',
+  },
 ];
 
-const FaqItem = ({ q, a, index }) => {
+const FaqItem = ({ icon: Icon, q, short, full, index }) => {
   const [open, setOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -192,8 +223,13 @@ const FaqItem = ({ q, a, index }) => {
       spotlightSize={280}
       className={`border rounded-2xl overflow-hidden transition-all duration-200 ${open ? 'border-amber-200 bg-amber-50/50 shadow-sm' : 'border-gray-100 bg-white hover:border-amber-100 hover:shadow-sm'}`}
     >
-      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between p-5 text-left gap-4 group">
-        <span className={`text-[14px] font-medium transition-colors ${open ? 'text-gray-900' : 'text-gray-700 group-hover:text-gray-900'}`}>{q}</span>
+      <button onClick={() => { setOpen(!open); setExpanded(false); }} className="w-full flex items-center justify-between p-5 text-left gap-4 group">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${open ? 'bg-amber-100 text-amber-600' : 'bg-gray-100 text-gray-500 group-hover:bg-amber-50 group-hover:text-amber-500'}`}>
+            <Icon size={14} />
+          </div>
+          <span className={`text-[14px] font-medium transition-colors ${open ? 'text-gray-900' : 'text-gray-700 group-hover:text-gray-900'}`}>{q}</span>
+        </div>
         <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }} className={`shrink-0 transition-colors ${open ? 'text-amber-500' : 'text-gray-400'}`}>
           <ChevronDown size={16} />
         </motion.div>
@@ -208,7 +244,19 @@ const FaqItem = ({ q, a, index }) => {
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
-            <p className="px-5 pb-5 text-[13px] text-gray-600 leading-relaxed">{a}</p>
+            <div className="px-5 pb-5 pl-16">
+              <p className="text-[13px] text-gray-600 leading-relaxed">
+                {expanded ? full : short}
+              </p>
+              {full !== short && (
+                <button
+                  onClick={() => setExpanded(v => !v)}
+                  className="mt-2 text-[12px] text-amber-600 hover:text-amber-700 font-medium transition-colors"
+                >
+                  {expanded ? 'Thu gọn ↑' : 'Xem thêm →'}
+                </button>
+              )}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -223,22 +271,25 @@ const testimonials = [
     name: 'Nguyễn Minh Khoa',
     role: 'MC Đám cưới — 3 năm kinh nghiệm',
     score: 91,
-    quote: 'Sau 2 tuần luyện với MC Hub, điểm phát âm của tôi tăng từ 64 lên 91. Feedback AI cụ thể hơn hẳn thầy giáo thật — chỉ ra đúng âm nào sai, ngắt nghỉ chỗ nào.',
-    avatar: 'https://i.pravatar.cc/80?u=khoa',
+    quote: 'Sau 2 tuần luyện với MC Hub, điểm phát âm tăng từ 64 lên 91. Feedback AI chỉ ra đúng âm nào sai, ngắt nghỉ chỗ nào — cụ thể hơn thầy giáo thật.',
+    avatar: '/images/minh.jpg',
+    fallback: 'https://i.pravatar.cc/96?img=11',
   },
   {
     name: 'Trần Thị Bảo Châu',
     role: 'Dẫn chương trình TV — Freelance',
     score: 88,
-    quote: 'Tôi dùng để ôn kịch bản trước sự kiện. Tiện nhất là có thể luyện lúc 11 giờ đêm mà không cần ai chấm điểm. Báo cáo chi tiết giúp tôi biết chính xác cần sửa gì.',
-    avatar: 'https://i.pravatar.cc/80?u=chau',
+    quote: 'Luyện lúc 11 giờ đêm mà không cần ai chấm điểm. Báo cáo chi tiết giúp biết chính xác cần sửa gì trước sự kiện.',
+    avatar: '/images/linh.jpg',
+    fallback: 'https://i.pravatar.cc/96?img=47',
   },
   {
     name: 'Lê Đức Anh',
     role: 'MC Sự kiện doanh nghiệp',
     score: 85,
-    quote: 'Ban đầu tôi skeptical về AI chấm giọng tiếng Việt, nhưng kết quả thật sự impressive. Phần phân tích nhịp điệu và tốc độ nói rất chính xác so với feedback từ đạo diễn.',
-    avatar: 'https://i.pravatar.cc/80?u=ducanh',
+    quote: 'Phần phân tích nhịp điệu và tốc độ nói rất chính xác so với feedback từ đạo diễn. Kết quả AI chấm giọng tiếng Việt thật sự ấn tượng.',
+    avatar: '/images/duy.jpg',
+    fallback: 'https://i.pravatar.cc/96?img=52',
   },
 ];
 
@@ -910,7 +961,7 @@ const Home = () => {
               <Quote size={24} className="text-amber-200 mb-4" />
               <p className="text-[15px] text-gray-700 leading-relaxed flex-1 mb-6">"{testimonials[0].quote}"</p>
               <div className="flex items-center gap-3 pt-5 border-t border-gray-100">
-                <img src={testimonials[0].avatar} alt={testimonials[0].name} className="w-10 h-10 rounded-xl object-cover border border-gray-200" />
+                <img src={testimonials[0].avatar} alt={testimonials[0].name} onError={e => { e.currentTarget.src = testimonials[0].fallback; }} className="w-12 h-12 rounded-xl object-cover border border-gray-200" />
                 <div className="flex-1 min-w-0">
                   <p className="text-[14px] font-semibold text-gray-900">{testimonials[0].name}</p>
                   <p className="text-[12px] text-gray-400">{testimonials[0].role}</p>
@@ -935,9 +986,9 @@ const Home = () => {
                   <div className="flex gap-0.5 mb-4">
                     {[...Array(5)].map((_, j) => <Star key={j} size={11} className="text-[#f5a623] fill-[#f5a623]" />)}
                   </div>
-                  <p className="text-[13px] text-gray-600 leading-relaxed flex-1 mb-4 line-clamp-4">"{t.quote}"</p>
+                  <p className="text-[13px] text-gray-600 leading-relaxed flex-1 mb-4 line-clamp-3">"{t.quote}"</p>
                   <div className="flex items-center gap-2.5 pt-3 border-t border-gray-100">
-                    <img src={t.avatar} alt={t.name} className="w-8 h-8 rounded-lg object-cover border border-gray-200" />
+                    <img src={t.avatar} alt={t.name} onError={e => { e.currentTarget.src = t.fallback; }} className="w-10 h-10 rounded-lg object-cover border border-gray-200" />
                     <div className="flex-1 min-w-0">
                       <p className="text-[12px] font-semibold text-gray-900">{t.name}</p>
                       <p className="text-[11px] text-gray-400 truncate">{t.role}</p>
@@ -957,23 +1008,56 @@ const Home = () => {
           <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mb-16 text-gray-900">{t('home.successRoadmap')}</h2>
         </ScrollReveal>
 
-        <div className="space-y-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            { step: '01', title: t('home.step1Title'), desc: t('home.step1Desc'), icon: <Zap size={16} /> },
-            { step: '02', title: t('home.step2Title'), desc: t('home.step2Desc'), icon: <Sparkles size={16} /> },
-            { step: '03', title: t('home.step3Title'), desc: t('home.step3Desc'), icon: <Award size={16} /> },
+            {
+              step: '01', title: t('home.step1Title'), icon: <Zap size={14} />,
+              caption: 'Ghi âm — nhận điểm AI trong 30 giây',
+              img: '/images/step-record.png',
+              fallback: 'https://picsum.photos/seed/step-record/480/320',
+              offset: 'md:mt-0',
+              imgClass: 'object-cover',
+            },
+            {
+              step: '02', title: t('home.step2Title'), icon: <Sparkles size={14} />,
+              caption: 'Biểu đồ 5 tiêu chí, theo dõi streak hàng ngày',
+              img: '/images/step-report.png',
+              fallback: 'https://picsum.photos/seed/step-report/480/320',
+              offset: 'md:mt-10',
+              imgClass: 'object-cover',
+            },
+            {
+              step: '03', title: t('home.step3Title'), icon: <Award size={14} />,
+              caption: 'Tự tin dẫn bất kỳ sự kiện nào',
+              img: '/images/step-stage.png',
+              fallback: 'https://picsum.photos/seed/step-stage/480/320',
+              offset: 'md:mt-20',
+              imgClass: 'object-cover object-top',
+            },
           ].map((item, i) => (
-            <ScrollReveal key={i} delay={i * 0.12}>
-              <div className="flex gap-4 sm:gap-8 items-start group">
-                <p className="text-[40px] sm:text-[60px] font-bold leading-none text-amber-200 select-none shrink-0 w-20 text-right group-hover:text-amber-300 transition-colors">
-                  {item.step}
-                </p>
-                <div className="pt-2 border-t border-gray-200 flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-amber-500">{item.icon}</span>
-                    <h3 className="text-[16px] font-semibold text-gray-900">{item.title}</h3>
+            <ScrollReveal key={i} delay={i * 0.12} className={item.offset}>
+              <div className="group flex flex-col gap-4">
+                {/* Image */}
+                <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm group-hover:shadow-md group-hover:border-amber-100 transition-all">
+                  <img
+                    src={item.img}
+                    alt={item.title}
+                    onError={e => { e.currentTarget.src = item.fallback; }}
+                    className={`w-full h-52 ${item.imgClass}`}
+                  />
+                </div>
+                {/* Text below image */}
+                <div className="flex gap-3 items-start px-1">
+                  <p className="text-[36px] font-bold leading-none text-amber-200 select-none shrink-0 group-hover:text-amber-300 transition-colors">
+                    {item.step}
+                  </p>
+                  <div className="pt-1">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className="text-amber-500">{item.icon}</span>
+                      <h3 className="text-[15px] font-semibold text-gray-900">{item.title}</h3>
+                    </div>
+                    <p className="text-gray-400 text-[12px] leading-relaxed">{item.caption}</p>
                   </div>
-                  <p className="text-gray-500 text-[14px] leading-relaxed max-w-lg">{item.desc}</p>
                 </div>
               </div>
             </ScrollReveal>
@@ -1008,7 +1092,7 @@ const Home = () => {
           {/* Right: accordion */}
           <div className="lg:col-span-3 space-y-2">
             {faqs.map((faq, i) => (
-              <FaqItem key={i} q={faq.q} a={faq.a} index={i} />
+              <FaqItem key={i} icon={faq.icon} q={faq.q} short={faq.short} full={faq.full} index={i} />
             ))}
           </div>
         </div>
@@ -1024,24 +1108,20 @@ const Home = () => {
             {/* Subtle glow center */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-[#f5a623]/[0.04] rounded-full blur-[60px] pointer-events-none" />
 
-            <div className="relative z-10 px-6 py-10 sm:px-10 sm:py-16 lg:px-20 lg:py-20 flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
-              {/* Left: icon + text */}
+            <div className="relative z-10 px-6 py-10 sm:px-10 sm:py-16 lg:px-20 lg:py-16 flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+              {/* Left: icon + text + buttons */}
               <div className="flex-1 text-center lg:text-left">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#f5a623] text-black mb-6 shadow-lg shadow-[#f5a623]/20">
                   <Mic size={22} />
                 </div>
-                <h2 className="text-3xl lg:text-4xl font-bold tracking-tight leading-tight mb-4">
+                <h2 className="text-3xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
                   {t('home.readyToOwnMic')}{' '}
                   <span className="text-[#f5a623]">{t('home.theMic')}</span>
                 </h2>
-                <p className="text-gray-500 text-[14px] leading-relaxed max-w-md mx-auto lg:mx-0">
-                  {t('home.ctaDesc')}
+                <p className="text-gray-500 text-[13px] leading-relaxed max-w-sm mx-auto lg:mx-0 mb-7">
+                  500+ MC đã nâng điểm trung bình <strong className="text-gray-700">+24 điểm</strong> sau 2 tuần.
                 </p>
-              </div>
-
-              {/* Right: buttons + social proof */}
-              <div className="flex flex-col items-center lg:items-end gap-5 shrink-0">
-                <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                   <Link
                     to="/m/payment"
                     className="flex items-center justify-center gap-2 px-7 py-3 rounded-xl bg-[#f5a623] text-black text-[14px] font-semibold hover:bg-[#e09520] transition-colors shadow-lg shadow-[#f5a623]/15 whitespace-nowrap"
@@ -1057,10 +1137,18 @@ const Home = () => {
                     {t('home.sendMessage') || 'Liên hệ ngay'}
                   </motion.button>
                 </div>
-                {/* Social proof */}
-                <p className="text-[12px] text-gray-400">
-                  Đã có <span className="text-gray-600 font-medium">500+</span> MC tin dùng
-                </p>
+              </div>
+
+              {/* Right: mockup image */}
+              <div className="shrink-0 w-full max-w-xs lg:max-w-sm">
+                <div className="rounded-2xl overflow-hidden shadow-xl shadow-amber-100/60 border border-amber-100/60">
+                  <img
+                    src="/images/cta-mockup.png"
+                    alt="MC Hub app mockup"
+                    onError={e => { e.currentTarget.src = 'https://picsum.photos/seed/cta-mockup/600/420'; }}
+                    className="w-full h-56 lg:h-64 object-cover object-bottom"
+                  />
+                </div>
               </div>
             </div>
           </div>

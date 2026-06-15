@@ -17,12 +17,12 @@ import SpotlightCard from '../components/ui/SpotlightCard';
 import mcImage from '../assets/mc.jpg';
 
 const teamMembers = [
-  { id: 1, name: "Lê Trí Trung", role: "CEO (Chief Executive Officer)", specialty: "BackEnd Developer", image: "/images/trung.jpg", bio: "Visionary leader driving the technical backbone of The MC Hub.", socials: { linkedin: "#", twitter: "#", facebook: "#" } },
-  { id: 2, name: "Nguyễn Trọng Tiến Minh", role: "CFO (Chief Financial Officer)", specialty: "Business Strategy", image: "/images/minh.jpg", bio: "Ensuring financial health and sustainable business growth.", socials: { linkedin: "#", facebook: "#" } },
-  { id: 3, name: "Trần Lê Phương Linh", role: "CPO (Chief Product Officer)", specialty: "Product Design", image: "/images/linh.jpg", bio: "Crafting intuitive and beautiful user experiences.", socials: { linkedin: "#", instagram: "#" } },
-  { id: 4, name: "Đinh Quang Duy", role: "CMO (Chief Marketing Officer)", specialty: "Marketing & Communication", image: "/images/duy.jpg", bio: "Connecting The MC Hub with the world through storytelling.", socials: { linkedin: "#", facebook: "#" } },
-  { id: 5, name: "Trần Lê Vy", role: "CTO (Chief Technology Officer)", specialty: "Frontend Developer", image: "/images/vy.jpg", bio: "Leading technology innovation and frontend architecture.", socials: { github: "#", linkedin: "#" } },
-  { id: 6, name: "Huỳnh Thị Minh Nguyệt", role: "Head of Engineering", specialty: "Frontend Developer", image: "/images/nguyet.jpg", bio: "Orchestrating seamless engineering processes and code quality.", socials: { github: "#", linkedin: "#" } }
+  { id: 1, name: "Lê Trí Trung", role: "CEO · Backend Developer", specialty: "BackEnd Developer", image: "/images/trung.jpg", bio: "Kiến trúc hệ thống & dẫn dắt kỹ thuật.", socials: { linkedin: "#", twitter: "#", facebook: "#" } },
+  { id: 2, name: "Nguyễn Trọng Tiến Minh", role: "CFO · Business Strategy", specialty: "Business Strategy", image: "/images/minh.jpg", bio: "Chiến lược tài chính & phát triển bền vững.", socials: { linkedin: "#", facebook: "#" } },
+  { id: 3, name: "Trần Lê Phương Linh", role: "CPO · Product Design", specialty: "Product Design", image: "/images/linh.jpg", bio: "Thiết kế trải nghiệm người dùng trực quan.", socials: { linkedin: "#", instagram: "#" } },
+  { id: 4, name: "Đinh Quang Duy", role: "CMO · Marketing", specialty: "Marketing & Communication", image: "/images/duy.jpg", bio: "Kết nối thương hiệu với cộng đồng MC.", socials: { linkedin: "#", facebook: "#" } },
+  { id: 5, name: "Trần Lê Vy", role: "CTO · Frontend Developer", specialty: "Frontend Developer", image: "/images/vy.jpg", bio: "Kiến trúc frontend & đổi mới công nghệ.", socials: { github: "#", linkedin: "#" } },
+  { id: 6, name: "Huỳnh Thị Minh Nguyệt", role: "Head of Engineering · Frontend", specialty: "Frontend Developer", image: "/images/nguyet.jpg", bio: "Đảm bảo chất lượng code & quy trình kỹ thuật.", socials: { github: "#", linkedin: "#" } }
 ];
 
 const SocialIcon = ({ type }) => {

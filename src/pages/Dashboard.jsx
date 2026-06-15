@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Zap, Loader2, Mic, ChevronLeft, ChevronRight, Crown, Sparkles } from "lucide-react";
+import { Zap, Loader2, Mic, ChevronLeft, ChevronRight, Crown, Sparkles, BarChart3, Award, AudioLines } from "lucide-react";
 import UpgradeBanner from "../components/ui/UpgradeBanner";
 import SessionCard from "../components/dashboard/SessionCard";
 import { Link } from "react-router-dom";
@@ -157,6 +157,9 @@ const Dashboard = () => {
       subColor: avgAccuracy >= 80 ? 'text-emerald-500' : avgAccuracy >= 60 ? 'text-blue-400' : 'text-zinc-600',
       bar: parseFloat(avgAccuracy),
       barColor: '#10b981',
+      iconBg: 'bg-emerald-500/10 border-emerald-500/20',
+      iconColor: 'text-emerald-400',
+      Icon: BarChart3,
     },
     {
       label: t('dashboard.practices'),
@@ -167,6 +170,9 @@ const Dashboard = () => {
       subColor: 'text-zinc-600',
       bar: Math.min(100, (totalPractices / 20) * 100),
       barColor: '#3b82f6',
+      iconBg: 'bg-blue-500/10 border-blue-500/20',
+      iconColor: 'text-blue-400',
+      Icon: Mic,
     },
     {
       label: t('dashboard.level'),
@@ -177,6 +183,9 @@ const Dashboard = () => {
       subColor: 'text-zinc-600',
       bar: ((totalPractices % 5) / 5) * 100,
       barColor: '#f5a623',
+      iconBg: 'bg-amber-500/10 border-amber-500/20',
+      iconColor: 'text-amber-400',
+      Icon: Award,
     },
     {
       label: t('dashboard.speakingRate'),
@@ -187,6 +196,9 @@ const Dashboard = () => {
       subColor: avgWpm >= 120 ? 'text-violet-400' : 'text-zinc-600',
       bar: Math.min(100, (avgWpm / 150) * 100),
       barColor: '#8b5cf6',
+      iconBg: 'bg-violet-500/10 border-violet-500/20',
+      iconColor: 'text-violet-400',
+      Icon: AudioLines,
     },
   ];
 
@@ -216,11 +228,14 @@ const Dashboard = () => {
             transition={{ duration: 0.4, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
             className="p-5 bg-[#111113] border border-white/[0.07] rounded-2xl hover:border-white/[0.14] hover:-translate-y-0.5 transition-all"
           >
-            <div className="flex justify-between items-start mb-3">
-              <span className="text-[10px] text-zinc-600 uppercase tracking-wider font-semibold">{s.label}</span>
+            <div className="flex items-start justify-between mb-4">
+              <div className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 ${s.iconBg}`}>
+                <s.Icon size={18} className={s.iconColor} />
+              </div>
               <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${s.tagColor}`}>{s.tag}</span>
             </div>
-            <p className="text-[20px] sm:text-[26px] font-bold text-white leading-none mb-2">{s.value}</p>
+            <p className="text-[28px] font-bold text-white leading-none mb-1">{s.value}</p>
+            <p className="text-[11px] text-zinc-600 mb-3">{s.label}</p>
             <div className="h-1 w-full bg-white/[0.04] rounded-full mb-2">
               <div className="h-full rounded-full transition-all" style={{ width: `${s.bar}%`, backgroundColor: s.barColor }} />
             </div>

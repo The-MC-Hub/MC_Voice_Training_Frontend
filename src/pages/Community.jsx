@@ -396,40 +396,42 @@ const Community = () => {
                 {t('community.leaderboardList')}
               </p>
               <div className="space-y-2 max-h-[360px] overflow-y-auto">
-                {leaderboards[activeTab]?.length > 0 ? leaderboards[activeTab].map((entry, index) => (
-                  <div key={entry.userId}
-                    className="flex items-center justify-between p-3.5 rounded-xl bg-[#09090b] border border-white/[0.04] hover:border-[#f5a623]/20 hover:bg-[#f5a623]/[0.02] transition-colors">
-                    <div className="flex items-center gap-3">
-                      <span className="font-mono text-[12px] text-zinc-600 w-6">#{index + 1}</span>
-                      <img src={entry.userAvatar || "/default-avatar.png"} alt={entry.userName}
-                        className="w-8 h-8 rounded-full border border-white/[0.08] object-cover"
-                        onError={(e) => { e.target.src = "/default-avatar.png"; }} />
-                      <div>
-                        <span className="text-[13px] font-medium text-white block">{entry.userName}</span>
-                        <span className="mt-0.5 block">{getTierBadge(entry.currentTier)}</span>
+                {leaderboards[activeTab]?.length > 0 ? (() => {
+                  const maxVal = activeTab === "precision"
+                    ? Math.max(...leaderboards[activeTab].map(e => e.cumulativeXP))
+                    : activeTab === "diligent"
+                    ? Math.max(...leaderboards[activeTab].map(e => e.totalPracticeHours))
+                    : Math.max(...leaderboards[activeTab].map(e => e.currentStreak));
+                  return leaderboards[activeTab].map((entry, index) => {
+                    const val = activeTab === "precision" ? entry.cumulativeXP
+                      : activeTab === "diligent" ? entry.totalPracticeHours
+                      : entry.currentStreak;
+                    const pct = maxVal > 0 ? (val / maxVal) * 100 : 0;
+                    const barColor = activeTab === "precision" ? "#f5a623" : activeTab === "diligent" ? "#3b82f6" : "#f97316";
+                    return (
+                      <div key={entry.userId}
+                        className="flex items-center gap-3 p-3 rounded-xl bg-[#09090b] border border-white/[0.04] hover:border-[#f5a623]/20 hover:bg-[#f5a623]/[0.02] transition-colors">
+                        <span className="font-mono text-[12px] text-zinc-600 w-5 shrink-0">#{index + 1}</span>
+                        <img src={entry.userAvatar || "/default-avatar.png"} alt={entry.userName}
+                          className={`w-10 h-10 rounded-xl border object-cover shrink-0 ${index === 0 ? 'border-[#f5a623]/50' : 'border-white/[0.08]'}`}
+                          onError={(e) => { e.target.src = "/default-avatar.png"; }} />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[13px] font-medium text-white truncate max-w-[100px]">{entry.userName}</span>
+                            <span className="text-[12px] font-semibold shrink-0 ml-2" style={{ color: barColor }}>
+                              {activeTab === "precision" && `${entry.cumulativeXP.toFixed(0)} XP`}
+                              {activeTab === "diligent" && `${entry.totalPracticeHours.toFixed(1)}h`}
+                              {activeTab === "streak" && `${entry.currentStreak}d`}
+                            </span>
+                          </div>
+                          <div className="h-1 w-full bg-white/[0.04] rounded-full overflow-hidden">
+                            <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: barColor }} />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="text-right">
-                      {activeTab === "precision" && (
-                        <>
-                          <span className="text-[13px] font-semibold text-[#f5a623] block">{entry.cumulativeXP.toFixed(0)} XP</span>
-                          <span className="text-[10px] text-zinc-600 uppercase">Cumulative</span>
-                        </>
-                      )}
-                      {activeTab === "diligent" && (
-                        <>
-                          <span className="text-[13px] font-semibold text-blue-400 block">{entry.totalPracticeHours.toFixed(1)} {t('community.hoursUnit')}</span>
-                          <span className="text-[10px] text-zinc-600">{entry.totalSessions} {t('community.practicesUnit')}</span>
-                        </>
-                      )}
-                      {activeTab === "streak" && (
-                        <span className="text-[13px] font-semibold text-orange-400 flex items-center justify-end gap-1">
-                          <Flame size={12} fill="currentColor" className="text-orange-500" /> {entry.currentStreak} {t('community.daysUnit')}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                )) : (
+                    );
+                  });
+                })() : (
                   <div className="text-center py-16">
                     <Compass size={24} className="text-zinc-800 mx-auto mb-2" />
                     <p className="text-[12px] text-zinc-600">{t('community.noLeaderboardData')}</p>
