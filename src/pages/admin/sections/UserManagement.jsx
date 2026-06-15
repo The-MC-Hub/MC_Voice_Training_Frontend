@@ -802,6 +802,8 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                 <th className="px-4 py-3">Người dùng</th>
                 <th className="px-4 py-3">Vai trò</th>
                 <th className="px-4 py-3">Gói</th>
+                <th className="px-4 py-3">Mã GT</th>
+                <th className="px-4 py-3 text-center">Đã GT</th>
                 <th className="px-4 py-3">Sessions</th>
                 <th className="px-4 py-3">Trạng thái</th>
                 <th className="px-4 py-3 text-right">Thao tác</th>
@@ -809,7 +811,7 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {filtered.length === 0 && (
-                <tr><td colSpan={6} className="px-6 py-12 text-center text-gray-400 text-[13px]">Không tìm thấy người dùng</td></tr>
+                <tr><td colSpan={8} className="px-6 py-12 text-center text-gray-400 text-[13px]">Không tìm thấy người dùng</td></tr>
               )}
               {filtered.map(u => {
                 const isSelected = selectedUser?._id === u._id;
@@ -835,6 +837,16 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                     </td>
                     <td className="px-4 py-3"><Badge cls={roleCls(u.role)}>{(u.role || "CLIENT").toUpperCase()}</Badge></td>
                     <td className="px-4 py-3"><Badge cls={PLAN_BADGE[u.plan] || PLAN_BADGE.FREE}>{u.plan || "FREE"}</Badge></td>
+                    <td className="px-4 py-3">
+                      {u.referralCode
+                        ? <span className="font-mono text-[11px] text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">{u.referralCode}</span>
+                        : <span className="text-gray-300 text-[11px]">—</span>}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {u.referralCount > 0
+                        ? <span className="font-semibold text-emerald-600 text-[12px]">{u.referralCount}</span>
+                        : <span className="text-gray-300 text-[11px]">0</span>}
+                    </td>
                     <td className="px-4 py-3"><span className="font-mono text-[11px] text-gray-600">{u.aiSessionsUsed || 0}</span></td>
                     <td className="px-4 py-3">
                       {u.isActive

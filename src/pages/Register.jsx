@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import {
   Mail, Lock, User, Phone, ShieldCheck, ArrowRight,
   Eye, EyeOff, CheckCircle2, Mic, Zap, BarChart3, Award, RefreshCw,
-  BookOpen, Star, Crown,
+  BookOpen, Star, Crown, Gift,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "../store/useAuthStore";
@@ -384,7 +384,8 @@ const Register = () => {
   const { register, loading, error } = useAuthStore();
   useApi(fetchUserRoles, []);
 
-  const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "", phoneNumber: "" });
+  const refParam = searchParams.get("ref") || "";
+  const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "", phoneNumber: "", referralCode: refParam });
   const [localError, setLocalError] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -402,7 +403,9 @@ const Register = () => {
     if (form.password !== form.confirmPassword) { setLocalError(t('auth.passwordMismatch')); return; }
     if (form.password.length < 6) { setLocalError(t('settings.passwordTooShort')); return; }
     try {
-      const res = await register({ name: form.name, email: form.email, password: form.password, phoneNumber: form.phoneNumber, role: "MC" });
+      const payload = { name: form.name, email: form.email, password: form.password, phoneNumber: form.phoneNumber, role: "MC" };
+      if (form.referralCode.trim()) payload.referralCode = form.referralCode.trim().toUpperCase();
+      const res = await register(payload);
       setRegisteredEmail(res.email || form.email);
       setStep("otp");
     } catch (err) {
@@ -542,6 +545,18 @@ const Register = () => {
                             {showConfirm ? <EyeOff size={14} /> : <Eye size={14} />}
                           </button>
                     }
+                  />
+
+                  {/* Referral code */}
+                  <InputField
+                    label="Mã giới thiệu (không bắt buộc)"
+                    icon={Gift}
+                    type="text"
+                    name="referralCode"
+                    placeholder="Ví dụ: 5TY6H"
+                    value={form.referralCode}
+                    onChange={e => setForm(p => ({ ...p, referralCode: e.target.value.toUpperCase().slice(0, 5) }))}
+                    maxLength={5}
                   />
 
                   {/* Terms */}

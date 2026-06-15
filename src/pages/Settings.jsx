@@ -32,7 +32,9 @@ import {
   MapPin,
   CreditCard,
   Check,
-  
+  Gift,
+  Copy,
+
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useToast } from "../components/ui/Toast";
@@ -146,6 +148,89 @@ const EmojiAvatarPicker = ({ selected, onSelect, compact = false }) => {
             );
           })}
         </div>
+      </div>
+    </div>
+  );
+};
+
+const ReferralCard = ({ user, updateUser }) => {
+  const [generating, setGenerating] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const toast = useToast();
+
+  const referralCode = user?.referralCode;
+  const referralCount = user?.referralCount ?? 0;
+  const referralLink = referralCode ? `${window.location.origin}/register?ref=${referralCode}` : null;
+
+  const handleCopy = () => {
+    if (!referralLink) return;
+    navigator.clipboard.writeText(referralLink).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  const handleGenerate = async () => {
+    setGenerating(true);
+    try {
+      const res = await api.post("/auth/referral-code/generate");
+      const code = res.data?.data?.referralCode;
+      if (code && updateUser) updateUser({ referralCode: code });
+    } catch (err) {
+      toast?.error?.(err.response?.data?.message || "Không thể tạo mã giới thiệu.");
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2 mb-1">
+        <Gift size={16} className="text-[#f5a623]" />
+        <h2 className="text-[15px] font-semibold text-gray-900">Mã giới thiệu</h2>
+      </div>
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-[12px] text-gray-500 mb-1">Bạn đã giới thiệu được</p>
+            <p className="text-[28px] font-bold text-gray-900 leading-none">{referralCount} <span className="text-[14px] font-medium text-gray-400">người</span></p>
+          </div>
+          {referralCode && (
+            <div className="text-right">
+              <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">Mã của bạn</p>
+              <span className="font-mono text-[20px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-xl">{referralCode}</span>
+            </div>
+          )}
+        </div>
+
+        {referralCode ? (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5">
+              <span className="flex-1 text-[12px] text-gray-600 font-mono truncate">{referralLink}</span>
+              <button
+                type="button"
+                onClick={handleCopy}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all shrink-0 ${copied ? "bg-emerald-500 text-white" : "bg-amber-500 hover:bg-amber-600 text-white"}`}
+              >
+                {copied ? <><CheckCircle2 size={12} /> Đã sao chép</> : <><Copy size={12} /> Copy link</>}
+              </button>
+            </div>
+            <p className="text-[11px] text-gray-400">Chia sẻ link trên để bạn bè đăng ký — mã sẽ được điền tự động.</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-[12px] text-gray-500">Bạn chưa có mã giới thiệu. Tạo ngay để chia sẻ với bạn bè!</p>
+            <button
+              type="button"
+              onClick={handleGenerate}
+              disabled={generating}
+              className="flex items-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[13px] font-semibold transition-colors disabled:opacity-50"
+            >
+              {generating ? <Loader2 size={14} className="animate-spin" /> : <Gift size={14} />}
+              {generating ? "Đang tạo..." : "Tạo mã giới thiệu"}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -829,6 +914,9 @@ const Settings = () => {
                 </div>
             </form>
           </div>
+
+          {/* Referral Section */}
+          <ReferralCard user={user} updateUser={updateUser} />
 
           {/* General Section */}
           <div ref={sectionRefs.general} id="section-general" className="scroll-mt-20 space-y-4">
