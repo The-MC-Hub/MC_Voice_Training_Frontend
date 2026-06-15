@@ -238,7 +238,7 @@ const ReferralCard = ({ user, updateUser }) => {
 
 const Settings = () => {
   const { t, i18n: i18nInstance } = useTranslation();
-  const { user, updateUser, logout } = useAuth();
+  const { user, updateUser, logout, refreshUser } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
   const [showBioPreview, setShowBioPreview] = useState(false);
@@ -251,6 +251,8 @@ const Settings = () => {
     payment: useRef(null),
   };
   const [activeSection, setActiveSection] = useState("profile");
+
+  useEffect(() => { refreshUser(); }, []);
 
   useEffect(() => {
     const observers = [];
