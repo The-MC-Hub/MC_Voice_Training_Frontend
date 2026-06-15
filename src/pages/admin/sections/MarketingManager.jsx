@@ -16,7 +16,7 @@ import {
 } from '../../../services/emailCampaignService';
 
 // ── Shared ────────────────────────────────────────────────────────────────────
-
+  
 const TabBar = ({ tabs, active, onChange }) => (
   <div className="flex gap-0 border-b border-[--border-subtle] mb-6">
     {tabs.map((t, i) => (
