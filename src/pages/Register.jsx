@@ -454,14 +454,13 @@ const QUIZ = [
   },
 ];
 
-const CoursePickScreen = ({ onPick, onSkip }) => {
+const CoursePickScreen = ({ onPick, onSkip, submitting }) => {
   const [allCourses, setAllCourses] = useState([]);
   // "quiz" | "analyzing" | "result"
   const [phase, setPhase] = useState("quiz");
   const [quizStep, setQuizStep] = useState(0);
   const [answers, setAnswers] = useState([]); // array of option objects
   const [suggestedCourse, setSuggestedCourse] = useState(null);
-  const [picking, setPicking] = useState(false);
 
   useEffect(() => {
     academyService.getAllCourses()
@@ -504,15 +503,7 @@ const CoursePickScreen = ({ onPick, onSkip }) => {
     }
   };
 
-  const handleAcceptGift = async () => {
-    if (!suggestedCourse) { onSkip(); return; }
-    setPicking(true);
-    const id = suggestedCourse.id || suggestedCourse._id;
-    try {
-      await academyService.enrollCourse(id);
-    } catch {
-      // ignore enrollment errors
-    }
+  const handleAcceptGift = () => {
     onPick(suggestedCourse);
   };
 
@@ -670,17 +661,17 @@ const CoursePickScreen = ({ onPick, onSkip }) => {
 
         <button
           onClick={handleAcceptGift}
-          disabled={picking}
+          disabled={submitting}
           className="w-full py-3.5 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2 transition-all mb-3"
         >
-          {picking
-            ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            : <>Nhận quà &amp; Bắt đầu học <ArrowRight size={16} /></>
+          {submitting
+            ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Đang tạo tài khoản...</>
+            : <>Nhận quà &amp; Xác nhận email <ArrowRight size={16} /></>
           }
         </button>
 
-        <button onClick={onSkip} className="text-[12px] text-gray-400 hover:text-gray-600 transition-colors">
-          Bỏ qua phần quà này
+        <button onClick={onSkip} disabled={submitting} className="text-[12px] text-gray-400 hover:text-gray-600 disabled:opacity-40 transition-colors">
+          Bỏ qua, chỉ xác nhận email
         </button>
       </motion.div>
     );
@@ -718,19 +709,31 @@ const Register = () => {
   const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [agreed, setAgreed] = useState(false);
-  // "form" | "otp" | "coursePick" | "success"
+  // "form" | "coursePick" | "otp" | "success"
   const verifyParam = searchParams.get("verify");
   const [step, setStep] = useState(verifyParam ? "otp" : "form");
   const [registeredEmail, setRegisteredEmail] = useState(verifyParam || "");
   const [userRole, setUserRole] = useState("");
+  // Course picked during quiz — enrolled after OTP success
+  const [pendingCourse, setPendingCourse] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const set = k => e => setForm(p => ({ ...p, [k]: e.target.value }));
 
-  const handleSubmit = async (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
     setLocalError("");
     if (form.password !== form.confirmPassword) { setLocalError(t('auth.passwordMismatch')); return; }
     if (form.password.length < 8) { setLocalError("Mật khẩu phải có ít nhất 8 ký tự."); return; }
+    // Go to quiz first — register API called after quiz
+    setStep("coursePick");
+  };
+
+  const handleQuizDone = async (pickedCourse) => {
+    // pickedCourse may be null (skipped)
+    setPendingCourse(pickedCourse || null);
+    setLocalError("");
+    setSubmitting(true);
     try {
       const payload = { name: form.name, email: form.email, password: form.password, phoneNumber: form.phoneNumber, role: "MC", avatar: selectedAvatar };
       if (form.referralCode.trim()) payload.referralCode = form.referralCode.trim().toUpperCase();
@@ -739,12 +742,21 @@ const Register = () => {
       setStep("otp");
     } catch (err) {
       setLocalError(err.response?.data?.message || error || "Đăng ký thất bại.");
+      setStep("form");
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  const handleOtpSuccess = (res) => {
+  const handleOtpSuccess = async (res) => {
     setUserRole(res.user?.role || "MC");
-    setStep("coursePick");
+    // Enroll the picked course now that account is verified
+    if (pendingCourse) {
+      const id = pendingCourse.id || pendingCourse._id;
+      try { await academyService.enrollCourse(id); } catch { /* ignore */ }
+    }
+    setStep("success");
+    setTimeout(() => navigate(ROLE_REDIRECT[res.user?.role?.toLowerCase()] || "/m/dashboard"), 1500);
   };
 
   const finishRegistration = () => {
@@ -804,7 +816,11 @@ const Register = () => {
                 />
               </motion.div>
             ) : step === "coursePick" ? (
-              <CoursePickScreen onPick={finishRegistration} onSkip={finishRegistration} />
+              <CoursePickScreen
+                onPick={handleQuizDone}
+                onSkip={() => handleQuizDone(null)}
+                submitting={submitting}
+              />
             ) : step === "otp" ? (
               <OtpScreen email={registeredEmail} onSuccess={handleOtpSuccess} />
             ) : (
@@ -829,7 +845,7 @@ const Register = () => {
                   )}
                 </AnimatePresence>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleFormSubmit} className="space-y-4">
                   {/* Name + Phone row */}
                   <div className="grid grid-cols-2 gap-3">
                     <InputField label={t('auth.stageName')} icon={User}
