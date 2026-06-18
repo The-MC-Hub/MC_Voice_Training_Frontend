@@ -97,7 +97,7 @@ const VoicePractice = () => {
             <div className="flex items-center gap-2">
               <a href="/login" className="text-[12px] text-zinc-400 hover:text-white transition-colors">Đăng nhập</a>
               <a href="/register" className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-500 text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors">
-                Đăng ký miễn phí →
+                Đăng ký miễn phí được tặng ngày một khóa học bất kì →
               </a>
             </div>
           </div>
