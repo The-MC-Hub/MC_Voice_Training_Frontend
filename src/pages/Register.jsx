@@ -701,37 +701,84 @@ const CoursePickScreen = ({ onPick, onSkip, submitting }) => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.35 }}
-          className="rounded-2xl border-2 border-amber-200 bg-amber-50/40 p-4 mb-4"
+          className="rounded-2xl border-2 border-amber-200 bg-amber-50/40 overflow-hidden mb-4"
         >
-          <div className="flex items-start gap-3">
-            <div
-              className="w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0 mt-0.5"
-              style={{ background: meta.color + "18", border: `1.5px solid ${meta.color}35` }}
-            >
-              {meta.emoji}
+          {/* Thumbnail */}
+          {suggestedCourse.thumbnail && (
+            <div className="w-full h-32 overflow-hidden">
+              <img
+                src={suggestedCourse.thumbnail}
+                alt={suggestedCourse.title}
+                className="w-full h-full object-cover"
+              />
             </div>
-            <div className="flex-1 min-w-0">
+          )}
+
+          <div className="p-4">
+            {/* Category + difficulty */}
+            <div className="flex items-center gap-2 mb-2">
               <span
-                className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider mb-1.5"
+                className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider"
                 style={{ background: meta.color + "18", color: meta.color }}
               >
                 {meta.label}
               </span>
-              <p className="text-[14px] font-bold text-gray-900 leading-snug mb-1">
-                {suggestedCourse.title || meta.label}
-              </p>
-              {suggestedCourse.description && (
-                <p className="text-[11px] text-gray-500 line-clamp-2 leading-relaxed">{suggestedCourse.description}</p>
+              {suggestedCourse.difficulty && (
+                <span className="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-100 text-gray-500 uppercase tracking-wider">
+                  {suggestedCourse.difficulty === "BEGINNER" ? "Cơ bản"
+                    : suggestedCourse.difficulty === "INTERMEDIATE" ? "Trung cấp"
+                    : suggestedCourse.difficulty === "ADVANCED" ? "Nâng cao" : suggestedCourse.difficulty}
+                </span>
               )}
             </div>
-          </div>
 
-          {/* Match badge */}
-          <div className="mt-3 pt-3 border-t border-amber-100 flex items-center gap-1.5">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M2 6L4.5 8.5L10 3" stroke="#f59e0b" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <span className="text-[11px] text-amber-600 font-semibold">Phù hợp với mục tiêu của bạn</span>
+            {/* Title */}
+            <p className="text-[15px] font-bold text-gray-900 leading-snug mb-1.5">
+              {suggestedCourse.title || meta.label}
+            </p>
+
+            {/* Short description */}
+            {(suggestedCourse.shortDescription || suggestedCourse.description) && (
+              <p className="text-[12px] text-gray-500 line-clamp-2 leading-relaxed mb-3">
+                {suggestedCourse.shortDescription || suggestedCourse.description}
+              </p>
+            )}
+
+            {/* Stats row */}
+            <div className="flex items-center gap-3 flex-wrap">
+              {suggestedCourse.estimatedHours > 0 && (
+                <div className="flex items-center gap-1 text-[11px] text-gray-500">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#9ca3af" strokeWidth="1.2"/><path d="M6 3.5V6L7.5 7.5" stroke="#9ca3af" strokeWidth="1.2" strokeLinecap="round"/></svg>
+                  {suggestedCourse.estimatedHours}h học
+                </div>
+              )}
+              {suggestedCourse.totalLessons > 0 && (
+                <div className="flex items-center gap-1 text-[11px] text-gray-500">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1.5" y="2" width="9" height="8" rx="1.5" stroke="#9ca3af" strokeWidth="1.2"/><path d="M4 5h4M4 7h2.5" stroke="#9ca3af" strokeWidth="1.1" strokeLinecap="round"/></svg>
+                  {suggestedCourse.totalLessons} bài học
+                </div>
+              )}
+              {suggestedCourse.totalEnrollments > 0 && (
+                <div className="flex items-center gap-1 text-[11px] text-gray-500">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="5" cy="4" r="2" stroke="#9ca3af" strokeWidth="1.2"/><path d="M1.5 10c0-2 1.5-3 3.5-3s3.5 1 3.5 3" stroke="#9ca3af" strokeWidth="1.2" strokeLinecap="round"/><circle cx="9" cy="4" r="1.5" stroke="#9ca3af" strokeWidth="1.1"/><path d="M10.5 10c0-1.5-.8-2.4-2-2.8" stroke="#9ca3af" strokeWidth="1.1" strokeLinecap="round"/></svg>
+                  {suggestedCourse.totalEnrollments} học viên
+                </div>
+              )}
+              {suggestedCourse.finalPriceVnd === 0 || suggestedCourse.priceVnd === 0 ? (
+                <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-600">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6L4.5 8.5L10 3" stroke="#10b981" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  Miễn phí
+                </div>
+              ) : null}
+            </div>
+
+            {/* Match badge */}
+            <div className="mt-3 pt-3 border-t border-amber-100 flex items-center gap-1.5">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M2 6L4.5 8.5L10 3" stroke="#f59e0b" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <span className="text-[11px] text-amber-600 font-semibold">Phù hợp với mục tiêu của bạn</span>
+            </div>
           </div>
         </motion.div>
 
