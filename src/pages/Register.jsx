@@ -4,12 +4,13 @@ import { useTranslation } from "react-i18next";
 import {
   Mail, Lock, User, Phone, ShieldCheck, ArrowRight,
   Eye, EyeOff, CheckCircle2, Mic, Zap, BarChart3, Award, RefreshCw,
-  BookOpen, Star, Crown, Gift,
+  BookOpen, Star, Crown, Gift, Sparkles, Heart, Briefcase,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "../store/useAuthStore";
 import { useApi } from "../hooks/useApi";
 import { fetchUserRoles } from "../controllers/publicController";
+import { academyService } from "../services/academyService";
 const ROLE_REDIRECT = { admin: "/m/dashboard", mc: "/m/dashboard", client: "/m/dashboard" };
 
 const SLIDE_FEATURES = [
@@ -407,6 +408,209 @@ const OtpScreen = ({ email, onSuccess }) => {
   );
 };
 
+// ── Free course pick (shown after OTP for new FREE users) ────────────────
+const CATEGORY_META = {
+  WEDDING:        { emoji: "💍", label: "MC Đám cưới",    color: "#f59e0b", desc: "Kịch bản dẫn lễ cưới chuyên nghiệp, từ nhập tiệc đến trao nhẫn" },
+  CORPORATE:      { emoji: "💼", label: "MC Doanh nghiệp", color: "#60a5fa", desc: "Hội nghị, tổng kết, lễ ra mắt sản phẩm — phong cách lịch lãm" },
+  GALA:           { emoji: "✨", label: "MC Gala Dinner",   color: "#a78bfa", desc: "Dẫn chương trình gala sang trọng, xử lý tình huống sân khấu lớn" },
+  TALKSHOW:       { emoji: "🎙️", label: "MC Talkshow",      color: "#34d399", desc: "Dẫn chuyện, phỏng vấn, điều phối khách mời tự nhiên, cuốn hút" },
+  PRODUCT_LAUNCH: { emoji: "🚀", label: "Ra mắt sản phẩm", color: "#f472b6", desc: "Tạo điểm nhấn, build hype, dẫn sự kiện launch ấn tượng" },
+  GENERAL:        { emoji: "📢", label: "Tổng hợp",         color: "#fb923c", desc: "Kỹ năng nền tảng MC: giọng nói, nhịp điệu, xử lý sự cố" },
+};
+
+const GOALS = [
+  { id: "MC", label: "Trở thành MC chuyên nghiệp", icon: "🎤", targetCategories: ["WEDDING", "GALA"] },
+  { id: "WORK", label: "Thuyết trình, giao tiếp công việc", icon: "💼", targetCategories: ["CORPORATE", "TALKSHOW"] },
+  { id: "PRONUNCIATION", label: "Cải thiện phát âm, chữa ngọng", icon: "🗣️", targetCategories: ["GENERAL"] },
+  { id: "OTHER", label: "Chỉ muốn khám phá ứng dụng", icon: "✨", targetCategories: ["PRODUCT_LAUNCH", "GENERAL"] },
+];
+
+const CoursePickScreen = ({ onPick, onSkip }) => {
+  const [allCourses, setAllCourses] = useState([]);
+  const [step, setStep] = useState(1); // 1: Questions, 2: Loading, 3: Result
+  const [suggestedCourse, setSuggestedCourse] = useState(null);
+  const [picking, setPicking] = useState(false);
+
+  useEffect(() => {
+    academyService.getAllCourses()
+      .then(res => setAllCourses(res.data?.data || res.data || []))
+      .catch(() => { /* ignore */ });
+  }, []);
+
+  const handleSelectGoal = (goal) => {
+    setStep(2);
+    // Simulate AI thinking
+    setTimeout(() => {
+      let match = null;
+      for (const cat of goal.targetCategories) {
+        match = allCourses.find(c => c.category === cat);
+        if (match) break;
+      }
+      if (!match) match = allCourses[0]; // Fallback to first available course
+      
+      setSuggestedCourse(match);
+      setStep(3);
+    }, 1200);
+  };
+
+  const handleAcceptGift = async () => {
+    if (!suggestedCourse) { onSkip(); return; }
+    setPicking(true);
+    const id = suggestedCourse.id || suggestedCourse._id;
+    try {
+      await academyService.enrollCourse(id);
+    } catch {
+      // Ignore errors
+    }
+    onPick(suggestedCourse);
+  };
+
+  if (step === 1) {
+    return (
+      <motion.div
+        key="goal-pick"
+        initial={{ opacity: 0, x: 24 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -24 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="flex flex-col py-2 text-center"
+      >
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.1, type: "spring", damping: 14, stiffness: 260 }}
+          className="w-14 h-14 rounded-2xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center mx-auto mb-4"
+        >
+          <span className="text-2xl">🎯</span>
+        </motion.div>
+        <h3 className="text-[22px] font-bold text-gray-900 mb-1.5">Mục tiêu của bạn là gì?</h3>
+        <p className="text-[13px] text-gray-500 mb-6">
+          Giúp MC Hub tùy chỉnh lộ trình và chuẩn bị phần quà <span className="font-semibold text-amber-600">khóa học miễn phí</span> cho bạn.
+        </p>
+
+        <div className="flex flex-col gap-3">
+          {GOALS.map((g, i) => (
+            <motion.button
+              key={g.id}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 * i, duration: 0.4 }}
+              onClick={() => handleSelectGoal(g)}
+              className="flex items-center gap-4 p-4 rounded-2xl border-2 border-gray-200 bg-white hover:border-amber-400 hover:bg-amber-50/30 active:scale-[0.99] transition-all text-left group"
+            >
+              <div className="w-10 h-10 rounded-xl bg-gray-50 group-hover:bg-amber-100/50 flex items-center justify-center text-xl shrink-0 transition-colors">
+                {g.icon}
+              </div>
+              <span className="text-[14px] font-bold text-gray-900 leading-tight">
+                {g.label}
+              </span>
+            </motion.button>
+          ))}
+        </div>
+
+        <button onClick={onSkip} className="mt-6 text-center text-[12px] text-gray-400 hover:text-gray-600 transition-colors">
+          Bỏ qua, tôi sẽ tự khám phá sau →
+        </button>
+      </motion.div>
+    );
+  }
+
+  if (step === 2) {
+    return (
+      <motion.div
+        key="analyzing"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="flex flex-col items-center justify-center py-16 text-center"
+      >
+        <div className="w-16 h-16 relative flex items-center justify-center mb-6">
+          <div className="absolute inset-0 rounded-full border-4 border-amber-100" />
+          <div className="absolute inset-0 rounded-full border-4 border-amber-500 border-t-transparent animate-spin" />
+          <span className="text-xl animate-pulse">✨</span>
+        </div>
+        <h3 className="text-[18px] font-bold text-gray-900 mb-2">Đang phân tích...</h3>
+        <p className="text-[13px] text-gray-500">Tìm kiếm khóa học phù hợp nhất với bạn</p>
+      </motion.div>
+    );
+  }
+
+  if (step === 3) {
+    if (!suggestedCourse) {
+      onSkip();
+      return null;
+    }
+    const meta = CATEGORY_META[suggestedCourse.category] || CATEGORY_META.GENERAL;
+    return (
+      <motion.div
+        key="gift"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4, type: "spring", bounce: 0.4 }}
+        className="flex flex-col py-2 text-center"
+      >
+        <div className="relative mx-auto mb-6">
+          <motion.div
+            initial={{ scale: 0, rotate: -15 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+            className="w-20 h-20 rounded-3xl bg-linear-to-br from-amber-300 to-amber-500 flex items-center justify-center shadow-lg shadow-amber-200 z-10 relative"
+          >
+            <span className="text-4xl drop-shadow-md">🎁</span>
+          </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4 }}
+            className="absolute -top-3 -right-3 text-2xl"
+          >
+            ✨
+          </motion.div>
+        </div>
+
+        <h3 className="text-[22px] font-bold text-gray-900 mb-2">Quà tặng dành cho bạn!</h3>
+        <p className="text-[13px] text-gray-500 mb-6 leading-relaxed">
+          Dựa trên mục tiêu của bạn, MC Hub tặng bạn khóa học này để bắt đầu hành trình.
+        </p>
+
+        <div className="bg-white border-2 border-amber-200 rounded-2xl p-4 text-left shadow-xs mb-6">
+          <div className="flex items-center gap-3">
+            <div
+              className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0"
+              style={{ background: meta.color + "20", border: `1.5px solid ${meta.color}40` }}
+            >
+              {meta.emoji}
+            </div>
+            <div className="flex-1 min-w-0">
+              <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider mb-1" style={{ background: meta.color + "20", color: meta.color }}>
+                {meta.label}
+              </span>
+              <p className="text-[15px] font-bold text-gray-900 leading-tight truncate">
+                {suggestedCourse.title || meta.label}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <button
+          onClick={handleAcceptGift}
+          disabled={picking}
+          className="w-full py-3.5 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2 transition-all mb-4"
+        >
+          {picking 
+            ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            : <>Nhận quà & Bắt đầu học <ArrowRight size={16} /></>
+          }
+        </button>
+
+        <button onClick={onSkip} className="text-[12px] text-gray-400 hover:text-gray-600 transition-colors">
+          Bỏ qua phần quà này
+        </button>
+      </motion.div>
+    );
+  }
+
+  return null;
+};
+
 // ── Avatar options (10 icons, emoji-based) ────────────────────────────────
 const AVATARS = [
   { id: "mic",     emoji: "🎤", label: "Mic" },
@@ -436,10 +640,11 @@ const Register = () => {
   const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [agreed, setAgreed] = useState(false);
-  // "form" | "otp" | "success"
+  // "form" | "otp" | "coursePick" | "success"
   const verifyParam = searchParams.get("verify");
   const [step, setStep] = useState(verifyParam ? "otp" : "form");
   const [registeredEmail, setRegisteredEmail] = useState(verifyParam || "");
+  const [userRole, setUserRole] = useState("");
 
   const set = k => e => setForm(p => ({ ...p, [k]: e.target.value }));
 
@@ -460,8 +665,13 @@ const Register = () => {
   };
 
   const handleOtpSuccess = (res) => {
+    setUserRole(res.user?.role || "MC");
+    setStep("coursePick");
+  };
+
+  const finishRegistration = () => {
     setStep("success");
-    setTimeout(() => navigate(ROLE_REDIRECT[res.user?.role?.toLowerCase()] || "/m/dashboard"), 1500);
+    setTimeout(() => navigate(ROLE_REDIRECT[userRole?.toLowerCase()] || "/m/dashboard"), 1500);
   };
 
   const displayError = localError || error;
@@ -515,6 +725,8 @@ const Register = () => {
                   className="h-0.5 bg-amber-500 rounded-full max-w-xs"
                 />
               </motion.div>
+            ) : step === "coursePick" ? (
+              <CoursePickScreen onPick={finishRegistration} onSkip={finishRegistration} />
             ) : step === "otp" ? (
               <OtpScreen email={registeredEmail} onSuccess={handleOtpSuccess} />
             ) : (

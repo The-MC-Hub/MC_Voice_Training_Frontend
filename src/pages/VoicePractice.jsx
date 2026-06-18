@@ -1,5 +1,5 @@
-import React from "react";
-import { Loader2, ArrowLeft, Award, AlertCircle, Zap, RefreshCw, Square, Play, AudioLines } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Loader2, ArrowLeft, Award, AlertCircle, Zap, RefreshCw, Square, Play, AudioLines, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useVoicePractice, clampMetric, ANALYZE_PHASES } from "../hooks/useVoicePractice";
 import Navbar from "../components/Navbar";
@@ -39,7 +39,30 @@ const VoicePractice = () => {
     accuracy, energy, pace, pacePercent,
     feedbackItems, expertTips, markdownReport,
     completionPercent, overallScore, overallLevel, paceInsight,
+    guestCooldownUntil,
   } = vp;
+
+  // Live countdown for guest cooldown
+  const [cooldownLeft, setCooldownLeft] = useState(0);
+  useEffect(() => {
+    if (!guestCooldownUntil) { setCooldownLeft(0); return; }
+    const tick = () => {
+      const diff = Math.max(0, Math.ceil((guestCooldownUntil - Date.now()) / 1000));
+      setCooldownLeft(diff);
+    };
+    tick();
+    const t = setInterval(tick, 1000);
+    return () => clearInterval(t);
+  }, [guestCooldownUntil]);
+
+  const fmtCooldown = (secs) => {
+    const h = Math.floor(secs / 3600);
+    const m = Math.floor((secs % 3600) / 60);
+    const s = secs % 60;
+    return h > 0
+      ? `${h}g ${String(m).padStart(2,"0")}p ${String(s).padStart(2,"0")}s`
+      : `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  };
 
   if (loading)
     return (
@@ -60,6 +83,24 @@ const VoicePractice = () => {
       <main className="flex-1 flex flex-col pt-20 min-h-[calc(100vh-3.5rem)] overflow-hidden">
         {aiLimit && usagePct >= 80 && (
           <UpgradeBanner variant="strip" plan={plan} used={aiUsed} limit={aiLimit} />
+        )}
+
+        {!user && (
+          <div className="flex items-center justify-between gap-3 px-4 py-2.5 bg-amber-500/10 border-b border-amber-500/20 flex-wrap">
+            <div className="flex items-center gap-2 text-[13px] text-amber-300">
+              <span className="text-base">🎁</span>
+              <span>Bạn đang dùng <strong>thử miễn phí</strong> — kết quả không được lưu.</span>
+              {cooldownLeft > 0 && (
+                <span className="text-zinc-400">· Luyện lại sau <span className="text-amber-400 font-semibold">{fmtCooldown(cooldownLeft)}</span></span>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <a href="/login" className="text-[12px] text-zinc-400 hover:text-white transition-colors">Đăng nhập</a>
+              <a href="/register" className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-500 text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors">
+                Đăng ký miễn phí →
+              </a>
+            </div>
+          </div>
         )}
 
         <div className="flex-1 flex overflow-hidden">
@@ -108,9 +149,16 @@ const VoicePractice = () => {
                 </div>
 
                 {audioBlob && !analyzing && !result && (
-                  <button onClick={handleAnalyze} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors">
-                    <Zap size={14} /> {t_vp("analyzeNow")}
-                  </button>
+                  !user && cooldownLeft > 0 ? (
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-800 border border-white/10 text-zinc-400 text-[13px]">
+                      <Clock size={13} className="shrink-0 text-amber-400" />
+                      <span>Thử lại sau <span className="font-semibold text-amber-400">{fmtCooldown(cooldownLeft)}</span></span>
+                    </div>
+                  ) : (
+                    <button onClick={handleAnalyze} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors">
+                      <Zap size={14} /> {t_vp("analyzeNow")}
+                    </button>
+                  )
                 )}
                 {audioBlob && (
                   <button onClick={resetPractice} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-white/[0.1] text-zinc-300 text-[13px] font-medium hover:bg-white/[0.05] transition-colors">

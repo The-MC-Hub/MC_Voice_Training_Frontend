@@ -121,6 +121,8 @@ const PaymentPage = () => {
     try {
       const res = await api.post(`/payment/apply-discount?code=${encodeURIComponent(discountCode.trim())}&plan=${selectedPlan}`);
       setDiscountInfo(res.data?.data);
+      // Automatically refetch order to apply the discount to PayOS link or activate immediately if 100%
+      await fetchOrder(selectedPlan, res.data?.data?.code);
     } catch (e) {
       setDiscountError(e.response?.data?.message || "Mã không hợp lệ");
     } finally {
@@ -128,16 +130,32 @@ const PaymentPage = () => {
     }
   };
 
-  const fetchOrder = async (plan = selectedPlan) => {
+  const fetchOrder = async (plan = selectedPlan, overrideDiscountCode = null) => {
     if (!user?.id) return;
     setLoading(true);
     setError(null);
     setOrderData(null);
     try {
-      const res = await api.post(`/payment/create-order?userId=${user.id}&plan=${plan}`);
-      setOrderData(res.data.data);
-    } catch {
-      setError("Không thể tạo đơn hàng. Vui lòng thử lại.");
+      const activeCode = overrideDiscountCode !== null ? overrideDiscountCode : (discountInfo?.code || "");
+      const url = activeCode 
+        ? `/payment/create-order?userId=${user.id}&plan=${plan}&discountCode=${encodeURIComponent(activeCode)}`
+        : `/payment/create-order?userId=${user.id}&plan=${plan}`;
+      
+      const res = await api.post(url);
+      const data = res.data.data;
+      
+      if (data.isPremium && data.amount === 0) {
+        updateUser({ isPremium: true, plan: data.plan });
+        await refreshUser();
+        setSuccess(true);
+        toast.showSuccess("Kích hoạt thành công với mã giảm giá!");
+        setTimeout(() => navigate("/m/dashboard"), 2500);
+        return;
+      }
+      
+      setOrderData(data);
+    } catch (e) {
+      setError(e.response?.data?.message || "Không thể tạo đơn hàng. Vui lòng thử lại.");
     } finally {
       setLoading(false);
     }

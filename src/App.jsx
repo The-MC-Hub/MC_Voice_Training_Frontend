@@ -140,7 +140,7 @@ function App() {
               {/* Full-screen views (outside MainLayout — no Navbar/Footer) */}
               <Route path="/m/admin" element={<RoleRoute allowedRoles={['admin']}><Wrap><AdminDashboard /></Wrap></RoleRoute>} />
               <Route path="/m/admin/:section" element={<RoleRoute allowedRoles={['admin']}><Wrap><AdminDashboard /></Wrap></RoleRoute>} />
-              <Route path="/m/voice/practice/:id" element={<ProtectedRoute><Wrap><VoicePractice /></Wrap></ProtectedRoute>} />
+              <Route path="/m/voice/practice/:id" element={<Wrap><VoicePractice /></Wrap>} />
               <Route path="/m/voice/report/:sessionId" element={<ProtectedRoute><Wrap><VoiceReport /></Wrap></ProtectedRoute>} />
               <Route path="/m/learning/guide/:id" element={<ProtectedRoute><Wrap><ReadingView /></Wrap></ProtectedRoute>} />
 

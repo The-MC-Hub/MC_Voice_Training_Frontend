@@ -863,7 +863,7 @@ const Home = () => {
                         key={`${i}-${idx}`}
                         whileHover={{ y: -6 }}
                         transition={CARD_HOVER_TRANSITION}
-                        onClick={() => navigate(isAuthenticated ? `/m/voice/practice/${lesson.id}` : '/login')}
+                        onClick={() => navigate(`/m/voice/practice/${lesson.id}`)}
                         className="min-w-[280px] sm:min-w-[340px] bg-white border border-gray-100 rounded-2xl overflow-hidden cursor-pointer hover:border-amber-200 hover:shadow-lg hover:shadow-amber-50 transition-all duration-300 group flex flex-col"
                       >
                         {/* Thumbnail */}

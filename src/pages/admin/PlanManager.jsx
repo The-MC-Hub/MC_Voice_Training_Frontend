@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import {
   Plus, Trash2, Edit2, Check, X, Tag, Package,
   ChevronDown, ChevronUp, Save, RefreshCw, AlertCircle,
-  Percent, DollarSign, Calendar, Infinity as InfinityIcon, ToggleLeft, ToggleRight
+  Percent, DollarSign, Calendar, Infinity as InfinityIcon, ToggleLeft, ToggleRight,
+  Settings, Clock
 } from "lucide-react";
 import api from "../../services/api";
 
@@ -555,6 +556,38 @@ const PlanManager = () => {
   const [loadingDiscounts, setLoadingDiscounts] = useState(true);
   const [tab, setTab] = useState("plans");
 
+  // Settings tab — guest cooldown
+  const [cooldownHours, setCooldownHours] = useState(3);
+  const [cooldownInput, setCooldownInput] = useState("3");
+  const [cooldownSaving, setCooldownSaving] = useState(false);
+  const [cooldownMsg, setCooldownMsg] = useState(null);
+
+  const fetchCooldown = useCallback(async () => {
+    try {
+      const res = await api.get("/admin/settings/guest-cooldown");
+      const h = res.data?.data?.hours ?? 3;
+      setCooldownHours(h);
+      setCooldownInput(String(h));
+    } catch { /* use default */ }
+  }, []);
+
+  const saveCooldown = async () => {
+    const h = parseInt(cooldownInput, 10);
+    if (!h || h < 1 || h > 168) { setCooldownMsg({ type: "error", text: "Giá trị phải từ 1 đến 168 giờ." }); return; }
+    setCooldownSaving(true);
+    setCooldownMsg(null);
+    try {
+      await api.put(`/admin/settings/guest-cooldown?hours=${h}`);
+      setCooldownHours(h);
+      setCooldownMsg({ type: "success", text: `Đã cập nhật: ${h} giờ.` });
+    } catch (e) {
+      setCooldownMsg({ type: "error", text: e.response?.data?.message || "Lưu thất bại." });
+    } finally {
+      setCooldownSaving(false);
+      setTimeout(() => setCooldownMsg(null), 3000);
+    }
+  };
+
   const fetchPlans = useCallback(async () => {
     setLoadingPlans(true);
     try {
@@ -573,7 +606,7 @@ const PlanManager = () => {
     finally { setLoadingDiscounts(false); }
   }, []);
 
-  useEffect(() => { fetchPlans(); fetchDiscounts(); }, [fetchPlans, fetchDiscounts]);
+  useEffect(() => { fetchPlans(); fetchDiscounts(); fetchCooldown(); }, [fetchPlans, fetchDiscounts, fetchCooldown]);
 
   const PLAN_ORDER = { FREE: 0, BASIC: 1, FULL: 2, ANNUAL: 3 };
   const sortedPlans = [...plans].sort((a, b) => (PLAN_ORDER[a.plan] ?? 9) - (PLAN_ORDER[b.plan] ?? 9));
@@ -585,6 +618,7 @@ const PlanManager = () => {
         {[
           { id: "plans", label: "Gói đăng ký", icon: Package },
           { id: "discounts", label: "Mã giảm giá", icon: Tag },
+          { id: "settings", label: "Cài đặt", icon: Settings },
         ].map(({ id, label, icon: Icon }) => (
           <button
             key={id}
@@ -632,6 +666,55 @@ const PlanManager = () => {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Settings tab */}
+      {tab === "settings" && (
+        <div className="space-y-6 max-w-lg">
+          {/* Guest cooldown card */}
+          <div className="border border-white/[0.07] rounded-xl overflow-hidden">
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.05] bg-white/[0.02]">
+              <Clock size={13} className="text-amber-400" />
+              <span className="text-[12px] font-semibold text-white">Thời gian chờ luyện giọng (khách)</span>
+            </div>
+            <div className="p-4 space-y-3">
+              <p className="text-[12px] text-zinc-400 leading-relaxed">
+                Người dùng chưa đăng ký phải chờ sau mỗi lần luyện giọng miễn phí.<br />
+                Hiện tại: <span className="text-amber-400 font-semibold">{cooldownHours} giờ</span>.
+              </p>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 bg-[#09090b] border border-white/[0.07] rounded px-3 py-2 w-28">
+                  <input
+                    type="number"
+                    min={1}
+                    max={168}
+                    value={cooldownInput}
+                    onChange={e => setCooldownInput(e.target.value)}
+                    className="bg-transparent outline-none text-[13px] text-white w-full"
+                  />
+                  <span className="text-[11px] text-zinc-500 shrink-0">giờ</span>
+                </div>
+                <button
+                  onClick={saveCooldown}
+                  disabled={cooldownSaving}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded bg-amber-500 text-black text-[12px] font-semibold hover:bg-amber-400 disabled:opacity-50 transition-colors"
+                >
+                  {cooldownSaving
+                    ? <RefreshCw size={12} className="animate-spin" />
+                    : <Save size={12} />
+                  }
+                  Lưu
+                </button>
+              </div>
+              {cooldownMsg && (
+                <p className={`text-[11px] font-medium ${cooldownMsg.type === "success" ? "text-emerald-400" : "text-red-400"}`}>
+                  {cooldownMsg.text}
+                </p>
+              )}
+              <p className="text-[10px] text-zinc-600">Phạm vi: 1 – 168 giờ. Áp dụng ngay sau khi lưu.</p>
+            </div>
+          </div>
         </div>
       )}
 

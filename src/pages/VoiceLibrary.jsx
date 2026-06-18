@@ -117,7 +117,7 @@ const VoiceLibrary = () => {
               return (
                 <div
                   key={lesson.id}
-                  onClick={() => navigate(isAuthenticated ? `/m/voice/practice/${lesson.id}` : '/login')}
+                  onClick={() => navigate(`/m/voice/practice/${lesson.id}`)}
                   className="relative flex items-center gap-3 px-4 py-3 bg-[#111113] border border-white/[0.07] rounded-xl hover:border-gold/30 hover:bg-[#141416] transition-all cursor-pointer group"
                 >
                   {/* Rank badge */}
@@ -327,7 +327,7 @@ const VoiceLibrary = () => {
                     <div
                       key={lesson.id}
                       className="flex items-center gap-4 px-4 py-3 bg-[#111113] border border-white/[0.07] rounded-xl hover:border-white/[0.14] hover:bg-[#141416] transition-all group cursor-pointer"
-                      onClick={() => navigate(isAuthenticated ? `/m/voice/practice/${lesson.id}` : '/login')}
+                      onClick={() => navigate(`/m/voice/practice/${lesson.id}`)}
                     >
                       <div className="relative w-16 h-16 rounded-xl bg-[#0d0d0f] border border-white/[0.06] overflow-hidden shrink-0 flex items-center justify-center">
                         {lesson.thumbnailUrl ? (
@@ -384,7 +384,7 @@ const VoiceLibrary = () => {
                     <div
                       key={lesson.id}
                       className="group flex flex-col bg-[#111113] border border-white/[0.07] rounded-2xl overflow-hidden hover:border-gold/25 hover:shadow-[0_0_20px_rgba(245,166,35,0.06)] transition-all cursor-pointer"
-                      onClick={() => navigate(isAuthenticated ? `/m/voice/practice/${lesson.id}` : '/login')}
+                      onClick={() => navigate(`/m/voice/practice/${lesson.id}`)}
                     >
                       {/* Thumbnail */}
                       <div className="relative w-full aspect-video bg-[#0d0d0f] flex items-center justify-center overflow-hidden">

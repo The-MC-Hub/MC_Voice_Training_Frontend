@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../store/useAuthStore";
-import { fetchLessonById, analyzePractice, fetchPracticeHistory } from "../controllers/voiceController";
+import { fetchLessonById, analyzePractice, analyzeGuestPractice, fetchPracticeHistory } from "../controllers/voiceController";
 import { academyService } from "../services/academyService";
 import { useAudioAnalyser } from "./useAudioAnalyser";
 import celebrate from "../utils/celebrate";
@@ -47,6 +47,29 @@ export function useVoicePractice() {
   const analyzeTimerRef = useRef(null);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+
+  // Guest cooldown — tracked via localStorage, duration fetched from API
+  const GUEST_COOLDOWN_KEY = "mchub_guest_practice_until";
+  const [guestCooldownMs, setGuestCooldownMs] = useState(3 * 60 * 60 * 1000);
+  const [guestCooldownUntil, setGuestCooldownUntil] = useState(() => {
+    if (typeof window === "undefined") return null;
+    const stored = localStorage.getItem(GUEST_COOLDOWN_KEY);
+    if (!stored) return null;
+    const ts = parseInt(stored, 10);
+    return ts > Date.now() ? ts : null;
+  });
+
+  useEffect(() => {
+    if (user) return;
+    import("../services/api").then(({ default: api }) => {
+      api.get("/voice/guest-cooldown-hours")
+        .then(res => {
+          const h = res.data?.data?.hours;
+          if (h && h > 0) setGuestCooldownMs(h * 60 * 60 * 1000);
+        })
+        .catch(() => {});
+    });
+  }, [user]);
   const [history, setHistory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -200,10 +223,12 @@ export function useVoicePractice() {
   }, [id, user?.id]);
 
   const startRecording = async () => {
-    const plan = user?.plan || "FREE";
-    const aiUsed = user?.aiSessionsUsed ?? 0;
-    if (plan === "FREE" && aiUsed >= 5) { navigate("/m/payment"); return; }
-    if (plan === "BASIC" && aiUsed >= 20) { navigate("/m/payment"); return; }
+    if (user) {
+      const plan = user?.plan || "FREE";
+      const aiUsed = user?.aiSessionsUsed ?? 0;
+      if (plan === "FREE" && aiUsed >= 5) { navigate("/m/payment"); return; }
+      if (plan === "BASIC" && aiUsed >= 20) { navigate("/m/payment"); return; }
+    }
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       liveStreamRef.current = stream;
@@ -261,11 +286,27 @@ export function useVoicePractice() {
 
   const handleAnalyze = async () => {
     if (!audioBlob) return;
+
+    // Guest cooldown gate
+    if (!user) {
+      const stored = localStorage.getItem(GUEST_COOLDOWN_KEY);
+      if (stored) {
+        const ts = parseInt(stored, 10);
+        if (ts > Date.now()) {
+          setGuestCooldownUntil(ts);
+          return;
+        }
+      }
+    }
+
     setAnalyzing(true);
     setError(null);
     startAnalyzeProgress();
     try {
-      const data = await analyzePractice(id, user.id, audioBlob);
+      const data = user
+          ? await analyzePractice(id, user.id, audioBlob)
+          : await analyzeGuestPractice(audioBlob, lesson?.content);
+          
       setResult({
         accuracy_score: data.accuracy_score ?? data.accuracyScore ?? 0,
         rhythm_score: data.rhythm_score ?? data.rhythmScore ?? 0,
@@ -287,17 +328,25 @@ export function useVoicePractice() {
         status: "success",
       });
       stopAnalyzeProgress(true);
-      if (courseId) {
+      if (courseId && user) {
         academyService.completeLesson(courseId, id).catch(() => {});
         celebrate("🎉 Tuyệt vời! Bạn đã hoàn thành bài luyện!");
+      } else if (!user) {
+        const cooldownTs = Date.now() + guestCooldownMs;
+        localStorage.setItem(GUEST_COOLDOWN_KEY, String(cooldownTs));
+        setGuestCooldownUntil(cooldownTs);
+        celebrate("🎉 Trải nghiệm hoàn tất! Đăng ký để lưu kết quả và luyện không giới hạn.");
       }
-      await Promise.all([fetchHistory(), refreshUser()]);
+      
+      if (user) {
+        await Promise.all([fetchHistory(), refreshUser()]);
+      }
     } catch (err) {
       stopAnalyzeProgress(false);
       if (err.response?.status === 402 || err.response?.data?.code === "ERR_4005") {
         navigate("/m/payment");
       }
-      setError("AI Analysis failed. Please try again.");
+      setError(err.response?.data?.message || "AI Analysis failed. Please try again.");
     } finally {
       setAnalyzing(false);
     }
@@ -379,6 +428,8 @@ export function useVoicePractice() {
     user, evalLanguage, i18nInstance, t, t_vp,
     // data
     lesson, course, loading, error, history, currentPage, setCurrentPage, itemsPerPage, totalPracticesCount,
+    // guest
+    guestCooldownUntil,
     // recording state
     recording, audioBlob, audioUrl, analyzing, analyzeProgress, analyzePhase, result, recordingTime,
     // recording actions

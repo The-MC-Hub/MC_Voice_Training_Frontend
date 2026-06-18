@@ -43,6 +43,21 @@ export const analyzePractice = async (lessonId, userId, audioFile) => {
     return response.data.data;
 };
 
+export const analyzeGuestPractice = async (audioFile, scriptOrigin) => {
+    const formData = new FormData();
+    const ext = audioFile.type?.includes('ogg') ? 'ogg' : 'webm';
+    formData.append('audioFile', audioFile, `recording.${ext}`);
+    if (scriptOrigin) {
+        formData.append('scriptOrigin', scriptOrigin);
+    }
+
+    const response = await api.post('/voice/practice/analyze-guest', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 120000,
+    });
+    return response.data.data;
+};
+
 export const fetchPracticeHistory = async (userId) => {
     if (!userId || userId === "undefined") {
         return [];
