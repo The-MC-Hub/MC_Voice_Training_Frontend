@@ -194,7 +194,17 @@ const VoicePractice = () => {
                 {/* Pre-record: script left + recorder right */}
                 {!result && lesson && (
                   <div className="flex gap-4 items-stretch min-h-[480px]">
-                    <SimpleScriptPanel lesson={lesson} />
+                    <SimpleScriptPanel
+                    lesson={lesson}
+                    scriptFontSize={scriptFontSize} setScriptFontSize={setScriptFontSize}
+                    scriptAlign={scriptAlign} setScriptAlign={setScriptAlign}
+                    scriptFont={scriptFont} setScriptFont={setScriptFont}
+                    scriptBg={scriptBg} setScriptBg={setScriptBg}
+                    teleprompter={teleprompter} setTeleprompter={setTeleprompter}
+                    teleprompterWpm={teleprompterWpm} setTeleprompterWpm={setTeleprompterWpm}
+                    teleprompterRunning={teleprompterRunning} setTeleprompterRunning={setTeleprompterRunning}
+                    scriptScrollRef={scriptScrollRef}
+                  />
                     <RecordingCard
                       recording={recording} audioBlob={audioBlob} audioUrl={audioUrl} analyzing={analyzing}
                       recordingTime={recordingTime} formatTime={formatTime}

@@ -13,9 +13,9 @@ const BG_MAP = { cream: "#faf8f3", white: "#ffffff", sepia: "#f5ecd7", dark: "#1
 const TEXT_MAP = { cream: "#292524", white: "#1c1917", sepia: "#44321a", dark: "#e4e4e7" };
 const SUB_TEXT_MAP = { cream: "#78716c", white: "#71717a", sepia: "#92400e", dark: "#71717a" };
 const FONT_MAP = {
-  serif: 'Georgia, "Times New Roman", serif',
-  sans: "Inter, system-ui, sans-serif",
-  mono: '"Courier New", Courier, monospace',
+  serif: '"Noto Serif", "Times New Roman", serif',
+  sans: '"Be Vietnam Pro", Inter, system-ui, sans-serif',
+  mono: '"Noto Sans Mono", "Courier New", monospace',
 };
 
 function renderInlineMarkdown(text) {
@@ -34,26 +34,142 @@ function renderInlineMarkdown(text) {
   return parts.length ? parts : text;
 }
 
-// Simple pre-record script: just renders lesson content without annotation system
-export function SimpleScriptPanel({ lesson }) {
+// Simple pre-record script: full toolbar (font, size, align, bg, teleprompter) — no annotations
+export function SimpleScriptPanel({
+  lesson,
+  scriptFontSize, setScriptFontSize,
+  scriptAlign, setScriptAlign,
+  scriptFont, setScriptFont,
+  scriptBg, setScriptBg,
+  teleprompter, setTeleprompter,
+  teleprompterWpm, setTeleprompterWpm,
+  teleprompterRunning, setTeleprompterRunning,
+  scriptScrollRef,
+}) {
+  // Fallback local state when props not provided (standalone usage)
+  const [localSize, setLocalSize] = React.useState(22);
+  const [localAlign, setLocalAlign] = React.useState("center");
+  const [localFont, setLocalFont] = React.useState("serif");
+  const [localBg, setLocalBg] = React.useState("cream");
+  const [localTeleprompter, setLocalTeleprompter] = React.useState(false);
+  const [localWpm, setLocalWpm] = React.useState(130);
+  const [localRunning, setLocalRunning] = React.useState(false);
+  const localScrollRef = React.useRef(null);
+  const teleprompterRef = React.useRef(null);
+
+  const fSize = scriptFontSize ?? localSize;
+  const setFSize = setScriptFontSize ?? setLocalSize;
+  const fAlign = scriptAlign ?? localAlign;
+  const setFAlign = setScriptAlign ?? setLocalAlign;
+  const fFont = scriptFont ?? localFont;
+  const setFFont = setScriptFont ?? setLocalFont;
+  const fBg = scriptBg ?? localBg;
+  const setFBg = setScriptBg ?? setLocalBg;
+  const tp = teleprompter ?? localTeleprompter;
+  const setTp = setTeleprompter ?? setLocalTeleprompter;
+  const tpWpm = teleprompterWpm ?? localWpm;
+  const setTpWpm = setTeleprompterWpm ?? setLocalWpm;
+  const tpRunning = teleprompterRunning ?? localRunning;
+  const setTpRunning = setTeleprompterRunning ?? setLocalRunning;
+  const scrollRef = scriptScrollRef ?? localScrollRef;
+
+  // Teleprompter auto-scroll
+  React.useEffect(() => {
+    if (!tpRunning || !tp) return;
+    const msPerWord = 60000 / tpWpm;
+    const avgWordLen = 5;
+    const pxPerMs = (fSize * 1.7) / (msPerWord * avgWordLen);
+    const tick = 16;
+    const id = setInterval(() => {
+      if (scrollRef.current) scrollRef.current.scrollTop += pxPerMs * tick;
+    }, tick);
+    return () => clearInterval(id);
+  }, [tpRunning, tp, tpWpm, fSize, scrollRef]);
+
   if (!lesson) return null;
+
+  const bg = BG_MAP[fBg];
+  const textColor = TEXT_MAP[fBg];
+  const subColor = SUB_TEXT_MAP[fBg];
+
+  const renderContent = () => {
+    if (!lesson.content) return <p style={{ color: "#71717a", fontSize: "14px" }}>Không có kịch bản</p>;
+    return lesson.content.split("\n").map((line, i) => {
+      const h = line.match(/^#{1,3}\s+(.+)$/);
+      if (h) return <p key={i} style={{ fontWeight: 700, fontSize: `${Math.round(fSize * 0.72)}px`, letterSpacing: "0.06em", textTransform: "uppercase", color: subColor, margin: "1.5rem 0 0.5rem", textAlign: "center" }}>{h[1]}</p>;
+      if (!line.trim()) return <br key={i} />;
+      const parts = line.split(/\*\*(.+?)\*\*/g);
+      return <p key={i} style={{ marginBottom: "0.25rem" }}>{parts.map((p, j) => j % 2 === 1 ? <strong key={j}>{p}</strong> : p)}</p>;
+    });
+  };
+
   return (
-    <div className="flex-1 rounded-2xl border border-white/[0.07] bg-[#111113] overflow-hidden flex flex-col">
-      <div className="px-5 py-4 border-b border-white/[0.07] flex items-center gap-2">
-        <BookOpen size={13} className="text-zinc-500" />
-        <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">Kịch bản luyện tập</span>
+    <div className="flex-1 rounded-2xl border border-white/[0.07] bg-[#111113] overflow-hidden flex flex-col min-w-0">
+      {/* Toolbar */}
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.07] bg-[#0d0d0f] gap-2 flex-wrap">
+        <div className="flex items-center gap-1">
+          <button onClick={() => setFSize(s => Math.max(14, s - 2))} className="w-6 h-6 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Minus size={12} /></button>
+          <span className="text-[11px] text-zinc-500 w-8 text-center font-mono">{fSize}px</span>
+          <button onClick={() => setFSize(s => Math.min(48, s + 2))} className="w-6 h-6 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Plus size={12} /></button>
+        </div>
+
+        <div className="flex items-center gap-0.5 bg-[#111113] border border-white/[0.07] rounded-lg p-0.5">
+          {[["left", AlignLeft], ["center", AlignCenter], ["right", AlignRight]].map(([v, Icon]) => (
+            <button key={v} onClick={() => setFAlign(v)} className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${fAlign === v ? "bg-gold/20 text-gold" : "text-zinc-500 hover:text-white"}`}><Icon size={12} /></button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-0.5 bg-[#111113] border border-white/[0.07] rounded-lg p-0.5">
+          {[["serif", "S"], ["sans", "A"], ["mono", "M"]].map(([v, label]) => (
+            <button key={v} onClick={() => setFFont(v)} className={`px-2 h-6 text-[11px] font-medium rounded transition-colors ${fFont === v ? "bg-gold/20 text-gold" : "text-zinc-500 hover:text-white"}`}>{label}</button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-1">
+          {[{ v: "cream", bg: "#faf8f3", ring: "ring-amber-400" }, { v: "white", bg: "#ffffff", ring: "ring-zinc-300" }, { v: "sepia", bg: "#f5ecd7", ring: "ring-amber-600" }, { v: "dark", bg: "#1a1a1e", ring: "ring-zinc-600" }].map(({ v, bg: btnBg, ring }) => (
+            <button key={v} onClick={() => setFBg(v)} style={{ background: btnBg }} className={`w-5 h-5 rounded-full border border-white/20 transition-all ${fBg === v ? `ring-2 ring-offset-1 ring-offset-[#0d0d0f] ${ring}` : ""}`} />
+          ))}
+        </div>
+
+        <div className="flex items-center gap-1.5 ml-auto">
+          {tp && (
+            <div className="flex items-center gap-1">
+              <Gauge size={11} className="text-zinc-600" />
+              <button onClick={() => setTpWpm(w => Math.max(60, w - 10))} className="w-5 h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Minus size={10} /></button>
+              <span className="text-[11px] text-zinc-500 w-10 text-center font-mono">{tpWpm}</span>
+              <button onClick={() => setTpWpm(w => Math.min(250, w + 10))} className="w-5 h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Plus size={10} /></button>
+              <button
+                onClick={() => {
+                  if (tpRunning) { setTpRunning(false); }
+                  else { if (scrollRef.current) scrollRef.current.scrollTop = 0; setTpRunning(true); }
+                }}
+                className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium transition-colors ${tpRunning ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-gold/10 text-gold border border-gold/30 hover:bg-gold/20"}`}
+              >
+                {tpRunning ? <><Square size={10} /> Dừng</> : <><Play size={10} /> Chạy</>}
+              </button>
+            </div>
+          )}
+          <button
+            onClick={() => { setTp(v => !v); setTpRunning(false); }}
+            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium border transition-colors ${tp ? "bg-blue-500/10 text-blue-400 border-blue-500/30" : "text-zinc-500 border-white/[0.07] hover:text-white hover:border-white/20"}`}
+          >
+            <Gauge size={11} /> Teleprompter
+          </button>
+        </div>
       </div>
-      <div className="flex-1 overflow-y-auto px-8 py-6" style={{ background: "#faf8f3", fontFamily: "Georgia, serif", fontSize: "22px", color: "#292524", lineHeight: 1.8, textAlign: "center" }}>
-        {lesson.content
-          ? lesson.content.split("\n").map((line, i) => {
-              const h = line.match(/^#{1,3}\s+(.+)$/);
-              if (h) return <p key={i} style={{ fontWeight: 700, fontSize: "16px", letterSpacing: "0.06em", textTransform: "uppercase", color: "#78716c", margin: "1.5rem 0 0.5rem" }}>{h[1]}</p>;
-              if (!line.trim()) return <br key={i} />;
-              const parts = line.split(/\*\*(.+?)\*\*/g);
-              return <p key={i}>{parts.map((p, j) => j % 2 === 1 ? <strong key={j}>{p}</strong> : p)}</p>;
-            })
-          : <p className="text-zinc-400 text-[14px]">Không có kịch bản</p>
-        }
+
+      {/* Script */}
+      <div
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto px-8 py-6"
+        style={{ background: bg, scrollbarWidth: "thin", scrollbarColor: `${subColor}40 transparent` }}
+      >
+        <h3 style={{ color: subColor, textAlign: "center", fontSize: "11px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "1.5rem" }}>
+          Kịch bản luyện tập
+        </h3>
+        <div style={{ fontFamily: FONT_MAP[fFont], fontSize: `${fSize}px`, color: textColor, textAlign: fAlign, lineHeight: 1.8 }}>
+          {renderContent()}
+        </div>
       </div>
     </div>
   );
