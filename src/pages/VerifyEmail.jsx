@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import api from "../services/api";
 import { useAuthStore } from "../store/useAuthStore";
+import { academyService } from "../services/academyService";
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
@@ -27,11 +28,17 @@ const VerifyEmail = () => {
     }
 
     api.get(`/auth/verify-email?token=${encodeURIComponent(token)}`)
-      .then((res) => {
+      .then(async (res) => {
         const { token: jwt, user } = res.data.data;
         localStorage.setItem("token", jwt);
         localStorage.setItem("user", JSON.stringify(user));
         useAuthStore.setState({ user, token: jwt, role: user.role, isAuthenticated: true });
+        // Enroll gift course chosen during registration quiz (if any)
+        const giftCourseId = sessionStorage.getItem("giftCourseId");
+        if (giftCourseId) {
+          sessionStorage.removeItem("giftCourseId");
+          try { await academyService.giftEnrollCourse(giftCourseId); } catch { /* ignore */ }
+        }
         setStatus("success");
         setTimeout(() => navigate("/m/dashboard", { replace: true }), 2000);
       })

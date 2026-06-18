@@ -732,6 +732,12 @@ const Register = () => {
   const handleQuizDone = async (pickedCourse) => {
     // pickedCourse may be null (skipped)
     setPendingCourse(pickedCourse || null);
+    // Persist so VerifyEmail page can enroll after magic link click
+    if (pickedCourse) {
+      sessionStorage.setItem("giftCourseId", pickedCourse.id || pickedCourse._id);
+    } else {
+      sessionStorage.removeItem("giftCourseId");
+    }
     setLocalError("");
     setSubmitting(true);
     try {
