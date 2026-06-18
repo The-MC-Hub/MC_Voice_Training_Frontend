@@ -459,8 +459,10 @@ const CoursePickScreen = ({ onPick, onSkip, submitting }) => {
   // "quiz" | "analyzing" | "result"
   const [phase, setPhase] = useState("quiz");
   const [quizStep, setQuizStep] = useState(0);
-  const [answers, setAnswers] = useState([]); // array of option objects
+  const [answers, setAnswers] = useState([]);
   const [suggestedCourse, setSuggestedCourse] = useState(null);
+  const [selectedIdx, setSelectedIdx] = useState(null); // highlight on tap before transition
+  const [direction, setDirection] = useState(1); // 1 = forward
 
   useEffect(() => {
     academyService.getAllCourses()
@@ -469,14 +471,12 @@ const CoursePickScreen = ({ onPick, onSkip, submitting }) => {
   }, []);
 
   const pickBestCourse = (collectedAnswers, courses) => {
-    // Tally category scores from all answers
     const scores = {};
     for (const opt of collectedAnswers) {
       for (const [cat, w] of Object.entries(opt.weights)) {
         scores[cat] = (scores[cat] || 0) + w;
       }
     }
-    // Sort categories by score desc
     const ranked = Object.entries(scores).sort((a, b) => b[1] - a[1]);
     let match = null;
     for (const [cat] of ranked) {
@@ -486,121 +486,178 @@ const CoursePickScreen = ({ onPick, onSkip, submitting }) => {
     return match || courses[0] || null;
   };
 
-  const handleAnswer = (option) => {
+  const handleAnswer = (option, idx) => {
+    setSelectedIdx(idx);
     const newAnswers = [...answers, option];
-    setAnswers(newAnswers);
 
-    if (quizStep < QUIZ.length - 1) {
-      setQuizStep(q => q + 1);
-    } else {
-      // All answered — pick course
-      setPhase("analyzing");
-      setTimeout(() => {
-        const best = pickBestCourse(newAnswers, allCourses);
-        setSuggestedCourse(best);
-        setPhase("result");
-      }, 1400);
-    }
-  };
-
-  const handleAcceptGift = () => {
-    onPick(suggestedCourse);
+    setTimeout(() => {
+      setSelectedIdx(null);
+      if (quizStep < QUIZ.length - 1) {
+        setDirection(1);
+        setAnswers(newAnswers);
+        setQuizStep(q => q + 1);
+      } else {
+        setAnswers(newAnswers);
+        setPhase("analyzing");
+        setTimeout(() => {
+          const best = pickBestCourse(newAnswers, allCourses);
+          setSuggestedCourse(best);
+          setPhase("result");
+        }, 1600);
+      }
+    }, 180);
   };
 
   // ── Quiz phase ──────────────────────────────────────────────────────────
   if (phase === "quiz") {
     const q = QUIZ[quizStep];
-    const progress = ((quizStep) / QUIZ.length) * 100;
 
     return (
-      <motion.div
-        key={`quiz-${quizStep}`}
-        initial={{ opacity: 0, x: 28 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -28 }}
-        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col py-2"
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col h-full">
+        {/* Dot timeline + skip */}
+        <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-semibold text-amber-600 uppercase tracking-widest">
-              Câu {quizStep + 1}/{QUIZ.length}
-            </span>
+            {QUIZ.map((_, i) => (
+              <motion.div
+                key={i}
+                animate={{
+                  width: i === quizStep ? 24 : 8,
+                  backgroundColor: i < quizStep ? "#f59e0b" : i === quizStep ? "#f59e0b" : "#e5e7eb",
+                  opacity: i > quizStep ? 0.5 : 1,
+                }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="h-2 rounded-full"
+              />
+            ))}
           </div>
-          <button onClick={onSkip} className="text-[11px] text-gray-400 hover:text-gray-600 transition-colors">
-            Bỏ qua →
+          <button
+            onClick={onSkip}
+            className="text-[11px] text-gray-400 hover:text-gray-600 transition-colors font-medium"
+          >
+            Bỏ qua
           </button>
         </div>
 
-        {/* Progress bar */}
-        <div className="h-1 bg-gray-100 rounded-full mb-6 overflow-hidden">
+        <AnimatePresence mode="wait" custom={direction}>
           <motion.div
-            className="h-full bg-amber-400 rounded-full"
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-          />
-        </div>
-
-        {/* Question */}
-        <div className="text-center mb-6">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.05, type: "spring", damping: 14, stiffness: 260 }}
-            className="w-14 h-14 rounded-2xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center mx-auto mb-4"
+            key={quizStep}
+            custom={direction}
+            initial={{ opacity: 0, x: direction * 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: direction * -40 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col flex-1"
           >
-            <span className="text-2xl">{q.icon}</span>
-          </motion.div>
-          <h3 className="text-[20px] font-bold text-gray-900 leading-tight">{q.question}</h3>
-          {quizStep === 0 && (
-            <p className="text-[12px] text-gray-500 mt-2">
-              MC Hub sẽ tặng bạn <span className="font-semibold text-amber-600">1 khóa học miễn phí</span> dựa trên câu trả lời.
-            </p>
-          )}
-        </div>
-
-        {/* Options */}
-        <div className="flex flex-col gap-2.5">
-          {q.options.map((opt, i) => (
-            <motion.button
-              key={opt.label}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 + i * 0.04, duration: 0.35 }}
-              onClick={() => handleAnswer(opt)}
-              className="flex items-center gap-4 p-3.5 rounded-2xl border-2 border-gray-200 bg-white hover:border-amber-400 hover:bg-amber-50/40 active:scale-[0.99] transition-all text-left group"
-            >
-              <div className="w-9 h-9 rounded-xl bg-gray-50 group-hover:bg-amber-100/60 flex items-center justify-center text-lg shrink-0 transition-colors">
-                {opt.icon}
+            {/* Question header */}
+            <div className="mb-5">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-[11px] font-bold text-amber-500 uppercase tracking-widest">
+                  {quizStep + 1} / {QUIZ.length}
+                </span>
               </div>
-              <span className="text-[13.5px] font-semibold text-gray-800 leading-snug">{opt.label}</span>
-              <ArrowRight size={14} className="ml-auto text-gray-300 group-hover:text-amber-400 transition-colors shrink-0" />
-            </motion.button>
-          ))}
-        </div>
-      </motion.div>
+              <h3 className="text-[19px] font-bold text-gray-900 leading-snug">{q.question}</h3>
+              {quizStep === 0 && (
+                <p className="text-[12px] text-gray-500 mt-1.5">
+                  MC Hub sẽ tặng bạn <span className="font-semibold text-amber-600">1 khóa học miễn phí</span> dựa trên câu trả lời của bạn.
+                </p>
+              )}
+            </div>
+
+            {/* Option cards — large, tap-friendly */}
+            <div className="flex flex-col gap-2">
+              {q.options.map((opt, i) => {
+                const isSelected = selectedIdx === i;
+                return (
+                  <motion.button
+                    key={opt.label}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    onClick={() => handleAnswer(opt, i)}
+                    className={`flex items-center gap-3.5 px-4 py-3.5 rounded-2xl border-2 text-left transition-all duration-150 group
+                      ${isSelected
+                        ? "border-amber-500 bg-amber-50 scale-[0.98]"
+                        : "border-gray-200 bg-white hover:border-amber-300 hover:bg-amber-50/30 active:scale-[0.98]"
+                      }`}
+                  >
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 transition-colors
+                      ${isSelected ? "bg-amber-100" : "bg-gray-50 group-hover:bg-amber-100/60"}`}>
+                      {opt.icon}
+                    </div>
+                    <span className="text-[13.5px] font-semibold text-gray-800 leading-snug flex-1">{opt.label}</span>
+                    <motion.div
+                      animate={{ scale: isSelected ? 1 : 0, opacity: isSelected ? 1 : 0 }}
+                      transition={{ duration: 0.15 }}
+                      className="w-5 h-5 rounded-full bg-amber-500 flex items-center justify-center shrink-0"
+                    >
+                      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                        <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </motion.div>
+                    {!isSelected && (
+                      <ArrowRight size={14} className="text-gray-300 group-hover:text-amber-400 transition-colors shrink-0" />
+                    )}
+                  </motion.button>
+                );
+              })}
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
     );
   }
 
   // ── Analyzing phase ─────────────────────────────────────────────────────
   if (phase === "analyzing") {
+    const steps = ["Phân tích câu trả lời...", "Tìm khóa học phù hợp...", "Chuẩn bị quà tặng..."];
     return (
       <motion.div
         key="analyzing"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="flex flex-col items-center justify-center py-16 text-center"
+        className="flex flex-col items-center justify-center py-10 text-center"
       >
-        <div className="w-16 h-16 relative flex items-center justify-center mb-6">
-          <div className="absolute inset-0 rounded-full border-4 border-amber-100" />
-          <div className="absolute inset-0 rounded-full border-4 border-amber-500 border-t-transparent animate-spin" />
-          <span className="text-xl animate-pulse">🎁</span>
+        {/* Pulsing rings */}
+        <div className="relative w-20 h-20 flex items-center justify-center mb-6">
+          <motion.div
+            animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0, 0.3] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute inset-0 rounded-full bg-amber-200"
+          />
+          <motion.div
+            animate={{ scale: [1, 1.3, 1], opacity: [0.4, 0, 0.4] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+            className="absolute inset-0 rounded-full bg-amber-300"
+          />
+          <div className="w-16 h-16 rounded-full bg-amber-500 flex items-center justify-center shadow-lg shadow-amber-200 z-10">
+            <span className="text-2xl">🎁</span>
+          </div>
         </div>
-        <h3 className="text-[18px] font-bold text-gray-900 mb-2">Đang phân tích...</h3>
-        <p className="text-[13px] text-gray-500">Tìm khóa học phù hợp nhất với bạn</p>
+
+        <h3 className="text-[18px] font-bold text-gray-900 mb-4">Đang tìm quà cho bạn</h3>
+
+        <div className="flex flex-col gap-2 w-full max-w-55">
+          {steps.map((s, i) => (
+            <motion.div
+              key={s}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.4, duration: 0.4 }}
+              className="flex items-center gap-2 text-[12px] text-gray-500"
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: i * 0.4 + 0.2, type: "spring", stiffness: 300 }}
+                className="w-4 h-4 rounded-full bg-amber-100 flex items-center justify-center shrink-0"
+              >
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+              </motion.div>
+              {s}
+            </motion.div>
+          ))}
+        </div>
       </motion.div>
     );
   }
@@ -612,65 +669,91 @@ const CoursePickScreen = ({ onPick, onSkip, submitting }) => {
     return (
       <motion.div
         key="gift"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4, type: "spring", bounce: 0.35 }}
-        className="flex flex-col py-2 text-center"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="flex flex-col py-1"
       >
-        <div className="relative mx-auto mb-5">
+        {/* Header strip */}
+        <div className="flex items-center gap-3 mb-5">
           <motion.div
-            initial={{ scale: 0, rotate: -15 }}
+            initial={{ scale: 0, rotate: -20 }}
             animate={{ scale: 1, rotate: 0 }}
-            transition={{ delay: 0.15, type: "spring", stiffness: 200 }}
-            className="w-20 h-20 rounded-3xl bg-linear-to-br from-amber-300 to-amber-500 flex items-center justify-center shadow-lg shadow-amber-200 z-10 relative"
+            transition={{ type: "spring", stiffness: 220, damping: 14, delay: 0.1 }}
+            className="w-12 h-12 rounded-2xl bg-linear-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-md shadow-amber-200 shrink-0"
           >
-            <span className="text-4xl drop-shadow-md">🎁</span>
+            <span className="text-2xl">🎁</span>
           </motion.div>
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4 }}
-            className="absolute -top-3 -right-3 text-2xl"
-          >✨</motion.div>
+          <div>
+            <p className="text-[11px] font-bold text-amber-500 uppercase tracking-widest">Quà tặng của bạn</p>
+            <h3 className="text-[18px] font-bold text-gray-900 leading-tight">Khóa học miễn phí!</h3>
+          </div>
+          <motion.span
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5 }}
+            className="ml-auto text-2xl"
+          >✨</motion.span>
         </div>
 
-        <h3 className="text-[22px] font-bold text-gray-900 mb-1.5">Quà tặng dành cho bạn!</h3>
-        <p className="text-[13px] text-gray-500 mb-5 leading-relaxed">
-          Dựa trên câu trả lời, MC Hub tặng bạn khóa học phù hợp nhất để bắt đầu.
-        </p>
-
-        <div className="bg-white border-2 border-amber-200 rounded-2xl p-4 text-left shadow-xs mb-5">
-          <div className="flex items-center gap-3">
+        {/* Course card */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.35 }}
+          className="rounded-2xl border-2 border-amber-200 bg-amber-50/40 p-4 mb-4"
+        >
+          <div className="flex items-start gap-3">
             <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0"
-              style={{ background: meta.color + "20", border: `1.5px solid ${meta.color}40` }}
+              className="w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0 mt-0.5"
+              style={{ background: meta.color + "18", border: `1.5px solid ${meta.color}35` }}
             >
               {meta.emoji}
             </div>
             <div className="flex-1 min-w-0">
-              <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider mb-1" style={{ background: meta.color + "20", color: meta.color }}>
+              <span
+                className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider mb-1.5"
+                style={{ background: meta.color + "18", color: meta.color }}
+              >
                 {meta.label}
               </span>
-              <p className="text-[15px] font-bold text-gray-900 leading-tight">
+              <p className="text-[14px] font-bold text-gray-900 leading-snug mb-1">
                 {suggestedCourse.title || meta.label}
               </p>
               {suggestedCourse.description && (
-                <p className="text-[11px] text-gray-500 mt-1 line-clamp-2">{suggestedCourse.description}</p>
+                <p className="text-[11px] text-gray-500 line-clamp-2 leading-relaxed">{suggestedCourse.description}</p>
               )}
             </div>
           </div>
-        </div>
 
-        <button
-          onClick={handleAcceptGift}
+          {/* Match badge */}
+          <div className="mt-3 pt-3 border-t border-amber-100 flex items-center gap-1.5">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M2 6L4.5 8.5L10 3" stroke="#f59e0b" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span className="text-[11px] text-amber-600 font-semibold">Phù hợp với mục tiêu của bạn</span>
+          </div>
+        </motion.div>
+
+        <motion.button
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+          onClick={() => onPick(suggestedCourse)}
           disabled={submitting}
-          className="w-full py-3.5 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2 transition-all mb-3"
+          className="w-full py-3.5 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2 transition-all mb-2.5 shadow-sm shadow-amber-200"
         >
           {submitting
             ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Đang tạo tài khoản...</>
-            : <>Nhận quà &amp; Xác nhận email <ArrowRight size={16} /></>
+            : <>Nhận quà &amp; Xác nhận email <ArrowRight size={15} /></>
           }
-        </button>
+        </motion.button>
 
-        <button onClick={onSkip} disabled={submitting} className="text-[12px] text-gray-400 hover:text-gray-600 disabled:opacity-40 transition-colors">
+        <button
+          onClick={onSkip}
+          disabled={submitting}
+          className="text-[12px] text-gray-400 hover:text-gray-600 disabled:opacity-40 transition-colors text-center"
+        >
           Bỏ qua, chỉ xác nhận email
         </button>
       </motion.div>
