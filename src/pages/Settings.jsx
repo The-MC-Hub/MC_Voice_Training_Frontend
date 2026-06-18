@@ -47,6 +47,7 @@ import MCProfileView from "../components/profile/MCProfileView";
 import { uploadMedia } from "../services/mediaService";
 import api from "../services/api";
 import Breadcrumb from '../components/ui/Breadcrumb';
+import { useTour } from '../contexts/TourContext';
 
 const inputCls = "flex-1 bg-transparent text-[13px] text-gray-800 placeholder:text-gray-400 focus:outline-none min-w-0";
 const inputWrapCls = "flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5 focus-within:border-amber-400 transition-colors";
@@ -241,6 +242,7 @@ const Settings = () => {
   const { user, updateUser, logout, refreshUser } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
+  const { startTour } = useTour();
   const [showBioPreview, setShowBioPreview] = useState(false);
   const [showPersonalityPreview, setShowPersonalityPreview] = useState(false);
 
@@ -926,7 +928,25 @@ const Settings = () => {
               <Globe size={16} className="text-[#f5a623]" />
               <h2 className="text-[15px] font-semibold text-gray-900">{t('settings.general')}</h2>
             </div>
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-3">
+                {/* Replay tour */}
+                <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 border border-gray-100">
+                  <div>
+                    <p className="text-[13px] font-medium text-gray-800">Hướng dẫn sử dụng</p>
+                    <p className="text-[11px] text-gray-500 mt-0.5">Xem lại tour giới thiệu các tính năng chính</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      localStorage.removeItem("mcvt_tour_done");
+                      startTour();
+                    }}
+                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 text-[12px] font-semibold hover:bg-amber-100 transition-colors"
+                  >
+                    <History size={13} />
+                    Xem lại hướng dẫn
+                  </button>
+                </div>
                 <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 border border-gray-100">
                   <div>
                     <p className="text-[13px] font-medium text-gray-800">{t('settings.interfaceLanguage')}</p>

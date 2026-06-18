@@ -5,6 +5,8 @@ import { useAuthStore } from './store/useAuthStore';
 import PageLoader from './components/ui/PageLoader';
 import PageTransition from './components/animations/PageTransition';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { TourProvider } from './contexts/TourContext';
+import OnboardingTour from './components/OnboardingTour';
 
 import Home from './pages/Home';
 import About from './pages/About';
@@ -83,6 +85,8 @@ function App() {
 
   return (
     <ThemeProvider>
+      <TourProvider>
+      <OnboardingTour />
       <div className={`app-container${noSidebar ? '' : ' has-sidebars'}`}>
         <PopularLessonsSidebar />
         <AdSidebar />
@@ -152,6 +156,7 @@ function App() {
           </AnimatePresence>
         </Suspense>
       </div>
+      </TourProvider>
     </ThemeProvider>
   );
 }

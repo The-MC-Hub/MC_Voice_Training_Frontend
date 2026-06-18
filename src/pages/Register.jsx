@@ -891,6 +891,9 @@ const Register = () => {
       const id = pendingCourse.id || pendingCourse._id;
       try { await academyService.giftEnrollCourse(id); } catch { /* ignore */ }
     }
+    // Flag tour to start on first dashboard visit
+    localStorage.setItem("mcvt_tour_pending", "1");
+    localStorage.removeItem("mcvt_tour_done");
     setStep("success");
     setTimeout(() => navigate(ROLE_REDIRECT[res.user?.role?.toLowerCase()] || "/m/dashboard"), 1500);
   };

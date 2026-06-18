@@ -82,10 +82,11 @@ const Navbar = () => {
               <>
                 <NavLink to="/">{t('navbar.home')}</NavLink>
                 <NavLink to="/about">{t('navbar.about')}</NavLink>
-                <NavLink to="/m/dashboard">{t('navbar.dashboard')}</NavLink>
-                <NavLink to="/m/voice/library">{t('navbar.training')}</NavLink>
-                <NavLink to="/m/courses">{t('navbar.courses')}</NavLink>
+                <span data-tour="tour-dashboard"><NavLink to="/m/dashboard">{t('navbar.dashboard')}</NavLink></span>
+                <span data-tour="tour-training"><NavLink to="/m/voice/library">{t('navbar.training')}</NavLink></span>
+                <span data-tour="tour-courses"><NavLink to="/m/courses">{t('navbar.courses')}</NavLink></span>
                 <Link
+                  data-tour="tour-pricing"
                   to="/m/payment"
                   className="text-[13px] font-semibold text-[#f5a623] hover:text-[#e09520] transition-colors"
                 >
@@ -141,6 +142,7 @@ const Navbar = () => {
                     </span>
                   )}
                   <Link
+                    data-tour="tour-settings"
                     to="/m/settings"
                     className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${isDark ? 'text-zinc-500 hover:text-white hover:bg-white/[0.07]' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'}`}
                   >
