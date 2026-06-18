@@ -5,6 +5,7 @@ export const academyService = {
   getAllCourses: (type) => api.get('/courses', { params: type ? { type } : {} }),
   getCourseDetail: (id) => api.get(`/courses/${id}`),
   enrollCourse: (id) => api.post(`/courses/${id}/enroll`),
+  giftEnrollCourse: (id) => api.post(`/courses/${id}/gift-enroll`),
   createCourseOrder: (courseId) => api.post(`/payment/course-order?courseId=${courseId}`),
   updateCoursePricing: (courseId, { priceVnd, discountPercent }) => {
     const params = new URLSearchParams();
