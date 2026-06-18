@@ -734,9 +734,9 @@ const Register = () => {
     setPendingCourse(pickedCourse || null);
     // Persist so VerifyEmail page can enroll after magic link click
     if (pickedCourse) {
-      sessionStorage.setItem("giftCourseId", pickedCourse.id || pickedCourse._id);
+      localStorage.setItem("giftCourseId", pickedCourse.id || pickedCourse._id);
     } else {
-      sessionStorage.removeItem("giftCourseId");
+      localStorage.removeItem("giftCourseId");
     }
     setLocalError("");
     setSubmitting(true);

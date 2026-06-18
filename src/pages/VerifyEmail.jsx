@@ -34,9 +34,9 @@ const VerifyEmail = () => {
         localStorage.setItem("user", JSON.stringify(user));
         useAuthStore.setState({ user, token: jwt, role: user.role, isAuthenticated: true });
         // Enroll gift course chosen during registration quiz (if any)
-        const giftCourseId = sessionStorage.getItem("giftCourseId");
+        const giftCourseId = localStorage.getItem("giftCourseId");
         if (giftCourseId) {
-          sessionStorage.removeItem("giftCourseId");
+          localStorage.removeItem("giftCourseId");
           try { await academyService.giftEnrollCourse(giftCourseId); } catch { /* ignore */ }
         }
         setStatus("success");
