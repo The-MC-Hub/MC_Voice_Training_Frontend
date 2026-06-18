@@ -490,7 +490,7 @@ const PaymentPage = () => {
             )}
 
             {/* Discount code input */}
-            {selectedPlanData && !user?.isPremium && (
+            {selectedPlanData && (
               <div className="px-6 py-4 border-b border-gray-100">
                 <p className="text-[11px] text-gray-400 uppercase tracking-wider mb-2">Mã giảm giá</p>
                 <div className="flex gap-2">
