@@ -418,39 +418,90 @@ const CATEGORY_META = {
   GENERAL:        { emoji: "📢", label: "Tổng hợp",         color: "#fb923c", desc: "Kỹ năng nền tảng MC: giọng nói, nhịp điệu, xử lý sự cố" },
 };
 
-const GOALS = [
-  { id: "MC", label: "Trở thành MC chuyên nghiệp", icon: "🎤", targetCategories: ["WEDDING", "GALA"] },
-  { id: "WORK", label: "Thuyết trình, giao tiếp công việc", icon: "💼", targetCategories: ["CORPORATE", "TALKSHOW"] },
-  { id: "PRONUNCIATION", label: "Cải thiện phát âm, chữa ngọng", icon: "🗣️", targetCategories: ["GENERAL"] },
-  { id: "OTHER", label: "Chỉ muốn khám phá ứng dụng", icon: "✨", targetCategories: ["PRODUCT_LAUNCH", "GENERAL"] },
+// Quiz questions — each has options that carry category weights
+const QUIZ = [
+  {
+    id: "goal",
+    question: "Mục tiêu chính của bạn khi luyện tập?",
+    icon: "🎯",
+    options: [
+      { label: "Trở thành MC chuyên nghiệp", icon: "🎤", weights: { WEDDING: 3, GALA: 2 } },
+      { label: "Thuyết trình & giao tiếp công việc", icon: "💼", weights: { CORPORATE: 3, TALKSHOW: 2 } },
+      { label: "Cải thiện phát âm, chữa ngọng", icon: "🗣️", weights: { GENERAL: 3 } },
+      { label: "Khám phá, chưa có mục tiêu cụ thể", icon: "✨", weights: { GENERAL: 2, PRODUCT_LAUNCH: 1 } },
+    ],
+  },
+  {
+    id: "experience",
+    question: "Kinh nghiệm MC của bạn hiện tại?",
+    icon: "📊",
+    options: [
+      { label: "Chưa từng dẫn chương trình", icon: "🌱", weights: { GENERAL: 2 } },
+      { label: "Đã dẫn vài buổi nhỏ", icon: "🙂", weights: { WEDDING: 1, CORPORATE: 1 } },
+      { label: "Có kinh nghiệm, muốn nâng cao", icon: "🚀", weights: { GALA: 2, TALKSHOW: 1 } },
+    ],
+  },
+  {
+    id: "event",
+    question: "Loại sự kiện bạn quan tâm nhất?",
+    icon: "🎪",
+    options: [
+      { label: "Đám cưới & tiệc gia đình", icon: "💍", weights: { WEDDING: 3 } },
+      { label: "Hội nghị & doanh nghiệp", icon: "🏢", weights: { CORPORATE: 3 } },
+      { label: "Gala, sự kiện sang trọng", icon: "✨", weights: { GALA: 3 } },
+      { label: "Talkshow, phỏng vấn, livestream", icon: "🎙️", weights: { TALKSHOW: 3, PRODUCT_LAUNCH: 1 } },
+    ],
+  },
 ];
 
 const CoursePickScreen = ({ onPick, onSkip }) => {
   const [allCourses, setAllCourses] = useState([]);
-  const [step, setStep] = useState(1); // 1: Questions, 2: Loading, 3: Result
+  // "quiz" | "analyzing" | "result"
+  const [phase, setPhase] = useState("quiz");
+  const [quizStep, setQuizStep] = useState(0);
+  const [answers, setAnswers] = useState([]); // array of option objects
   const [suggestedCourse, setSuggestedCourse] = useState(null);
   const [picking, setPicking] = useState(false);
 
   useEffect(() => {
     academyService.getAllCourses()
       .then(res => setAllCourses(res.data?.data || res.data || []))
-      .catch(() => { /* ignore */ });
+      .catch(() => {});
   }, []);
 
-  const handleSelectGoal = (goal) => {
-    setStep(2);
-    // Simulate AI thinking
-    setTimeout(() => {
-      let match = null;
-      for (const cat of goal.targetCategories) {
-        match = allCourses.find(c => c.category === cat);
-        if (match) break;
+  const pickBestCourse = (collectedAnswers, courses) => {
+    // Tally category scores from all answers
+    const scores = {};
+    for (const opt of collectedAnswers) {
+      for (const [cat, w] of Object.entries(opt.weights)) {
+        scores[cat] = (scores[cat] || 0) + w;
       }
-      if (!match) match = allCourses[0]; // Fallback to first available course
-      
-      setSuggestedCourse(match);
-      setStep(3);
-    }, 1200);
+    }
+    // Sort categories by score desc
+    const ranked = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+    let match = null;
+    for (const [cat] of ranked) {
+      match = courses.find(c => c.category === cat);
+      if (match) break;
+    }
+    return match || courses[0] || null;
+  };
+
+  const handleAnswer = (option) => {
+    const newAnswers = [...answers, option];
+    setAnswers(newAnswers);
+
+    if (quizStep < QUIZ.length - 1) {
+      setQuizStep(q => q + 1);
+    } else {
+      // All answered — pick course
+      setPhase("analyzing");
+      setTimeout(() => {
+        const best = pickBestCourse(newAnswers, allCourses);
+        setSuggestedCourse(best);
+        setPhase("result");
+      }, 1400);
+    }
   };
 
   const handleAcceptGift = async () => {
@@ -460,62 +511,90 @@ const CoursePickScreen = ({ onPick, onSkip }) => {
     try {
       await academyService.enrollCourse(id);
     } catch {
-      // Ignore errors
+      // ignore enrollment errors
     }
     onPick(suggestedCourse);
   };
 
-  if (step === 1) {
+  // ── Quiz phase ──────────────────────────────────────────────────────────
+  if (phase === "quiz") {
+    const q = QUIZ[quizStep];
+    const progress = ((quizStep) / QUIZ.length) * 100;
+
     return (
       <motion.div
-        key="goal-pick"
-        initial={{ opacity: 0, x: 24 }}
+        key={`quiz-${quizStep}`}
+        initial={{ opacity: 0, x: 28 }}
         animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -24 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col py-2 text-center"
+        exit={{ opacity: 0, x: -28 }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        className="flex flex-col py-2"
       >
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.1, type: "spring", damping: 14, stiffness: 260 }}
-          className="w-14 h-14 rounded-2xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center mx-auto mb-4"
-        >
-          <span className="text-2xl">🎯</span>
-        </motion.div>
-        <h3 className="text-[22px] font-bold text-gray-900 mb-1.5">Mục tiêu của bạn là gì?</h3>
-        <p className="text-[13px] text-gray-500 mb-6">
-          Giúp MC Hub tùy chỉnh lộ trình và chuẩn bị phần quà <span className="font-semibold text-amber-600">khóa học miễn phí</span> cho bạn.
-        </p>
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-semibold text-amber-600 uppercase tracking-widest">
+              Câu {quizStep + 1}/{QUIZ.length}
+            </span>
+          </div>
+          <button onClick={onSkip} className="text-[11px] text-gray-400 hover:text-gray-600 transition-colors">
+            Bỏ qua →
+          </button>
+        </div>
 
-        <div className="flex flex-col gap-3">
-          {GOALS.map((g, i) => (
+        {/* Progress bar */}
+        <div className="h-1 bg-gray-100 rounded-full mb-6 overflow-hidden">
+          <motion.div
+            className="h-full bg-amber-400 rounded-full"
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          />
+        </div>
+
+        {/* Question */}
+        <div className="text-center mb-6">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.05, type: "spring", damping: 14, stiffness: 260 }}
+            className="w-14 h-14 rounded-2xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center mx-auto mb-4"
+          >
+            <span className="text-2xl">{q.icon}</span>
+          </motion.div>
+          <h3 className="text-[20px] font-bold text-gray-900 leading-tight">{q.question}</h3>
+          {quizStep === 0 && (
+            <p className="text-[12px] text-gray-500 mt-2">
+              MC Hub sẽ tặng bạn <span className="font-semibold text-amber-600">1 khóa học miễn phí</span> dựa trên câu trả lời.
+            </p>
+          )}
+        </div>
+
+        {/* Options */}
+        <div className="flex flex-col gap-2.5">
+          {q.options.map((opt, i) => (
             <motion.button
-              key={g.id}
-              initial={{ opacity: 0, y: 12 }}
+              key={opt.label}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 * i, duration: 0.4 }}
-              onClick={() => handleSelectGoal(g)}
-              className="flex items-center gap-4 p-4 rounded-2xl border-2 border-gray-200 bg-white hover:border-amber-400 hover:bg-amber-50/30 active:scale-[0.99] transition-all text-left group"
+              transition={{ delay: 0.05 + i * 0.04, duration: 0.35 }}
+              onClick={() => handleAnswer(opt)}
+              className="flex items-center gap-4 p-3.5 rounded-2xl border-2 border-gray-200 bg-white hover:border-amber-400 hover:bg-amber-50/40 active:scale-[0.99] transition-all text-left group"
             >
-              <div className="w-10 h-10 rounded-xl bg-gray-50 group-hover:bg-amber-100/50 flex items-center justify-center text-xl shrink-0 transition-colors">
-                {g.icon}
+              <div className="w-9 h-9 rounded-xl bg-gray-50 group-hover:bg-amber-100/60 flex items-center justify-center text-lg shrink-0 transition-colors">
+                {opt.icon}
               </div>
-              <span className="text-[14px] font-bold text-gray-900 leading-tight">
-                {g.label}
-              </span>
+              <span className="text-[13.5px] font-semibold text-gray-800 leading-snug">{opt.label}</span>
+              <ArrowRight size={14} className="ml-auto text-gray-300 group-hover:text-amber-400 transition-colors shrink-0" />
             </motion.button>
           ))}
         </div>
-
-        <button onClick={onSkip} className="mt-6 text-center text-[12px] text-gray-400 hover:text-gray-600 transition-colors">
-          Bỏ qua, tôi sẽ tự khám phá sau →
-        </button>
       </motion.div>
     );
   }
 
-  if (step === 2) {
+  // ── Analyzing phase ─────────────────────────────────────────────────────
+  if (phase === "analyzing") {
     return (
       <motion.div
         key="analyzing"
@@ -527,51 +606,47 @@ const CoursePickScreen = ({ onPick, onSkip }) => {
         <div className="w-16 h-16 relative flex items-center justify-center mb-6">
           <div className="absolute inset-0 rounded-full border-4 border-amber-100" />
           <div className="absolute inset-0 rounded-full border-4 border-amber-500 border-t-transparent animate-spin" />
-          <span className="text-xl animate-pulse">✨</span>
+          <span className="text-xl animate-pulse">🎁</span>
         </div>
         <h3 className="text-[18px] font-bold text-gray-900 mb-2">Đang phân tích...</h3>
-        <p className="text-[13px] text-gray-500">Tìm kiếm khóa học phù hợp nhất với bạn</p>
+        <p className="text-[13px] text-gray-500">Tìm khóa học phù hợp nhất với bạn</p>
       </motion.div>
     );
   }
 
-  if (step === 3) {
-    if (!suggestedCourse) {
-      onSkip();
-      return null;
-    }
+  // ── Result phase ────────────────────────────────────────────────────────
+  if (phase === "result") {
+    if (!suggestedCourse) { onSkip(); return null; }
     const meta = CATEGORY_META[suggestedCourse.category] || CATEGORY_META.GENERAL;
     return (
       <motion.div
         key="gift"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4, type: "spring", bounce: 0.4 }}
+        transition={{ duration: 0.4, type: "spring", bounce: 0.35 }}
         className="flex flex-col py-2 text-center"
       >
-        <div className="relative mx-auto mb-6">
+        <div className="relative mx-auto mb-5">
           <motion.div
             initial={{ scale: 0, rotate: -15 }}
             animate={{ scale: 1, rotate: 0 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+            transition={{ delay: 0.15, type: "spring", stiffness: 200 }}
             className="w-20 h-20 rounded-3xl bg-linear-to-br from-amber-300 to-amber-500 flex items-center justify-center shadow-lg shadow-amber-200 z-10 relative"
           >
             <span className="text-4xl drop-shadow-md">🎁</span>
           </motion.div>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4 }}
             className="absolute -top-3 -right-3 text-2xl"
-          >
-            ✨
-          </motion.div>
+          >✨</motion.div>
         </div>
 
-        <h3 className="text-[22px] font-bold text-gray-900 mb-2">Quà tặng dành cho bạn!</h3>
-        <p className="text-[13px] text-gray-500 mb-6 leading-relaxed">
-          Dựa trên mục tiêu của bạn, MC Hub tặng bạn khóa học này để bắt đầu hành trình.
+        <h3 className="text-[22px] font-bold text-gray-900 mb-1.5">Quà tặng dành cho bạn!</h3>
+        <p className="text-[13px] text-gray-500 mb-5 leading-relaxed">
+          Dựa trên câu trả lời, MC Hub tặng bạn khóa học phù hợp nhất để bắt đầu.
         </p>
 
-        <div className="bg-white border-2 border-amber-200 rounded-2xl p-4 text-left shadow-xs mb-6">
+        <div className="bg-white border-2 border-amber-200 rounded-2xl p-4 text-left shadow-xs mb-5">
           <div className="flex items-center gap-3">
             <div
               className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0"
@@ -583,9 +658,12 @@ const CoursePickScreen = ({ onPick, onSkip }) => {
               <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider mb-1" style={{ background: meta.color + "20", color: meta.color }}>
                 {meta.label}
               </span>
-              <p className="text-[15px] font-bold text-gray-900 leading-tight truncate">
+              <p className="text-[15px] font-bold text-gray-900 leading-tight">
                 {suggestedCourse.title || meta.label}
               </p>
+              {suggestedCourse.description && (
+                <p className="text-[11px] text-gray-500 mt-1 line-clamp-2">{suggestedCourse.description}</p>
+              )}
             </div>
           </div>
         </div>
@@ -593,11 +671,11 @@ const CoursePickScreen = ({ onPick, onSkip }) => {
         <button
           onClick={handleAcceptGift}
           disabled={picking}
-          className="w-full py-3.5 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2 transition-all mb-4"
+          className="w-full py-3.5 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2 transition-all mb-3"
         >
-          {picking 
+          {picking
             ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            : <>Nhận quà & Bắt đầu học <ArrowRight size={16} /></>
+            : <>Nhận quà &amp; Bắt đầu học <ArrowRight size={16} /></>
           }
         </button>
 
