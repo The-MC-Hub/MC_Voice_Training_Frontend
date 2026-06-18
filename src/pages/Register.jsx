@@ -753,7 +753,7 @@ const Register = () => {
     // Enroll the picked course now that account is verified
     if (pendingCourse) {
       const id = pendingCourse.id || pendingCourse._id;
-      try { await academyService.enrollCourse(id); } catch { /* ignore */ }
+      try { await academyService.giftEnrollCourse(id); } catch { /* ignore */ }
     }
     setStep("success");
     setTimeout(() => navigate(ROLE_REDIRECT[res.user?.role?.toLowerCase()] || "/m/dashboard"), 1500);
