@@ -504,7 +504,7 @@ const PaymentPage = () => {
                   <button
                     onClick={handleApplyDiscount}
                     disabled={applyingDiscount || !discountCode.trim()}
-                    className="px-4 py-2 bg-gray-900 text-white text-[12px] font-semibold rounded-xl hover:bg-gray-700 disabled:opacity-40 transition-colors"
+                    className="px-4 py-2 bg-amber-500 text-white text-[12px] font-semibold rounded-xl hover:bg-amber-600 disabled:opacity-40 transition-colors"
                   >
                     {applyingDiscount ? "..." : "Áp dụng"}
                   </button>
@@ -550,7 +550,7 @@ const PaymentPage = () => {
                     onClick={() => { window.location.href = orderData.checkoutUrl; }}
                     whileHover={{ scale: 1.01, boxShadow: '0 8px 24px rgba(245,166,35,0.3)' }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full py-4 bg-gold hover:bg-[#e09515] text-white font-bold text-[15px] rounded-2xl transition-colors flex items-center justify-center gap-3"
+                    className="w-full py-4 bg-amber-500 hover:bg-amber-600 text-white font-bold text-[15px] rounded-2xl transition-colors flex items-center justify-center gap-3"
                   >
                     <CreditCard size={18} />
                     Thanh toán qua PayOS
