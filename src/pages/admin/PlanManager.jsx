@@ -7,9 +7,10 @@ import {
 } from "lucide-react";
 import api from "../../services/api";
 
-const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600 rounded";
-const labelCls = "block text-[10px] text-zinc-500 uppercase tracking-wider mb-1";
-const sectionHead = "text-[11px] text-zinc-400 uppercase tracking-widest font-semibold px-4 py-2 border-b border-white/[0.05]";
+const inputCls = "w-full bg-[#0d0d0f] border border-white/8 px-3 py-2.5 text-[13px] text-white focus:outline-none focus:border-white/[0.2] focus:bg-[#111114] placeholder:text-zinc-600 rounded-lg transition-colors";
+const labelCls = "block text-[11px] font-medium text-zinc-400 mb-1.5 tracking-wide";
+const sectionHead = "text-[11px] text-zinc-400 uppercase tracking-widest font-semibold px-4 py-2 border-b border-white/5";
+const fieldGroupCls = "bg-white/2 border border-white/5 rounded-xl p-4 space-y-4";
 
 function formatVnd(n) {
   return n ? n.toLocaleString("vi-VN") + "đ" : "0đ";
@@ -47,7 +48,7 @@ function PlanEditor({ plan, onSave }) {
     }
   };
 
-  const PLAN_ACCENT = { FREE: "#71717a", BASIC: "#f5a623", FULL: "#3b82f6", ANNUAL: "#a855f7" };
+  const PLAN_ACCENT = { FREE: "#71717a", DAILY: "#10b981", BASIC: "#f5a623", FULL: "#3b82f6", ANNUAL: "#a855f7" };
   const accent = PLAN_ACCENT[plan.plan] || "#f5a623";
 
   // Discount helpers
@@ -66,18 +67,18 @@ function PlanEditor({ plan, onSave }) {
   const discountActive = form.discountedPriceVnd > 0 && form.discountPercent > 0;
 
   return (
-    <div className="border border-white/[0.07] bg-[#111113] rounded overflow-hidden">
+    <div className="border border-white/7 bg-[#111113] rounded overflow-hidden">
       {/* Header row */}
       <button
         onClick={() => setExpanded(e => !e)}
-        className="w-full flex items-center justify-between px-5 py-4 hover:bg-white/[0.02] transition-colors"
+        className="w-full flex items-center justify-between px-5 py-4 hover:bg-white/2 transition-colors"
       >
         <div className="flex items-center gap-3">
           <div className="w-2 h-2 rounded-full" style={{ background: accent }} />
           <span className="text-[14px] font-semibold text-white">{form.displayName}</span>
           <span className="text-[11px] text-zinc-500 font-mono">{plan.plan}</span>
           {form.badge && (
-            <span className="px-2 py-0.5 rounded bg-white/[0.05] text-[10px] text-zinc-400 border border-white/[0.07]">
+            <span className="px-2 py-0.5 rounded bg-white/5 text-[10px] text-zinc-400 border border-white/7">
               {form.badge}
             </span>
           )}
@@ -100,93 +101,110 @@ function PlanEditor({ plan, onSave }) {
       </button>
 
       {expanded && (
-        <div className="border-t border-white/[0.05] px-5 py-5 space-y-5">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className={labelCls}>Tên hiển thị</label>
-              <input className={inputCls} value={form.displayName || ""} onChange={e => set("displayName", e.target.value)} />
+        <div className="border-t border-white/5 px-5 py-6 space-y-4">
+
+          {/* Section 1 — Core info */}
+          <div className={fieldGroupCls}>
+            <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold">Thông tin cơ bản</p>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className={labelCls}>Tên hiển thị</label>
+                <input className={inputCls} value={form.displayName || ""} onChange={e => set("displayName", e.target.value)} />
+              </div>
+              <div>
+                <label className={labelCls}>Giá (VNĐ)</label>
+                <input className={inputCls} type="number" value={form.priceVnd || 0} onChange={e => set("priceVnd", Number(e.target.value))} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className={labelCls}>
+                  Số ngày&nbsp;
+                  <span className="text-zinc-600 normal-case font-normal">
+                    ({form.durationDays === 0 ? "Vĩnh viễn" : form.durationDays + " ngày"})
+                  </span>
+                </label>
+                <input className={inputCls} type="number" value={form.durationDays || 0} onChange={e => set("durationDays", Number(e.target.value))} />
+              </div>
+              <div>
+                <label className={labelCls}>
+                  AI session/tháng&nbsp;
+                  <span className="text-zinc-600 normal-case font-normal">
+                    ({form.aiSessionLimit >= 999 ? "Không giới hạn" : form.aiSessionLimit})
+                  </span>
+                </label>
+                <input className={inputCls} type="number" value={form.aiSessionLimit || 0} onChange={e => set("aiSessionLimit", Number(e.target.value))} />
+              </div>
             </div>
             <div>
-              <label className={labelCls}>Giá (VNĐ)</label>
-              <input className={inputCls} type="number" value={form.priceVnd || 0} onChange={e => set("priceVnd", Number(e.target.value))} />
+              <label className={labelCls}>Tagline</label>
+              <input className={inputCls} value={form.tagline || ""} onChange={e => set("tagline", e.target.value)} placeholder="Mô tả ngắn hiển thị dưới tên gói..." />
+            </div>
+            <div>
+              <label className={labelCls}>Mô tả chi tiết</label>
+              <textarea
+                className={inputCls + " resize-none"}
+                rows={2}
+                value={form.description || ""}
+                onChange={e => set("description", e.target.value)}
+                placeholder="Nội dung mô tả đầy đủ (không bắt buộc)..."
+              />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className={labelCls}>Số ngày ({form.durationDays === 0 ? "Vĩnh viễn" : form.durationDays + " ngày"})</label>
-              <input className={inputCls} type="number" value={form.durationDays || 0} onChange={e => set("durationDays", Number(e.target.value))} />
-            </div>
-            <div>
-              <label className={labelCls}>Giới hạn AI session ({form.aiSessionLimit >= 999 ? "Không giới hạn" : form.aiSessionLimit})</label>
-              <input className={inputCls} type="number" value={form.aiSessionLimit || 0} onChange={e => set("aiSessionLimit", Number(e.target.value))} />
-            </div>
-          </div>
-
-          <div>
-            <label className={labelCls}>Tagline</label>
-            <input className={inputCls} value={form.tagline || ""} onChange={e => set("tagline", e.target.value)} />
-          </div>
-
-          <div>
-            <label className={labelCls}>Mô tả</label>
-            <textarea
-              className={inputCls + " resize-none"}
-              rows={2}
-              value={form.description || ""}
-              onChange={e => set("description", e.target.value)}
-            />
-          </div>
-
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <label className={labelCls}>Badge</label>
-              <input className={inputCls} value={form.badge || ""} placeholder="Phổ biến nhất..." onChange={e => set("badge", e.target.value)} />
-            </div>
-            <div>
-              <label className={labelCls}>Social proof</label>
-              <input className={inputCls} value={form.socialProof || ""} placeholder="92% MC chọn..." onChange={e => set("socialProof", e.target.value)} />
-            </div>
-            <div>
-              <label className={labelCls}>Urgency text</label>
-              <input className={inputCls} value={form.urgencyText || ""} placeholder="Chỉ còn 8 chỗ..." onChange={e => set("urgencyText", e.target.value)} />
+          {/* Section 2 — Marketing copy */}
+          <div className={fieldGroupCls}>
+            <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold">Marketing</p>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className={labelCls}>Badge</label>
+                <input className={inputCls} value={form.badge || ""} placeholder="Phổ biến nhất..." onChange={e => set("badge", e.target.value)} />
+              </div>
+              <div>
+                <label className={labelCls}>Social proof</label>
+                <input className={inputCls} value={form.socialProof || ""} placeholder="92% MC chọn..." onChange={e => set("socialProof", e.target.value)} />
+              </div>
+              <div>
+                <label className={labelCls}>Urgency text</label>
+                <input className={inputCls} value={form.urgencyText || ""} placeholder="Chỉ còn 8 chỗ..." onChange={e => set("urgencyText", e.target.value)} />
+              </div>
             </div>
           </div>
 
-          {/* Highlights */}
-          <div>
-            <label className={labelCls}>Quyền lợi nổi bật</label>
-            <div className="space-y-1.5 mb-2">
+          {/* Section 3 — Highlights */}
+          <div className={fieldGroupCls}>
+            <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold">Quyền lợi nổi bật</p>
+            <div className="space-y-2">
               {(form.highlights || []).map((h, i) => (
-                <div key={i} className="flex items-center gap-2 bg-white/[0.03] border border-white/[0.05] px-3 py-1.5 rounded">
-                  <Check size={11} className="text-emerald-500 shrink-0" />
-                  <span className="flex-1 text-[12px] text-zinc-300">{h}</span>
-                  <button onClick={() => removeHighlight(i)} className="text-zinc-600 hover:text-red-400 transition-colors">
-                    <X size={12} />
+                <div key={i} className="flex items-center gap-2.5 bg-white/3 border border-white/6 px-3 py-2 rounded-lg">
+                  <Check size={12} className="text-emerald-500 shrink-0" />
+                  <span className="flex-1 text-[13px] text-zinc-300">{h}</span>
+                  <button onClick={() => removeHighlight(i)} className="text-zinc-600 hover:text-red-400 transition-colors p-0.5">
+                    <X size={13} />
                   </button>
                 </div>
               ))}
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 pt-1">
               <input
                 className={inputCls}
                 value={highlightDraft}
                 onChange={e => setHighlightDraft(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addHighlight())}
-                placeholder="Thêm quyền lợi..."
+                placeholder="Thêm quyền lợi rồi nhấn Enter..."
               />
               <button
                 onClick={addHighlight}
-                className="shrink-0 px-3 py-2 bg-white/[0.05] border border-white/[0.07] text-zinc-300 hover:text-white hover:border-white/[0.14] transition-colors rounded"
+                className="shrink-0 px-3.5 py-2 bg-white/5 border border-white/8 text-zinc-300 hover:text-white hover:border-white/18 transition-colors rounded-lg"
               >
-                <Plus size={13} />
+                <Plus size={14} />
               </button>
             </div>
           </div>
 
-          {/* Discount */}
-          <div className="border border-white/[0.07] rounded p-4 space-y-3 bg-[#09090b]/50">
-            <div className="flex items-center justify-between">
+          {/* Section 4 — Discount */}
+          <div className="border border-white/7 rounded-xl overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 bg-white/2 border-b border-white/5">
               <p className="text-[11px] font-semibold text-zinc-300 flex items-center gap-1.5">
                 <Percent size={12} className="text-red-400" />
                 Giảm giá trực tiếp trên gói
@@ -197,65 +215,68 @@ function PlanEditor({ plan, onSave }) {
                 </button>
               )}
             </div>
-
-            <div className="grid grid-cols-3 gap-3">
-              <div>
-                <label className={labelCls}>Giảm (%)</label>
-                <input
-                  className={inputCls}
-                  type="number" min="0" max="100" step="1"
-                  value={form.discountPercent || ""}
-                  placeholder="0"
-                  onChange={e => setDiscountByPercent(e.target.value)}
-                />
-              </div>
-              <div>
-                <label className={labelCls}>Giảm theo tiền (đ)</label>
-                <input
-                  className={inputCls}
-                  type="number" min="0"
-                  value={form.discountedPriceVnd && form.discountPercent ? form.priceVnd - form.discountedPriceVnd : ""}
-                  placeholder="0"
-                  onChange={e => setDiscountByAmount(e.target.value)}
-                />
-              </div>
-              <div>
-                <label className={labelCls}>Giá sau giảm</label>
-                <div className={inputCls + " flex items-center gap-2 cursor-default"}>
-                  {discountActive ? (
-                    <>
-                      <span className="font-bold text-red-400">{formatVnd(form.discountedPriceVnd)}</span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/15 text-red-400 border border-red-500/20">-{form.discountPercent}%</span>
-                    </>
-                  ) : (
-                    <span className="text-zinc-600">Chưa có giảm giá</span>
-                  )}
+            <div className="p-4 space-y-3">
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className={labelCls}>Giảm (%)</label>
+                  <input
+                    className={inputCls}
+                    type="number" min="0" max="100" step="1"
+                    value={form.discountPercent || ""}
+                    placeholder="0"
+                    onChange={e => setDiscountByPercent(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className={labelCls}>Giảm theo tiền (đ)</label>
+                  <input
+                    className={inputCls}
+                    type="number" min="0"
+                    value={form.discountedPriceVnd && form.discountPercent ? form.priceVnd - form.discountedPriceVnd : ""}
+                    placeholder="0"
+                    onChange={e => setDiscountByAmount(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className={labelCls}>Giá sau giảm</label>
+                  <div className={inputCls + " flex items-center gap-2 cursor-default"}>
+                    {discountActive ? (
+                      <>
+                        <span className="font-bold text-red-400">{formatVnd(form.discountedPriceVnd)}</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/15 text-red-400 border border-red-500/20">-{form.discountPercent}%</span>
+                      </>
+                    ) : (
+                      <span className="text-zinc-600">Chưa có giảm giá</span>
+                    )}
+                  </div>
                 </div>
               </div>
+              {discountActive && (
+                <p className="text-[11px] text-zinc-500 bg-red-500/5 border border-red-500/10 rounded-lg px-3 py-2">
+                  Hiển thị user:&nbsp;
+                  <span className="line-through text-zinc-600">{formatVnd(form.priceVnd)}</span>
+                  {" → "}
+                  <span className="text-red-400 font-semibold">{formatVnd(form.discountedPriceVnd)}</span>
+                  {" · "}
+                  <span className="text-zinc-500">tiết kiệm {formatVnd(form.priceVnd - form.discountedPriceVnd)} ({form.discountPercent}%)</span>
+                </p>
+              )}
             </div>
-
-            {discountActive && (
-              <p className="text-[11px] text-zinc-500">
-                Hiển thị user: <span className="line-through text-zinc-600">{formatVnd(form.priceVnd)}</span>
-                {" → "}<span className="text-red-400 font-semibold">{formatVnd(form.discountedPriceVnd)}</span>
-                {" "}<span className="text-zinc-500">(tiết kiệm {formatVnd(form.priceVnd - form.discountedPriceVnd)} · {form.discountPercent}%)</span>
-              </p>
-            )}
           </div>
 
-          {/* Active toggle + Save */}
-          <div className="flex items-center justify-between pt-2 border-t border-white/[0.05]">
+          {/* Footer — Active toggle + Save */}
+          <div className="flex items-center justify-between pt-1">
             <button
               onClick={() => set("active", !form.active)}
-              className={`flex items-center gap-2 text-[12px] font-medium transition-colors ${form.active ? "text-emerald-400" : "text-zinc-500"}`}
+              className={`flex items-center gap-2 text-[13px] font-medium transition-colors ${form.active ? "text-emerald-400" : "text-zinc-500"}`}
             >
-              {form.active ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
+              {form.active ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
               {form.active ? "Đang hiển thị" : "Đang ẩn"}
             </button>
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-2 px-4 py-2 bg-[#f5a623] text-black text-[12px] font-bold hover:bg-[#e09515] disabled:opacity-50 transition-colors rounded"
+              className="flex items-center gap-2 px-5 py-2.5 bg-[#f5a623] text-black text-[13px] font-bold hover:bg-[#e09515] disabled:opacity-50 transition-colors rounded-xl"
             >
               {saving ? <RefreshCw size={13} className="animate-spin" /> : <Save size={13} />}
               Lưu thay đổi
@@ -316,7 +337,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
 
   if (!editing) {
     return (
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.04] hover:bg-white/2 transition-colors">
         <div className="flex items-center gap-4 min-w-0">
           <span className="font-mono text-[13px] font-bold text-white">{discount.code}</span>
           <span className={`text-[11px] px-2 py-0.5 rounded font-medium ${
@@ -356,7 +377,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
   }
 
   return (
-    <div className="border-b border-white/[0.05] bg-[#09090b]/60 px-4 py-4 space-y-3">
+    <div className="border-b border-white/5 bg-[#09090b]/60 px-4 py-4 space-y-3">
       <div className="grid grid-cols-3 gap-3">
         <div>
           <label className={labelCls}>Mã</label>
@@ -396,7 +417,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
               className={`px-3 py-1.5 text-[11px] font-medium rounded border transition-colors ${
                 (form.applicablePlans || []).includes(p)
                   ? "bg-[#f5a623]/10 text-[#f5a623] border-[#f5a623]/30"
-                  : "bg-white/[0.03] text-zinc-500 border-white/[0.07] hover:border-white/[0.14]"
+                  : "bg-white/3 text-zinc-500 border-white/7 hover:border-white/14"
               }`}
             >
               {p}
@@ -419,7 +440,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
           {form.active ? "Hoạt động" : "Tắt"}
         </button>
         <div className="flex gap-2">
-          <button onClick={() => setEditing(false)} className="px-3 py-1.5 text-[11px] text-zinc-400 hover:text-white border border-white/[0.07] hover:border-white/[0.14] rounded transition-colors">
+          <button onClick={() => setEditing(false)} className="px-3 py-1.5 text-[11px] text-zinc-400 hover:text-white border border-white/7 hover:border-white/14 rounded transition-colors">
             Huỷ
           </button>
           <button onClick={handleSave} disabled={saving} className="flex items-center gap-1.5 px-3 py-1.5 bg-[#f5a623] text-black text-[11px] font-bold hover:bg-[#e09515] disabled:opacity-50 rounded transition-colors">
@@ -466,7 +487,7 @@ function NewDiscountForm({ onCreated }) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 px-4 py-2 bg-white/[0.04] border border-white/[0.07] text-zinc-300 hover:text-white hover:border-white/[0.14] text-[12px] font-medium transition-colors rounded"
+        className="flex items-center gap-2 px-4 py-2 bg-white/4 border border-white/7 text-zinc-300 hover:text-white hover:border-white/14 text-[12px] font-medium transition-colors rounded"
       >
         <Plus size={13} />
         Tạo mã giảm giá
@@ -475,7 +496,7 @@ function NewDiscountForm({ onCreated }) {
   }
 
   return (
-    <form onSubmit={handleCreate} className="bg-[#09090b]/80 border border-white/[0.08] rounded p-5 space-y-4">
+    <form onSubmit={handleCreate} className="bg-[#09090b]/80 border border-white/8 rounded p-5 space-y-4">
       <p className="text-[12px] font-semibold text-white flex items-center gap-2">
         <Tag size={13} className="text-[#f5a623]" /> Tạo mã giảm giá mới
       </p>
@@ -520,7 +541,7 @@ function NewDiscountForm({ onCreated }) {
               className={`px-3 py-1.5 text-[11px] font-medium rounded border transition-colors ${
                 (form.applicablePlans || []).includes(p)
                   ? "bg-[#f5a623]/10 text-[#f5a623] border-[#f5a623]/30"
-                  : "bg-white/[0.03] text-zinc-500 border-white/[0.07] hover:border-white/[0.14]"
+                  : "bg-white/3 text-zinc-500 border-white/7 hover:border-white/14"
               }`}
             >
               {p}
@@ -535,7 +556,7 @@ function NewDiscountForm({ onCreated }) {
       </div>
 
       <div className="flex justify-end gap-2">
-        <button type="button" onClick={() => setOpen(false)} className="px-4 py-2 text-[11px] text-zinc-400 hover:text-white border border-white/[0.07] hover:border-white/[0.14] rounded transition-colors">
+        <button type="button" onClick={() => setOpen(false)} className="px-4 py-2 text-[11px] text-zinc-400 hover:text-white border border-white/7 hover:border-white/14 rounded transition-colors">
           Huỷ
         </button>
         <button type="submit" disabled={saving} className="flex items-center gap-2 px-4 py-2 bg-[#f5a623] text-black text-[11px] font-bold hover:bg-[#e09515] disabled:opacity-50 rounded transition-colors">
@@ -614,7 +635,7 @@ const PlanManager = () => {
   return (
     <div className="space-y-6">
       {/* Tab switcher */}
-      <div className="flex items-center gap-1 border-b border-white/[0.06]">
+      <div className="flex items-center gap-1 border-b border-white/6">
         {[
           { id: "plans", label: "Gói đăng ký", icon: Package },
           { id: "discounts", label: "Mã giảm giá", icon: Tag },
@@ -673,8 +694,8 @@ const PlanManager = () => {
       {tab === "settings" && (
         <div className="space-y-6 max-w-lg">
           {/* Guest cooldown card */}
-          <div className="border border-white/[0.07] rounded-xl overflow-hidden">
-            <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.05] bg-white/[0.02]">
+          <div className="border border-white/7 rounded-xl overflow-hidden">
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-white/2">
               <Clock size={13} className="text-amber-400" />
               <span className="text-[12px] font-semibold text-white">Thời gian chờ luyện giọng (khách)</span>
             </div>
@@ -684,7 +705,7 @@ const PlanManager = () => {
                 Hiện tại: <span className="text-amber-400 font-semibold">{cooldownHours} giờ</span>.
               </p>
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5 bg-[#09090b] border border-white/[0.07] rounded px-3 py-2 w-28">
+                <div className="flex items-center gap-1.5 bg-[#09090b] border border-white/7 rounded px-3 py-2 w-28">
                   <input
                     type="number"
                     min={1}
@@ -746,7 +767,7 @@ const PlanManager = () => {
               <p className="text-[12px]">Chưa có mã giảm giá nào.</p>
             </div>
           ) : (
-            <div className="border border-white/[0.07] rounded overflow-hidden">
+            <div className="border border-white/7 rounded overflow-hidden">
               <div className={sectionHead}>
                 <span>Mã · Giá trị · Lượt dùng · Gói áp dụng · Trạng thái</span>
               </div>

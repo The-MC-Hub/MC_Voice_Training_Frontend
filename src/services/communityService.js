@@ -6,8 +6,18 @@ export const getStats = async () => {
   return response.data;
 };
 
-export const getLeaderboards = async () => {
-  const response = await api.get("/community/leaderboards");
+export const getLeaderboard = async ({ type = 'streak', period = 'all_time', page = 0, size = 20 } = {}) => {
+  const response = await api.get("/community/leaderboard", { params: { type, period, page, size } });
+  return response.data;
+};
+
+export const getMyRank = async ({ type = 'streak', period = 'all_time' } = {}) => {
+  const response = await api.get("/community/leaderboard/me", { params: { type, period } });
+  return response.data;
+};
+
+export const getFlashDeals = async () => {
+  const response = await api.get("/payment/flash-deals");
   return response.data;
 };
 

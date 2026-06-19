@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Zap, Loader2, Mic, ChevronLeft, ChevronRight, Crown, Sparkles, BarChart3, Award, AudioLines } from "lucide-react";
+import { Zap, Loader2, Mic, ChevronLeft, ChevronRight, Crown, Sparkles, BarChart3, Award, AudioLines, Clock } from "lucide-react";
 import UpgradeBanner from "../components/ui/UpgradeBanner";
 import SessionCard from "../components/dashboard/SessionCard";
 import { Link } from "react-router-dom";
@@ -34,9 +34,16 @@ const Dashboard = () => {
   // Plan usage for warning banner
   const plan = user?.plan || 'FREE';
   const aiUsed = user?.aiSessionsUsed ?? 0;
-  const aiLimit = plan === 'FREE' ? 5 : plan === 'BASIC' ? 20 : null; // null = unlimited
+  const aiLimit = plan === 'FREE' ? 5 : plan === 'BASIC' ? 20 : plan === 'DAILY' ? 10 : null; // null = unlimited
   const usagePct = aiLimit ? (aiUsed / aiLimit) * 100 : 0;
   const showLimitWarning = aiLimit && usagePct >= 80;
+
+  // DAILY plan countdown
+  const dailyRemaining = plan === 'DAILY' && user?.planExpiresAt
+    ? Math.max(0, new Date(user.planExpiresAt) - new Date())
+    : 0;
+  const dailyHours = Math.floor(dailyRemaining / 3600000);
+  const dailyMinutes = Math.floor((dailyRemaining % 3600000) / 60000);
 
   const { avgAccuracy, totalPractices, avgWpm, level, levelLabel } = useMemo(() => {
     const total = practiceHistory?.length || 0;
@@ -252,6 +259,25 @@ const Dashboard = () => {
           used={aiUsed}
           limit={aiLimit}
         />
+      )}
+
+      {/* DAILY plan countdown banner */}
+      {plan === 'DAILY' && dailyRemaining > 0 && !showLimitWarning && (
+        <div className="rounded-2xl border border-emerald-500/20 bg-linear-to-r from-emerald-500/6 to-transparent p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+            <Clock size={18} className="text-emerald-400" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[14px] font-semibold text-white mb-0.5">Goi Ngay dang hoat dong</p>
+            <p className="text-[12px] text-zinc-500">Con {dailyHours} gio {dailyMinutes} phut · {aiUsed}/{aiLimit} AI sessions da dung</p>
+          </div>
+          <Link
+            to="/m/payment"
+            className="shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-500 text-white text-[13px] font-semibold hover:bg-emerald-400 transition-colors whitespace-nowrap"
+          >
+            <Zap size={14} /> Gia han them
+          </Link>
+        </div>
       )}
 
       {/* Upgrade ad banner for FREE users (not near limit) */}

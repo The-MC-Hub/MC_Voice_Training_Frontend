@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
-  Settings, Menu, X,
+  Settings, Menu, X, Trophy,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -85,6 +85,12 @@ const Navbar = () => {
                 <span data-tour="tour-dashboard"><NavLink to="/m/dashboard">{t('navbar.dashboard')}</NavLink></span>
                 <span data-tour="tour-training"><NavLink to="/m/voice/library">{t('navbar.training')}</NavLink></span>
                 <span data-tour="tour-courses"><NavLink to="/m/courses">{t('navbar.courses')}</NavLink></span>
+                <NavLink to="/m/leaderboard">
+                  <span className="flex items-center gap-1">
+                  
+                    Xếp hạng
+                  </span>
+                </NavLink>
                 <Link
                   data-tour="tour-pricing"
                   to="/m/payment"
@@ -197,6 +203,7 @@ const Navbar = () => {
                     <MobileNavLink to="/m/dashboard" label={t('navbar.dashboard')} active={isActive('/m/dashboard')} />
                     <MobileNavLink to="/m/voice/library" label={t('navbar.training')} active={isActive('/m/voice')} />
                     <MobileNavLink to="/m/courses" label={t('navbar.courses')} active={isActive('/m/courses')} />
+                    <MobileNavLink to="/m/leaderboard" label="🏆 Xếp hạng" active={isActive('/m/leaderboard')} />
                     <MobileNavLink to="/m/payment" label={t('navbar.pricing')} active={isActive('/m/payment')} />
                   </>
                 )}

@@ -5,7 +5,7 @@ import {
   BarChart3, Clock, Star, TrendingUp, Users, Infinity, Crown,
   ChevronDown, ChevronUp
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../services/api";
 import { useAuth } from "../hooks/useAuth";
@@ -13,10 +13,11 @@ import { useToast } from "../components/ui/Toast";
 import Breadcrumb from '../components/ui/Breadcrumb';
 
 // Plan hierarchy order
-const PLAN_ORDER = { FREE: 0, BASIC: 1, FULL: 2, ANNUAL: 3 };
+const PLAN_ORDER = { FREE: 0, DAILY: 0.5, BASIC: 1, FULL: 2, ANNUAL: 3 };
 
 // Visual config per plan key (not stored in DB)
 const PLAN_VISUAL = {
+  DAILY:  { accentColor: "#10b981", borderSelected: "border-emerald-400", shadow: "shadow-[0_0_28px_rgba(16,185,129,0.18)]", badgeColor: "bg-emerald-50 border-emerald-300 text-emerald-700", period: "/ngày", highlight: [Zap, Mic, Globe, BarChart3] },
   BASIC:  { accentColor: "#f5a623", borderSelected: "border-amber-400", shadow: "shadow-[0_0_28px_rgba(245,158,11,0.18)]", badgeColor: "bg-amber-50 border-amber-300 text-amber-700", period: "/tháng", highlight: [Mic, Zap, BookOpen, BarChart3] },
   FULL:   { accentColor: "#3b82f6", borderSelected: "border-blue-400",  shadow: "shadow-[0_0_28px_rgba(59,130,246,0.15)]",  badgeColor: "bg-blue-50 border-blue-200 text-blue-700",   period: "/tháng", highlight: [Infinity, Globe, TrendingUp, BarChart3] },
   ANNUAL: { accentColor: "#a855f7", borderSelected: "border-purple-400",shadow: "shadow-[0_0_28px_rgba(168,85,247,0.15)]",  badgeColor: "bg-purple-50 border-purple-200 text-purple-700", period: "/năm",   highlight: [Crown, Award, Users, Star] },
@@ -30,6 +31,7 @@ function formatPrice(vnd) {
 function adaptPlans(apiPlans) {
   return apiPlans
     .filter(p => p.plan !== "FREE")
+    .sort((a, b) => (PLAN_ORDER[a.plan] ?? 99) - (PLAN_ORDER[b.plan] ?? 99))
     .map(p => {
       const v = PLAN_VISUAL[p.plan] || PLAN_VISUAL.BASIC;
       const icons = v.highlight;
@@ -59,16 +61,16 @@ function adaptPlans(apiPlans) {
 
 // Comparison table data
 const COMPARISON_ROWS = [
-  { feature: "Bài luyện tập", FREE: "Xem trước", BASIC: "50 bài", FULL: "50 bài", ANNUAL: "50 bài + ưu tiên mới" },
-  { feature: "Chủ đề MC", FREE: "—", BASIC: "MC Đám cưới", FULL: "3 chủ đề", ANNUAL: "3 chủ đề + Beta" },
-  { feature: "AI coaching/tháng", FREE: "5 lượt", BASIC: "20 lượt", FULL: "Không giới hạn", ANNUAL: "Không giới hạn" },
-  { feature: "Phân tích giọng (Clarity, Energy, Pace)", FREE: "❌", BASIC: "✓ Cơ bản", FULL: "✓ Chi tiết", ANNUAL: "✓ Chi tiết" },
-  { feature: "WER · CER · Jitter · HNR", FREE: "❌", BASIC: "❌", FULL: "✓", ANNUAL: "✓" },
-  { feature: "Biểu đồ tiến độ & lịch sử", FREE: "❌", BASIC: "❌", FULL: "✓", ANNUAL: "✓" },
-  { feature: "Trắc nghiệm lý thuyết", FREE: "❌", BASIC: "✓", FULL: "✓", ANNUAL: "✓" },
-  { feature: "Huy hiệu Annual Elite", FREE: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
-  { feature: "Ưu tiên hỗ trợ 24/7", FREE: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
-  { feature: "Truy cập tính năng Beta", FREE: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
+  { feature: "Bài luyện tập", FREE: "Xem trước", DAILY: "50 bài", BASIC: "50 bài", FULL: "50 bài", ANNUAL: "50 bài + ưu tiên mới" },
+  { feature: "Chủ đề MC", FREE: "—", DAILY: "Tat ca", BASIC: "MC Dam cuoi", FULL: "3 chu de", ANNUAL: "3 chu de + Beta" },
+  { feature: "AI coaching", FREE: "5 luot tong", DAILY: "10 luot/ngay", BASIC: "20 luot/thang", FULL: "Khong gioi han", ANNUAL: "Khong gioi han" },
+  { feature: "Phan tich giong (Clarity, Energy, Pace)", FREE: "❌", DAILY: "✓ Co ban", BASIC: "✓ Co ban", FULL: "✓ Chi tiet", ANNUAL: "✓ Chi tiet" },
+  { feature: "WER · CER · Jitter · HNR", FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "✓", ANNUAL: "✓" },
+  { feature: "Bieu do tien do & lich su", FREE: "❌", DAILY: "✓", BASIC: "❌", FULL: "✓", ANNUAL: "✓" },
+  { feature: "Trac nghiem ly thuyet", FREE: "❌", DAILY: "✓", BASIC: "✓", FULL: "✓", ANNUAL: "✓" },
+  { feature: "Huy hieu Annual Elite", FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
+  { feature: "Uu tien ho tro 24/7", FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
+  { feature: "Truy cap tinh nang Beta", FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
 ];
 
 const IS_DEV = import.meta.env.VITE_DEV_MODE === 'true';
@@ -76,15 +78,17 @@ const IS_DEV = import.meta.env.VITE_DEV_MODE === 'true';
 // Auto-select the next plan above user's current plan
 function getDefaultPlan(userPlan) {
   const current = PLAN_ORDER[userPlan?.toUpperCase()] ?? 0;
-  if (current === 0) return "BASIC";      // FREE → BASIC
-  if (current === 1) return "FULL";       // BASIC → FULL
-  if (current === 2) return "ANNUAL";     // FULL → ANNUAL
+  if (current === 0) return "DAILY";      // FREE → DAILY
+  if (current === 0.5) return "BASIC";   // DAILY → BASIC
+  if (current === 1) return "FULL";      // BASIC → FULL
+  if (current === 2) return "ANNUAL";    // FULL → ANNUAL
   return "ANNUAL";
 }
 
 const PaymentPage = () => {
   const { user, updateUser, refreshUser } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const toast = useToast();
 
   const [plans, setPlans] = useState([]);
@@ -111,6 +115,19 @@ const PaymentPage = () => {
       })
       .catch(() => {/* keep empty, UI shows nothing */})
       .finally(() => setPlansLoading(false));
+  }, []);
+
+  // Auto-fill coupon code from ?code= and select plan from ?plan= (flash deal deep-link)
+  useEffect(() => {
+    const codeParam = searchParams.get('code');
+    const planParam = searchParams.get('plan');
+    if (codeParam) {
+      setDiscountCode(codeParam.toUpperCase());
+      toast.info(`Mã "${codeParam.toUpperCase()}" đã được điền tự động. Nhấn Áp dụng để xác nhận.`);
+    }
+    if (planParam && PLAN_ORDER[planParam.toUpperCase()] !== undefined) {
+      setSelectedPlan(planParam.toUpperCase());
+    }
   }, []);
 
   const handleApplyDiscount = async () => {
@@ -162,11 +179,14 @@ const PaymentPage = () => {
   };
 
   useEffect(() => {
-    if (user?.id && !user?.isPremium) fetchOrder(selectedPlan);
+    // Always fetch order — DAILY users can re-purchase, and non-premium users need link
+    if (user?.id) fetchOrder(selectedPlan);
   }, [user?.id]);
 
   useEffect(() => {
-    if (!orderData || success || user?.isPremium) return;
+    // Allow polling for DAILY re-purchase even when already premium
+    const alreadyDailyRenew = selectedPlan === "DAILY" && (user?.plan || "FREE").toUpperCase() === "DAILY";
+    if (!orderData || success || (user?.isPremium && !alreadyDailyRenew)) return;
     pollRef.current = setInterval(async () => {
       try {
         const res = await api.get(`/payment/status/${user.id}`);
@@ -296,8 +316,9 @@ const PaymentPage = () => {
               ))
             ) : plans.map((plan) => {
               const isSelected = selectedPlan === plan.key;
-              const isCurrentPlan = (user?.plan || "FREE").toUpperCase() === plan.key;
-              const isDowngrade = PLAN_ORDER[plan.key] < currentPlanOrder;
+              // DAILY can always be re-purchased, never locked as "current"
+              const isCurrentPlan = plan.key !== "DAILY" && (user?.plan || "FREE").toUpperCase() === plan.key;
+              const isDowngrade = plan.key !== "DAILY" && PLAN_ORDER[plan.key] < currentPlanOrder;
 
               return (
                 <motion.button
@@ -329,7 +350,7 @@ const PaymentPage = () => {
                       <div className="flex-1 min-w-0">
 
                         {/* Name + badge */}
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
                           <span className={`text-[16px] font-bold ${isCurrentPlan ? 'text-gray-500' : 'text-gray-900'}`}>
                             {plan.name}
                           </span>
@@ -342,6 +363,17 @@ const PaymentPage = () => {
                               {plan.badge}
                             </span>
                           )}
+                          {plan.key === "DAILY" && (user?.plan || "FREE").toUpperCase() === "DAILY" && user?.planExpiresAt && (() => {
+                            const remaining = new Date(user.planExpiresAt) - new Date();
+                            if (remaining <= 0) return null;
+                            const hours = Math.floor(remaining / 3600000);
+                            const minutes = Math.floor((remaining % 3600000) / 60000);
+                            return (
+                              <span className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-emerald-50 border-emerald-300 text-emerald-700 flex items-center gap-1">
+                                <Clock size={9} /> Con {hours}g {minutes}p
+                              </span>
+                            );
+                          })()}
                         </div>
 
                         {/* Tagline */}

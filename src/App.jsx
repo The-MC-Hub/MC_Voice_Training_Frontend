@@ -34,6 +34,7 @@ const VoiceLibrary = lazy(() => import('./pages/VoiceLibrary'));
 const VoicePractice = lazy(() => import('./pages/VoicePractice'));
 const VoiceReport = lazy(() => import('./pages/VoiceReport'));
 const Community = lazy(() => import('./pages/Community'));
+const LeaderboardPage = lazy(() => import('./pages/LeaderboardPage'));
 const PaymentPage = lazy(() => import('./pages/PaymentPage'));
 const CoursesList = lazy(() => import('./pages/CoursesList'));
 const CourseDetail = lazy(() => import('./pages/CourseDetail'));
@@ -137,6 +138,7 @@ function App() {
                 <Route path="learning" element={<Wrap><ComingSoon title="Lộ trình học tập" description="Lộ trình luyện tập MC theo từng cấp độ đang được phát triển. Sẽ ra mắt sớm." /></Wrap>} />
                 <Route path="learning/milestone/:id" element={<Wrap><ComingSoon title="Lộ trình học tập" description="Lộ trình luyện tập MC theo từng cấp độ đang được phát triển. Sẽ ra mắt sớm." /></Wrap>} />
                 <Route path="community" element={<Wrap><Community /></Wrap>} />
+                <Route path="leaderboard" element={<ProtectedRoute><Wrap><LeaderboardPage /></Wrap></ProtectedRoute>} />
                 <Route path="courses" element={<ProtectedRoute><Wrap><CoursesList /></Wrap></ProtectedRoute>} />
                 <Route path="courses/:id" element={<ProtectedRoute><Wrap><CourseDetail /></Wrap></ProtectedRoute>} />
               </Route>
