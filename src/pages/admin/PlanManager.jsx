@@ -292,7 +292,7 @@ function PlanEditor({ plan, onSave }) {
 
 const EMPTY_DISCOUNT = {
   code: "", type: "PERCENT", discountValue: 10, maxUses: 0,
-  applicablePlans: [], expiresAt: "", description: "", active: true,
+  applicablePlans: [], startsAt: "", expiresAt: "", description: "", active: true, showInSidebar: false,
 };
 
 const ALL_PLANS = ["BASIC", "FULL", "ANNUAL"];
@@ -301,6 +301,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({ ...discount });
   const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState(null);
 
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
 
@@ -311,12 +312,13 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
 
   const handleSave = async () => {
     setSaving(true);
+    setErr(null);
     try {
       await api.put(`/admin/plans/discounts/${discount.id}`, form);
       onUpdate();
       setEditing(false);
     } catch (e) {
-      alert(e.response?.data?.message || "Lưu thất bại");
+      setErr(e.response?.data?.message || "Lưu thất bại");
     } finally {
       setSaving(false);
     }
@@ -328,47 +330,63 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
       await api.delete(`/admin/plans/discounts/${discount.id}`);
       onDelete();
     } catch {
-      alert("Xóa thất bại");
+      setErr("Xóa thất bại");
     }
   };
 
-  const isExpired = discount.expiresAt && new Date(discount.expiresAt) < new Date();
+  const now = new Date();
+  const isExpired = discount.expiresAt && new Date(discount.expiresAt) < now;
+  const isNotStarted = discount.startsAt && new Date(discount.startsAt) > now;
   const isMaxed = discount.maxUses > 0 && discount.usedCount >= discount.maxUses;
+  const statusLabel = !discount.active ? "Tắt" : isExpired ? "Hết hạn" : isMaxed ? "Hết lượt" : isNotStarted ? "Chưa bắt đầu" : "Hoạt động";
+  const statusOk = discount.active && !isExpired && !isMaxed && !isNotStarted;
 
   if (!editing) {
     return (
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.04] hover:bg-white/2 transition-colors">
-        <div className="flex items-center gap-4 min-w-0">
-          <span className="font-mono text-[13px] font-bold text-white">{discount.code}</span>
-          <span className={`text-[11px] px-2 py-0.5 rounded font-medium ${
-            discount.type === "PERCENT" ? "bg-blue-500/10 text-blue-400 border border-blue-500/20" : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+      <div className="group flex items-center justify-between px-4 py-3 border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors">
+        <div className="flex items-center gap-3 min-w-0 flex-wrap">
+          <span className="font-mono text-[13px] font-bold text-white tracking-wider">{discount.code}</span>
+          <span className={`text-[11px] px-2 py-0.5 rounded-md font-semibold ${
+            discount.type === "PERCENT"
+              ? "bg-violet-500/10 text-violet-400 border border-violet-500/20"
+              : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
           }`}>
             {discount.type === "PERCENT" ? `-${discount.discountValue}%` : `-${formatVnd(discount.discountValue)}`}
           </span>
-          <span className="text-[11px] text-zinc-500">
-            {discount.usedCount}/{discount.maxUses || "∞"} lượt
+          <span className="text-[11px] text-zinc-500 tabular-nums">
+            {discount.usedCount ?? 0}/{discount.maxUses || "∞"} lượt
           </span>
           {discount.applicablePlans?.length > 0 && (
-            <span className="text-[11px] text-zinc-600">{discount.applicablePlans.join(", ")}</span>
+            <span className="text-[11px] text-zinc-600 bg-white/3 px-2 py-0.5 rounded">
+              {discount.applicablePlans.join(" · ")}
+            </span>
           )}
-          {discount.expiresAt && (
-            <span className={`text-[10px] ${isExpired ? "text-red-400" : "text-zinc-600"}`}>
-              {isExpired ? "Hết hạn" : "Hết hạn " + new Date(discount.expiresAt).toLocaleDateString("vi-VN")}
+          {(discount.startsAt || discount.expiresAt) && (
+            <span className={`text-[10px] tabular-nums flex items-center gap-1 ${isExpired ? "text-red-400" : isNotStarted ? "text-amber-400" : "text-zinc-600"}`}>
+              <Calendar size={9} />
+              {discount.startsAt && !discount.expiresAt && `Từ ${new Date(discount.startsAt).toLocaleDateString("vi-VN")}`}
+              {!discount.startsAt && discount.expiresAt && (isExpired ? "Hết hạn" : `→ ${new Date(discount.expiresAt).toLocaleDateString("vi-VN")}`)}
+              {discount.startsAt && discount.expiresAt && `${new Date(discount.startsAt).toLocaleDateString("vi-VN")} → ${new Date(discount.expiresAt).toLocaleDateString("vi-VN")}`}
             </span>
           )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <span className={`text-[10px] px-2 py-0.5 rounded ${
-            !discount.active || isExpired || isMaxed
-              ? "bg-red-500/10 text-red-400 border border-red-500/20"
-              : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+          {discount.showInSidebar && (
+            <span className="text-[10px] px-2 py-0.5 rounded-md font-medium bg-violet-500/10 text-violet-400 border border-violet-500/20 flex items-center gap-1">
+              <Tag size={8} /> Sidebar
+            </span>
+          )}
+          <span className={`text-[10px] px-2 py-0.5 rounded-md font-medium ${
+            statusOk
+              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+              : "bg-red-500/10 text-red-400 border border-red-500/20"
           }`}>
-            {!discount.active ? "Tắt" : isExpired ? "Hết hạn" : isMaxed ? "Hết lượt" : "Hoạt động"}
+            {statusLabel}
           </span>
-          <button onClick={() => setEditing(true)} className="p-1.5 text-zinc-500 hover:text-white transition-colors">
+          <button onClick={() => setEditing(true)} className="p-1.5 text-zinc-600 hover:text-white transition-colors opacity-0 group-hover:opacity-100">
             <Edit2 size={13} />
           </button>
-          <button onClick={handleDelete} className="p-1.5 text-zinc-500 hover:text-red-400 transition-colors">
+          <button onClick={handleDelete} className="p-1.5 text-zinc-600 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100">
             <Trash2 size={13} />
           </button>
         </div>
@@ -377,76 +395,117 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
   }
 
   return (
-    <div className="border-b border-white/5 bg-[#09090b]/60 px-4 py-4 space-y-3">
-      <div className="grid grid-cols-3 gap-3">
-        <div>
-          <label className={labelCls}>Mã</label>
-          <input className={inputCls + " font-mono uppercase"} value={form.code} onChange={e => set("code", e.target.value.toUpperCase())} />
+    <div className="border border-amber-500/20 bg-[#0f0f11] rounded-xl mx-2 my-2 overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-2.5 bg-amber-500/5 border-b border-amber-500/10">
+        <div className="flex items-center gap-2">
+          <Edit2 size={12} className="text-amber-400" />
+          <span className="text-[11px] font-semibold text-amber-400 tracking-wide">Chỉnh sửa — {discount.code}</span>
         </div>
-        <div>
-          <label className={labelCls}>Loại</label>
-          <select className={inputCls} value={form.type} onChange={e => set("type", e.target.value)}>
-            <option value="PERCENT">Phần trăm (%)</option>
-            <option value="FIXED">Số tiền cố định (đ)</option>
-          </select>
-        </div>
-        <div>
-          <label className={labelCls}>{form.type === "PERCENT" ? "Giá trị (%)" : "Giá trị (đ)"}</label>
-          <input className={inputCls} type="number" value={form.discountValue} onChange={e => set("discountValue", Number(e.target.value))} />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className={labelCls}>Số lượt tối đa (0 = không giới hạn)</label>
-          <input className={inputCls} type="number" value={form.maxUses} onChange={e => set("maxUses", Number(e.target.value))} />
-        </div>
-        <div>
-          <label className={labelCls}>Ngày hết hạn (để trống = không hết hạn)</label>
-          <input className={inputCls} type="datetime-local" value={form.expiresAt ? form.expiresAt.slice(0, 16) : ""} onChange={e => set("expiresAt", e.target.value || null)} />
-        </div>
-      </div>
-
-      <div>
-        <label className={labelCls}>Áp dụng cho gói (để trống = tất cả)</label>
-        <div className="flex gap-2 mt-1">
-          {ALL_PLANS.map(p => (
-            <button
-              key={p}
-              onClick={() => togglePlan(p)}
-              className={`px-3 py-1.5 text-[11px] font-medium rounded border transition-colors ${
-                (form.applicablePlans || []).includes(p)
-                  ? "bg-[#f5a623]/10 text-[#f5a623] border-[#f5a623]/30"
-                  : "bg-white/3 text-zinc-500 border-white/7 hover:border-white/14"
-              }`}
-            >
-              {p}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <label className={labelCls}>Mô tả nội bộ</label>
-        <input className={inputCls} value={form.description || ""} onChange={e => set("description", e.target.value)} placeholder="Ghi chú cho admin..." />
-      </div>
-
-      <div className="flex items-center justify-between">
-        <button
-          onClick={() => set("active", !form.active)}
-          className={`flex items-center gap-1.5 text-[11px] font-medium ${form.active ? "text-emerald-400" : "text-zinc-500"}`}
-        >
-          {form.active ? <ToggleRight size={15} /> : <ToggleLeft size={15} />}
-          {form.active ? "Hoạt động" : "Tắt"}
+        <button onClick={() => setEditing(false)} className="p-1 text-zinc-500 hover:text-white transition-colors rounded">
+          <X size={13} />
         </button>
-        <div className="flex gap-2">
-          <button onClick={() => setEditing(false)} className="px-3 py-1.5 text-[11px] text-zinc-400 hover:text-white border border-white/7 hover:border-white/14 rounded transition-colors">
-            Huỷ
-          </button>
-          <button onClick={handleSave} disabled={saving} className="flex items-center gap-1.5 px-3 py-1.5 bg-[#f5a623] text-black text-[11px] font-bold hover:bg-[#e09515] disabled:opacity-50 rounded transition-colors">
-            {saving ? <RefreshCw size={11} className="animate-spin" /> : <Check size={11} />}
-            Lưu
-          </button>
+      </div>
+
+      <div className="p-4 space-y-4">
+        {/* Row 1: code + type + value */}
+        <div className="grid grid-cols-3 gap-3">
+          <div>
+            <label className={labelCls}>Mã giảm giá</label>
+            <input className={inputCls + " font-mono uppercase tracking-widest"} value={form.code} onChange={e => set("code", e.target.value.toUpperCase())} />
+          </div>
+          <div>
+            <label className={labelCls}>Loại</label>
+            <select className={inputCls} value={form.type} onChange={e => set("type", e.target.value)}>
+              <option value="PERCENT">Phần trăm (%)</option>
+              <option value="FIXED">Số tiền cố định (đ)</option>
+            </select>
+          </div>
+          <div>
+            <label className={labelCls}>{form.type === "PERCENT" ? "Giá trị (%)" : "Giá trị (đ)"}</label>
+            <input className={inputCls} type="number" value={form.discountValue} onChange={e => set("discountValue", Number(e.target.value))} />
+          </div>
+        </div>
+
+        {/* Row 2: time window + quota */}
+        <div>
+          <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold mb-2">Thời gian hiệu lực</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>Bắt đầu <span className="text-zinc-600 font-normal">(trống = ngay lập tức)</span></label>
+              <input className={inputCls} type="datetime-local" value={form.startsAt ? form.startsAt.slice(0, 16) : ""} onChange={e => set("startsAt", e.target.value || null)} />
+            </div>
+            <div>
+              <label className={labelCls}>Kết thúc <span className="text-zinc-600 font-normal">(trống = không hết hạn)</span></label>
+              <input className={inputCls} type="datetime-local" value={form.expiresAt ? form.expiresAt.slice(0, 16) : ""} onChange={e => set("expiresAt", e.target.value || null)} />
+            </div>
+          </div>
+        </div>
+
+        {/* Row 3: max uses */}
+        <div>
+          <label className={labelCls}>Số lượt tối đa <span className="text-zinc-600 font-normal">(0 = không giới hạn)</span></label>
+          <input className={inputCls + " max-w-[200px]"} type="number" min="0" value={form.maxUses} onChange={e => set("maxUses", Number(e.target.value))} />
+        </div>
+
+        {/* Row 4: applicable plans */}
+        <div>
+          <label className={labelCls}>Áp dụng cho gói <span className="text-zinc-600 font-normal">(trống = tất cả)</span></label>
+          <div className="flex gap-2 mt-1.5">
+            {ALL_PLANS.map(p => (
+              <button
+                key={p}
+                type="button"
+                onClick={() => togglePlan(p)}
+                className={`px-3 py-1.5 text-[11px] font-semibold rounded-lg border transition-all ${
+                  (form.applicablePlans || []).includes(p)
+                    ? "bg-amber-500/15 text-amber-400 border-amber-500/30 shadow-sm"
+                    : "bg-white/2 text-zinc-500 border-white/6 hover:border-white/12 hover:text-zinc-300"
+                }`}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Row 5: description */}
+        <div>
+          <label className={labelCls}>Mô tả nội bộ</label>
+          <input className={inputCls} value={form.description || ""} onChange={e => set("description", e.target.value)} placeholder="Ghi chú cho admin..." />
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-1 border-t border-white/5">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => set("active", !form.active)}
+              className={`flex items-center gap-1.5 text-[12px] font-medium transition-colors ${form.active ? "text-emerald-400 hover:text-emerald-300" : "text-zinc-500 hover:text-zinc-300"}`}
+            >
+              {form.active ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
+              {form.active ? "Hoạt động" : "Tắt"}
+            </button>
+            <span className="text-zinc-700">·</span>
+            <button
+              type="button"
+              onClick={() => set("showInSidebar", !form.showInSidebar)}
+              className={`flex items-center gap-1.5 text-[12px] font-medium transition-colors ${form.showInSidebar ? "text-violet-400 hover:text-violet-300" : "text-zinc-500 hover:text-zinc-300"}`}
+            >
+              {form.showInSidebar ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
+              {form.showInSidebar ? "Hiển thị sidebar" : "Ẩn khỏi sidebar"}
+            </button>
+          </div>
+          <div className="flex items-center gap-2">
+            {err && <span className="text-[11px] text-red-400">{err}</span>}
+            <button type="button" onClick={() => setEditing(false)} className="px-3 py-1.5 text-[11px] text-zinc-400 hover:text-white border border-white/8 hover:border-white/16 rounded-lg transition-colors">
+              Huỷ
+            </button>
+            <button type="button" onClick={handleSave} disabled={saving} className="flex items-center gap-1.5 px-4 py-1.5 bg-amber-500 text-black text-[11px] font-bold hover:bg-amber-400 disabled:opacity-50 rounded-lg transition-colors">
+              {saving ? <RefreshCw size={11} className="animate-spin" /> : <Check size={11} />}
+              Lưu thay đổi
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -467,17 +526,20 @@ function NewDiscountForm({ onCreated }) {
     set("applicablePlans", cur.includes(plan) ? cur.filter(p => p !== plan) : [...cur, plan]);
   };
 
+const [err, setErr] = useState(null);
+
   const handleCreate = async (e) => {
     e.preventDefault();
-    if (!form.code.trim()) return alert("Nhập mã giảm giá");
+    if (!form.code.trim()) { setErr("Nhập mã giảm giá"); return; }
     setSaving(true);
+    setErr(null);
     try {
       await api.post("/admin/plans/discounts", form);
       onCreated();
       setForm({ ...EMPTY_DISCOUNT });
       setOpen(false);
     } catch (e) {
-      alert(e.response?.data?.message || "Tạo thất bại");
+      setErr(e.response?.data?.message || "Tạo thất bại");
     } finally {
       setSaving(false);
     }
@@ -487,7 +549,7 @@ function NewDiscountForm({ onCreated }) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 px-4 py-2 bg-white/4 border border-white/7 text-zinc-300 hover:text-white hover:border-white/14 text-[12px] font-medium transition-colors rounded"
+        className="flex items-center gap-2 px-4 py-2 bg-amber-500/8 border border-amber-500/20 text-amber-400 hover:bg-amber-500/15 hover:border-amber-500/35 text-[12px] font-semibold transition-all rounded-lg"
       >
         <Plus size={13} />
         Tạo mã giảm giá
@@ -496,73 +558,120 @@ function NewDiscountForm({ onCreated }) {
   }
 
   return (
-    <form onSubmit={handleCreate} className="bg-[#09090b]/80 border border-white/8 rounded p-5 space-y-4">
-      <p className="text-[12px] font-semibold text-white flex items-center gap-2">
-        <Tag size={13} className="text-[#f5a623]" /> Tạo mã giảm giá mới
-      </p>
-
-      <div className="grid grid-cols-3 gap-3">
-        <div>
-          <label className={labelCls}>Mã *</label>
-          <input className={inputCls + " font-mono uppercase"} value={form.code} onChange={e => set("code", e.target.value.toUpperCase())} placeholder="SUMMER2025" required />
+    <form onSubmit={handleCreate} className="border border-emerald-500/20 bg-[#0f0f11] rounded-xl overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-2.5 bg-emerald-500/5 border-b border-emerald-500/10">
+        <div className="flex items-center gap-2">
+          <Plus size={12} className="text-emerald-400" />
+          <span className="text-[11px] font-semibold text-emerald-400 tracking-wide">Tạo mã giảm giá mới</span>
         </div>
-        <div>
-          <label className={labelCls}>Loại *</label>
-          <select className={inputCls} value={form.type} onChange={e => set("type", e.target.value)}>
-            <option value="PERCENT">Phần trăm (%)</option>
-            <option value="FIXED">Số tiền cố định (đ)</option>
-          </select>
-        </div>
-        <div>
-          <label className={labelCls}>{form.type === "PERCENT" ? "Giá trị (%)" : "Giá trị (đ)"} *</label>
-          <input className={inputCls} type="number" min="1" value={form.discountValue} onChange={e => set("discountValue", Number(e.target.value))} required />
-        </div>
+        <button type="button" onClick={() => setOpen(false)} className="p-1 text-zinc-500 hover:text-white transition-colors rounded">
+          <X size={13} />
+        </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className={labelCls}>Số lượt tối đa (0 = không giới hạn)</label>
-          <input className={inputCls} type="number" min="0" value={form.maxUses} onChange={e => set("maxUses", Number(e.target.value))} />
+      <div className="p-4 space-y-4">
+        {/* Row 1: code + type + value */}
+        <div className="grid grid-cols-3 gap-3">
+          <div>
+            <label className={labelCls}>Mã giảm giá <span className="text-red-400">*</span></label>
+            <input className={inputCls + " font-mono uppercase tracking-widest"} value={form.code} onChange={e => set("code", e.target.value.toUpperCase())} placeholder="LUCKY8PM" required />
+          </div>
+          <div>
+            <label className={labelCls}>Loại <span className="text-red-400">*</span></label>
+            <select className={inputCls} value={form.type} onChange={e => set("type", e.target.value)}>
+              <option value="PERCENT">Phần trăm (%)</option>
+              <option value="FIXED">Số tiền cố định (đ)</option>
+            </select>
+          </div>
+          <div>
+            <label className={labelCls}>{form.type === "PERCENT" ? "Giá trị (%)" : "Giá trị (đ)"} <span className="text-red-400">*</span></label>
+            <input className={inputCls} type="number" min="1" value={form.discountValue} onChange={e => set("discountValue", Number(e.target.value))} required />
+          </div>
         </div>
-        <div>
-          <label className={labelCls}>Ngày hết hạn (để trống = không hết hạn)</label>
-          <input className={inputCls} type="datetime-local" value={form.expiresAt} onChange={e => set("expiresAt", e.target.value)} />
-        </div>
-      </div>
 
-      <div>
-        <label className={labelCls}>Áp dụng cho gói (để trống = tất cả)</label>
-        <div className="flex gap-2 mt-1">
-          {ALL_PLANS.map(p => (
+        {/* Row 2: time window */}
+        <div>
+          <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold mb-2 flex items-center gap-1.5">
+            <Clock size={9} /> Thời gian hiệu lực (Flash Deal)
+          </p>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>Bắt đầu <span className="text-zinc-600 font-normal">(trống = ngay lập tức)</span></label>
+              <input className={inputCls} type="datetime-local" value={form.startsAt} onChange={e => set("startsAt", e.target.value)} />
+            </div>
+            <div>
+              <label className={labelCls}>Kết thúc <span className="text-zinc-600 font-normal">(trống = không hết hạn)</span></label>
+              <input className={inputCls} type="datetime-local" value={form.expiresAt} onChange={e => set("expiresAt", e.target.value)} />
+            </div>
+          </div>
+        </div>
+
+        {/* Row 3: quota */}
+        <div>
+          <label className={labelCls}>Số lượt tối đa <span className="text-zinc-600 font-normal">(0 = không giới hạn)</span></label>
+          <input className={inputCls + " max-w-[200px]"} type="number" min="0" value={form.maxUses} onChange={e => set("maxUses", Number(e.target.value))} />
+        </div>
+
+        {/* Row 4: applicable plans */}
+        <div>
+          <label className={labelCls}>Áp dụng cho gói <span className="text-zinc-600 font-normal">(trống = tất cả)</span></label>
+          <div className="flex gap-2 mt-1.5">
+            {ALL_PLANS.map(p => (
+              <button
+                type="button"
+                key={p}
+                onClick={() => togglePlan(p)}
+                className={`px-3 py-1.5 text-[11px] font-semibold rounded-lg border transition-all ${
+                  (form.applicablePlans || []).includes(p)
+                    ? "bg-amber-500/15 text-amber-400 border-amber-500/30"
+                    : "bg-white/2 text-zinc-500 border-white/6 hover:border-white/12 hover:text-zinc-300"
+                }`}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Row 5: description */}
+        <div>
+          <label className={labelCls}>Mô tả nội bộ</label>
+          <input className={inputCls} value={form.description} onChange={e => set("description", e.target.value)} placeholder="Flash deal Lucky Time 8h–9h tối..." />
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-1 border-t border-white/5">
+          <div className="flex items-center gap-3">
             <button
               type="button"
-              key={p}
-              onClick={() => togglePlan(p)}
-              className={`px-3 py-1.5 text-[11px] font-medium rounded border transition-colors ${
-                (form.applicablePlans || []).includes(p)
-                  ? "bg-[#f5a623]/10 text-[#f5a623] border-[#f5a623]/30"
-                  : "bg-white/3 text-zinc-500 border-white/7 hover:border-white/14"
-              }`}
+              onClick={() => set("active", !form.active)}
+              className={`flex items-center gap-1.5 text-[12px] font-medium transition-colors ${form.active ? "text-emerald-400 hover:text-emerald-300" : "text-zinc-500 hover:text-zinc-300"}`}
             >
-              {p}
+              {form.active ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
+              {form.active ? "Kích hoạt" : "Nháp"}
             </button>
-          ))}
+            <span className="text-zinc-700">·</span>
+            <button
+              type="button"
+              onClick={() => set("showInSidebar", !form.showInSidebar)}
+              className={`flex items-center gap-1.5 text-[12px] font-medium transition-colors ${form.showInSidebar ? "text-violet-400 hover:text-violet-300" : "text-zinc-500 hover:text-zinc-300"}`}
+            >
+              {form.showInSidebar ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
+              {form.showInSidebar ? "Hiển thị sidebar" : "Ẩn khỏi sidebar"}
+            </button>
+          </div>
+          <div className="flex items-center gap-2">
+            {err && <span className="text-[11px] text-red-400">{err}</span>}
+            <button type="button" onClick={() => setOpen(false)} className="px-3 py-1.5 text-[11px] text-zinc-400 hover:text-white border border-white/8 hover:border-white/16 rounded-lg transition-colors">
+              Huỷ
+            </button>
+            <button type="submit" disabled={saving} className="flex items-center gap-1.5 px-4 py-1.5 bg-emerald-500 text-black text-[11px] font-bold hover:bg-emerald-400 disabled:opacity-50 rounded-lg transition-colors">
+              {saving ? <RefreshCw size={11} className="animate-spin" /> : <Plus size={11} />}
+              Tạo mã
+            </button>
+          </div>
         </div>
-      </div>
-
-      <div>
-        <label className={labelCls}>Mô tả nội bộ</label>
-        <input className={inputCls} value={form.description} onChange={e => set("description", e.target.value)} placeholder="Ghi chú cho admin..." />
-      </div>
-
-      <div className="flex justify-end gap-2">
-        <button type="button" onClick={() => setOpen(false)} className="px-4 py-2 text-[11px] text-zinc-400 hover:text-white border border-white/7 hover:border-white/14 rounded transition-colors">
-          Huỷ
-        </button>
-        <button type="submit" disabled={saving} className="flex items-center gap-2 px-4 py-2 bg-[#f5a623] text-black text-[11px] font-bold hover:bg-[#e09515] disabled:opacity-50 rounded transition-colors">
-          {saving ? <RefreshCw size={11} className="animate-spin" /> : <Plus size={11} />}
-          Tạo mã
-        </button>
       </div>
     </form>
   );
