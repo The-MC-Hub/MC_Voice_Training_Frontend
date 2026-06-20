@@ -9,6 +9,7 @@ import {
   TrendingDown
 } from 'lucide-react';
 import { getLeaderboard, getMyRank } from '../services/communityService';
+import { trackLeaderboardFilter, trackLeaderboardShare } from '@/utils/analytics';
 import { useAuthStore } from '../store/useAuthStore';
 import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
@@ -908,7 +909,7 @@ const LeaderboardPage = () => {
           {PERIODS.map(p => (
             <button
               key={p.key}
-              onClick={() => setPeriod(p)}
+              onClick={() => { setPeriod(p); trackLeaderboardFilter(type.key, p.key); }}
               className={`px-4 py-1.5 rounded-md text-[12px] font-medium transition-all relative ${
                 period.key === p.key ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
               }`}
@@ -935,7 +936,7 @@ const LeaderboardPage = () => {
                 key={t.key}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => setType(t)}
+                onClick={() => { setType(t); trackLeaderboardFilter(t.key, period.key); }}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-lg border text-[12px] font-medium transition-all relative overflow-hidden ${
                   active
                     ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
@@ -1055,7 +1056,7 @@ const LeaderboardPage = () => {
               myEntry={myEntry}
               total={total}
               typeMeta={type}
-              onShare={() => setShowShare(true)}
+              onShare={() => { setShowShare(true); trackLeaderboardShare(myEntry?.rank); }}
             />
 
             {/* Feature #4: Personal best badge (weekly period only) */}

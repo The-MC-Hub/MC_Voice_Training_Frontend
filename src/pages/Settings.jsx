@@ -48,6 +48,7 @@ import { uploadMedia } from "../services/mediaService";
 import api from "../services/api";
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { useTour } from '../contexts/TourContext';
+import { trackSettingsProfileUpdate, trackSettingsAvatarUpload, trackLogoutClick, trackPasswordChangeSubmit } from '@/utils/analytics';
 
 const inputCls = "flex-1 bg-transparent text-[13px] text-gray-800 placeholder:text-gray-400 focus:outline-none min-w-0";
 const inputWrapCls = "flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5 focus-within:border-amber-400 transition-colors";
@@ -427,6 +428,7 @@ const Settings = () => {
         updateUser(results[0].data.user);
       }
       setSuccess(t('settings.profileUpdated'));
+      trackSettingsProfileUpdate();
     } catch (err) {
       setError(err.response?.data?.message || t('settings.failedUpdate'));
     } finally {
@@ -451,6 +453,7 @@ const Settings = () => {
     try {
       await handleUpdateSettings({ password: securityData.newPassword });
       setSuccess(t('settings.passwordChanged'));
+      trackPasswordChangeSubmit();
       setSecurityData({ currentPassword: "", newPassword: "", confirmPassword: "" });
     } catch (err) {
       setError(err.response?.data?.message || t('settings.failedUpdate'));
@@ -565,7 +568,7 @@ const Settings = () => {
                       <EmojiAvatarPicker
                         compact
                         selected={(() => { const a = profileData.avatar || user?.avatar || ""; return (a.includes('.') || a.startsWith('http')) ? "" : a; })()}
-                        onSelect={(emoji) => setProfileData(prev => ({ ...prev, avatar: emoji }))}
+                        onSelect={(emoji) => { setProfileData(prev => ({ ...prev, avatar: emoji })); trackSettingsAvatarUpload(); }}
                       />
                     </div>
                   </div>
@@ -1051,7 +1054,7 @@ const Settings = () => {
                   </div>
                   <button
                     type="button"
-                    onClick={() => { logout(); navigate('/'); }}
+                    onClick={() => { trackLogoutClick(); logout(); navigate('/'); }}
                     className="mt-4 shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 active:scale-95 text-white text-[12px] font-semibold transition-all duration-150"
                   >
                     <LogOut size={13} /> Đăng xuất

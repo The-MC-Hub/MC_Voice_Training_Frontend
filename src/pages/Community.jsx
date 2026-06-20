@@ -9,6 +9,7 @@ import {
   ChevronLeft, ChevronRight
 } from "lucide-react";
 import { fetchStats, fetchLeaderboards, fetchActiveArenas } from "../controllers/communityController";
+import { trackCommunityPageView } from '@/utils/analytics';
 import { useAuthStore } from "../store/useAuthStore";
 import PageLoader from "../components/ui/PageLoader";
 import PageBanner from '../components/ui/PageBanner';
@@ -52,6 +53,10 @@ const Community = () => {
   };
 
   const allSlides = useMemo(() => arenas, [arenas]);
+
+  useEffect(() => {
+    trackCommunityPageView();
+  }, []);
 
   useEffect(() => {
     const load = async () => {

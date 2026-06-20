@@ -11,6 +11,7 @@ import api from "../services/api";
 import { useAuth } from "../hooks/useAuth";
 import { useToast } from "../components/ui/Toast";
 import Breadcrumb from '../components/ui/Breadcrumb';
+import { trackPaymentPageView, trackPlanSelect, trackPaymentSubmit } from '@/utils/analytics';
 
 // Plan hierarchy order
 const PLAN_ORDER = { FREE: 0, DAILY: 0.5, BASIC: 1, FULL: 2, ANNUAL: 3 };
@@ -105,6 +106,9 @@ const PaymentPage = () => {
   const [discountError, setDiscountError] = useState(null);
   const [applyingDiscount, setApplyingDiscount] = useState(false);
   const pollRef = useRef(null);
+
+  // Track page view on mount
+  useEffect(() => { trackPaymentPageView(); }, []);
 
   // Fetch plans from API
   useEffect(() => {
@@ -326,6 +330,7 @@ const PaymentPage = () => {
                   onClick={() => {
                     if (isCurrentPlan || isDowngrade) return;
                     setSelectedPlan(plan.key);
+                    trackPlanSelect(plan.key);
                     fetchOrder(plan.key);
                   }}
                   whileHover={!isCurrentPlan && !isDowngrade ? { y: -1 } : {}}
@@ -579,7 +584,7 @@ const PaymentPage = () => {
 
                   {/* PayOS CTA */}
                   <motion.button
-                    onClick={() => { window.location.href = orderData.checkoutUrl; }}
+                    onClick={() => { trackPaymentSubmit(orderData.plan, orderData.amount); window.location.href = orderData.checkoutUrl; }}
                     whileHover={{ scale: 1.01, boxShadow: '0 8px 24px rgba(245,166,35,0.3)' }}
                     whileTap={{ scale: 0.98 }}
                     className="w-full py-4 bg-amber-500 hover:bg-amber-600 text-white font-bold text-[15px] rounded-2xl transition-colors flex items-center justify-center gap-3"

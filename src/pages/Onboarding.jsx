@@ -8,6 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { updateProfile } from "../controllers/mcController";
 import { uploadMedia } from "../services/mediaService";
+import { trackOnboardingStepComplete, trackOnboardingSubmit } from '@/utils/analytics';
 
 const inputCls = "w-full bg-[#09090b] border border-white/[0.07] rounded-xl py-3 px-4 text-[14px] text-white placeholder:text-zinc-600 outline-none focus:border-white/[0.14] transition-colors";
 
@@ -57,6 +58,7 @@ const Onboarding = () => {
   }, [selectedCountry]);
 
   const handleComplete = async () => {
+    trackOnboardingSubmit();
     try {
       let uploadedPortfolioUrls = [];
       if (profileData.showreelFiles.length > 0) {
@@ -381,14 +383,14 @@ const Onboarding = () => {
                 <ArrowLeft size={15} /> {t('common.back')}
               </button>
             )}
-            <button onClick={() => { if (step < 3) setStep(step + 1); else handleComplete(); }}
+            <button onClick={() => { if (step < 3) { setStep(step + 1); trackOnboardingStepComplete(step); } else handleComplete(); }}
               className="text-zinc-600 hover:text-zinc-400 text-[13px] transition-colors px-2">
               {t('onboarding.skip')}
             </button>
           </div>
 
           {step < 3 ? (
-            <button onClick={() => setStep(step + 1)}
+            <button onClick={() => { setStep(step + 1); trackOnboardingStepComplete(step); }}
               className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] text-black text-[13px] font-semibold rounded-xl hover:bg-[#e09520] transition-colors">
               {t('onboarding.continueStep')} {step} <ArrowRight size={15} />
             </button>

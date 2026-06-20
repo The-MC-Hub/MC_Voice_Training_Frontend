@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowRight, ChevronRight } from "lucide-react";
 import { useTour } from "../contexts/TourContext";
+import { trackOnboardingTourSkip, trackOnboardingTourComplete } from '@/utils/analytics';
 
 const PAD = 10; // spotlight padding px
 
@@ -206,14 +207,14 @@ const OnboardingTour = () => {
                   <div className="flex items-center gap-2">
                     {!isLast && (
                       <button
-                        onClick={endTour}
+                        onClick={() => { trackOnboardingTourSkip(); endTour(); }}
                         className="text-[11px] text-gray-400 hover:text-gray-600 transition-colors"
                       >
                         Bỏ qua
                       </button>
                     )}
                     <button
-                      onClick={nextStep}
+                      onClick={() => { if (isLast) { trackOnboardingTourComplete(); } nextStep(); }}
                       className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold transition-colors active:scale-95"
                     >
                       {isLast ? "Hoàn tất" : "Tiếp theo"}

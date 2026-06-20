@@ -9,6 +9,7 @@ import {
   Users, Target, GraduationCap, Star, Play, Lock, Map
 } from 'lucide-react';
 import { academyService } from '../services/academyService';
+import { trackCourseDetailView, trackCourseEnrollClick, trackLessonStart } from '@/utils/analytics';
 import { useAuthStore } from '../store/useAuthStore';
 import PageLoader from '../components/ui/PageLoader';
 import Breadcrumb from '../components/ui/Breadcrumb';
@@ -390,7 +391,12 @@ const CourseDetail = () => {
 
   useEffect(() => { fetchCourse(); }, [id]);
 
+  useEffect(() => {
+    if (course) trackCourseDetailView(id, course.title);
+  }, [course]);
+
   const handleEnroll = async () => {
+    trackCourseEnrollClick(id, course.title);
     setEnrolling(true);
     try { await academyService.enrollCourse(id); fetchCourse(); }
     catch (err) { console.error('Enroll error:', err); }
@@ -442,8 +448,14 @@ const CourseDetail = () => {
   };
 
   const handleOpen = (item) => {
-    if (item.type === 'lesson')  navigate(`/m/voice/practice/${item.id}?courseId=${id}`);
-    if (item.type === 'reading') navigate(`/m/learning/guide/${item.id}?courseId=${id}`);
+    if (item.type === 'lesson') {
+      trackLessonStart(item.id, item.type);
+      navigate(`/m/voice/practice/${item.id}?courseId=${id}`);
+    }
+    if (item.type === 'reading') {
+      trackLessonStart(item.id, item.type);
+      navigate(`/m/learning/guide/${item.id}?courseId=${id}`);
+    }
     if (item.type === 'quiz')    setActiveTab('quiz');
   };
 

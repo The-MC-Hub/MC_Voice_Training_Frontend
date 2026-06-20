@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { trackUpgradeBannerView, trackUpgradeBannerClick } from '@/utils/analytics';
 import { Zap, AlertTriangle, Crown, ArrowRight, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -25,6 +26,10 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
     const remaining = Math.max(0, limit - used);
     const nextPlan = NEXT_PLAN[plan] || 'FULL';
     const nextLabel = NEXT_PLAN_LABEL[plan] || 'Full';
+
+    useEffect(() => {
+        trackUpgradeBannerView(pct);
+    }, [pct]);
 
     if (variant === 'strip') {
         return (
@@ -52,6 +57,7 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
                     <div className="flex items-center gap-3 shrink-0">
                         <Link
                             to="/m/payment"
+                            onClick={trackUpgradeBannerClick}
                             className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-500 text-black text-[11px] font-semibold hover:bg-amber-400 transition-colors"
                         >
                             <Crown size={11} /> Nâng cấp {nextLabel}
@@ -137,6 +143,7 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
 
                 <Link
                     to="/m/payment"
+                    onClick={trackUpgradeBannerClick}
                     className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-amber-400 transition-colors"
                 >
                     <Crown size={13} /> Nâng cấp lên {nextLabel} <ArrowRight size={13} />
@@ -192,6 +199,7 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
                 </div>
                 <Link
                     to="/m/payment"
+                    onClick={trackUpgradeBannerClick}
                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors shrink-0 whitespace-nowrap"
                 >
                     <Crown size={12} /> Nâng cấp ngay

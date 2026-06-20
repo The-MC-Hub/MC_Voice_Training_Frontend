@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Mic, Star, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "../store/useAuthStore";
+import { trackLoginSubmit, trackLoginSuccess, trackLoginOtpVerify } from "@/utils/analytics";
 
 const ROLE_REDIRECT = { admin: "/m/dashboard", mc: "/m/dashboard", client: "/m/dashboard" };
 
@@ -167,6 +168,7 @@ const AdminOtpModal = ({ adminEmail, rememberMe, onSuccess, onCancel }) => {
     clearError();
     try {
       const res = await verifyAdminLoginOtp(adminEmail, code, rememberMe);
+      trackLoginOtpVerify();
       onSuccess(res);
     } catch (_) {
       setDigits(["", "", "", "", "", ""]);
@@ -275,6 +277,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     clearError();
+    trackLoginSubmit();
     try {
       localStorage.setItem('rememberMe', rememberMe);
       const res = await login(email, password, rememberMe);
@@ -282,6 +285,7 @@ const Login = () => {
         setAdminOtp({ email: res.email, rememberMe });
         return;
       }
+      trackLoginSuccess();
       navigate(ROLE_REDIRECT[res.user?.role?.toLowerCase()] || "/m/dashboard", { replace: true });
     } catch (err) {
       const msg = err.response?.data?.message || "";

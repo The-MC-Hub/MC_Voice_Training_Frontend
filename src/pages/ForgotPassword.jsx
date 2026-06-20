@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Mail, ArrowLeft, ArrowRight, Shield, Key, CheckCircle2 } from "lucide-react";
 import { forgotPassword, resetPassword } from "../services/authService";
+import { trackForgotPasswordSubmit } from '@/utils/analytics';
 
 const ForgotPassword = () => {
   const { t } = useTranslation();
@@ -26,7 +27,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     if (newPassword !== confirmPassword) { setError(t('auth.passwordMismatch')); return; }
     setLoading(true); setError("");
-    try { await resetPassword(email, code, newPassword); setStep(3); }
+    try { await resetPassword(email, code, newPassword); trackForgotPasswordSubmit(); setStep(3); }
     catch (err) { setError(err.response?.data?.message || "Invalid code or failed to reset password."); }
     finally { setLoading(false); }
   };

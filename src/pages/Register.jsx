@@ -11,6 +11,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { useApi } from "../hooks/useApi";
 import { fetchUserRoles } from "../controllers/publicController";
 import { academyService } from "../services/academyService";
+import { trackRegisterSubmit, trackRegisterSuccess, trackRegisterEmailVerify, trackRegisterQuizComplete } from '@/utils/analytics';
 const ROLE_REDIRECT = { admin: "/m/dashboard", mc: "/m/dashboard", client: "/m/dashboard" };
 
 const SLIDE_FEATURES = [
@@ -498,6 +499,7 @@ const CoursePickScreen = ({ onPick, onSkip, submitting }) => {
         setQuizStep(q => q + 1);
       } else {
         setAnswers(newAnswers);
+        trackRegisterQuizComplete(newAnswers);
         setPhase("analyzing");
         setTimeout(() => {
           const best = pickBestCourse(newAnswers, allCourses);
@@ -852,6 +854,7 @@ const Register = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    trackRegisterSubmit();
     setLocalError("");
     if (form.password !== form.confirmPassword) { setLocalError(t('auth.passwordMismatch')); return; }
     if (form.password.length < 8) { setLocalError("Mật khẩu phải có ít nhất 8 ký tự."); return; }
@@ -874,6 +877,7 @@ const Register = () => {
       const payload = { name: form.name, email: form.email, password: form.password, phoneNumber: form.phoneNumber, role: "MC", avatar: selectedAvatar };
       if (form.referralCode.trim()) payload.referralCode = form.referralCode.trim().toUpperCase();
       const res = await register(payload);
+      trackRegisterSuccess();
       setRegisteredEmail(res.email || form.email);
       setStep("otp");
     } catch (err) {
@@ -885,6 +889,7 @@ const Register = () => {
   };
 
   const handleOtpSuccess = async (res) => {
+    trackRegisterEmailVerify();
     setUserRole(res.user?.role || "MC");
     // Enroll the picked course now that account is verified
     if (pendingCourse) {

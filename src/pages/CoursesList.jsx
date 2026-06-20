@@ -7,6 +7,7 @@ import {
   ChevronRight, GraduationCap
 } from 'lucide-react';
 import { academyService } from '../services/academyService';
+import { trackCourseListView, trackCourseDetailView } from '@/utils/analytics';
 import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
 
@@ -54,7 +55,7 @@ const CourseCard = ({ course, index }) => {
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -4 }}
       transition={{ delay: index * 0.06, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      onClick={() => navigate(`/m/courses/${course.id}`)}
+      onClick={() => { trackCourseDetailView(course.id, course.title); navigate(`/m/courses/${course.id}`); }}
       className="group cursor-pointer bg-[#111113] border border-white/[0.07] rounded-2xl overflow-hidden
                  hover:border-[#f5a623]/30 hover:shadow-[0_8px_32px_rgba(245,166,35,0.10)]
                  transition-all duration-300 flex flex-col"
@@ -152,6 +153,7 @@ const CoursesList = () => {
   const [activeFilter, setActiveFilter] = useState(null);
 
   useEffect(() => {
+    trackCourseListView();
     setLoading(true);
     academyService.getAllCourses()
       .then(res => {

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Loader2, ArrowLeft, Award, AlertCircle, Zap, RefreshCw, Square, Play, AudioLines, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useVoicePractice, clampMetric, ANALYZE_PHASES } from "../hooks/useVoicePractice";
+import { trackVoicePracticeStart, trackRecordingStart, trackRecordingStop, trackAnalysisComplete, trackTeleprompterEnable, trackVoiceAnnotationAdd, trackVoicePracticeReset } from '@/utils/analytics';
 import Navbar from "../components/Navbar";
 import UpgradeBanner from "../components/ui/UpgradeBanner";
 import Breadcrumb from "../components/ui/Breadcrumb";
@@ -41,6 +42,52 @@ const VoicePractice = () => {
     completionPercent, overallScore, overallLevel, paceInsight,
     guestCooldownUntil,
   } = vp;
+
+  // Analytics tracking
+  const recordingStartTimeRef = useRef(null);
+
+  // Track practice start when lesson loads
+  useEffect(() => {
+    if (lesson) {
+      trackVoicePracticeStart(lesson.id || lesson._id, lesson.category);
+    }
+  }, [lesson?.id || lesson?._id]);
+
+  // Track analysis complete when result arrives
+  useEffect(() => {
+    if (result) {
+      trackAnalysisComplete(accuracy, energy, pace, lesson?.id || lesson?._id);
+    }
+  }, [result]);
+
+  const handleStartRecording = () => {
+    recordingStartTimeRef.current = Date.now();
+    trackRecordingStart(lesson?.id || lesson?._id);
+    startRecording();
+  };
+
+  const handleStopRecording = () => {
+    const duration = recordingStartTimeRef.current
+      ? Math.round((Date.now() - recordingStartTimeRef.current) / 1000)
+      : recordingTime;
+    trackRecordingStop(duration);
+    stopRecording();
+  };
+
+  const handleResetPractice = () => {
+    trackVoicePracticeReset();
+    resetPractice();
+  };
+
+  const handleSetTeleprompter = (value) => {
+    if (value && !teleprompter) trackTeleprompterEnable();
+    setTeleprompter(value);
+  };
+
+  const handleSetAnnotations = (value) => {
+    trackVoiceAnnotationAdd();
+    setAnnotations(value);
+  };
 
   // Live countdown for guest cooldown
   const [cooldownLeft, setCooldownLeft] = useState(0);
@@ -161,16 +208,16 @@ const VoicePractice = () => {
                   )
                 )}
                 {audioBlob && (
-                  <button onClick={resetPractice} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-white/[0.1] text-zinc-300 text-[13px] font-medium hover:bg-white/[0.05] transition-colors">
+                  <button onClick={handleResetPractice} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-white/[0.1] text-zinc-300 text-[13px] font-medium hover:bg-white/[0.05] transition-colors">
                     <RefreshCw size={13} /> {t_vp("reRecord")}
                   </button>
                 )}
                 {recording ? (
-                  <button onClick={stopRecording} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-500 text-white text-[13px] font-semibold hover:bg-red-600 transition-colors">
+                  <button onClick={handleStopRecording} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-500 text-white text-[13px] font-semibold hover:bg-red-600 transition-colors">
                     <Square size={13} /> {t_vp("stop")}
                   </button>
                 ) : !audioBlob ? (
-                  <button onClick={startRecording} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors">
+                  <button onClick={handleStartRecording} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors">
                     <Play size={13} /> {t_vp("startRecording")}
                   </button>
                 ) : null}
@@ -200,7 +247,7 @@ const VoicePractice = () => {
                     scriptAlign={scriptAlign} setScriptAlign={setScriptAlign}
                     scriptFont={scriptFont} setScriptFont={setScriptFont}
                     scriptBg={scriptBg} setScriptBg={setScriptBg}
-                    teleprompter={teleprompter} setTeleprompter={setTeleprompter}
+                    teleprompter={teleprompter} setTeleprompter={handleSetTeleprompter}
                     teleprompterWpm={teleprompterWpm} setTeleprompterWpm={setTeleprompterWpm}
                     teleprompterRunning={teleprompterRunning} setTeleprompterRunning={setTeleprompterRunning}
                     scriptScrollRef={scriptScrollRef}
@@ -208,8 +255,8 @@ const VoicePractice = () => {
                     <RecordingCard
                       recording={recording} audioBlob={audioBlob} audioUrl={audioUrl} analyzing={analyzing}
                       recordingTime={recordingTime} formatTime={formatTime}
-                      startRecording={startRecording} stopRecording={stopRecording}
-                      handleAnalyze={handleAnalyze} resetPractice={resetPractice}
+                      startRecording={handleStartRecording} stopRecording={handleStopRecording}
+                      handleAnalyze={handleAnalyze} resetPractice={handleResetPractice}
                       bars={bars} volumeLevel={volumeLevel} audioStatus={audioStatus} EMPTY_BARS={EMPTY_BARS}
                       cameraOn={cameraOn} videoRef={videoRef} toggleCamera={toggleCamera}
                       analyzeProgress={analyzeProgress} analyzePhase={analyzePhase}
@@ -226,11 +273,11 @@ const VoicePractice = () => {
                     scriptAlign={scriptAlign} setScriptAlign={setScriptAlign}
                     scriptFont={scriptFont} setScriptFont={setScriptFont}
                     scriptBg={scriptBg} setScriptBg={setScriptBg}
-                    teleprompter={teleprompter} setTeleprompter={setTeleprompter}
+                    teleprompter={teleprompter} setTeleprompter={handleSetTeleprompter}
                     teleprompterWpm={teleprompterWpm} setTeleprompterWpm={setTeleprompterWpm}
                     teleprompterRunning={teleprompterRunning} setTeleprompterRunning={setTeleprompterRunning}
                     scriptScrollRef={scriptScrollRef}
-                    annotations={annotations} setAnnotations={setAnnotations}
+                    annotations={annotations} setAnnotations={handleSetAnnotations}
                     annotationPopup={annotationPopup} setAnnotationPopup={setAnnotationPopup}
                     noteInput={noteInput} setNoteInput={setNoteInput}
                     showNoteInput={showNoteInput} setShowNoteInput={setShowNoteInput}

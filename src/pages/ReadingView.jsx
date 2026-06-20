@@ -14,6 +14,7 @@ import NotesSidebar from '../components/reading/NotesSidebar';
 import { useAuthStore } from '../store/useAuthStore';
 import { MessageSquare } from 'lucide-react';
 import '../markdown.css';
+import { trackLessonStart, trackLessonComplete } from '@/utils/analytics';
 
 const ReadingView = () => {
   const { id } = useParams();
@@ -34,6 +35,10 @@ const ReadingView = () => {
   const [highlights, setHighlights] = useState([]);
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [tooltipData, setTooltipData] = useState(null);
+
+  useEffect(() => {
+    trackLessonStart(id, 'reading');
+  }, [id]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -261,6 +266,7 @@ const ReadingView = () => {
                 onClick={async () => {
                   if (courseId) {
                     try { await academyService.completeReading(courseId, id); } catch {}
+                    trackLessonComplete(id, courseId);
                     celebrate('📖 Xuất sắc! Bạn đã hoàn thành bài đọc!');
                     navigate(`/m/courses/${courseId}`);
                   } else {

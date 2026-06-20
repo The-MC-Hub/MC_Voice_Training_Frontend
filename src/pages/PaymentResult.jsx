@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { CheckCircle, XCircle, Loader2, ArrowLeft } from "lucide-react";
 import api from "../services/api";
 import { useAuth } from "../hooks/useAuth";
+import { trackPaymentSuccess, trackPaymentCancel } from '@/utils/analytics';
 
 const PaymentResult = () => {
   const [searchParams] = useSearchParams();
@@ -11,6 +12,17 @@ const PaymentResult = () => {
   const isSuccess = window.location.pathname.includes("/payment/success");
   const [countdown, setCountdown] = useState(10);
   const [verified, setVerified] = useState(null);
+
+  useEffect(() => {
+    const plan = searchParams.get("plan") || "premium";
+    const amount = searchParams.get("amount");
+    const orderId = searchParams.get("orderId") || searchParams.get("orderCode");
+    if (isSuccess) {
+      trackPaymentSuccess(plan, amount, orderId);
+    } else {
+      trackPaymentCancel(plan);
+    }
+  }, []);
 
   useEffect(() => {
     if (!user?.id) { setVerified(false); return; }

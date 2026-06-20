@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Zap, Loader2, Mic, ChevronLeft, ChevronRight, Crown, Sparkles, BarChart3, Award, AudioLines, Clock } from "lucide-react";
 import UpgradeBanner from "../components/ui/UpgradeBanner";
@@ -10,6 +10,7 @@ import { useApi } from "../hooks/useApi";
 import { fetchDashboard } from "../controllers/mcController";
 import { fetchPracticeHistory } from "../controllers/voiceController";
 import { useAuthStore } from "../store/useAuthStore";
+import { trackDashboardView, trackDashboardTabSwitch, trackDashboardChartFilter, trackUpgradeBannerView } from '@/utils/analytics';
 import OverviewTab from "../components/dashboard/OverviewTab";
 import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
@@ -24,6 +25,8 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
 
+  useEffect(() => { trackDashboardView(); }, []);
+
   const { data: dashboard, loading: dashLoading } = useApi(fetchDashboard);
   const { data: practiceHistory, loading: practiceLoading } = useApi(
     () => fetchPracticeHistory(user?.id),
@@ -37,6 +40,8 @@ const Dashboard = () => {
   const aiLimit = plan === 'FREE' ? 5 : plan === 'BASIC' ? 20 : plan === 'DAILY' ? 10 : null; // null = unlimited
   const usagePct = aiLimit ? (aiUsed / aiLimit) * 100 : 0;
   const showLimitWarning = aiLimit && usagePct >= 80;
+
+  useEffect(() => { if (showLimitWarning) trackUpgradeBannerView(Math.round(usagePct)); }, [showLimitWarning]);
 
   // DAILY plan countdown
   const dailyRemaining = plan === 'DAILY' && user?.planExpiresAt
@@ -305,7 +310,7 @@ const Dashboard = () => {
           {["Overview", "Training History"].map((tab) => (
             <button
               key={tab}
-              onClick={() => { setActiveTab(tab); if (tab === "Training History") setCurrentPage(1); }}
+              onClick={() => { setActiveTab(tab); trackDashboardTabSwitch(tab); if (tab === "Training History") setCurrentPage(1); }}
               className={`px-4 py-2.5 text-[13px] font-medium border-b-2 transition-colors -mb-px ${
                 activeTab === tab
                   ? 'border-[#f5a623] text-white'
@@ -326,7 +331,7 @@ const Dashboard = () => {
             emptyMonthlyData={chartData}
             practiceHistory={practiceHistory}
             timeFrame={timeFrame}
-            setTimeFrame={setTimeFrame}
+            setTimeFrame={(tf) => { setTimeFrame(tf); trackDashboardChartFilter(tf); }}
             skillsData={skillsData}
             categoryStats={categoryStats}
             accuracyDistribution={accuracyDistribution}

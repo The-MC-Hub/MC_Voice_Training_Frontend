@@ -3,6 +3,7 @@ import { Sparkles, Check, X, ShieldCheck, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../services/api';
 import { useAuthStore } from '../store/useAuthStore';
+import { trackPremiumModalView, trackPremiumModalUpgradeClick } from '@/utils/analytics';
 
 const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
   const { user, updateUser } = useAuthStore();
@@ -15,6 +16,7 @@ const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
   const pollRef = React.useRef(null);
 
   useEffect(() => {
+    if (isOpen) trackPremiumModalView();
     if (isOpen && user?.id) fetchOrderDetails();
     return () => { if (pollRef.current) clearInterval(pollRef.current); };
   }, [isOpen, user?.id]);
@@ -180,7 +182,7 @@ const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
                         </div>
                       </div>
                     </div>
-                    <button onClick={handleSimulateSuccess} disabled={simulating}
+                    <button onClick={() => { trackPremiumModalUpgradeClick('premium'); handleSimulateSuccess(); }} disabled={simulating}
                       className="w-full py-2.5 bg-emerald-500 text-white font-medium rounded-xl text-[13px] hover:bg-emerald-600 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-60">
                       {simulating ? (
                         <><div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" /> Upgrading...</>
