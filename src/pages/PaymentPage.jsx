@@ -37,7 +37,7 @@ function adaptPlans(apiPlans) {
       const icons = v.highlight;
       return {
         key: p.plan,
-        name: p.displayName,
+        name: p.plan === 'DAILY' ? 'Gói Ngày' : p.displayName,
         price: formatPrice(p.priceVnd),
         priceNum: p.priceVnd,
         originalPrice: p.discountedPriceVnd > 0 ? formatPrice(p.priceVnd) : null,
