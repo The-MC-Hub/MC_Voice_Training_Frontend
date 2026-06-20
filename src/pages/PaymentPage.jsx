@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   Sparkles, Check, ShieldCheck, CreditCard, Award, AlertCircle,
   ArrowLeft, Zap, BookOpen, Globe, Lock, CheckCircle2, X, Mic,
-  BarChart3, Clock, Star, TrendingUp, Users, Infinity, Crown,
-  ChevronDown, ChevronUp
+  BarChart3, Clock, Star, TrendingUp, Users, Infinity, Crown
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -63,15 +62,15 @@ function adaptPlans(apiPlans) {
 // Comparison table data
 const COMPARISON_ROWS = [
   { feature: "Bài luyện tập", FREE: "Xem trước", DAILY: "50 bài", BASIC: "50 bài", FULL: "50 bài", ANNUAL: "50 bài + ưu tiên mới" },
-  { feature: "Chủ đề MC", FREE: "—", DAILY: "Tat ca", BASIC: "MC Dam cuoi", FULL: "3 chu de", ANNUAL: "3 chu de + Beta" },
-  { feature: "AI coaching", FREE: "5 luot tong", DAILY: "10 luot/ngay", BASIC: "20 luot/thang", FULL: "Khong gioi han", ANNUAL: "Khong gioi han" },
-  { feature: "Phan tich giong (Clarity, Energy, Pace)", FREE: "❌", DAILY: "✓ Co ban", BASIC: "✓ Co ban", FULL: "✓ Chi tiet", ANNUAL: "✓ Chi tiet" },
+  { feature: "Chủ đề MC", FREE: "—", DAILY: "Tất cả", BASIC: "MC Đám cưới", FULL: "3 chủ đề", ANNUAL: "3 chủ đề + Beta" },
+  { feature: "AI coaching", FREE: "5 lượt tổng", DAILY: "10 lượt/ngày", BASIC: "20 lượt/tháng", FULL: "Không giới hạn", ANNUAL: "Không giới hạn" },
+  { feature: "Phân tích giọng (Clarity, Energy, Pace)", FREE: "❌", DAILY: "✓ Cơ bản", BASIC: "✓ Cơ bản", FULL: "✓ Chi tiết", ANNUAL: "✓ Chi tiết" },
   { feature: "WER · CER · Jitter · HNR", FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "✓", ANNUAL: "✓" },
-  { feature: "Bieu do tien do & lich su", FREE: "❌", DAILY: "✓", BASIC: "❌", FULL: "✓", ANNUAL: "✓" },
-  { feature: "Trac nghiem ly thuyet", FREE: "❌", DAILY: "✓", BASIC: "✓", FULL: "✓", ANNUAL: "✓" },
-  { feature: "Huy hieu Annual Elite", FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
-  { feature: "Uu tien ho tro 24/7", FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
-  { feature: "Truy cap tinh nang Beta", FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
+  { feature: "Biểu đồ tiến độ & lịch sử", FREE: "❌", DAILY: "✓", BASIC: "❌", FULL: "✓", ANNUAL: "✓" },
+  { feature: "Trắc nghiệm lý thuyết", FREE: "❌", DAILY: "✓", BASIC: "✓", FULL: "✓", ANNUAL: "✓" },
+  { feature: "Huy hiệu Annual Elite", FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
+  { feature: "Ưu tiên hỗ trợ 24/7", FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
+  { feature: "Truy cập tính năng Beta", FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
 ];
 
 const IS_DEV = import.meta.env.VITE_DEV_MODE === 'true';
@@ -100,7 +99,6 @@ const PaymentPage = () => {
   const [error, setError] = useState(null);
   const [simulating, setSimulating] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [showComparison, setShowComparison] = useState(false);
   const [discountCode, setDiscountCode] = useState("");
   const [discountInfo, setDiscountInfo] = useState(null);
   const [discountError, setDiscountError] = useState(null);
@@ -468,15 +466,19 @@ const PaymentPage = () => {
                         {isCurrentPlan ? (
                           <CheckCircle2 size={18} className="text-emerald-500" />
                         ) : isDowngrade ? (
-                          <div className="w-4 h-4 rounded-full border-2 border-gray-200" />
-                        ) : (
-                          <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${
-                            isSelected ? 'border-[--accent] bg-[--accent]' : 'border-gray-300'
-                          }`}
-                          style={{ '--accent': plan.accentColor }}
+                          <div className="w-5 h-5 rounded-full border-2 border-gray-200" />
+                        ) : isSelected ? (
+                          <motion.div
+                            initial={{ scale: 0.6, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ type: 'spring', damping: 12, stiffness: 300 }}
+                            className="w-6 h-6 rounded-full flex items-center justify-center shadow-md"
+                            style={{ background: plan.accentColor, boxShadow: `0 2px 10px ${plan.accentColor}55` }}
                           >
-                            {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                          </div>
+                            <Check size={13} strokeWidth={3} className="text-white" />
+                          </motion.div>
+                        ) : (
+                          <div className="w-5 h-5 rounded-full border-2 border-gray-300" />
                         )}
                       </div>
                     </div>
@@ -622,95 +624,78 @@ const PaymentPage = () => {
 
         {/* ── Comparison Table ── */}
         <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
-          <button
-            onClick={() => setShowComparison(v => !v)}
-            className="w-full flex items-center justify-between px-6 py-5 hover:bg-gray-50 transition-colors"
-          >
-            <div className="text-left">
-              <p className="text-[16px] font-bold text-gray-900">So sánh quyền lợi các gói</p>
-              <p className="text-[12px] text-gray-400 mt-0.5">Xem chi tiết từng tính năng bạn nhận được</p>
+          <div className="px-6 py-5 border-b border-gray-100">
+            <p className="text-[16px] font-bold text-gray-900">So sánh quyền lợi các gói</p>
+            <p className="text-[12px] text-gray-400 mt-0.5">Xem chi tiết từng tính năng bạn nhận được</p>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-[13px]">
+              <thead>
+                <tr className="border-b border-gray-100">
+                  <th className="text-left px-6 py-3 font-semibold text-gray-500 text-[11px] uppercase tracking-wider w-[28%]">Tính năng</th>
+                  {['Free', 'Daily', 'Basic', 'Full', 'Annual'].map((name) => {
+                    const planKey = name.toUpperCase();
+                    const isCurrent = (user?.plan || 'FREE').toUpperCase() === planKey;
+                    const isHighlighted = selectedPlan === planKey;
+                    const accent = PLAN_VISUAL[planKey]?.accentColor || '#6b7280';
+                    return (
+                      <th key={name} className={`text-center px-3 py-3 font-bold text-[13px] ${isCurrent ? 'text-emerald-600' : isHighlighted ? 'text-gray-900' : 'text-gray-400'}`}>
+                        <div className="flex flex-col items-center gap-1">
+                          <span>{name}</span>
+                          {isCurrent && <span className="text-[9px] font-semibold text-emerald-500 uppercase tracking-wide">Hiện tại</span>}
+                          {isHighlighted && !isCurrent && <div className="h-0.5 w-8 rounded-full" style={{ background: accent }} />}
+                        </div>
+                      </th>
+                    );
+                  })}
+                </tr>
+              </thead>
+              <tbody>
+                {COMPARISON_ROWS.map((row, i) => (
+                  <tr key={i} className={`border-b border-gray-50 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                    <td className="px-6 py-3 text-gray-600 text-[12px]">{row.feature}</td>
+                    {['FREE', 'DAILY', 'BASIC', 'FULL', 'ANNUAL'].map(key => {
+                      const val = row[key];
+                      const isCurrent = (user?.plan || 'FREE').toUpperCase() === key;
+                      const isHighlighted = selectedPlan === key;
+                      const isCheck = val === '✓' || (val && val.startsWith('✓'));
+                      const isCross = val === '❌';
+                      const accent = PLAN_VISUAL[key]?.accentColor;
+                      return (
+                        <td key={key} className={`text-center px-3 py-3 text-[12px] transition-colors ${
+                          isCurrent ? 'bg-emerald-50/40' : isHighlighted ? 'bg-amber-50/30' : ''
+                        }`}
+                        style={isHighlighted && !isCurrent && !isCross && !isCheck ? { borderBottom: `2px solid ${accent}20` } : {}}
+                        >
+                          {isCross
+                            ? <X size={13} className="mx-auto text-gray-300" />
+                            : isCheck
+                            ? <Check size={13} className="mx-auto text-emerald-500" />
+                            : <span className={isCurrent ? 'text-gray-700 font-medium' : isHighlighted ? 'text-gray-700 font-medium' : 'text-gray-400'}>{val}</span>
+                          }
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Bottom CTA */}
+          <div className="px-6 py-5 bg-linear-to-r from-amber-50 to-orange-50 border-t border-amber-100 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-[14px] font-bold text-gray-900">MC chuyên nghiệp không để giọng tự phát triển.</p>
+              <p className="text-[12px] text-gray-500 mt-0.5">Bắt đầu luyện tập có AI hỗ trợ từ hôm nay.</p>
             </div>
-            {showComparison ? <ChevronUp size={18} className="text-gray-400" /> : <ChevronDown size={18} className="text-gray-400" />}
-          </button>
-
-          <AnimatePresence>
-            {showComparison && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="overflow-hidden"
-              >
-                <div className="overflow-x-auto border-t border-gray-100">
-                  <table className="w-full text-[13px]">
-                    <thead>
-                      <tr className="border-b border-gray-100">
-                        <th className="text-left px-6 py-3 font-semibold text-gray-500 text-[11px] uppercase tracking-wider w-[32%]">Tính năng</th>
-                        {['Free', 'Basic', 'Full', 'Annual'].map((name, i) => {
-                          const planKey = name.toUpperCase();
-                          const isCurrent = (user?.plan || 'FREE').toUpperCase() === planKey;
-                          const isHighlighted = selectedPlan === planKey;
-                          const accent = plans.find(p => p.key === planKey)?.accentColor;
-                          return (
-                            <th key={name} className={`text-center px-4 py-3 font-bold text-[13px] ${isCurrent ? 'text-emerald-600' : isHighlighted ? 'text-gray-900' : 'text-gray-400'}`}>
-                              <div className="flex flex-col items-center gap-1">
-                                <span>{name}</span>
-                                {isCurrent && <span className="text-[9px] font-semibold text-emerald-500 uppercase tracking-wide">Hiện tại</span>}
-                                {isHighlighted && !isCurrent && <div className="h-0.5 w-8 rounded-full" style={{ background: accent }} />}
-                              </div>
-                            </th>
-                          );
-                        })}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {COMPARISON_ROWS.map((row, i) => (
-                        <tr key={i} className={`border-b border-gray-50 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
-                          <td className="px-6 py-3 text-gray-600 text-[12px]">{row.feature}</td>
-                          {['FREE', 'BASIC', 'FULL', 'ANNUAL'].map(key => {
-                            const val = row[key];
-                            const isCurrent = (user?.plan || 'FREE').toUpperCase() === key;
-                            const isHighlighted = selectedPlan === key;
-                            const isCheck = val === '✓' || (val && val.startsWith('✓'));
-                            const isCross = val === '❌';
-                            return (
-                              <td key={key} className={`text-center px-4 py-3 text-[12px] transition-colors ${
-                                isCurrent ? 'bg-emerald-50/40' : isHighlighted ? 'bg-amber-50/30' : ''
-                              }`}>
-                                {isCross
-                                  ? <X size={13} className="mx-auto text-gray-300" />
-                                  : isCheck
-                                  ? <Check size={13} className="mx-auto text-emerald-500" />
-                                  : <span className={isCurrent ? 'text-gray-700 font-medium' : isHighlighted ? 'text-gray-700' : 'text-gray-400'}>{val}</span>
-                                }
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Bottom CTA inside table */}
-                <div className="px-6 py-5 bg-linear-to-r from-amber-50 to-orange-50 border-t border-amber-100 flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-[14px] font-bold text-gray-900">MC chuyên nghiệp không để giọng tự phát triển.</p>
-                    <p className="text-[12px] text-gray-500 mt-0.5">Bắt đầu luyện tập có AI hỗ trợ từ hôm nay.</p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      document.getElementById('plan-cards-top')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    className="shrink-0 px-5 py-2.5 bg-gold hover:bg-[#e09515] text-white text-[13px] font-semibold rounded-xl transition-colors"
-                  >
-                    Chọn gói ngay
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="shrink-0 px-5 py-2.5 bg-gold hover:bg-[#e09515] text-white text-[13px] font-semibold rounded-xl transition-colors"
+            >
+              Chọn gói ngay
+            </button>
+          </div>
         </div>
 
         {/* Testimonials strip */}
