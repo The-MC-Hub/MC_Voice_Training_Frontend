@@ -6,8 +6,11 @@ import {
 } from "recharts";
 import {
   Users, Activity, Zap, TrendingUp, Clock, UserCheck,
-  UserX, Mic, CreditCard, Star,
+  UserX, Mic, CreditCard, Star, FileText, ExternalLink,
 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import ga4ReportMd from "../../../../GA4_TRACKING_REPORT.md?raw";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 const fmt   = (v) => (v ?? 0).toLocaleString("vi-VN");
@@ -77,9 +80,58 @@ const Tabs = ({ value, onChange, options }) => (
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
+// ── GA4 Report tab ────────────────────────────────────────────────────────────
+const GA4ReportTab = () => (
+  <div className="bg-[--bg-surface] border border-[--border-subtle] rounded-xl p-6 lg:p-8">
+    <div className="flex items-center justify-between mb-6 pb-4 border-b border-[--border-subtle]">
+      <div className="flex items-center gap-3">
+        <div className="w-9 h-9 rounded-lg bg-[--bg-elevated] border border-[--border-subtle] flex items-center justify-center">
+          <FileText size={16} className="text-[gold]" />
+        </div>
+        <div>
+          <h2 className="text-[14px] font-semibold text-[--text-primary]">Báo cáo Hệ thống Tracking GA4</h2>
+          <p className="text-[11px] text-[--text-muted] mt-0.5">Measurement ID: G-S6MV5SK3E0 · MC Voice Training Web</p>
+        </div>
+      </div>
+      <a
+        href="https://analytics.google.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[--bg-elevated] border border-[--border-subtle] text-[11px] text-[--text-muted] hover:text-[--text-primary] transition-colors"
+      >
+        <ExternalLink size={12} />
+        Mở GA4
+      </a>
+    </div>
+    <div className="prose prose-invert prose-sm max-w-none
+      prose-headings:text-[--text-primary] prose-headings:font-semibold
+      prose-h1:text-[18px] prose-h1:mb-4 prose-h1:hidden
+      prose-h2:text-[15px] prose-h2:mt-8 prose-h2:mb-3 prose-h2:text-[gold]
+      prose-h3:text-[13px] prose-h3:mt-5 prose-h3:mb-2 prose-h3:text-[--text-secondary]
+      prose-p:text-[12px] prose-p:text-[--text-muted] prose-p:leading-relaxed
+      prose-strong:text-[--text-primary] prose-strong:font-semibold
+      prose-code:text-[11px] prose-code:bg-[--bg-elevated] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-amber-400 prose-code:font-mono prose-code:before:content-none prose-code:after:content-none
+      prose-pre:bg-[--bg-elevated] prose-pre:border prose-pre:border-[--border-subtle] prose-pre:rounded-lg prose-pre:text-[11px]
+      prose-table:text-[11px] prose-table:w-full
+      prose-th:text-[--text-muted] prose-th:font-semibold prose-th:text-left prose-th:pb-2 prose-th:border-b prose-th:border-[--border-subtle]
+      prose-td:text-[--text-muted] prose-td:py-2 prose-td:border-b prose-td:border-[--border-subtle]/50
+      prose-li:text-[12px] prose-li:text-[--text-muted]
+      prose-a:text-amber-400 prose-a:no-underline hover:prose-a:underline
+      prose-hr:border-[--border-subtle]
+      prose-blockquote:border-l-amber-400 prose-blockquote:text-[--text-muted] prose-blockquote:bg-[--bg-elevated] prose-blockquote:rounded-r-lg prose-blockquote:py-1
+    ">
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+        {ga4ReportMd}
+      </ReactMarkdown>
+    </div>
+  </div>
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
 const AnalyticsSection = ({ analytics }) => {
   const [loginRange, setLoginRange] = useState("day");
   const [sessionRange, setSessionRange] = useState("day");
+  const [mainTab, setMainTab] = useState("data");
 
   // Fallback to empty object — render charts with empty data instead of blocking
   const a = analytics || {};
@@ -122,6 +174,21 @@ const AnalyticsSection = ({ analytics }) => {
 
   return (
     <div className="space-y-6">
+
+      {/* ── Main tab switcher ────────────────────────────────────────────── */}
+      <div className="flex items-center gap-2">
+        <Tabs
+          value={mainTab}
+          onChange={setMainTab}
+          options={[
+            { value: "data",   label: "Dữ liệu hệ thống" },
+            { value: "ga4",    label: "📊 GA4 Report" },
+          ]}
+        />
+      </div>
+
+      {mainTab === "ga4" && <GA4ReportTab />}
+      {mainTab === "data" && <>
 
       {/* ── KPI row ──────────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -415,6 +482,7 @@ const AnalyticsSection = ({ analytics }) => {
         )}
       </Card>
 
+      </>}
     </div>
   );
 };

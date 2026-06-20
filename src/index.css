@@ -2,6 +2,7 @@
 
 @import "tailwindcss";
 @import "@heroui/react/styles";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --color-gold: #f5a623;

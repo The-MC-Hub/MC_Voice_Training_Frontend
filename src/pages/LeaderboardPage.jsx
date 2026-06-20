@@ -420,7 +420,8 @@ const StatsBar = ({ total }) => (
     initial={{ opacity: 0, y: -8 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay: 0.1 }}
-    className="flex items-center gap-6 px-4 py-3 bg-white/2 border border-white/6 rounded-xl mb-6 overflow-x-auto"
+    className="flex items-center gap-6 px-5 py-4 border border-amber-500/10 rounded-xl mb-6 overflow-x-auto relative overflow-hidden"
+    style={{ background: 'linear-gradient(135deg, rgba(245,158,11,0.04) 0%, rgba(255,255,255,0.02) 100%)', boxShadow: '0 0 40px rgba(245,158,11,0.05) inset' }}
   >
     <div className="flex items-center gap-2 shrink-0">
       <div className="w-6 h-6 rounded-lg bg-amber-500/10 flex items-center justify-center">
@@ -472,7 +473,18 @@ const Podium = ({ entries, type, currentUserId }) => {
   return (
     <div className="flex items-end justify-center gap-6 pt-8 pb-8 relative">
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-32 bg-amber-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-48 bg-amber-500/8 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-48 h-24 bg-orange-400/6 rounded-full blur-2xl" />
+        {/* Floating particles */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 rounded-full bg-amber-400/40"
+            style={{ left: `${15 + i * 15}%`, top: `${20 + (i % 3) * 25}%` }}
+            animate={{ y: [-4, 4, -4], opacity: [0.2, 0.6, 0.2] }}
+            transition={{ duration: 2.5 + i * 0.4, repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }}
+          />
+        ))}
       </div>
 
       {pods.map(({ entry, style, rank }) => {
@@ -494,7 +506,7 @@ const Podium = ({ entries, type, currentUserId }) => {
                 transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
                 className="absolute -top-5 left-1/2 -translate-x-1/2"
               >
-                <Crown size={18} className="text-amber-400 drop-shadow-[0_0_6px_rgba(245,158,11,0.8)]" />
+                <Crown size={20} className="text-amber-400 drop-shadow-[0_0_10px_rgba(245,158,11,1)]" />
               </motion.div>
             )}
 
@@ -526,7 +538,8 @@ const Podium = ({ entries, type, currentUserId }) => {
               animate={{ scaleY: 1 }}
               transition={{ delay: delay + 0.2, type: 'spring', stiffness: 200, damping: 25 }}
               style={{ transformOrigin: 'bottom' }}
-              className={`${style.h} w-20 rounded-t-lg ${style.bg} border border-white/6 flex items-center justify-center relative overflow-hidden`}
+              className={`${style.h} w-20 rounded-t-xl ${style.bg} border border-white/10 flex items-center justify-center relative overflow-hidden`}
+              style={{ boxShadow: rank === 1 ? '0 -4px 20px rgba(245,158,11,0.12)' : undefined }}
             >
               <div className="absolute inset-0 bg-linear-to-b from-white/8 to-transparent" />
               <span className={`text-[20px] font-black ${style.label} relative z-10`}>#{rank}</span>
@@ -561,7 +574,8 @@ const LeaderboardRow = ({ entry, type, isMe, index }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
-            className="absolute inset-0 bg-white/2 pointer-events-none"
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: 'linear-gradient(90deg, rgba(245,158,11,0.03) 0%, rgba(255,255,255,0.02) 100%)' }}
           />
         )}
       </AnimatePresence>
@@ -612,7 +626,8 @@ const MyRankCard = ({ myEntry, total, typeMeta, onShare }) => {
       initial={{ opacity: 0, x: 12 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ type: 'spring', stiffness: 260, damping: 24, delay: 0.15 }}
-      className="bg-white/3 border border-white/8 rounded-xl overflow-hidden"
+      className="border border-white/8 rounded-2xl overflow-hidden"
+      style={{ background: 'linear-gradient(135deg, rgba(245,158,11,0.04) 0%, rgba(255,255,255,0.02) 100%)' }}
     >
       {/* Header */}
       <div className="px-4 py-3 border-b border-white/6 flex items-center justify-between bg-white/2">
@@ -833,10 +848,19 @@ const LeaderboardPage = () => {
   const isTop10 = myEntry && myEntry.rank <= 10;
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-white">
+    <div className="min-h-screen bg-[#07070a] text-white relative overflow-x-hidden">
+      {/* Ambient background mesh */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-amber-500/[0.04] rounded-full blur-[120px]" />
+        <div className="absolute top-1/3 -left-48 w-[500px] h-[500px] bg-orange-600/[0.03] rounded-full blur-[100px]" />
+        <div className="absolute top-1/2 -right-48 w-[500px] h-[500px] bg-amber-400/[0.03] rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-amber-500/[0.02] rounded-full blur-[80px]" />
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 opacity-[0.015]" style={{backgroundImage: 'linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)', backgroundSize: '60px 60px'}} />
+      </div>
       <PageBanner />
 
-      <div className="max-w-6xl mx-auto px-4 py-6">
+      <div className="max-w-6xl mx-auto px-4 py-6 relative z-10">
         <Breadcrumb items={[{ label: 'Trang chủ', href: '/' }, { label: 'Bảng xếp hạng' }]} />
 
         {/* Feature #5: Top 10 congrats banner */}
@@ -849,7 +873,7 @@ const LeaderboardPage = () => {
               transition={{ type: 'spring', stiffness: 300, damping: 26 }}
               className="mt-4 mb-2"
             >
-              <div className="flex items-center gap-3 px-4 py-3 bg-amber-500/8 border border-amber-500/20 rounded-xl">
+              <div className="flex items-center gap-3 px-4 py-3 border border-amber-500/25 rounded-xl relative overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(245,158,11,0.08) 0%, rgba(245,158,11,0.04) 100%)', boxShadow: '0 0 24px rgba(245,158,11,0.08)' }}>
                 <motion.span
                   animate={{ rotate: [0, -15, 15, -10, 10, 0] }}
                   transition={{ delay: 0.9, duration: 0.6 }}
@@ -876,18 +900,22 @@ const LeaderboardPage = () => {
           className="flex items-center justify-between mt-4 mb-6"
         >
           <div>
-            <h1 className="text-[24px] font-black text-white flex items-center gap-2.5">
-              <motion.span
-                animate={{ rotate: [0, -8, 8, -4, 0] }}
-                transition={{ delay: 0.5, duration: 0.5 }}
+            <div className="flex items-center gap-3 mb-1">
+              <motion.div
+                animate={{ rotate: [0, -8, 8, -4, 0], scale: [1, 1.1, 1] }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+                className="w-11 h-11 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center"
+                style={{ boxShadow: '0 0 24px rgba(245,158,11,0.15)' }}
               >
                 <Trophy size={22} className="text-amber-400" />
-              </motion.span>
-              Bảng xếp hạng
-            </h1>
-            <p className="text-[13px] text-zinc-500 mt-0.5">
-              <AnimatedNumber value={total} /> người dùng đang thi đua
-            </p>
+              </motion.div>
+              <div>
+                <h1 className="text-[28px] font-black text-white tracking-tight leading-none">Bảng xếp hạng</h1>
+                <p className="text-[12px] text-zinc-500 mt-0.5 font-mono">
+                  <AnimatedNumber value={total} /> người đang thi đua · cập nhật real-time
+                </p>
+              </div>
+            </div>
           </div>
           <motion.button
             whileHover={{ scale: 1.03 }}
@@ -905,7 +933,7 @@ const LeaderboardPage = () => {
         <StatsBar total={total} />
 
         {/* Period tabs */}
-        <div className="flex gap-1 p-1 bg-white/4 border border-white/8 rounded-lg w-fit mb-4">
+        <div className="flex gap-1 p-1 border border-white/8 rounded-xl w-fit mb-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
           {PERIODS.map(p => (
             <button
               key={p.key}
@@ -917,7 +945,8 @@ const LeaderboardPage = () => {
               {period.key === p.key && (
                 <motion.div
                   layoutId="period-indicator"
-                  className="absolute inset-0 bg-white/10 rounded-md"
+                  className="absolute inset-0 rounded-lg"
+                  style={{ background: 'linear-gradient(135deg, rgba(245,158,11,0.15) 0%, rgba(245,158,11,0.08) 100%)', boxShadow: '0 0 12px rgba(245,158,11,0.1)' }}
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 />
               )}
@@ -939,14 +968,15 @@ const LeaderboardPage = () => {
                 onClick={() => { setType(t); trackLeaderboardFilter(t.key, period.key); }}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-lg border text-[12px] font-medium transition-all relative overflow-hidden ${
                   active
-                    ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
+                    ? 'border-amber-500/30 text-amber-400'
                     : 'bg-white/3 border-white/8 text-zinc-500 hover:text-zinc-300 hover:bg-white/6'
                 }`}
               >
                 {active && (
                   <motion.div
                     layoutId="type-indicator"
-                    className="absolute inset-0 bg-amber-500/8"
+                    className="absolute inset-0 rounded-lg"
+                    style={{ background: 'linear-gradient(135deg, rgba(245,158,11,0.12) 0%, rgba(245,158,11,0.06) 100%)', boxShadow: '0 0 16px rgba(245,158,11,0.12) inset' }}
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -969,7 +999,8 @@ const LeaderboardPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2 }}
-                className="bg-white/3 border border-white/8 rounded-xl overflow-hidden"
+                className="border border-white/8 rounded-2xl overflow-hidden"
+                style={{ background: 'rgba(255,255,255,0.02)', backdropFilter: 'blur(12px)' }}
               >
                 {/* Podium */}
                 {loading ? (
@@ -985,7 +1016,7 @@ const LeaderboardPage = () => {
                     </div>
                   </div>
                 ) : podiumEntries.length > 0 ? (
-                  <div className="border-b border-white/6 bg-linear-to-b from-white/2 to-transparent">
+                  <div className="border-b border-amber-500/10 relative" style={{ background: 'linear-gradient(180deg, rgba(245,158,11,0.04) 0%, transparent 100%)' }}>
                     <Podium entries={podiumEntries} type={type} currentUserId={user?.id} />
                   </div>
                 ) : null}
@@ -1098,7 +1129,8 @@ const LeaderboardPage = () => {
             whileTap={{ scale: 0.9 }}
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-6 right-6 w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 hover:bg-amber-500/20 transition-colors z-10"
+            className="fixed bottom-6 right-6 w-10 h-10 rounded-full border border-amber-500/30 flex items-center justify-center text-amber-400 hover:text-amber-300 transition-all z-10"
+            style={{ background: 'linear-gradient(135deg, rgba(245,158,11,0.12) 0%, rgba(245,158,11,0.06) 100%)', boxShadow: '0 0 20px rgba(245,158,11,0.15)' }}
           >
             <ChevronUp size={18} />
           </motion.button>
