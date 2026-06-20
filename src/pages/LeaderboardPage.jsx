@@ -39,18 +39,18 @@ const TIER_THRESHOLDS = {
 };
 
 const TIER_COLORS = {
-  ELITE_LEGEND: { bg: 'bg-red-500/10',    text: 'text-red-400',    border: 'border-red-500/20',    bar: 'from-red-600 to-red-400' },
-  DIAMOND:      { bg: 'bg-cyan-500/10',   text: 'text-cyan-400',   border: 'border-cyan-500/20',   bar: 'from-cyan-600 to-cyan-400' },
-  PLATINUM:     { bg: 'bg-indigo-500/10', text: 'text-indigo-400', border: 'border-indigo-500/20', bar: 'from-indigo-600 to-indigo-400' },
-  GOLD:         { bg: 'bg-amber-500/10',  text: 'text-amber-400',  border: 'border-amber-500/20',  bar: 'from-amber-600 to-amber-400' },
-  SILVER:       { bg: 'bg-zinc-500/10',   text: 'text-zinc-300',   border: 'border-zinc-500/20',   bar: 'from-zinc-500 to-zinc-300' },
-  BRONZE:       { bg: 'bg-orange-900/10', text: 'text-orange-500', border: 'border-orange-900/20', bar: 'from-orange-700 to-orange-500' },
+  ELITE_LEGEND: { bg: 'bg-red-50',    text: 'text-red-600',    border: 'border-red-200',    bar: 'from-red-600 to-red-400' },
+  DIAMOND:      { bg: 'bg-cyan-50',   text: 'text-cyan-600',   border: 'border-cyan-200',   bar: 'from-cyan-600 to-cyan-400' },
+  PLATINUM:     { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200', bar: 'from-indigo-600 to-indigo-400' },
+  GOLD:         { bg: 'bg-amber-50',  text: 'text-amber-600',  border: 'border-amber-200',  bar: 'from-amber-600 to-amber-400' },
+  SILVER:       { bg: 'bg-gray-100',  text: 'text-gray-600',   border: 'border-gray-200',   bar: 'from-gray-500 to-gray-400' },
+  BRONZE:       { bg: 'bg-orange-50', text: 'text-orange-600', border: 'border-orange-200', bar: 'from-orange-700 to-orange-500' },
 };
 
 const PODIUM_STYLES = [
-  { ring: 'ring-amber-500/60', bg: 'bg-amber-500/10', label: 'text-amber-400', icon: Trophy, iconColor: 'text-amber-400', order: 'order-2', h: 'h-24', glow: 'rgba(245,158,11,0.15)', shimmer: true },
-  { ring: 'ring-zinc-400/40',  bg: 'bg-zinc-500/10',  label: 'text-zinc-300',  icon: Medal,  iconColor: 'text-zinc-300',  order: 'order-1', h: 'h-16', glow: 'rgba(161,161,170,0.10)', shimmer: false },
-  { ring: 'ring-orange-600/40',bg: 'bg-orange-600/10',label: 'text-orange-400',icon: Award,  iconColor: 'text-orange-400',order: 'order-3', h: 'h-12', glow: 'rgba(194,65,12,0.10)',  shimmer: false },
+  { ring: 'ring-amber-400/70', bg: 'bg-amber-100', label: 'text-amber-600', icon: Trophy, iconColor: 'text-amber-600', order: 'order-2', h: 'h-24', glow: 'rgba(245,158,11,0.20)', shimmer: true },
+  { ring: 'ring-gray-400/50',  bg: 'bg-gray-100',  label: 'text-gray-600',  icon: Medal,  iconColor: 'text-gray-600',  order: 'order-1', h: 'h-16', glow: 'rgba(156,163,175,0.15)', shimmer: false },
+  { ring: 'ring-orange-400/50',bg: 'bg-orange-100',label: 'text-orange-600',icon: Award,  iconColor: 'text-orange-600',order: 'order-3', h: 'h-12', glow: 'rgba(234,88,12,0.15)',  shimmer: false },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -122,13 +122,13 @@ const Avatar = ({ src, name, size = 'md', online = false }) => {
   const initials = name ? name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() : '?';
   return (
     <div className="relative shrink-0">
-      <div className={`${cls} rounded-full bg-white/8 ring-1 ring-white/10 flex items-center justify-center overflow-hidden font-semibold text-zinc-400`}>
+      <div className={`${cls} rounded-full bg-gray-100 ring-1 ring-gray-200 flex items-center justify-center overflow-hidden font-semibold text-gray-500`}>
         {isUrl ? <img src={src} alt={name} className="w-full h-full object-cover" />
                : isEmoji ? <span>{src}</span>
                : initials}
       </div>
       {online && (
-        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#09090b]" />
+        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
       )}
     </div>
   );
@@ -136,7 +136,7 @@ const Avatar = ({ src, name, size = 'md', online = false }) => {
 
 const MovementBadge = ({ delta }) => {
   if (delta === undefined || delta === null || delta === 0) return (
-    <span className="inline-flex items-center gap-0.5 text-[9px] text-zinc-600"><Minus size={8} /></span>
+    <span className="inline-flex items-center gap-0.5 text-[9px] text-gray-400"><Minus size={8} /></span>
   );
   if (delta > 0) return (
     <span className="inline-flex items-center gap-0.5 text-[9px] text-emerald-500 font-semibold">
@@ -155,9 +155,9 @@ const MetricValue = ({ entry, typeKey, field, unit }) => {
   if (typeKey === 'diligent') val = Number(val).toFixed(1);
   const showFire = typeKey === 'streak' && entry.currentStreak >= 3;
   return (
-    <span className="text-[13px] font-semibold text-white tabular-nums flex items-center gap-1">
+    <span className="text-[13px] font-semibold text-gray-900 tabular-nums flex items-center gap-1">
       {showFire && <Flame size={12} className="text-orange-400 shrink-0" />}
-      {val} <span className="text-zinc-500 font-normal text-[11px]">{unit}</span>
+      {val} <span className="text-gray-400 font-normal text-[11px]">{unit}</span>
     </span>
   );
 };
@@ -167,15 +167,15 @@ const SkeletonRow = ({ delay = 0 }) => (
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ delay }}
-    className="flex items-center gap-3 px-4 py-3 border-b border-white/5"
+    className="flex items-center gap-3 px-4 py-3 border-b border-gray-100"
   >
-    <div className="w-6 h-3 bg-white/6 rounded animate-pulse" />
-    <div className="w-9 h-9 rounded-full bg-white/6 shrink-0 animate-pulse" />
+    <div className="w-6 h-3 bg-gray-200 rounded animate-pulse" />
+    <div className="w-9 h-9 rounded-full bg-gray-200 shrink-0 animate-pulse" />
     <div className="flex-1 space-y-1.5">
-      <div className="h-3 bg-white/6 rounded w-32 animate-pulse" />
-      <div className="h-2 bg-white/4 rounded w-16 animate-pulse" />
+      <div className="h-3 bg-gray-200 rounded w-32 animate-pulse" />
+      <div className="h-2 bg-gray-100 rounded w-16 animate-pulse" />
     </div>
-    <div className="h-3 bg-white/6 rounded w-16 animate-pulse" />
+    <div className="h-3 bg-gray-200 rounded w-16 animate-pulse" />
   </motion.div>
 );
 
@@ -299,11 +299,11 @@ const TierProgressCard = ({ myEntry }) => {
       initial={{ opacity: 0, x: 12 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.25 }}
-      className="bg-white/3 border border-white/8 rounded-xl overflow-hidden mt-3"
+      className="bg-white border border-gray-200 rounded-xl overflow-hidden mt-3 shadow-sm"
     >
-      <div className="px-4 py-3 border-b border-white/6 bg-white/2 flex items-center gap-2">
-        <Target size={13} className="text-indigo-400" />
-        <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest">Tiến trình Tier</span>
+      <div className="px-4 py-3 border-b border-gray-100 bg-gray-50 flex items-center gap-2">
+        <Target size={13} className="text-indigo-500" />
+        <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest">Tiến trình Tier</span>
       </div>
 
       <div className="p-4 space-y-3">
@@ -315,7 +315,7 @@ const TierProgressCard = ({ myEntry }) => {
           </div>
           {!isMax && (
             <>
-              <ChevronRight size={14} className="text-zinc-700" />
+              <ChevronRight size={14} className="text-gray-400" />
               <div className="flex items-center gap-1.5">
                 <span className="text-[16px]">{nextT?.emoji}</span>
                 <span className={`text-[12px] font-bold ${nextC?.text}`}>{nextT?.label}</span>
@@ -332,7 +332,7 @@ const TierProgressCard = ({ myEntry }) => {
         {/* Progress bar */}
         {!isMax ? (
           <>
-            <div className="h-2 bg-white/8 rounded-full overflow-hidden">
+            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${pct}%` }}
@@ -341,7 +341,7 @@ const TierProgressCard = ({ myEntry }) => {
               />
             </div>
             <div className="flex items-center justify-between text-[10px]">
-              <span className="text-zinc-600">{pct}% hoàn thành</span>
+              <span className="text-gray-400">{pct}% hoàn thành</span>
               <span className={`font-semibold ${nextC?.text}`}>
                 Cần thêm {needed} ngày streak
               </span>
@@ -355,7 +355,7 @@ const TierProgressCard = ({ myEntry }) => {
 
         {/* Milestone hint */}
         {!isMax && (
-          <div className="flex items-center gap-2 text-[10px] text-zinc-600 bg-white/2 rounded-lg px-3 py-2">
+          <div className="flex items-center gap-2 text-[10px] text-gray-500 bg-orange-50 rounded-lg px-3 py-2">
             <Flame size={10} className="text-orange-400 shrink-0" />
             Duy trì streak {needed} ngày nữa để lên <span className={`font-semibold ${nextC?.text} ml-1`}>{nextT?.label}</span>
           </div>
@@ -393,20 +393,20 @@ const PersonalBestBadge = ({ allTimeEntry, weeklyEntry, typeMeta }) => {
 // ─── Feature #1: Same-tier Filter Toggle ──────────────────────────────────────
 
 const FilterBar = ({ myTier, filterSameTier, setFilterSameTier, totalShown, totalAll }) => (
-  <div className="flex items-center gap-2 px-4 py-2 border-b border-white/5 bg-white/1">
+  <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-100 bg-gray-50">
     <button
       onClick={() => setFilterSameTier(v => !v)}
       className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all border ${
         filterSameTier
-          ? 'bg-indigo-500/15 border-indigo-500/30 text-indigo-400'
-          : 'bg-transparent border-white/8 text-zinc-600 hover:text-zinc-400'
+          ? 'bg-indigo-50 border-indigo-200 text-indigo-600'
+          : 'bg-white border-gray-200 text-gray-500 hover:text-gray-700'
       }`}
     >
       <Filter size={10} />
       Cùng tier {myTier && filterSameTier ? `(${myTier})` : ''}
     </button>
     {filterSameTier && (
-      <span className="text-[10px] text-zinc-600">
+      <span className="text-[10px] text-gray-400">
         {totalShown} / {totalAll} người
       </span>
     )}
@@ -420,38 +420,37 @@ const StatsBar = ({ total }) => (
     initial={{ opacity: 0, y: -8 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay: 0.1 }}
-    className="flex items-center gap-6 px-5 py-4 border border-amber-500/10 rounded-xl mb-6 overflow-x-auto relative overflow-hidden"
-    style={{ background: 'linear-gradient(135deg, rgba(245,158,11,0.04) 0%, rgba(255,255,255,0.02) 100%)', boxShadow: '0 0 40px rgba(245,158,11,0.05) inset' }}
+    className="flex items-center gap-6 px-5 py-4 border border-amber-200 rounded-xl mb-6 overflow-x-auto relative overflow-hidden bg-white shadow-sm"
   >
     <div className="flex items-center gap-2 shrink-0">
-      <div className="w-6 h-6 rounded-lg bg-amber-500/10 flex items-center justify-center">
-        <Users size={12} className="text-amber-400" />
+      <div className="w-6 h-6 rounded-lg bg-amber-100 flex items-center justify-center">
+        <Users size={12} className="text-amber-600" />
       </div>
       <div>
-        <p className="text-[10px] text-zinc-600">Tổng thành viên</p>
-        <p className="text-[13px] font-bold text-white tabular-nums">
+        <p className="text-[10px] text-gray-500">Tổng thành viên</p>
+        <p className="text-[13px] font-bold text-gray-900 tabular-nums">
           <AnimatedNumber value={total} />
         </p>
       </div>
     </div>
-    <div className="w-px h-8 bg-white/6 shrink-0" />
+    <div className="w-px h-8 bg-gray-200 shrink-0" />
     <div className="flex items-center gap-2 shrink-0">
-      <div className="w-6 h-6 rounded-lg bg-orange-500/10 flex items-center justify-center">
-        <Flame size={12} className="text-orange-400" />
+      <div className="w-6 h-6 rounded-lg bg-orange-100 flex items-center justify-center">
+        <Flame size={12} className="text-orange-500" />
       </div>
       <div>
-        <p className="text-[10px] text-zinc-600">Đang thi đua</p>
-        <p className="text-[13px] font-bold text-orange-400">🔥 Active</p>
+        <p className="text-[10px] text-gray-500">Đang thi đua</p>
+        <p className="text-[13px] font-bold text-orange-500">🔥 Active</p>
       </div>
     </div>
-    <div className="w-px h-8 bg-white/6 shrink-0" />
+    <div className="w-px h-8 bg-gray-200 shrink-0" />
     <div className="flex items-center gap-2 shrink-0">
-      <div className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-        <Zap size={12} className="text-emerald-400" />
+      <div className="w-6 h-6 rounded-lg bg-emerald-100 flex items-center justify-center">
+        <Zap size={12} className="text-emerald-600" />
       </div>
       <div>
-        <p className="text-[10px] text-zinc-600">Cập nhật</p>
-        <p className="text-[13px] font-bold text-emerald-400">Real-time</p>
+        <p className="text-[10px] text-gray-500">Cập nhật</p>
+        <p className="text-[13px] font-bold text-emerald-600">Real-time</p>
       </div>
     </div>
   </motion.div>
@@ -511,7 +510,7 @@ const Podium = ({ entries, type, currentUserId }) => {
             )}
 
             <div
-              className={`relative ring-2 ${style.ring} rounded-full ${isMe ? 'ring-offset-2 ring-offset-[#09090b]' : ''}`}
+              className={`relative ring-2 ${style.ring} rounded-full ${isMe ? 'ring-offset-2 ring-offset-white' : ''}`}
               style={{ boxShadow: `0 0 20px ${style.glow}` }}
             >
               <Avatar src={entry.userAvatar} name={entry.userName} size="lg" />
@@ -525,7 +524,7 @@ const Podium = ({ entries, type, currentUserId }) => {
             </div>
 
             <div className="text-center space-y-0.5 max-w-22">
-              <p className={`text-[12px] font-semibold truncate ${isMe ? 'text-emerald-400' : 'text-white'}`}>
+              <p className={`text-[12px] font-semibold truncate ${isMe ? 'text-emerald-600' : 'text-gray-900'}`}>
                 {entry.userName}
               </p>
               <p className={`text-[12px] font-black ${style.label}`}>
@@ -538,10 +537,10 @@ const Podium = ({ entries, type, currentUserId }) => {
               animate={{ scaleY: 1 }}
               transition={{ delay: delay + 0.2, type: 'spring', stiffness: 200, damping: 25 }}
               style={{ transformOrigin: 'bottom' }}
-              className={`${style.h} w-20 rounded-t-xl ${style.bg} border border-white/10 flex items-center justify-center relative overflow-hidden`}
+              className={`${style.h} w-20 rounded-t-xl ${style.bg} border border-gray-200 flex items-center justify-center relative overflow-hidden`}
               style={{ boxShadow: rank === 1 ? '0 -4px 20px rgba(245,158,11,0.12)' : undefined }}
             >
-              <div className="absolute inset-0 bg-linear-to-b from-white/8 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-b from-white/50 to-transparent" />
               <span className={`text-[20px] font-black ${style.label} relative z-10`}>#{rank}</span>
             </motion.div>
           </motion.div>
@@ -563,8 +562,8 @@ const LeaderboardRow = ({ entry, type, isMe, index }) => {
       transition={{ delay: Math.min(index * 0.03, 0.4), type: 'spring', stiffness: 280, damping: 28 }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
-      className={`grid grid-cols-[44px_1fr_auto] gap-3 items-center px-4 py-3 border-b border-white/5 last:border-0 transition-colors relative ${
-        isMe ? 'bg-emerald-500/6 border-l-2 border-l-emerald-500/50' : ''
+      className={`grid grid-cols-[44px_1fr_auto] gap-3 items-center px-4 py-3 border-b border-gray-100 last:border-0 transition-colors relative ${
+        isMe ? 'bg-emerald-50 border-l-2 border-l-emerald-400' : ''
       }`}
     >
       <AnimatePresence>
@@ -575,20 +574,20 @@ const LeaderboardRow = ({ entry, type, isMe, index }) => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
             className="absolute inset-0 pointer-events-none"
-            style={{ background: 'linear-gradient(90deg, rgba(245,158,11,0.03) 0%, rgba(255,255,255,0.02) 100%)' }}
+            style={{ background: 'linear-gradient(90deg, rgba(245,158,11,0.06) 0%, rgba(245,158,11,0.02) 100%)' }}
           />
         )}
       </AnimatePresence>
 
       <div className="flex flex-col items-center gap-0.5">
-        <span className="font-mono text-[12px] font-semibold text-zinc-500">{entry.rank}</span>
+        <span className="font-mono text-[12px] font-semibold text-gray-400">{entry.rank}</span>
         <MovementBadge delta={entry.rankDelta} />
       </div>
 
       <div className="flex items-center gap-2.5 min-w-0">
         <Avatar src={entry.userAvatar} name={entry.userName} size="sm" online={entry.recentlyActive} />
         <div className="min-w-0">
-          <p className={`text-[13px] font-medium truncate ${isMe ? 'text-emerald-400' : 'text-white'}`}>
+          <p className={`text-[13px] font-medium truncate ${isMe ? 'text-emerald-600' : 'text-gray-900'}`}>
             {entry.userName}
             {isMe && <span className="ml-1.5 text-[10px] text-emerald-500 font-normal">(bạn)</span>}
           </p>
@@ -610,12 +609,12 @@ const MyRankCard = ({ myEntry, total, typeMeta, onShare }) => {
     <motion.div
       initial={{ opacity: 0, x: 12 }}
       animate={{ opacity: 1, x: 0 }}
-      className="bg-white/3 border border-white/8 rounded-xl p-5 text-center"
+      className="bg-white border border-gray-200 rounded-xl p-5 text-center shadow-sm"
     >
-      <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-3">
-        <Trophy size={18} className="text-zinc-600" />
+      <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-3">
+        <Trophy size={18} className="text-gray-400" />
       </div>
-      <p className="text-[12px] text-zinc-500 leading-relaxed">Chưa có dữ liệu.<br/>Luyện tập để lên bảng!</p>
+      <p className="text-[12px] text-gray-500 leading-relaxed">Chưa có dữ liệu.<br/>Luyện tập để lên bảng!</p>
     </motion.div>
   );
 
@@ -626,21 +625,20 @@ const MyRankCard = ({ myEntry, total, typeMeta, onShare }) => {
       initial={{ opacity: 0, x: 12 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ type: 'spring', stiffness: 260, damping: 24, delay: 0.15 }}
-      className="border border-white/8 rounded-2xl overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, rgba(245,158,11,0.04) 0%, rgba(255,255,255,0.02) 100%)' }}
+      className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm"
     >
       {/* Header */}
-      <div className="px-4 py-3 border-b border-white/6 flex items-center justify-between bg-white/2">
+      <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
         <div className="flex items-center gap-2">
-          <Trophy size={13} className="text-amber-400" />
-          <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest">Vị trí của bạn</span>
+          <Trophy size={13} className="text-amber-500" />
+          <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest">Vị trí của bạn</span>
         </div>
         {/* Feature #2: Share button */}
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={onShare}
-          className="flex items-center gap-1 px-2 py-1 rounded-md bg-white/6 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors text-[10px] font-medium"
+          className="flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-700 transition-colors text-[10px] font-medium"
         >
           <Share2 size={10} />
           Chia sẻ
@@ -651,39 +649,37 @@ const MyRankCard = ({ myEntry, total, typeMeta, onShare }) => {
         <div className="flex items-center gap-3">
           <Avatar src={myEntry.userAvatar} name={myEntry.userName} size="md" />
           <div>
-            <p className="text-[13px] font-semibold text-white">{myEntry.userName}</p>
+            <p className="text-[13px] font-semibold text-gray-900">{myEntry.userName}</p>
             <TierBadge tier={myEntry.currentTier} />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-2">
-          <div className="bg-white/4 rounded-lg px-3 py-2.5 relative overflow-hidden">
-            <div className="absolute inset-0 bg-linear-to-br from-amber-500/5 to-transparent" />
-            <p className="text-[10px] text-zinc-500 mb-0.5 relative z-10">Hạng</p>
-            <p className="text-[20px] font-black text-amber-400 leading-none relative z-10">
+          <div className="bg-amber-50 border border-amber-100 rounded-lg px-3 py-2.5 relative overflow-hidden">
+            <p className="text-[10px] text-gray-500 mb-0.5">Hạng</p>
+            <p className="text-[20px] font-black text-amber-600 leading-none">
               #<AnimatedNumber value={myEntry.rank} />
             </p>
           </div>
-          <div className="bg-white/4 rounded-lg px-3 py-2.5 relative overflow-hidden">
-            <div className="absolute inset-0 bg-linear-to-br from-white/3 to-transparent" />
-            <p className="text-[10px] text-zinc-500 mb-0.5 relative z-10">{typeMeta.label}</p>
-            <p className="text-[20px] font-black text-white leading-none flex items-end gap-1 relative z-10">
+          <div className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-2.5 relative overflow-hidden">
+            <p className="text-[10px] text-gray-500 mb-0.5">{typeMeta.label}</p>
+            <p className="text-[20px] font-black text-gray-900 leading-none flex items-end gap-1">
               <AnimatedNumber
                 value={typeMeta.key === 'diligent' ? Number(myEntry[typeMeta.field]) : myEntry[typeMeta.field]}
                 decimals={typeMeta.key === 'diligent' ? 1 : 0}
               />
-              <span className="text-[10px] font-normal text-zinc-500 mb-0.5">{typeMeta.unit}</span>
+              <span className="text-[10px] font-normal text-gray-400 mb-0.5">{typeMeta.unit}</span>
             </p>
           </div>
         </div>
 
         {/* Percentile bar */}
-        <div className="bg-white/4 rounded-lg px-3 py-2.5">
+        <div className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-2.5">
           <div className="flex items-center justify-between mb-1.5">
-            <p className="text-[10px] text-zinc-500">Vượt qua</p>
+            <p className="text-[10px] text-gray-500">Vượt qua</p>
             <span className="text-[12px] font-bold text-emerald-400">{percentile}%</span>
           </div>
-          <div className="h-1.5 bg-white/8 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${percentile}%` }}
@@ -691,7 +687,7 @@ const MyRankCard = ({ myEntry, total, typeMeta, onShare }) => {
               className="h-full bg-linear-to-r from-emerald-600 to-emerald-400 rounded-full"
             />
           </div>
-          <p className="text-[10px] text-zinc-600 mt-1">người dùng</p>
+          <p className="text-[10px] text-gray-400 mt-1">người dùng</p>
         </div>
 
         {/* Streak */}
@@ -700,13 +696,13 @@ const MyRankCard = ({ myEntry, total, typeMeta, onShare }) => {
             <Flame size={12} className="text-orange-400" />
             <span>Streak hiện tại</span>
           </div>
-          <span className="text-[13px] font-bold text-orange-400">{myEntry.currentStreak} ngày</span>
+          <span className="text-[13px] font-bold text-orange-500">{myEntry.currentStreak} ngày</span>
         </div>
 
         {/* Goal nudge */}
-        <div className="flex items-center gap-2 px-3 py-2 bg-white/2 border border-white/6 rounded-lg">
-          <Target size={11} className="text-zinc-600 shrink-0" />
-          <p className="text-[10px] text-zinc-600 leading-relaxed">
+        <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-100 rounded-lg">
+          <Target size={11} className="text-gray-400 shrink-0" />
+          <p className="text-[10px] text-gray-400 leading-relaxed">
             Luyện tập hôm nay để giữ streak &amp; leo hạng!
           </p>
         </div>
@@ -848,19 +844,10 @@ const LeaderboardPage = () => {
   const isTop10 = myEntry && myEntry.rank <= 10;
 
   return (
-    <div className="min-h-screen bg-[#07070a] text-white relative overflow-x-hidden">
-      {/* Ambient background mesh */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-amber-500/[0.04] rounded-full blur-[120px]" />
-        <div className="absolute top-1/3 -left-48 w-[500px] h-[500px] bg-orange-600/[0.03] rounded-full blur-[100px]" />
-        <div className="absolute top-1/2 -right-48 w-[500px] h-[500px] bg-amber-400/[0.03] rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-amber-500/[0.02] rounded-full blur-[80px]" />
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 opacity-[0.015]" style={{backgroundImage: 'linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)', backgroundSize: '60px 60px'}} />
-      </div>
+    <div className="min-h-screen bg-gray-50 text-gray-900 relative overflow-x-hidden">
       <PageBanner />
 
-      <div className="max-w-6xl mx-auto px-4 py-6 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 py-6">
         <Breadcrumb items={[{ label: 'Trang chủ', href: '/' }, { label: 'Bảng xếp hạng' }]} />
 
         {/* Feature #5: Top 10 congrats banner */}
@@ -910,8 +897,8 @@ const LeaderboardPage = () => {
                 <Trophy size={22} className="text-amber-400" />
               </motion.div>
               <div>
-                <h1 className="text-[28px] font-black text-white tracking-tight leading-none">Bảng xếp hạng</h1>
-                <p className="text-[12px] text-zinc-500 mt-0.5 font-mono">
+                <h1 className="text-[28px] font-black text-gray-900 tracking-tight leading-none">Bảng xếp hạng</h1>
+                <p className="text-[12px] text-gray-400 mt-0.5 font-mono">
                   <AnimatedNumber value={total} /> người đang thi đua · cập nhật real-time
                 </p>
               </div>
@@ -922,7 +909,7 @@ const LeaderboardPage = () => {
             whileTap={{ scale: 0.97 }}
             onClick={handleRefresh}
             disabled={refreshing}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/8 text-zinc-400 hover:text-white hover:bg-white/8 transition-colors text-[12px] disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-500 hover:text-gray-700 hover:bg-gray-50 transition-colors text-[12px] disabled:opacity-50 shadow-sm"
           >
             <RefreshCw size={12} className={refreshing ? 'animate-spin' : ''} />
             Làm mới
@@ -933,13 +920,13 @@ const LeaderboardPage = () => {
         <StatsBar total={total} />
 
         {/* Period tabs */}
-        <div className="flex gap-1 p-1 border border-white/8 rounded-xl w-fit mb-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
+        <div className="flex gap-1 p-1 border border-gray-200 rounded-xl w-fit mb-4 bg-white shadow-sm">
           {PERIODS.map(p => (
             <button
               key={p.key}
               onClick={() => { setPeriod(p); trackLeaderboardFilter(type.key, p.key); }}
               className={`px-4 py-1.5 rounded-md text-[12px] font-medium transition-all relative ${
-                period.key === p.key ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
+                period.key === p.key ? 'text-gray-900' : 'text-gray-400 hover:text-gray-600'
               }`}
             >
               {period.key === p.key && (
@@ -968,8 +955,8 @@ const LeaderboardPage = () => {
                 onClick={() => { setType(t); trackLeaderboardFilter(t.key, period.key); }}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-lg border text-[12px] font-medium transition-all relative overflow-hidden ${
                   active
-                    ? 'border-amber-500/30 text-amber-400'
-                    : 'bg-white/3 border-white/8 text-zinc-500 hover:text-zinc-300 hover:bg-white/6'
+                    ? 'bg-amber-50 border-amber-200 text-amber-600'
+                    : 'bg-white border-gray-200 text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                 }`}
               >
                 {active && (
@@ -999,8 +986,7 @@ const LeaderboardPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2 }}
-                className="border border-white/8 rounded-2xl overflow-hidden"
-                style={{ background: 'rgba(255,255,255,0.02)', backdropFilter: 'blur(12px)' }}
+                className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm"
               >
                 {/* Podium */}
                 {loading ? (
@@ -1008,15 +994,15 @@ const LeaderboardPage = () => {
                     <div className="flex items-end gap-6">
                       {[16, 24, 12].map((h, i) => (
                         <div key={i} className="flex flex-col items-center gap-2 animate-pulse">
-                          <div className="w-14 h-14 rounded-full bg-white/6" />
-                          <div className="h-2 w-16 bg-white/6 rounded" />
-                          <div className="w-20 bg-white/4 rounded-t-lg" style={{ height: `${h * 4}px` }} />
+                          <div className="w-14 h-14 rounded-full bg-gray-200" />
+                          <div className="h-2 w-16 bg-gray-200 rounded" />
+                          <div className="w-20 bg-gray-100 rounded-t-lg" style={{ height: `${h * 4}px` }} />
                         </div>
                       ))}
                     </div>
                   </div>
                 ) : podiumEntries.length > 0 ? (
-                  <div className="border-b border-amber-500/10 relative" style={{ background: 'linear-gradient(180deg, rgba(245,158,11,0.04) 0%, transparent 100%)' }}>
+                  <div className="border-b border-amber-100 relative" style={{ background: 'linear-gradient(180deg, rgba(245,158,11,0.05) 0%, transparent 100%)' }}>
                     <Podium entries={podiumEntries} type={type} currentUserId={user?.id} />
                   </div>
                 ) : null}
@@ -1033,10 +1019,10 @@ const LeaderboardPage = () => {
                 )}
 
                 {/* Column header */}
-                <div className="grid grid-cols-[44px_1fr_auto] gap-3 px-4 py-2.5 border-b border-white/6 bg-white/2">
-                  <span className="text-[10px] text-zinc-600 uppercase tracking-wider">#</span>
-                  <span className="text-[10px] text-zinc-600 uppercase tracking-wider">Người dùng</span>
-                  <span className="text-[10px] text-zinc-600 uppercase tracking-wider">{type.label}</span>
+                <div className="grid grid-cols-[44px_1fr_auto] gap-3 px-4 py-2.5 border-b border-gray-100 bg-gray-50">
+                  <span className="text-[10px] text-gray-400 uppercase tracking-wider">#</span>
+                  <span className="text-[10px] text-gray-400 uppercase tracking-wider">Người dùng</span>
+                  <span className="text-[10px] text-gray-400 uppercase tracking-wider">{type.label}</span>
                 </div>
 
                 {/* Rows */}
@@ -1044,8 +1030,8 @@ const LeaderboardPage = () => {
                   Array.from({ length: 8 }).map((_, i) => <SkeletonRow key={i} delay={i * 0.04} />)
                 ) : filteredEntries.length === 0 ? (
                   <div className="py-20 text-center">
-                    <TrendingUp size={32} className="mx-auto mb-3 text-zinc-700" />
-                    <p className="text-[13px] text-zinc-600">
+                    <TrendingUp size={32} className="mx-auto mb-3 text-gray-300" />
+                    <p className="text-[13px] text-gray-400">
                       {filterSameTier ? 'Không có người cùng tier' : 'Chưa có dữ liệu'}
                     </p>
                   </div>
@@ -1064,14 +1050,14 @@ const LeaderboardPage = () => {
                 <div ref={loaderRef} className="h-4" />
                 {loadingMore && (
                   <div className="py-5 flex justify-center">
-                    <div className="w-5 h-5 border-2 border-white/10 border-t-amber-400 rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-gray-200 border-t-amber-400 rounded-full animate-spin" />
                   </div>
                 )}
                 {!hasMore && filteredEntries.length > 0 && !filterSameTier && (
                   <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-center text-[11px] text-zinc-700 py-4"
+                    className="text-center text-[11px] text-gray-400 py-4"
                   >
                     Đã hiển thị tất cả {total} người dùng
                   </motion.p>
