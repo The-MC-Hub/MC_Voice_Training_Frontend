@@ -14,7 +14,7 @@ import NotesSidebar from '../components/reading/NotesSidebar';
 import { useAuthStore } from '../store/useAuthStore';
 import { MessageSquare } from 'lucide-react';
 import '../markdown.css';
-import { trackLessonStart, trackLessonComplete } from '@/utils/analytics';
+import { trackLessonStart, trackLessonComplete, trackLessonAbandon } from '@/utils/analytics';
 
 const ReadingView = () => {
   const { id } = useParams();
@@ -36,8 +36,27 @@ const ReadingView = () => {
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [tooltipData, setTooltipData] = useState(null);
 
+  const lessonStartTimeRef = React.useRef(Date.now());
+  const completedRef = React.useRef(false);
   useEffect(() => {
     trackLessonStart(id, 'reading');
+    lessonStartTimeRef.current = Date.now();
+    completedRef.current = false;
+  }, [id]);
+
+  useEffect(() => {
+    const handleUnload = () => {
+      if (completedRef.current) return;
+      const elapsed = Math.round((Date.now() - lessonStartTimeRef.current) / 1000);
+      trackLessonAbandon(id, elapsed);
+    };
+    window.addEventListener('beforeunload', handleUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleUnload);
+      if (completedRef.current) return;
+      const elapsed = Math.round((Date.now() - lessonStartTimeRef.current) / 1000);
+      trackLessonAbandon(id, elapsed);
+    };
   }, [id]);
 
   useEffect(() => {
@@ -264,6 +283,7 @@ const ReadingView = () => {
               </div>
               <button
                 onClick={async () => {
+                  completedRef.current = true;
                   if (courseId) {
                     try { await academyService.completeReading(courseId, id); } catch {}
                     trackLessonComplete(id, courseId);

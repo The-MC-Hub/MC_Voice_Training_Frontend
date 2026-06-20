@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useRef, useEffect, useCallback } from "react";
+import { trackScriptScrollDepth } from '@/utils/analytics';
 import { BookOpen, Minus, Plus, AlignLeft, AlignCenter, AlignRight, Gauge, Play, Square } from "lucide-react";
 
 const HIGHLIGHT_COLORS = [
@@ -201,6 +202,26 @@ export default function ScriptPanel({
   const subColor = SUB_TEXT_MAP[scriptBg];
 
   const plainScript = lesson?.content?.replace(/^\[(.+?)\]\s*$/gm, "\n[$1]\n") || "";
+
+  const firedDepthRef = useRef(new Set());
+  const handleScriptScroll = useCallback(() => {
+    const el = scriptScrollRef?.current;
+    if (!el) return;
+    const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+    for (const threshold of [25, 50, 75, 100]) {
+      if (pct >= threshold && !firedDepthRef.current.has(threshold)) {
+        firedDepthRef.current.add(threshold);
+        trackScriptScrollDepth(threshold);
+      }
+    }
+  }, [scriptScrollRef]);
+
+  useEffect(() => {
+    const el = scriptScrollRef?.current;
+    if (!el) return;
+    el.addEventListener('scroll', handleScriptScroll, { passive: true });
+    return () => el.removeEventListener('scroll', handleScriptScroll);
+  }, [scriptScrollRef, handleScriptScroll]);
 
   const handleScriptMouseUp = (e) => {
     if (annotationPopupRef.current?.contains(e.target)) return;

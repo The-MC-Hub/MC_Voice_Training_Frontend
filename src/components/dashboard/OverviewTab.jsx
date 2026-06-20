@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme } from '../../contexts/ThemeContext';
 import {
@@ -11,6 +11,7 @@ import { Zap, TrendingUp, Mic, Award, BarChart3, PieChart as PieIcon, ChevronRig
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import SessionCard from "./SessionCard";
+import { trackStreakMilestone } from '@/utils/analytics';
 import SpotlightCard from '../ui/SpotlightCard';
 
 const fadeUp = {
@@ -34,6 +35,15 @@ const OverviewTab = ({
     boxShadow: theme === 'light' ? '0 8px 32px rgba(0,0,0,0.08)' : '0 8px 32px rgba(0,0,0,0.4)',
   };
   const n = practiceHistory?.length || 0;
+  const streak = Math.min(n, 7);
+  const prevStreakRef = useRef(null);
+  useEffect(() => {
+    if (prevStreakRef.current === null) { prevStreakRef.current = streak; return; }
+    if (streak !== prevStreakRef.current && [3, 7, 14, 30].includes(streak)) {
+      trackStreakMilestone(streak);
+    }
+    prevStreakRef.current = streak;
+  }, [streak]);
   const avgAcc = n ? (practiceHistory.reduce((a, p) => a + (p.accuracy_score || 0), 0) / n).toFixed(1) : 0;
   const avgRhy = n ? (practiceHistory.reduce((a, p) => a + (p.rhythm_score || 0), 0) / n).toFixed(1) : 0;
 
@@ -145,7 +155,7 @@ const OverviewTab = ({
       {/* Row 2: Quick metrics */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { icon: Flame, label: 'Streak hiện tại', value: `${Math.min(n, 7)}`, unit: 'ngày', color: 'text-orange-400', bg: 'bg-orange-500/[0.08] border-orange-500/20', bar: Math.min(n, 7) / 30 * 100, barColor: '#f97316' },
+          { icon: Flame, label: 'Streak hiện tại', value: `${streak}`, unit: 'ngày', color: 'text-orange-400', bg: 'bg-orange-500/[0.08] border-orange-500/20', bar: streak / 30 * 100, barColor: '#f97316' },
           { icon: Target, label: 'Mục tiêu tuần', value: `${Math.min(n, 5)}/5`, unit: 'phiên', color: 'text-blue-400', bg: 'bg-blue-500/[0.08] border-blue-500/20', bar: Math.min(n, 5) / 5 * 100, barColor: '#3b82f6' },
           { icon: Clock, label: 'Thời gian luyện tập', value: `${(n * 12).toFixed(0)}`, unit: 'phút', color: 'text-violet-400', bg: 'bg-violet-500/[0.08] border-violet-500/20', bar: Math.min((n * 12) / 300 * 100, 100), barColor: '#8b5cf6' },
         ].map(({ icon: Icon, label, value, unit, color, bg, bar, barColor }, i) => (

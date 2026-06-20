@@ -3,7 +3,7 @@ import { Sparkles, Check, X, ShieldCheck, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../services/api';
 import { useAuthStore } from '../store/useAuthStore';
-import { trackPremiumModalView, trackPremiumModalUpgradeClick } from '@/utils/analytics';
+import { trackPremiumModalView, trackPremiumModalUpgradeClick, trackPremiumModalDismiss } from '@/utils/analytics';
 
 const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
   const { user, updateUser } = useAuthStore();
@@ -73,7 +73,7 @@ const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          onClick={onClose}
+          onClick={() => { trackPremiumModalDismiss(); onClose(); }}
           className="fixed inset-0 bg-black/70 backdrop-blur-sm"
         />
         <motion.div
@@ -86,7 +86,7 @@ const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
           {/* Gold top bar */}
           <div className="h-1 w-full bg-[#f5a623]" />
 
-          <button onClick={onClose}
+          <button onClick={() => { trackPremiumModalDismiss(); onClose(); }}
             className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-lg border border-white/[0.07] text-zinc-500 hover:text-white hover:border-white/[0.14] transition-colors">
             <X size={16} />
           </button>

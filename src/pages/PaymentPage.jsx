@@ -11,7 +11,7 @@ import api from "../services/api";
 import { useAuth } from "../hooks/useAuth";
 import { useToast } from "../components/ui/Toast";
 import Breadcrumb from '../components/ui/Breadcrumb';
-import { trackPaymentPageView, trackPlanSelect, trackPaymentSubmit } from '@/utils/analytics';
+import { trackPaymentPageView, trackPlanSelect, trackPaymentSubmit, trackDiscountCodeApplied } from '@/utils/analytics';
 
 // Plan hierarchy order
 const PLAN_ORDER = { FREE: 0, DAILY: 0.5, BASIC: 1, FULL: 2, ANNUAL: 3 };
@@ -142,9 +142,11 @@ const PaymentPage = () => {
     try {
       const res = await api.post(`/payment/apply-discount?code=${encodeURIComponent(discountCode.trim())}&plan=${selectedPlan}`);
       setDiscountInfo(res.data?.data);
+      trackDiscountCodeApplied(discountCode.trim().toUpperCase(), true);
       // Automatically refetch order to apply the discount to PayOS link or activate immediately if 100%
       await fetchOrder(selectedPlan, res.data?.data?.code);
     } catch (e) {
+      trackDiscountCodeApplied(discountCode.trim().toUpperCase(), false);
       setDiscountError(e.response?.data?.message || "Mã không hợp lệ");
     } finally {
       setApplyingDiscount(false);

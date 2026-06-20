@@ -72,3 +72,10 @@ export const trackOnboardingTourComplete = () => track('onboarding_tour_complete
 
 // Contact
 export const trackContactModalSubmit = () => track('contact_modal_submit');
+
+// Funnel Bottleneck
+export const trackPremiumModalDismiss = () => track('premium_modal_dismiss');
+export const trackDiscountCodeApplied = (code, success) => track('discount_code_applied', { code, success });
+export const trackStreakMilestone = (days) => track('streak_milestone', { streak_days: days });
+export const trackScriptScrollDepth = (percent) => track('script_scroll_depth', { scroll_percent: percent });
+export const trackLessonAbandon = (lessonId, timeSpentSeconds) => track('lesson_abandon', { lesson_id: lessonId, time_spent_seconds: timeSpentSeconds });
