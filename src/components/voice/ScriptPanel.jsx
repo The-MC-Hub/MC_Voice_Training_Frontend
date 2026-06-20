@@ -413,7 +413,7 @@ export default function ScriptPanel({
 
         <div
           ref={scriptScrollRef}
-          className="max-h-125 overflow-y-auto px-8 py-8 select-text"
+          className="max-h-[70vh] overflow-y-auto px-8 py-8 select-text"
           style={{ background: bg, scrollbarWidth: "thin", position: "relative" }}
           onMouseUp={handleScriptMouseUp}
           onClick={(e) => {
