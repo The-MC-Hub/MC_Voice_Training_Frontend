@@ -12,7 +12,7 @@ export default function RecordingCard({
   t_vp,
 }) {
   return (
-    <div className="flex-1 rounded-2xl border border-white/[0.07] bg-[#111113] overflow-hidden">
+    <div data-quest="quest-recording-card" className="flex-1 rounded-2xl border border-white/[0.07] bg-[#111113] overflow-hidden">
       <div className="rounded-2xl border-0 overflow-hidden h-full flex flex-col">
         {/* Status bar */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.07]">

@@ -989,6 +989,7 @@ const LeaderboardPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2 }}
+                data-quest="quest-leaderboard-table"
                 className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm"
               >
                 {/* Podium */}

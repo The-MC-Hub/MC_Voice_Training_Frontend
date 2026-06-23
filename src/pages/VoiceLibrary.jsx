@@ -335,12 +335,13 @@ const VoiceLibrary = () => {
           ) : currentItems.length > 0 ? (
             viewMode === 'list' ? (
               <div className="flex flex-col gap-2">
-                {currentItems.map((lesson) => {
+                {currentItems.map((lesson, lessonIdx) => {
                   const stats = getLessonStats(lesson.id);
                   const wordCount = lesson.content?.split(' ').length || 0;
                   return (
                     <div
                       key={lesson.id}
+                      {...(lessonIdx === 0 ? { 'data-quest': 'quest-first-lesson' } : {})}
                       className="flex items-center gap-4 px-4 py-3 bg-[#111113] border border-white/[0.07] rounded-xl hover:border-white/[0.14] hover:bg-[#141416] transition-all group cursor-pointer"
                       onClick={() => { trackLessonClick(lesson.id, lesson.category); navigate(`/m/voice/practice/${lesson.id}`); }}
                     >
@@ -392,12 +393,13 @@ const VoiceLibrary = () => {
             ) : (
               /* Grid view */
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                {currentItems.map((lesson) => {
+                {currentItems.map((lesson, lessonIdx) => {
                   const stats = getLessonStats(lesson.id);
                   const wordCount = lesson.content?.split(' ').length || 0;
                   return (
                     <div
                       key={lesson.id}
+                      {...(lessonIdx === 0 ? { 'data-quest': 'quest-first-lesson' } : {})}
                       className="group flex flex-col bg-[#111113] border border-white/[0.07] rounded-2xl overflow-hidden hover:border-gold/25 hover:shadow-[0_0_20px_rgba(245,166,35,0.06)] transition-all cursor-pointer"
                       onClick={() => { trackLessonClick(lesson.id, lesson.category); navigate(`/m/voice/practice/${lesson.id}`); }}
                     >

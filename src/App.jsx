@@ -7,6 +7,8 @@ import PageTransition from './components/animations/PageTransition';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { TourProvider } from './contexts/TourContext';
 import OnboardingTour from './components/OnboardingTour';
+import { QuestGuideProvider } from './contexts/QuestGuideContext';
+import QuestGuideTour from './components/QuestGuideTour';
 
 import Home from './pages/Home';
 import About from './pages/About';
@@ -87,7 +89,9 @@ function App() {
   return (
     <ThemeProvider>
       <TourProvider>
+      <QuestGuideProvider>
       <OnboardingTour />
+      <QuestGuideTour />
       <div className={`app-container${noSidebar ? '' : ' has-sidebars'}`}>
         <PopularLessonsSidebar />
         <AdSidebar />
@@ -158,6 +162,7 @@ function App() {
           </AnimatePresence>
         </Suspense>
       </div>
+      </QuestGuideProvider>
       </TourProvider>
     </ThemeProvider>
   );

@@ -83,11 +83,11 @@ const Navbar = () => {
                 <NavLink to="/">{t('navbar.home')}</NavLink>
                 <NavLink to="/about">{t('navbar.about')}</NavLink>
                 <span data-tour="tour-dashboard"><NavLink to="/m/dashboard">{t('navbar.dashboard')}</NavLink></span>
-                <span data-tour="tour-training"><NavLink to="/m/voice/library">{t('navbar.training')}</NavLink></span>
-                <span data-tour="tour-courses"><NavLink to="/m/courses">{t('navbar.courses')}</NavLink></span>
+                <span data-tour="tour-training" data-quest="quest-training-nav"><NavLink to="/m/voice/library">{t('navbar.training')}</NavLink></span>
+                <span data-tour="tour-courses" data-quest="quest-courses-nav"><NavLink to="/m/courses">{t('navbar.courses')}</NavLink></span>
                 <NavLink to="/m/leaderboard">
-                  <span className="flex items-center gap-1">
-                  
+                  <span className="flex items-center gap-1" data-quest="quest-leaderboard-nav">
+
                     Xếp hạng
                   </span>
                 </NavLink>
@@ -149,6 +149,7 @@ const Navbar = () => {
                   )}
                   <Link
                     data-tour="tour-settings"
+                    data-quest="quest-settings-nav"
                     to="/m/settings"
                     className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${isDark ? 'text-zinc-500 hover:text-white hover:bg-white/[0.07]' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'}`}
                   >

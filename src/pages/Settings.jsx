@@ -565,7 +565,7 @@ const Settings = () => {
                       </div>
                     </div>
                     {/* Picker */}
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0" data-quest="quest-avatar-picker">
                       <p className={labelCls + " mb-2"}>Chọn emoji đại diện</p>
                       <EmojiAvatarPicker
                         compact
@@ -577,7 +577,7 @@ const Settings = () => {
 
                   {/* Fields row */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2 border-t border-gray-100">
-                    <div className="space-y-1.5">
+                    <div className="space-y-1.5" data-quest="quest-name-input">
                       <label className={labelCls}>{t('settings.displayName')}</label>
                       <div className={inputWrapCls}>
                         <User size={15} className="text-gray-400 shrink-0" />
@@ -916,6 +916,7 @@ const Settings = () => {
                   <button
                     type="submit"
                     disabled={loading}
+                    data-quest="quest-save-profile"
                     className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[13px] font-semibold transition-colors disabled:opacity-50"
                   >
                     <Save size={15} /> {loading ? t('settings.saving') : t('settings.saveAllChanges')}

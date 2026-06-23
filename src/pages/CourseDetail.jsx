@@ -207,6 +207,7 @@ const PathMap = ({ items, onOpen }) => {
             <motion.button
               whileHover={{ scale: 1.07 }} whileTap={{ scale: 0.95, y: 2 }}
               onClick={() => onOpen(item)}
+              {...(i === 0 ? { 'data-quest': 'quest-first-lesson-reading' } : {})}
               className={`relative w-16 h-16 rounded-full border-2 flex items-center justify-center transition-colors ${v.circle}`}
               aria-label={item.title}
             >

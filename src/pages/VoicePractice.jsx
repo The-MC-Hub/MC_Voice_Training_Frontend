@@ -214,15 +214,17 @@ const VoicePractice = () => {
                     <RefreshCw size={13} /> {t_vp("reRecord")}
                   </button>
                 )}
-                {recording ? (
-                  <button onClick={handleStopRecording} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-500 text-white text-[13px] font-semibold hover:bg-red-600 transition-colors">
-                    <Square size={13} /> {t_vp("stop")}
-                  </button>
-                ) : !audioBlob ? (
-                  <button onClick={handleStartRecording} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors">
-                    <Play size={13} /> {t_vp("startRecording")}
-                  </button>
-                ) : null}
+                <span data-quest="quest-record-btn">
+                  {recording ? (
+                    <button onClick={handleStopRecording} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-500 text-white text-[13px] font-semibold hover:bg-red-600 transition-colors">
+                      <Square size={13} /> {t_vp("stop")}
+                    </button>
+                  ) : !audioBlob ? (
+                    <button onClick={handleStartRecording} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors">
+                      <Play size={13} /> {t_vp("startRecording")}
+                    </button>
+                  ) : null}
+                </span>
               </div>
             </div>
 

@@ -57,6 +57,7 @@ const CourseCard = ({ course, index }) => {
       whileHover={{ y: -4 }}
       transition={{ delay: index * 0.06, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
       onClick={() => { trackCourseDetailView(course.id, course.title); navigate(`/m/courses/${course.id}`); }}
+      {...(index === 0 ? { 'data-quest': 'quest-first-course' } : {})}
       className="group cursor-pointer bg-[#111113] border border-white/[0.07] rounded-2xl overflow-hidden
                  hover:border-[#f5a623]/30 hover:shadow-[0_8px_32px_rgba(245,166,35,0.10)]
                  transition-all duration-300 flex flex-col"

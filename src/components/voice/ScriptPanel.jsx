@@ -105,7 +105,7 @@ export function SimpleScriptPanel({
   };
 
   return (
-    <div className="flex-1 rounded-2xl border border-white/[0.07] bg-[#111113] overflow-hidden flex flex-col min-w-0">
+    <div data-quest="quest-script-panel" className="flex-1 rounded-2xl border border-white/[0.07] bg-[#111113] overflow-hidden flex flex-col min-w-0">
       {/* Toolbar */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.07] bg-[#0d0d0f] gap-2 flex-wrap">
         <div className="flex items-center gap-1">

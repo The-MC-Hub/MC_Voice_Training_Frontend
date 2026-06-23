@@ -3,17 +3,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, Circle, Gift, ChevronRight, Copy, Check, ChevronDown, Sparkles, Trophy } from 'lucide-react';
 import { questService } from '../../services/questService';
 import { useNavigate } from 'react-router-dom';
+import { useQuestGuide } from '../../contexts/QuestGuideContext';
 
 const QUEST_META = [
   { id: 'profile',      label: 'Hoàn thiện hồ sơ',    desc: 'Điền đầy đủ tên và ảnh đại diện',     link: '/m/settings',     cta: 'Cập nhật hồ sơ' },
   { id: 'practice',    label: 'Luyện tập đầu tiên',   desc: 'Hoàn thành 1 bài AI coaching',         link: '/m/voice/library', cta: 'Bắt đầu luyện tập' },
   { id: 'courses',     label: 'Khám phá khóa học',    desc: 'Ghé thăm trang Khóa học',              link: '/m/courses',       cta: 'Xem khóa học' },
-  { id: 'reading',     label: 'Đọc 1 bài học',        desc: 'Hoàn thành 1 bài đọc trong khóa học', link: '/m/courses',       cta: 'Đọc bài học' },
-  { id: 'leaderboard', label: 'Xem bảng xếp hạng',   desc: 'Ghé thăm trang Xếp hạng',              link: '/m/leaderboard',   cta: 'Xem bảng xếp hạng' },
+{ id: 'leaderboard', label: 'Xem bảng xếp hạng',   desc: 'Ghé thăm trang Xếp hạng',              link: '/m/leaderboard',   cta: 'Xem bảng xếp hạng' },
 ];
 
 const NewbieQuest = () => {
   const navigate = useNavigate();
+  const { startGuide } = useQuestGuide();
   const [progress, setProgress] = useState(null);
   const [loading, setLoading] = useState(true);
   const [claiming, setClaiming] = useState(false);
@@ -56,7 +57,7 @@ const NewbieQuest = () => {
   if (loading || !progress) return null;
   if (progress.voucherClaimed && !voucherCode) return null;
 
-  const { completedQuests = [], doneCount = 0, totalQuests = 5 } = progress;
+  const { completedQuests = [], doneCount = 0, totalQuests = 4 } = progress;
   const pct = Math.round((doneCount / totalQuests) * 100);
   const allDone = doneCount === totalQuests;
 
@@ -230,7 +231,7 @@ const NewbieQuest = () => {
                           ? 'opacity-60'
                           : 'hover:bg-amber-100/60 cursor-pointer active:scale-[0.99]'
                       }`}
-                      onClick={() => !done && navigate(q.link)}
+                      onClick={() => !done && startGuide(q.id)}
                     >
                       {done ? (
                         <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
