@@ -358,10 +358,10 @@ const OverviewTab = ({
           </div>
         ) : (
           <div className="py-14 text-center border border-dashed border-white/[0.06] rounded-xl">
-            <Mic size={28} className="text-zinc-800 mx-auto mb-3" />
+            <Mic size={28} className="text-zinc-800 mx-auto my-3" />
             <p className="text-[13px] text-zinc-600 mb-4">{t('dashboard.noSessionsYet')}</p>
             <Link to="/m/voice/library"
-              className="inline-flex items-center gap-2 px-5 py-2 bg-[#f5a623] text-black text-[13px] font-semibold rounded-xl hover:bg-[#e09520] transition-colors">
+              className="inline-flex mb-3 items-center gap-2 px-5 py-2 bg-[#f5a623] text-black text-[13px] font-semibold rounded-xl hover:bg-[#e09520] transition-colors">
               {t('dashboard.startFirstPractice')}
             </Link>
           </div>

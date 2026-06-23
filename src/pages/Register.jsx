@@ -333,9 +333,15 @@ const OtpScreen = ({ email, onSuccess }) => {
       <p className="text-[14px] font-semibold text-amber-600 mb-2">{email}</p>
 
       {/* Magic link hint */}
-      <div className="w-full bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 mb-6 text-left">
+      <div className="w-full bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 mb-3 text-left">
         <p className="text-[12px] text-emerald-700 font-medium mb-0.5">✅ Cách nhanh nhất</p>
         <p className="text-[12px] text-emerald-600">Mở email và nhấn nút <strong>"Xác nhận email ngay"</strong> — tự động đăng nhập, không cần nhập mã.</p>
+      </div>
+
+      {/* Spam hint */}
+      <div className="w-full bg-amber-50 border border-amber-200 rounded-xl p-3 mb-6 text-left flex items-start gap-2">
+        <span className="text-amber-500 text-[14px] mt-px">⚠️</span>
+        <p className="text-[12px] text-amber-700">Không thấy email? Kiểm tra thư mục <strong>Spam / Quảng cáo</strong> — đôi khi email bị lọc nhầm.</p>
       </div>
 
       {/* Divider */}
@@ -835,8 +841,36 @@ const Register = () => {
   useApi(fetchUserRoles, []);
 
   const refParam = searchParams.get("ref") || "";
-  const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "", phoneNumber: "", referralCode: refParam });
-  const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0].id);
+
+  // ── Cookie helpers (no dependency) ─────────────────────────────────────
+  const COOKIE_KEY = "mcvt_reg_draft";
+  const readDraft = () => {
+    try {
+      const match = document.cookie.split("; ").find(r => r.startsWith(COOKIE_KEY + "="));
+      if (!match) return null;
+      return JSON.parse(decodeURIComponent(match.split("=").slice(1).join("=")));
+    } catch { return null; }
+  };
+  const saveDraft = (data) => {
+    const val = encodeURIComponent(JSON.stringify(data));
+    // 1-day expiry, SameSite=Lax
+    document.cookie = `${COOKIE_KEY}=${val};max-age=86400;path=/;SameSite=Lax`;
+  };
+  const clearDraft = () => {
+    document.cookie = `${COOKIE_KEY}=;max-age=0;path=/;SameSite=Lax`;
+  };
+
+  // Init form from saved draft (exclude passwords)
+  const draft = readDraft();
+  const [form, setForm] = useState({
+    name: draft?.name || "",
+    email: draft?.email || "",
+    password: "",
+    confirmPassword: "",
+    phoneNumber: draft?.phoneNumber || "",
+    referralCode: draft?.referralCode || refParam,
+  });
+  const [selectedAvatar, setSelectedAvatar] = useState(draft?.avatar || AVATARS[0].id);
   const [localError, setLocalError] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -849,6 +883,11 @@ const Register = () => {
   // Course picked during quiz — enrolled after OTP success
   const [pendingCourse, setPendingCourse] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+
+  // Persist non-sensitive fields to cookie on change
+  useEffect(() => {
+    saveDraft({ name: form.name, email: form.email, phoneNumber: form.phoneNumber, referralCode: form.referralCode, avatar: selectedAvatar });
+  }, [form.name, form.email, form.phoneNumber, form.referralCode, selectedAvatar]);
 
   const set = k => e => setForm(p => ({ ...p, [k]: e.target.value }));
 
@@ -878,6 +917,7 @@ const Register = () => {
       if (form.referralCode.trim()) payload.referralCode = form.referralCode.trim().toUpperCase();
       const res = await register(payload);
       trackRegisterSuccess();
+      clearDraft();
       setRegisteredEmail(res.email || form.email);
       setStep("otp");
     } catch (err) {

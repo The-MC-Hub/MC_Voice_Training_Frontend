@@ -10,6 +10,7 @@ import api from "../services/api";
 import { useAuth } from "../hooks/useAuth";
 import { useToast } from "../components/ui/Toast";
 import Breadcrumb from '../components/ui/Breadcrumb';
+import { voucherService } from '../services/voucherService';
 import { trackPaymentPageView, trackPlanSelect, trackPaymentSubmit, trackDiscountCodeApplied } from '@/utils/analytics';
 
 // Plan hierarchy order
@@ -103,10 +104,19 @@ const PaymentPage = () => {
   const [discountInfo, setDiscountInfo] = useState(null);
   const [discountError, setDiscountError] = useState(null);
   const [applyingDiscount, setApplyingDiscount] = useState(false);
+  const [myVouchers, setMyVouchers] = useState([]);
+  const [showVoucherList, setShowVoucherList] = useState(false);
   const pollRef = useRef(null);
 
   // Track page view on mount
   useEffect(() => { trackPaymentPageView(); }, []);
+
+  // Fetch user's available vouchers
+  useEffect(() => {
+    voucherService.getAvailableVouchers()
+      .then(res => setMyVouchers(res.data?.data || []))
+      .catch(() => {});
+  }, []);
 
   // Fetch plans from API
   useEffect(() => {
@@ -527,6 +537,69 @@ const PaymentPage = () => {
                     <p className="text-[11px] text-gray-400">{selectedPlanData.period}</p>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {/* My vouchers */}
+            {selectedPlanData && myVouchers.length > 0 && (
+              <div className="px-6 py-4 border-b border-gray-100">
+                <button
+                  onClick={() => setShowVoucherList(v => !v)}
+                  className="flex items-center gap-2 text-[11px] text-amber-600 font-semibold uppercase tracking-wider mb-2 hover:text-amber-700 transition-colors"
+                >
+                  <Award size={13} />
+                  Voucher của bạn ({myVouchers.length})
+                  <span className="ml-auto text-gray-400">{showVoucherList ? "▲" : "▼"}</span>
+                </button>
+                <AnimatePresence>
+                  {showVoucherList && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="flex flex-col gap-2 pb-2">
+                        {myVouchers.map(v => {
+                          const isExpired = v.expiresAt && new Date(v.expiresAt) < new Date();
+                          const daysLeft = v.expiresAt
+                            ? Math.ceil((new Date(v.expiresAt) - new Date()) / 86400000)
+                            : null;
+                          return (
+                            <div
+                              key={v.id}
+                              onClick={() => {
+                                if (isExpired) return;
+                                setDiscountCode(v.code);
+                                setDiscountInfo(null);
+                                setDiscountError(null);
+                                setShowVoucherList(false);
+                              }}
+                              className={`flex items-center justify-between px-3 py-2.5 rounded-xl border cursor-pointer transition-all ${
+                                isExpired
+                                  ? "border-gray-100 bg-gray-50 opacity-50 cursor-not-allowed"
+                                  : "border-amber-200 bg-amber-50 hover:border-amber-400 hover:bg-amber-100"
+                              }`}
+                            >
+                              <div className="flex flex-col gap-0.5">
+                                <span className="text-[12px] font-mono font-bold text-gray-800">{v.code}</span>
+                                <span className="text-[11px] text-gray-500">{v.description}</span>
+                              </div>
+                              <div className="flex flex-col items-end gap-0.5">
+                                <span className="text-[13px] font-bold text-amber-600">-{v.discountPercent}%</span>
+                                {isExpired
+                                  ? <span className="text-[10px] text-red-400">Hết hạn</span>
+                                  : daysLeft !== null && <span className="text-[10px] text-gray-400">Còn {daysLeft} ngày</span>
+                                }
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             )}
 

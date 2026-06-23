@@ -6,20 +6,14 @@ import api from "../services/api";
 import { useAuthStore } from "../store/useAuthStore";
 import { academyService } from "../services/academyService";
 
+
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { token: storeToken } = useAuthStore();
   const [status, setStatus] = useState("loading"); // "loading" | "success" | "error"
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    // If already logged in, skip
-    if (storeToken) {
-      navigate("/m/dashboard", { replace: true });
-      return;
-    }
-
     const token = searchParams.get("token");
     if (!token) {
       setStatus("error");
@@ -40,6 +34,10 @@ const VerifyEmail = () => {
           try { await academyService.giftEnrollCourse(giftCourseId); } catch { /* ignore */ }
         }
         setStatus("success");
+        localStorage.setItem("justVerified", "1");
+        if (!localStorage.getItem("mcvt_tour_done")) {
+          localStorage.setItem("mcvt_tour_pending", "1");
+        }
         setTimeout(() => navigate("/m/dashboard", { replace: true }), 2000);
       })
       .catch((err) => {

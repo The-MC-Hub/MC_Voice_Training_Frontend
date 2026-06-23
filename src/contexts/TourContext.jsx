@@ -50,17 +50,19 @@ export const TourProvider = ({ children }) => {
   const timerRef = useRef(null);
 
   useEffect(() => {
-    if (
-      location.pathname === "/m/dashboard" &&
-      localStorage.getItem("mcvt_tour_pending")
-    ) {
-      localStorage.removeItem("mcvt_tour_pending");
-      clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => {
-        setStepIdx(0);
-        setActive(true);
-      }, 900);
-    }
+    if (location.pathname !== "/m/dashboard") return;
+    if (localStorage.getItem(TOUR_KEY)) return; // already done
+
+    // Either explicit pending flag (from verify email) or first-ever visit
+    const hasPending = localStorage.getItem("mcvt_tour_pending");
+    if (hasPending) localStorage.removeItem("mcvt_tour_pending");
+
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      setStepIdx(0);
+      setActive(true);
+    }, 1500);
+
     return () => clearTimeout(timerRef.current);
   }, [location.pathname]);
 

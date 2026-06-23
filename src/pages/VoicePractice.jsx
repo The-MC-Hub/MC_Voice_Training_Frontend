@@ -3,6 +3,7 @@ import { Loader2, ArrowLeft, Award, AlertCircle, Zap, RefreshCw, Square, Play, A
 import { motion, AnimatePresence } from "framer-motion";
 import { useVoicePractice, clampMetric, ANALYZE_PHASES } from "../hooks/useVoicePractice";
 import { trackVoicePracticeStart, trackRecordingStart, trackRecordingStop, trackAnalysisComplete, trackTeleprompterEnable, trackVoiceAnnotationAdd, trackVoicePracticeReset } from '@/utils/analytics';
+import { questService } from '../services/questService';
 import Navbar from "../components/Navbar";
 import UpgradeBanner from "../components/ui/UpgradeBanner";
 import Breadcrumb from "../components/ui/Breadcrumb";
@@ -53,10 +54,11 @@ const VoicePractice = () => {
     }
   }, [lesson?.id || lesson?._id]);
 
-  // Track analysis complete when result arrives
+  // Track analysis complete when result arrives + mark quest
   useEffect(() => {
     if (result) {
       trackAnalysisComplete(accuracy, energy, pace, lesson?.id || lesson?._id);
+      questService.completeQuest('practice').catch(() => {});
     }
   }, [result]);
 

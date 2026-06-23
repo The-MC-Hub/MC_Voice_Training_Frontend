@@ -15,6 +15,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import { MessageSquare } from 'lucide-react';
 import '../markdown.css';
 import { trackLessonStart, trackLessonComplete, trackLessonAbandon } from '@/utils/analytics';
+import { questService } from '../services/questService';
 
 const ReadingView = () => {
   const { id } = useParams();
@@ -287,6 +288,7 @@ const ReadingView = () => {
                   if (courseId) {
                     try { await academyService.completeReading(courseId, id); } catch {}
                     trackLessonComplete(id, courseId);
+                    questService.completeQuest('reading').catch(() => {});
                     celebrate('📖 Xuất sắc! Bạn đã hoàn thành bài đọc!');
                     navigate(`/m/courses/${courseId}`);
                   } else {

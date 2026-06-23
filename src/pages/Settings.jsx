@@ -49,6 +49,7 @@ import api from "../services/api";
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { useTour } from '../contexts/TourContext';
 import { trackSettingsProfileUpdate, trackSettingsAvatarUpload, trackLogoutClick, trackPasswordChangeSubmit } from '@/utils/analytics';
+import { questService } from '../services/questService';
 
 const inputCls = "flex-1 bg-transparent text-[13px] text-gray-800 placeholder:text-gray-400 focus:outline-none min-w-0";
 const inputWrapCls = "flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5 focus-within:border-amber-400 transition-colors";
@@ -429,6 +430,7 @@ const Settings = () => {
       }
       setSuccess(t('settings.profileUpdated'));
       trackSettingsProfileUpdate();
+      questService.completeQuest('profile').catch(() => {});
     } catch (err) {
       setError(err.response?.data?.message || t('settings.failedUpdate'));
     } finally {

@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { academyService } from '../services/academyService';
 import { trackCourseListView, trackCourseDetailView } from '@/utils/analytics';
+import { questService } from '../services/questService';
 import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
 
@@ -154,6 +155,7 @@ const CoursesList = () => {
 
   useEffect(() => {
     trackCourseListView();
+    questService.completeQuest('courses').catch(() => {});
     setLoading(true);
     academyService.getAllCourses()
       .then(res => {

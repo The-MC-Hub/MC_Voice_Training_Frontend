@@ -62,8 +62,19 @@ const OnboardingTour = () => {
   useEffect(() => {
     if (!active) return;
     recalc();
+    // Retry if DOM not ready yet (nav elements may still be mounting)
+    const retry = setInterval(() => {
+      if (currentStep && !document.querySelector(`[data-tour="${currentStep.target}"]`)) return;
+      recalc();
+      clearInterval(retry);
+    }, 150);
+    const timeout = setTimeout(() => clearInterval(retry), 3000);
     window.addEventListener("resize", recalc);
-    return () => window.removeEventListener("resize", recalc);
+    return () => {
+      window.removeEventListener("resize", recalc);
+      clearInterval(retry);
+      clearTimeout(timeout);
+    };
   }, [active, currentStep, recalc]);
 
   if (!active || !currentStep) return null;

@@ -23,8 +23,8 @@ const Toast = ({ id, type = 'info', message, onClose }) => {
         display: 'flex',
         alignItems: 'center',
         gap: '0.75rem',
-        background: 'rgba(15,23,42,0.95)',
-        border: `1px solid ${color}33`,
+        background: '#1e293b',
+        border: `1px solid ${color}44`,
         borderLeft: `3px solid ${color}`,
         borderRadius: '0.75rem',
         padding: '0.875rem 1rem',
@@ -36,7 +36,7 @@ const Toast = ({ id, type = 'info', message, onClose }) => {
       }}
     >
       <Icon size={18} style={{ color, flexShrink: 0 }} />
-      <span style={{ flex: 1, fontSize: '0.875rem', color: 'var(--text-primary)', lineHeight: 1.4 }}>{message}</span>
+      <span style={{ flex: 1, fontSize: '0.875rem', color: '#f1f5f9', lineHeight: 1.4 }}>{message}</span>
       <button
         onClick={() => onClose(id)}
         style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '2px', display: 'flex' }}

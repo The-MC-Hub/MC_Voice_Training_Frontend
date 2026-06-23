@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { getLeaderboard, getMyRank } from '../services/communityService';
 import { trackLeaderboardFilter, trackLeaderboardShare } from '@/utils/analytics';
+import { questService } from '../services/questService';
 import { useAuthStore } from '../store/useAuthStore';
 import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
@@ -732,6 +733,8 @@ const LeaderboardPage = () => {
   const [celebrationFired, setCelebrationFired] = useState(false);
   const loaderRef = useRef(null);
   const PAGE_SIZE = 20;
+
+  useEffect(() => { questService.completeQuest('leaderboard').catch(() => {}); }, []);
 
   const fetchPage = useCallback(async (pageNum, reset = false) => {
     try {

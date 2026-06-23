@@ -14,9 +14,12 @@ import { trackDashboardView, trackDashboardTabSwitch, trackDashboardChartFilter,
 import OverviewTab from "../components/dashboard/OverviewTab";
 import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
+import { useToast } from '../components/ui/Toast';
+import NewbieQuest from '../components/dashboard/NewbieQuest';
 const Dashboard = () => {
   const { user } = useAuthStore();
   const { t } = useTranslation();
+  const toast = useToast();
 
   const [activeTab, setActiveTab] = useState("Overview");
   const [sortOrder, setSortOrder] = useState("newest");
@@ -26,6 +29,13 @@ const Dashboard = () => {
   const ITEMS_PER_PAGE = 10;
 
   useEffect(() => { trackDashboardView(); }, []);
+
+  useEffect(() => {
+    if (localStorage.getItem("justVerified")) {
+      localStorage.removeItem("justVerified");
+      toast("Email đã xác thực! Chào mừng bạn đến với MC Hub.", "success");
+    }
+  }, []);
 
   const { data: dashboard, loading: dashLoading } = useApi(fetchDashboard);
   const { data: practiceHistory, loading: practiceLoading } = useApi(
@@ -255,6 +265,12 @@ const Dashboard = () => {
           </motion.div>
         ))}
       </div>
+
+      {/* Newbie quest — only FREE users */}
+      {plan === 'FREE' && (
+      
+          <NewbieQuest />
+      )}
 
       {/* Usage warning banner */}
       {showLimitWarning && (
