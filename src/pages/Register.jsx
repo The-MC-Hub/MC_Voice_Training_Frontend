@@ -415,407 +415,120 @@ const OtpScreen = ({ email, onSuccess }) => {
   );
 };
 
-// ── Free course pick (shown after OTP for new FREE users) ────────────────
-const CATEGORY_META = {
-  WEDDING:        { emoji: "💍", label: "MC Đám cưới",    color: "#f59e0b", desc: "Kịch bản dẫn lễ cưới chuyên nghiệp, từ nhập tiệc đến trao nhẫn" },
-  CORPORATE:      { emoji: "💼", label: "MC Doanh nghiệp", color: "#60a5fa", desc: "Hội nghị, tổng kết, lễ ra mắt sản phẩm — phong cách lịch lãm" },
-  GALA:           { emoji: "✨", label: "MC Gala Dinner",   color: "#a78bfa", desc: "Dẫn chương trình gala sang trọng, xử lý tình huống sân khấu lớn" },
-  TALKSHOW:       { emoji: "🎙️", label: "MC Talkshow",      color: "#34d399", desc: "Dẫn chuyện, phỏng vấn, điều phối khách mời tự nhiên, cuốn hút" },
-  PRODUCT_LAUNCH: { emoji: "🚀", label: "Ra mắt sản phẩm", color: "#f472b6", desc: "Tạo điểm nhấn, build hype, dẫn sự kiện launch ấn tượng" },
-  GENERAL:        { emoji: "📢", label: "Tổng hợp",         color: "#fb923c", desc: "Kỹ năng nền tảng MC: giọng nói, nhịp điệu, xử lý sự cố" },
-};
-
-// Quiz questions — each has options that carry category weights
-const QUIZ = [
-  {
-    id: "goal",
-    question: "Mục tiêu chính của bạn khi luyện tập?",
-    icon: "🎯",
-    options: [
-      { label: "Trở thành MC chuyên nghiệp", icon: "🎤", weights: { WEDDING: 3, GALA: 2 } },
-      { label: "Thuyết trình & giao tiếp công việc", icon: "💼", weights: { CORPORATE: 3, TALKSHOW: 2 } },
-      { label: "Cải thiện phát âm, chữa ngọng", icon: "🗣️", weights: { GENERAL: 3 } },
-      { label: "Khám phá, chưa có mục tiêu cụ thể", icon: "✨", weights: { GENERAL: 2, PRODUCT_LAUNCH: 1 } },
-    ],
-  },
-  {
-    id: "experience",
-    question: "Kinh nghiệm MC của bạn hiện tại?",
-    icon: "📊",
-    options: [
-      { label: "Chưa từng dẫn chương trình", icon: "🌱", weights: { GENERAL: 2 } },
-      { label: "Đã dẫn vài buổi nhỏ", icon: "🙂", weights: { WEDDING: 1, CORPORATE: 1 } },
-      { label: "Có kinh nghiệm, muốn nâng cao", icon: "🚀", weights: { GALA: 2, TALKSHOW: 1 } },
-    ],
-  },
-  {
-    id: "event",
-    question: "Loại sự kiện bạn quan tâm nhất?",
-    icon: "🎪",
-    options: [
-      { label: "Đám cưới & tiệc gia đình", icon: "💍", weights: { WEDDING: 3 } },
-      { label: "Hội nghị & doanh nghiệp", icon: "🏢", weights: { CORPORATE: 3 } },
-      { label: "Gala, sự kiện sang trọng", icon: "✨", weights: { GALA: 3 } },
-      { label: "Talkshow, phỏng vấn, livestream", icon: "🎙️", weights: { TALKSHOW: 3, PRODUCT_LAUNCH: 1 } },
-    ],
-  },
-];
+const DIFF_LABEL = { BEGINNER: "Cơ bản", INTERMEDIATE: "Trung cấp", ADVANCED: "Nâng cao" };
+const DIFF_COLOR = { BEGINNER: "#10b981", INTERMEDIATE: "#f59e0b", ADVANCED: "#ef4444" };
 
 const CoursePickScreen = ({ onPick, onSkip, submitting }) => {
   const [allCourses, setAllCourses] = useState([]);
-  // "quiz" | "analyzing" | "result"
-  const [phase, setPhase] = useState("quiz");
-  const [quizStep, setQuizStep] = useState(0);
-  const [answers, setAnswers] = useState([]);
-  const [suggestedCourse, setSuggestedCourse] = useState(null);
-  const [selectedIdx, setSelectedIdx] = useState(null); // highlight on tap before transition
-  const [direction, setDirection] = useState(1); // 1 = forward
+  const [loading, setLoading] = useState(true);
+  const [selectedKey, setSelectedKey] = useState(null);
 
   useEffect(() => {
     academyService.getAllCourses()
       .then(res => setAllCourses(res.data?.data || res.data || []))
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
-  const pickBestCourse = (collectedAnswers, courses) => {
-    const scores = {};
-    for (const opt of collectedAnswers) {
-      for (const [cat, w] of Object.entries(opt.weights)) {
-        scores[cat] = (scores[cat] || 0) + w;
-      }
-    }
-    const ranked = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-    let match = null;
-    for (const [cat] of ranked) {
-      match = courses.find(c => c.category === cat);
-      if (match) break;
-    }
-    return match || courses[0] || null;
-  };
-
-  const handleAnswer = (option, idx) => {
-    setSelectedIdx(idx);
-    const newAnswers = [...answers, option];
-
-    setTimeout(() => {
-      setSelectedIdx(null);
-      if (quizStep < QUIZ.length - 1) {
-        setDirection(1);
-        setAnswers(newAnswers);
-        setQuizStep(q => q + 1);
-      } else {
-        setAnswers(newAnswers);
-        trackRegisterQuizComplete(newAnswers);
-        setPhase("analyzing");
-        setTimeout(() => {
-          const best = pickBestCourse(newAnswers, allCourses);
-          setSuggestedCourse(best);
-          setPhase("result");
-        }, 1600);
-      }
-    }, 180);
-  };
-
-  // ── Quiz phase ──────────────────────────────────────────────────────────
-  if (phase === "quiz") {
-    const q = QUIZ[quizStep];
-
-    return (
-      <div className="flex flex-col h-full">
-        {/* Dot timeline + skip */}
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex items-center gap-2">
-            {QUIZ.map((_, i) => (
-              <motion.div
-                key={i}
-                animate={{
-                  width: i === quizStep ? 24 : 8,
-                  backgroundColor: i < quizStep ? "#f59e0b" : i === quizStep ? "#f59e0b" : "#e5e7eb",
-                  opacity: i > quizStep ? 0.5 : 1,
-                }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="h-2 rounded-full"
-              />
-            ))}
-          </div>
-          <button
-            onClick={onSkip}
-            className="text-[11px] text-gray-400 hover:text-gray-600 transition-colors font-medium"
-          >
-            Bỏ qua
-          </button>
+  return (
+    <div className="flex flex-col">
+      {/* Header */}
+      <div className="mb-5">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-2xl">🎁</span>
+          <span className="text-[11px] font-bold text-amber-500 uppercase tracking-widest">Quà tặng cho bạn</span>
         </div>
-
-        <AnimatePresence mode="wait" custom={direction}>
-          <motion.div
-            key={quizStep}
-            custom={direction}
-            initial={{ opacity: 0, x: direction * 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: direction * -40 }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col flex-1"
-          >
-            {/* Question header */}
-            <div className="mb-5">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-[11px] font-bold text-amber-500 uppercase tracking-widest">
-                  {quizStep + 1} / {QUIZ.length}
-                </span>
-              </div>
-              <h3 className="text-[19px] font-bold text-gray-900 leading-snug">{q.question}</h3>
-              {quizStep === 0 && (
-                <p className="text-[12px] text-gray-500 mt-1.5">
-                  MC Hub sẽ tặng bạn <span className="font-semibold text-amber-600">1 khóa học miễn phí</span> dựa trên câu trả lời của bạn.
-                </p>
-              )}
-            </div>
-
-            {/* Option cards — large, tap-friendly */}
-            <div className="flex flex-col gap-2">
-              {q.options.map((opt, i) => {
-                const isSelected = selectedIdx === i;
-                return (
-                  <motion.button
-                    key={opt.label}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                    onClick={() => handleAnswer(opt, i)}
-                    className={`flex items-center gap-3.5 px-4 py-3.5 rounded-2xl border-2 text-left transition-all duration-150 group
-                      ${isSelected
-                        ? "border-amber-500 bg-amber-50 scale-[0.98]"
-                        : "border-gray-200 bg-white hover:border-amber-300 hover:bg-amber-50/30 active:scale-[0.98]"
-                      }`}
-                  >
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 transition-colors
-                      ${isSelected ? "bg-amber-100" : "bg-gray-50 group-hover:bg-amber-100/60"}`}>
-                      {opt.icon}
-                    </div>
-                    <span className="text-[13.5px] font-semibold text-gray-800 leading-snug flex-1">{opt.label}</span>
-                    <motion.div
-                      animate={{ scale: isSelected ? 1 : 0, opacity: isSelected ? 1 : 0 }}
-                      transition={{ duration: 0.15 }}
-                      className="w-5 h-5 rounded-full bg-amber-500 flex items-center justify-center shrink-0"
-                    >
-                      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                        <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </motion.div>
-                    {!isSelected && (
-                      <ArrowRight size={14} className="text-gray-300 group-hover:text-amber-400 transition-colors shrink-0" />
-                    )}
-                  </motion.button>
-                );
-              })}
-            </div>
-          </motion.div>
-        </AnimatePresence>
+        <h3 className="text-[22px] font-bold text-gray-900 leading-tight mb-1">Chọn 1 khóa học miễn phí</h3>
+        <p className="text-[13px] text-gray-500">Được đăng ký ngay sau khi xác thực email.</p>
       </div>
-    );
-  }
 
-  // ── Analyzing phase ─────────────────────────────────────────────────────
-  if (phase === "analyzing") {
-    const steps = ["Phân tích câu trả lời...", "Tìm khóa học phù hợp...", "Chuẩn bị quà tặng..."];
-    return (
-      <motion.div
-        key="analyzing"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="flex flex-col items-center justify-center py-10 text-center"
-      >
-        {/* Pulsing rings */}
-        <div className="relative w-20 h-20 flex items-center justify-center mb-6">
-          <motion.div
-            animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0, 0.3] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-0 rounded-full bg-amber-200"
-          />
-          <motion.div
-            animate={{ scale: [1, 1.3, 1], opacity: [0.4, 0, 0.4] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-            className="absolute inset-0 rounded-full bg-amber-300"
-          />
-          <div className="w-16 h-16 rounded-full bg-amber-500 flex items-center justify-center shadow-lg shadow-amber-200 z-10">
-            <span className="text-2xl">🎁</span>
-          </div>
+      {/* Course grid */}
+      {loading ? (
+        <div className="flex items-center justify-center py-12">
+          <span className="w-6 h-6 border-2 border-amber-300 border-t-amber-500 rounded-full animate-spin" />
         </div>
-
-        <h3 className="text-[18px] font-bold text-gray-900 mb-4">Đang tìm quà cho bạn</h3>
-
-        <div className="flex flex-col gap-2 w-full max-w-55">
-          {steps.map((s, i) => (
-            <motion.div
-              key={s}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.4, duration: 0.4 }}
-              className="flex items-center gap-2 text-[12px] text-gray-500"
-            >
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: i * 0.4 + 0.2, type: "spring", stiffness: 300 }}
-                className="w-4 h-4 rounded-full bg-amber-100 flex items-center justify-center shrink-0"
+      ) : (
+        <div className="flex flex-col gap-2 max-h-90 overflow-y-auto pr-1" style={{ scrollbarWidth: "thin" }}>
+          {allCourses.map((c, i) => {
+            const key = c.id || c._id || String(i);
+            const isSelected = selectedKey === key;
+            const diff = DIFF_LABEL[c.difficulty] || c.difficulty;
+            const diffColor = DIFF_COLOR[c.difficulty] || "#6b7280";
+            return (
+              <motion.button
+                key={key}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.03, duration: 0.25 }}
+                onClick={() => setSelectedKey(key)}
+                className={`flex items-center gap-3 px-3.5 py-3 rounded-xl border-2 text-left transition-all ${
+                  isSelected
+                    ? "border-amber-400 bg-amber-50 shadow-[0_0_0_3px_rgba(245,166,35,0.12)]"
+                    : "border-gray-200 bg-white hover:border-amber-200 hover:bg-amber-50/30"
+                }`}
               >
-                <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-              </motion.div>
-              {s}
-            </motion.div>
-          ))}
+                {/* Thumbnail */}
+                <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-gray-100">
+                  {c.thumbnail
+                    ? <img src={c.thumbnail} alt={c.title} className="w-full h-full object-cover" />
+                    : <div className="w-full h-full flex items-center justify-center text-xl">📚</div>
+                  }
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <p className="text-[13px] font-semibold text-gray-900 leading-snug truncate">{c.title}</p>
+                  <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                    {diff && (
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ background: diffColor + "18", color: diffColor }}>
+                        {diff}
+                      </span>
+                    )}
+                    {c.totalLessons > 0 && (
+                      <span className="text-[10px] text-gray-400">{c.totalLessons} bài</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Radio */}
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+                  isSelected ? "border-amber-500 bg-amber-500" : "border-gray-300"
+                }`}>
+                  {isSelected && (
+                    <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
+                      <path d="M1 3.5L3.5 6L8 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
+                </div>
+              </motion.button>
+            );
+          })}
         </div>
-      </motion.div>
-    );
-  }
+      )}
 
-  // ── Result phase ────────────────────────────────────────────────────────
-  if (phase === "result") {
-    if (!suggestedCourse) { onSkip(); return null; }
-    const meta = CATEGORY_META[suggestedCourse.category] || CATEGORY_META.GENERAL;
-    return (
-      <motion.div
-        key="gift"
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col py-1"
-      >
-        {/* Header strip */}
-        <div className="flex items-center gap-3 mb-5">
-          <motion.div
-            initial={{ scale: 0, rotate: -20 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 220, damping: 14, delay: 0.1 }}
-            className="w-12 h-12 rounded-2xl bg-linear-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-md shadow-amber-200 shrink-0"
-          >
-            <span className="text-2xl">🎁</span>
-          </motion.div>
-          <div>
-            <p className="text-[11px] font-bold text-amber-500 uppercase tracking-widest">Quà tặng của bạn</p>
-            <h3 className="text-[18px] font-bold text-gray-900 leading-tight">Khóa học miễn phí!</h3>
-          </div>
-          <motion.span
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5 }}
-            className="ml-auto text-2xl"
-          >✨</motion.span>
-        </div>
-
-        {/* Course card */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.35 }}
-          className="rounded-2xl border-2 border-amber-200 bg-amber-50/40 overflow-hidden mb-4"
-        >
-          {/* Thumbnail */}
-          {suggestedCourse.thumbnail && (
-            <div className="w-full h-32 overflow-hidden">
-              <img
-                src={suggestedCourse.thumbnail}
-                alt={suggestedCourse.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
-
-          <div className="p-4">
-            {/* Category + difficulty */}
-            <div className="flex items-center gap-2 mb-2">
-              <span
-                className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider"
-                style={{ background: meta.color + "18", color: meta.color }}
-              >
-                {meta.label}
-              </span>
-              {suggestedCourse.difficulty && (
-                <span className="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-100 text-gray-500 uppercase tracking-wider">
-                  {suggestedCourse.difficulty === "BEGINNER" ? "Cơ bản"
-                    : suggestedCourse.difficulty === "INTERMEDIATE" ? "Trung cấp"
-                    : suggestedCourse.difficulty === "ADVANCED" ? "Nâng cao" : suggestedCourse.difficulty}
-                </span>
-              )}
-            </div>
-
-            {/* Title */}
-            <p className="text-[15px] font-bold text-gray-900 leading-snug mb-1.5">
-              {suggestedCourse.title || meta.label}
-            </p>
-
-            {/* Short description */}
-            {(suggestedCourse.shortDescription || suggestedCourse.description) && (
-              <p className="text-[12px] text-gray-500 line-clamp-2 leading-relaxed mb-3">
-                {suggestedCourse.shortDescription || suggestedCourse.description}
-              </p>
-            )}
-
-            {/* Stats row */}
-            <div className="flex items-center gap-3 flex-wrap">
-              {suggestedCourse.estimatedHours > 0 && (
-                <div className="flex items-center gap-1 text-[11px] text-gray-500">
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#9ca3af" strokeWidth="1.2"/><path d="M6 3.5V6L7.5 7.5" stroke="#9ca3af" strokeWidth="1.2" strokeLinecap="round"/></svg>
-                  {suggestedCourse.estimatedHours}h học
-                </div>
-              )}
-              {suggestedCourse.totalLessons > 0 && (
-                <div className="flex items-center gap-1 text-[11px] text-gray-500">
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1.5" y="2" width="9" height="8" rx="1.5" stroke="#9ca3af" strokeWidth="1.2"/><path d="M4 5h4M4 7h2.5" stroke="#9ca3af" strokeWidth="1.1" strokeLinecap="round"/></svg>
-                  {suggestedCourse.totalLessons} bài học
-                </div>
-              )}
-              {suggestedCourse.totalEnrollments > 0 && (
-                <div className="flex items-center gap-1 text-[11px] text-gray-500">
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="5" cy="4" r="2" stroke="#9ca3af" strokeWidth="1.2"/><path d="M1.5 10c0-2 1.5-3 3.5-3s3.5 1 3.5 3" stroke="#9ca3af" strokeWidth="1.2" strokeLinecap="round"/><circle cx="9" cy="4" r="1.5" stroke="#9ca3af" strokeWidth="1.1"/><path d="M10.5 10c0-1.5-.8-2.4-2-2.8" stroke="#9ca3af" strokeWidth="1.1" strokeLinecap="round"/></svg>
-                  {suggestedCourse.totalEnrollments} học viên
-                </div>
-              )}
-              {suggestedCourse.finalPriceVnd === 0 || suggestedCourse.priceVnd === 0 ? (
-                <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-600">
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6L4.5 8.5L10 3" stroke="#10b981" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  Miễn phí
-                </div>
-              ) : null}
-            </div>
-
-            {/* Match badge */}
-            <div className="mt-3 pt-3 border-t border-amber-100 flex items-center gap-1.5">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M2 6L4.5 8.5L10 3" stroke="#f59e0b" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <span className="text-[11px] text-amber-600 font-semibold">Phù hợp với mục tiêu của bạn</span>
-            </div>
-          </div>
-        </motion.div>
-
+      {/* Actions */}
+      <div className="mt-4 flex flex-col gap-2">
         <motion.button
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
-          onClick={() => onPick(suggestedCourse)}
+          onClick={() => { const c = allCourses.find(x => (x.id || x._id || String(allCourses.indexOf(x))) === selectedKey); c ? onPick(c) : onSkip(); }}
           disabled={submitting}
-          className="w-full py-3.5 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2 transition-all mb-2.5 shadow-sm shadow-amber-200"
+          whileHover={{ scale: submitting ? 1 : 1.01 }}
+          whileTap={{ scale: 0.98 }}
+          className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 disabled:opacity-50 flex items-center justify-center gap-2 transition-all shadow-sm shadow-amber-200"
         >
           {submitting
             ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Đang tạo tài khoản...</>
-            : <>Nhận quà &amp; Xác nhận email <ArrowRight size={15} /></>
+            : selectedKey
+              ? <>Nhận khóa học &amp; Xác nhận email <ArrowRight size={15} /></>
+              : <>Bỏ qua &amp; Xác nhận email <ArrowRight size={15} /></>
           }
         </motion.button>
-
-        <button
-          onClick={onSkip}
-          disabled={submitting}
-          className="text-[12px] text-gray-400 hover:text-gray-600 disabled:opacity-40 transition-colors text-center"
-        >
-          Bỏ qua, chỉ xác nhận email
-        </button>
-      </motion.div>
-    );
-  }
-
-  return null;
+        {selectedKey && (
+          <button onClick={onSkip} disabled={submitting} className="text-[12px] text-gray-400 hover:text-gray-600 transition-colors text-center">
+            Bỏ qua, không nhận quà
+          </button>
+        )}
+      </div>
+    </div>
+  );
 };
 
 // ── Avatar options (10 icons, emoji-based) ────────────────────────────────

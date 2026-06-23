@@ -196,9 +196,9 @@ const faqs = [
   },
   {
     icon: TrendingUp,
-    q: 'Premium thanh toán như thế nào?',
-    short: 'Chuyển khoản MBBank — hệ thống tự kích hoạt trong vài phút. Một lần, không tự gia hạn.',
-    full: 'Chuyển khoản ngân hàng (MBBank). Sau khi chuyển đúng nội dung, hệ thống tự động kích hoạt trong vài phút. Gói Premium là một lần, không tự gia hạn.',
+    q: 'Các gói dịch vụ thanh toán như thế nào?',
+    short: 'Thanh toán qua PayOS — kích hoạt tự động. 4 gói: Ngày / Basic / Full / Annual.',
+    full: 'Thanh toán qua cổng PayOS tích hợp sẵn trên trang. Hệ thống kích hoạt gói tự động ngay sau khi xác nhận. Có 4 gói: Gói Ngày (24h), Basic (tháng), Full (tháng), Annual (năm) — không tự gia hạn.',
   },
   {
     icon: CheckCircle2,
@@ -272,7 +272,7 @@ const testimonials = [
     role: 'MC Đám cưới — 3 năm kinh nghiệm',
     score: 91,
     quote: 'Sau 2 tuần luyện với MC Hub, điểm phát âm tăng từ 64 lên 91. Feedback AI chỉ ra đúng âm nào sai, ngắt nghỉ chỗ nào — cụ thể hơn thầy giáo thật.',
-    avatar: '/images/minh.jpg',
+    avatar: 'https://i.pravatar.cc/96?img=11',
     fallback: 'https://i.pravatar.cc/96?img=11',
   },
   {
@@ -280,7 +280,7 @@ const testimonials = [
     role: 'Dẫn chương trình TV — Freelance',
     score: 88,
     quote: 'Luyện lúc 11 giờ đêm mà không cần ai chấm điểm. Báo cáo chi tiết giúp biết chính xác cần sửa gì trước sự kiện.',
-    avatar: '/images/linh.jpg',
+    avatar: 'https://i.pravatar.cc/96?img=47',
     fallback: 'https://i.pravatar.cc/96?img=47',
   },
   {
@@ -288,7 +288,7 @@ const testimonials = [
     role: 'MC Sự kiện doanh nghiệp',
     score: 85,
     quote: 'Phần phân tích nhịp điệu và tốc độ nói rất chính xác so với feedback từ đạo diễn. Kết quả AI chấm giọng tiếng Việt thật sự ấn tượng.',
-    avatar: '/images/duy.jpg',
+    avatar: 'https://i.pravatar.cc/96?img=52',
     fallback: 'https://i.pravatar.cc/96?img=52',
   },
 ];

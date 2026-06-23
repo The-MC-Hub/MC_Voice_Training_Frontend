@@ -97,7 +97,8 @@ const About = () => {
           <ScrollReveal direction="up" delay={0.2}>
             <div className="mt-10 mx-auto max-w-3xl rounded-2xl overflow-hidden shadow-2xl shadow-amber-500/10 border border-amber-400/10">
               <img
-                src="/ảnh bìa.png"
+                src="/images/cover.png"
+                onError={e => { e.currentTarget.src = 'https://picsum.photos/seed/mchub-cover/1200/500'; e.currentTarget.onerror = null; }}
                 alt="The MC Hub — Cắt tiếng nói, Chạm tương lai"
                 className="w-full h-auto object-cover"
               />

@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, CheckCircle2, AlertCircle, Clock, MessageSquare, Sparkles } from 'lucide-react';
-import emailjs from '@emailjs/browser';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -47,16 +46,20 @@ const ContactUs = () => {
 
   const sendEmail = (e) => {
     e.preventDefault();
-    setIsSending(true); setStatus(null);
-    emailjs.sendForm('REMOVED_SERVICE_ID', 'REMOVED_TEMPLATE_ID', form.current, 'REMOVED_PUBLIC_KEY')
-      .then(() => { setStatus('success'); form.current.reset(); })
-      .catch(() => setStatus('error'))
-      .finally(() => setIsSending(false));
+    const data = new FormData(form.current);
+    const name = data.get('user_name') || '';
+    const email = data.get('user_email') || '';
+    const subject = data.get('subject') || 'Liên hệ từ MC Hub';
+    const message = data.get('message') || '';
+    const body = `Tên: ${name}\nEmail: ${email}\n\n${message}`;
+    window.location.href = `mailto:themchubforwork@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setStatus('success');
+    form.current.reset();
   };
 
   const contacts = [
     { icon: Mail,   label: 'Email hỗ trợ',  value: 'themchubforwork@gmail.com', sub: 'Phản hồi trong 24–48 giờ' },
-    { icon: Phone,  label: 'Điện thoại',     value: '0912 158 715',             sub: 'Thứ 2 – Thứ 6, 8:00–17:00' },
+    { icon: Phone,  label: 'Điện thoại',     value: '0912 158 715',             sub: 'Thứ 2 – Thứ 6, 8:00–22:00' },
     { icon: MapPin, label: 'Địa chỉ',        value: 'Đà Nẵng, Việt Nam',        sub: 'Văn phòng chính' },
     { icon: Clock,  label: 'Giờ hỗ trợ',     value: '8:00 – 22:00 hằng ngày',  sub: 'Kể cả cuối tuần' },
   ];

@@ -91,9 +91,9 @@ const categories = [
   },
   {
     icon: CreditCard, label: 'Thanh toán', value: 'billing',
-    title: 'Gói Premium & Thanh toán',
+    title: 'Gói & Thanh toán',
     desc: 'Nâng cấp tài khoản, phương thức thanh toán và chính sách hoàn tiền',
-    count: 5,
+    count: 4,
   },
   {
     icon: Shield, label: 'Tài khoản', value: 'account',
@@ -119,18 +119,18 @@ const faqs = {
   ],
   result: [
     { q: 'Báo cáo sau buổi luyện có ý nghĩa gì?', a: 'Báo cáo hiển thị điểm tổng, điểm từng tiêu chí, biểu đồ so sánh với buổi trước, và gợi ý cụ thể từ AI về điểm cần cải thiện.' },
-    { q: 'Lịch sử luyện tập được lưu bao lâu?', a: 'Tài khoản miễn phí lưu 30 ngày. Tài khoản Premium lưu không giới hạn và xuất báo cáo PDF.' },
+    { q: 'Lịch sử luyện tập được lưu bao lâu?', a: 'Tài khoản Free: kết quả luyện tập được lưu nhưng không có biểu đồ tiến độ. Gói Full và Annual: lịch sử không giới hạn kèm biểu đồ tiến trình chi tiết.' },
     { q: 'Làm thế nào để xem tiến trình theo thời gian?', a: 'Vào Dashboard → mục "Tiến trình", chọn khoảng thời gian muốn xem. Biểu đồ đường thể hiện xu hướng điểm số theo ngày/tuần/tháng.' },
   ],
   billing: [
-    { q: 'Gói Premium có những gì khác so với miễn phí?', a: 'Premium mở khóa: không giới hạn buổi luyện (miễn phí: 5/ngày), toàn bộ thư viện kịch bản nâng cao, báo cáo chi tiết PDF, lưu lịch sử không giới hạn, và hỗ trợ ưu tiên.' },
-    { q: 'Thanh toán bằng cách nào?', a: 'Hỗ trợ chuyển khoản ngân hàng (MBBank). Sau khi chuyển khoản đúng nội dung, hệ thống tự động kích hoạt Premium trong vòng vài phút.' },
-    { q: 'Tôi có thể hủy gói Premium không?', a: 'Gói Premium thanh toán một lần, không tự gia hạn. Khi hết hạn bạn có thể gia hạn hoặc dùng miễn phí.' },
+    { q: 'Các gói dịch vụ có những gì?', a: 'MC Hub có 4 gói: Gói Ngày (10 AI sessions/24h, tất cả chủ đề), Basic (20 sessions/tháng, thư viện kịch bản), Full (sessions không giới hạn, phân tích nâng cao WER/CER/Jitter/HNR, biểu đồ tiến độ), Annual (toàn bộ Full + huy hiệu Elite, hỗ trợ 24/7, truy cập Beta). Xem giá chi tiết tại trang Thanh toán.' },
+    { q: 'Thanh toán bằng cách nào?', a: 'Thanh toán qua cổng PayOS tích hợp trực tiếp trên trang. Gói được kích hoạt tự động ngay sau khi xác nhận giao dịch thành công.' },
+    { q: 'Tôi có thể hủy gói không?', a: 'Các gói không tự động gia hạn. Gói Ngày hết sau 24h, gói tháng/năm hết sau chu kỳ đã chọn. Khi hết hạn tài khoản về Free — bạn có thể mua lại bất kỳ lúc nào.' },
     { q: 'Chính sách hoàn tiền như thế nào?', a: 'Hoàn tiền trong 7 ngày nếu gặp lỗi kỹ thuật nghiêm trọng từ phía chúng tôi. Liên hệ support qua email để được hỗ trợ.' },
   ],
   account: [
     { q: 'Làm thế nào để đổi mật khẩu?', a: 'Vào Cài đặt → Bảo mật → Đổi mật khẩu. Nhập mật khẩu hiện tại và mật khẩu mới, xác nhận và lưu.' },
-    { q: 'Tôi quên mật khẩu, phải làm gì?', a: 'Tại trang đăng nhập, nhấn "Quên mật khẩu", nhập email đăng ký. Hệ thống gửi link reset về email trong vòng 5 phút.' },
+    { q: 'Tôi quên mật khẩu, phải làm gì?', a: 'Tại trang đăng nhập, nhấn "Quên mật khẩu", nhập email đăng ký. Hệ thống gửi mã OTP 6 chữ số về email trong vòng vài phút. Nhập mã, đặt mật khẩu mới là xong. Mã có hiệu lực trong 10 phút.' },
     { q: 'Làm thế nào để xóa tài khoản?', a: 'Vào Cài đặt → Tài khoản → Xóa tài khoản. Lưu ý: toàn bộ dữ liệu luyện tập sẽ bị xóa vĩnh viễn và không thể khôi phục.' },
     { q: 'Dữ liệu giọng nói của tôi có được bảo mật không?', a: 'Có. Bản ghi âm chỉ dùng để phân tích trong session hiện tại và không lưu trữ vĩnh viễn. Xem Chính sách bảo mật để biết thêm chi tiết.' },
   ],

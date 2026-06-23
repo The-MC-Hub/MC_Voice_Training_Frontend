@@ -32,112 +32,122 @@ const ForgotPassword = () => {
     finally { setLoading(false); }
   };
 
+  const inputCls = "flex items-center gap-2.5 px-3.5 py-3 border border-gray-200 bg-gray-50 rounded-xl focus-within:border-amber-400 focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(245,166,35,0.12)] transition-all";
+  const iconCls = "shrink-0 text-gray-400";
+  const textInputCls = "bg-transparent border-none outline-none flex-1 text-[14px] text-gray-900 placeholder:text-gray-400";
+  const labelCls = "text-[13px] font-semibold text-gray-700";
+
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-[#09090b]">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-white">
+      <div className="w-full max-w-sm">
+        {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-1.5">
-            <span className="text-xl font-bold text-white tracking-tight">MC</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#f5a623] mb-0.5" />
-            <span className="text-xl font-bold text-white tracking-tight">Hub</span>
+            <span className="text-xl font-bold text-gray-900 tracking-tight">MC</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mb-0.5" />
+            <span className="text-xl font-bold text-gray-900 tracking-tight">Hub</span>
           </Link>
-          <h2 className="mt-6 text-2xl font-bold text-white tracking-tight">
+        </div>
+
+        {/* Heading */}
+        <div className="mb-8">
+          <h2 className="text-[28px] font-bold text-gray-900 tracking-tight leading-tight mb-2">
             {step === 1 && t('auth.forgotPasswordTitle')}
             {step === 2 && t('auth.resetPasswordTitle')}
             {step === 3 && t('auth.passwordResetSuccessTitle')}
           </h2>
-          <p className="mt-1.5 text-[14px] text-zinc-500">
+          <p className="text-[14px] text-gray-500 leading-relaxed">
             {step === 1 && t('auth.forgotPasswordDesc')}
             {step === 2 && t('auth.resetCodeSentDesc', { email })}
             {step === 3 && t('auth.resetSuccessDesc')}
           </p>
         </div>
 
-        <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-8">
-          {error && (
-            <div className="bg-red-500/[0.08] border border-red-500/20 text-red-400 text-[13px] rounded-xl p-3 text-center mb-6">
-              {error}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-xl p-3 text-center mb-5">
+            {error}
+          </div>
+        )}
+
+        {step === 1 && (
+          <form onSubmit={handleSendCode} className="space-y-4">
+            <div className="flex flex-col gap-1.5">
+              <label className={labelCls}>{t('auth.email')}</label>
+              <div className={inputCls}>
+                <Mail size={15} className={iconCls} />
+                <input type="email" placeholder="name@example.com"
+                  className={textInputCls}
+                  value={email} onChange={(e) => setEmail(e.target.value)} required />
+              </div>
             </div>
-          )}
+            <button type="submit" disabled={loading}
+              className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 transition-all mt-2">
+              {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>{t('auth.sendCode')} <ArrowRight size={16} /></>}
+            </button>
+            <Link to="/login" className="flex items-center justify-center gap-2 text-[13px] text-gray-500 hover:text-gray-800 transition-colors pt-1">
+              <ArrowLeft size={14} /> {t('auth.backToLogin')}
+            </Link>
+          </form>
+        )}
 
-          {step === 1 && (
-            <form onSubmit={handleSendCode} className="space-y-5">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-zinc-500 uppercase tracking-wider">{t('auth.email')}</label>
-                <div className="flex items-center gap-2.5 px-3 py-2.5 bg-[#09090b] border border-white/[0.07] rounded-xl focus-within:border-white/[0.16] transition-colors">
-                  <Mail size={15} className="text-zinc-600 shrink-0" />
-                  <input
-                    type="email" placeholder="name@example.com"
-                    className="bg-transparent border-none outline-none flex-1 text-[14px] text-white placeholder:text-zinc-700"
-                    value={email} onChange={(e) => setEmail(e.target.value)} required
-                  />
-                </div>
+        {step === 2 && (
+          <form onSubmit={handleResetPassword} className="space-y-4">
+            <div className="flex flex-col gap-1.5">
+              <label className={labelCls}>{t('auth.sixDigitCode')}</label>
+              <div className={inputCls}>
+                <Shield size={15} className="shrink-0 text-amber-500" />
+                <input type="text" placeholder="000000" maxLength={6}
+                  className={`${textInputCls} text-center tracking-[0.3em] font-bold`}
+                  value={code} onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, ''))} required />
               </div>
-              <button type="submit" disabled={loading}
-                className="w-full py-2.5 rounded-xl bg-[#f5a623] text-black text-[14px] font-semibold hover:bg-[#e09520] transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
-                {loading ? <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <>{t('auth.sendCode')} <ArrowRight size={16} /></>}
-              </button>
-              <Link to="/login" className="flex items-center justify-center gap-2 text-[13px] text-zinc-500 hover:text-white transition-colors">
-                <ArrowLeft size={14} /> {t('auth.backToLogin')}
-              </Link>
-            </form>
-          )}
-
-          {step === 2 && (
-            <form onSubmit={handleResetPassword} className="space-y-5">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-zinc-500 uppercase tracking-wider">{t('auth.sixDigitCode')}</label>
-                <div className="flex items-center gap-2.5 px-3 py-2.5 bg-[#09090b] border border-white/[0.07] rounded-xl focus-within:border-white/[0.16] transition-colors">
-                  <Shield size={15} className="text-[#f5a623] shrink-0" />
-                  <input
-                    type="text" placeholder="000000" maxLength={6}
-                    className="bg-transparent border-none outline-none flex-1 text-[14px] text-white placeholder:text-zinc-700 text-center tracking-[0.3em] font-bold"
-                    value={code} onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, ''))} required
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-zinc-500 uppercase tracking-wider">{t('auth.newPasswordLabel')}</label>
-                <div className="flex items-center gap-2.5 px-3 py-2.5 bg-[#09090b] border border-white/[0.07] rounded-xl focus-within:border-white/[0.16] transition-colors">
-                  <Key size={15} className="text-zinc-600 shrink-0" />
-                  <input type="password" className="bg-transparent border-none outline-none flex-1 text-[14px] text-white placeholder:text-zinc-700"
-                    value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
-                </div>
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-zinc-500 uppercase tracking-wider">{t('auth.confirmNewPasswordLabel')}</label>
-                <div className="flex items-center gap-2.5 px-3 py-2.5 bg-[#09090b] border border-white/[0.07] rounded-xl focus-within:border-white/[0.16] transition-colors">
-                  <Shield size={15} className="text-zinc-600 shrink-0" />
-                  <input type="password" className="bg-transparent border-none outline-none flex-1 text-[14px] text-white placeholder:text-zinc-700"
-                    value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
-                </div>
-              </div>
-              <button type="submit" disabled={loading || code.length < 6}
-                className="w-full py-2.5 rounded-xl bg-[#f5a623] text-black text-[14px] font-semibold hover:bg-[#e09520] transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
-                {loading ? <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : t('auth.resetPasswordBtn')}
-              </button>
-              <button type="button" onClick={() => setStep(1)} className="w-full text-[13px] text-zinc-500 hover:text-white transition-colors">
-                {t('auth.resendCode')}
-              </button>
-            </form>
-          )}
-
-          {step === 3 && (
-            <div className="text-center space-y-6">
-              <div className="w-16 h-16 bg-emerald-500/[0.08] rounded-full flex items-center justify-center mx-auto border border-emerald-500/20">
-                <CheckCircle2 size={32} className="text-emerald-400" />
-              </div>
-              <div className="space-y-1">
-                <p className="text-[14px] text-zinc-400">{t('auth.securityUpdated')}</p>
-                <p className="text-[13px] text-zinc-600">{t('auth.nowCanSignIn')}</p>
-              </div>
-              <Link to="/login"
-                className="w-full py-2.5 rounded-xl bg-[#f5a623] text-black text-[14px] font-semibold hover:bg-[#e09520] transition-colors flex items-center justify-center gap-2">
-                {t('auth.goToLogin')} <ArrowRight size={16} />
-              </Link>
             </div>
-          )}
-        </div>
+            <div className="flex flex-col gap-1.5">
+              <label className={labelCls}>{t('auth.newPasswordLabel')}</label>
+              <div className={inputCls}>
+                <Key size={15} className={iconCls} />
+                <input type="password" className={textInputCls}
+                  value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
+              </div>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className={labelCls}>{t('auth.confirmNewPasswordLabel')}</label>
+              <div className={inputCls}>
+                <Shield size={15} className={iconCls} />
+                <input type="password" className={textInputCls}
+                  value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+              </div>
+            </div>
+            <button type="submit" disabled={loading || code.length < 6}
+              className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 transition-all mt-2">
+              {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : t('auth.resetPasswordBtn')}
+            </button>
+            <button type="button" onClick={() => setStep(1)}
+              className="w-full text-[13px] text-gray-400 hover:text-gray-600 transition-colors pt-1">
+              {t('auth.resendCode')}
+            </button>
+          </form>
+        )}
+
+        {step === 3 && (
+          <div className="text-center space-y-6">
+            <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto border-2 border-emerald-200">
+              <CheckCircle2 size={32} className="text-emerald-500" />
+            </div>
+            <div className="space-y-1">
+              <p className="text-[14px] text-gray-600">{t('auth.securityUpdated')}</p>
+              <p className="text-[13px] text-gray-400">{t('auth.nowCanSignIn')}</p>
+            </div>
+            <Link to="/login"
+              className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 transition-colors flex items-center justify-center gap-2">
+              {t('auth.goToLogin')} <ArrowRight size={16} />
+            </Link>
+          </div>
+        )}
+
+        <p className="text-center text-[13px] text-gray-400 mt-8 pt-6 border-t border-gray-100">
+          Chưa có tài khoản?{" "}
+          <Link to="/register" className="text-amber-600 hover:text-amber-700 font-semibold">Đăng ký</Link>
+        </p>
       </div>
     </div>
   );

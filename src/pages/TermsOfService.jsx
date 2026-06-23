@@ -192,15 +192,18 @@ const TermsOfService = () => {
               ]} />
             </SectionBlock>
 
-            <SectionBlock id="payment" icon={CreditCard} title="5. Thanh toán & Premium">
-              <p>MC Hub cung cấp gói Premium với đầy đủ tính năng AI phân tích. Các điều khoản thanh toán:</p>
+            <SectionBlock id="payment" icon={CreditCard} title="5. Thanh toán & Gói dịch vụ">
+              <p>MC Hub cung cấp 4 gói dịch vụ phù hợp với nhu cầu khác nhau:</p>
               <Ul items={[
-                'Giá hiện tại: 20.000đ (khuyến mãi ra mắt, giá gốc 100.000đ) — thanh toán một lần, không tự động gia hạn.',
-                'Thanh toán qua chuyển khoản ngân hàng MBBank với mã xác nhận duy nhất.',
-                'Premium được kích hoạt tự động sau khi hệ thống xác nhận giao dịch (thông thường trong vòng vài phút).',
-                'Không hoàn tiền sau khi Premium đã được kích hoạt và bạn đã sử dụng tính năng AI phân tích.',
-                'Trong trường hợp lỗi kỹ thuật khiến Premium không được kích hoạt dù đã thanh toán, vui lòng liên hệ hỗ trợ trong vòng 48 giờ.',
-                'Giá có thể thay đổi; người dùng Premium hiện tại không bị ảnh hưởng bởi thay đổi giá.',
+                'Gói Ngày (DAILY): trải nghiệm đầy đủ trong 24 giờ, 10 AI sessions, tất cả chủ đề.',
+                'Gói Basic: 20 AI sessions/tháng, thư viện kịch bản, trắc nghiệm lý thuyết.',
+                'Gói Full: AI sessions không giới hạn, phân tích nâng cao (WER, CER, Jitter, HNR), biểu đồ tiến độ.',
+                'Gói Annual: toàn bộ quyền lợi Full + huy hiệu Annual Elite, ưu tiên hỗ trợ 24/7, truy cập tính năng Beta.',
+                'Giá chính thức hiển thị trên trang Thanh toán; có thể thay đổi — người dùng đã đăng ký không bị ảnh hưởng trong chu kỳ hiện tại.',
+                'Thanh toán qua cổng thanh toán tích hợp PayOS; gói được kích hoạt tự động sau khi xác nhận giao dịch.',
+                'Không hoàn tiền sau khi gói đã được kích hoạt và bạn đã sử dụng tính năng AI phân tích.',
+                'Lỗi kỹ thuật khiến gói không kích hoạt dù đã thanh toán: liên hệ hỗ trợ trong 48 giờ.',
+                'Gói Ngày hết hạn sau 24 giờ; gói tháng/năm hết hạn theo chu kỳ đã chọn — không tự động gia hạn.',
               ]} />
             </SectionBlock>
 
