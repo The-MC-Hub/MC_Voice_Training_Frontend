@@ -356,6 +356,18 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
           <span className="text-[11px] text-zinc-500 tabular-nums">
             {discount.usedCount ?? 0}/{discount.maxUses || "∞"} lượt
           </span>
+          {discount.maxUses > 0 && (() => {
+            const remaining = discount.maxUses - (discount.usedCount ?? 0);
+            const pct = ((discount.usedCount ?? 0) / discount.maxUses) * 100;
+            const color = remaining === 0 ? "text-red-400 border-red-500/20 bg-red-500/10"
+              : pct >= 80 ? "text-amber-400 border-amber-500/20 bg-amber-500/10"
+              : "text-emerald-400 border-emerald-500/20 bg-emerald-500/10";
+            return (
+              <span className={`text-[11px] px-2 py-0.5 rounded-md font-semibold border tabular-nums ${color}`}>
+                còn {remaining}
+              </span>
+            );
+          })()}
           {discount.applicablePlans?.length > 0 && (
             <span className="text-[11px] text-zinc-600 bg-white/3 px-2 py-0.5 rounded">
               {discount.applicablePlans.join(" · ")}
@@ -862,6 +874,29 @@ const PlanManager = () => {
               Làm mới
             </button>
           </div>
+
+          {/* Voucher stats summary */}
+          {discounts.length > 0 && (() => {
+            const now = new Date();
+            const active = discounts.filter(d => d.active && !(d.expiresAt && new Date(d.expiresAt) < now) && !(d.maxUses > 0 && (d.usedCount ?? 0) >= d.maxUses) && !(d.startsAt && new Date(d.startsAt) > now));
+            const totalRemaining = discounts.filter(d => d.maxUses > 0).reduce((sum, d) => sum + Math.max(0, d.maxUses - (d.usedCount ?? 0)), 0);
+            const unlimited = discounts.filter(d => d.active && d.maxUses === 0).length;
+            return (
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { label: "Đang hoạt động", value: active.length, sub: `/ ${discounts.length} mã`, color: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/5" },
+                  { label: "Lượt còn lại", value: totalRemaining, sub: unlimited > 0 ? `+ ${unlimited} mã không giới hạn` : "tổng có giới hạn", color: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/5" },
+                  { label: "Đã sử dụng", value: discounts.reduce((s, d) => s + (d.usedCount ?? 0), 0), sub: "tổng lượt dùng", color: "text-zinc-400", border: "border-white/10", bg: "bg-white/[0.02]" },
+                ].map(({ label, value, sub, color, border, bg }) => (
+                  <div key={label} className={`rounded-xl border ${border} ${bg} px-4 py-3`}>
+                    <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1">{label}</p>
+                    <p className={`text-[22px] font-bold tabular-nums ${color}`}>{value}</p>
+                    <p className="text-[10px] text-zinc-600 mt-0.5">{sub}</p>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
 
           <NewDiscountForm onCreated={fetchDiscounts} />
 
