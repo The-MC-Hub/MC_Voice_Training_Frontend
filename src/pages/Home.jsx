@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Mic, ArrowRight, Sparkles, Award, Zap, BookOpen, X, ExternalLink, Copy,
-  ChevronDown, Star, TrendingUp, CheckCircle2, BarChart3, AudioLines,
+  ChevronDown, ChevronLeft, ChevronRight, Star, TrendingUp, CheckCircle2, BarChart3, AudioLines,
   MessageSquare, Quote
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useMotionValue, useTransform } from 'framer-motion';
@@ -13,8 +13,7 @@ import ScrollReveal from '../components/animations/ScrollReveal';
 import { useApi } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
 import { fetchFeaturedTrainingStats } from '../controllers/publicController';
-import { fetchLessons } from '../controllers/voiceController';
-import LazyImage from '../components/ui/LazyImage';
+import { fetchFeaturedLessons } from '../controllers/voiceController';
 import ScrollToTop from '../components/ui/ScrollToTop';
 import ContactModal from '../components/modals/ContactModal';
 import SpotlightCard from '../components/ui/SpotlightCard';
@@ -27,6 +26,15 @@ const DIFF_COLOR = {
   HARD:   'text-red-400 bg-red-500/10 border-red-500/20',
 };
 const DIFF_LABEL = { EASY: 'Cơ bản', MEDIUM: 'Trung bình', HARD: 'Nâng cao' };
+
+const MOCK_LESSONS = [
+  { id: 'demo-1', title: 'Dẫn chương trình hội nghị doanh nghiệp', category: 'Sự kiện', difficulty: 'MEDIUM', content: 'Kính thưa quý vị đại biểu, kính thưa toàn thể các bạn tham dự hội nghị hôm nay. Chúng tôi xin nhiệt liệt chào mừng quý vị đã đến tham dự sự kiện thường niên quan trọng này.' },
+  { id: 'demo-2', title: 'Lễ trao giải thưởng cuối năm', category: 'Lễ trao giải', difficulty: 'HARD', content: 'Đây là khoảnh khắc mà tất cả chúng ta đã mong chờ. Những con người đặc biệt, những nỗ lực phi thường, và những thành tựu đáng tự hào.' },
+  { id: 'demo-3', title: 'Khai mạc triển lãm nghệ thuật', category: 'Văn hóa', difficulty: 'EASY', content: 'Xin kính chào quý khách đến tham dự buổi khai mạc triển lãm nghệ thuật hôm nay. Đây là không gian hội tụ của sáng tạo và cảm xúc.' },
+  { id: 'demo-4', title: 'Dẫn tiệc cưới sang trọng', category: 'Đám cưới', difficulty: 'MEDIUM', content: 'Trong không gian lộng lẫy và ấm áp của buổi tiệc hôm nay, chúng tôi trân trọng giới thiệu đôi uyên ương tân lang tân nương.' },
+  { id: 'demo-5', title: 'Giới thiệu sản phẩm ra mắt', category: 'Doanh nghiệp', difficulty: 'EASY', content: 'Hôm nay là một ngày đặc biệt khi chúng tôi chính thức giới thiệu đến quý vị sản phẩm mới nhất, được nghiên cứu và phát triển trong suốt hai năm qua.' },
+  { id: 'demo-6', title: 'Lễ kỷ niệm thành lập công ty', category: 'Doanh nghiệp', difficulty: 'HARD', content: 'Hai mươi năm hình thành và phát triển, công ty chúng ta đã vượt qua bao thăng trầm để đứng vững như ngày hôm nay.' },
+];
 
 // ─── Animation presets ────────────────────────────────────────────────────────
 const fadeUp = {
@@ -603,10 +611,129 @@ const SampleReportCard = () => {
 };
 
 
+const CARD_W = 220;
+const CARD_GAP = 12;
+const AUTO_INTERVAL = 3000;
+
+const LessonCarousel = ({ lessons, navigate }) => {
+  const scrollRef = useRef(null);
+  const isPaused = useRef(false);
+  const timerRef = useRef(null);
+
+  const scroll = (dir) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const step = (CARD_W + CARD_GAP) * 2;
+    const next = el.scrollLeft + dir * step;
+    const max = el.scrollWidth - el.clientWidth;
+    // loop: if near end scroll back to start, if before start go to end
+    if (dir > 0 && next >= max - 10) {
+      el.scrollTo({ left: 0, behavior: 'smooth' });
+    } else if (dir < 0 && el.scrollLeft <= 10) {
+      el.scrollTo({ left: max, behavior: 'smooth' });
+    } else {
+      el.scrollBy({ left: dir * step, behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      if (!isPaused.current) scroll(1);
+    }, AUTO_INTERVAL);
+    return () => clearInterval(timerRef.current);
+  }, [lessons]);
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => { isPaused.current = true; }}
+      onMouseLeave={() => { isPaused.current = false; }}
+    >
+      <button
+        onClick={() => scroll(-1)}
+        className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-gray-500 hover:text-gray-900 hover:border-gray-300 transition-all"
+      >
+        <ChevronLeft size={16} />
+      </button>
+      <button
+        onClick={() => scroll(1)}
+        className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-gray-500 hover:text-gray-900 hover:border-gray-300 transition-all"
+      >
+        <ChevronRight size={16} />
+      </button>
+
+      <div
+        ref={scrollRef}
+        className="flex gap-3 overflow-x-auto px-10 pb-2"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        {[...lessons, ...lessons].map((lesson, idx) => {
+          const wordCount = lesson.content?.split(/\s+/).filter(Boolean).length || 0;
+          const diffColor = DIFF_COLOR[lesson.difficulty] || DIFF_COLOR.HARD;
+          const diffLabel = DIFF_LABEL[lesson.difficulty] || lesson.difficulty;
+          return (
+            <motion.div
+              key={idx}
+              whileHover={{ y: -4 }}
+              transition={CARD_HOVER_TRANSITION}
+              onClick={() => navigate(`/m/voice/practice/${lesson.id}`)}
+              className="min-w-[220px] bg-white border border-gray-100 rounded-2xl overflow-hidden cursor-pointer hover:border-amber-200 hover:shadow-lg hover:shadow-amber-50 transition-all duration-300 group flex flex-col shrink-0"
+            >
+              {/* Thumbnail */}
+              <div className="relative h-28 bg-amber-50 overflow-hidden shrink-0">
+                {lesson.thumbnailUrl ? (
+                  <img
+                    src={lesson.thumbnailUrl}
+                    alt={lesson.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-amber-50">
+                    <div className="w-10 h-10 rounded-xl bg-amber-100 border border-amber-200 flex items-center justify-center">
+                      <Mic size={18} className="text-amber-400" />
+                    </div>
+                  </div>
+                )}
+                {lesson.difficulty && (
+                  <div className="absolute top-2 right-2">
+                    <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded border ${diffColor}`}>
+                      {diffLabel}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Info */}
+              <div className="p-3.5 flex flex-col flex-1">
+                <span className="text-[9px] font-semibold text-amber-600 uppercase tracking-widest mb-1.5 block">
+                  {lesson.category || 'Luyện đọc'}
+                </span>
+                <h4 className="text-[13px] font-semibold text-gray-900 leading-snug line-clamp-2 mb-2.5 group-hover:text-amber-500 transition-colors duration-200">
+                  {lesson.title}
+                </h4>
+                <div className="flex items-center justify-between pt-2.5 border-t border-gray-100 mt-auto">
+                  <div className="flex items-center gap-1">
+                    <BookOpen size={10} className="text-gray-400" />
+                    <span className="text-[11px] text-gray-400">{wordCount} từ</span>
+                  </div>
+                  <span className="flex items-center gap-1 text-[11px] font-semibold text-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    Luyện ngay <ArrowRight size={11} />
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 const Home = () => {
   const { t, i18n } = useTranslation();
   const { data: trainingStats } = useApi(fetchFeaturedTrainingStats);
-  const { data: featuredLessons } = useApi(fetchLessons);
+  const { data: featuredLessonsRaw } = useApi(() => fetchFeaturedLessons(8));
+  const featuredLessons = featuredLessonsRaw?.length > 0 ? featuredLessonsRaw : MOCK_LESSONS;
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
@@ -833,8 +960,8 @@ const Home = () => {
       </section>
 
       {/* ── LESSON CAROUSEL ─────────────────────────────────────────────────── */}
-      {featuredLessons?.length > 0 && (
-        <section className="py-20 overflow-hidden">
+      {(
+        <section className="py-20">
           <div className="max-w-6xl mx-auto px-6 mb-10 flex items-end justify-between">
             <ScrollReveal direction="left">
               <h2 className="text-3xl font-bold tracking-tight mb-2 text-gray-900">Bài luyện đọc</h2>
@@ -850,84 +977,7 @@ const Home = () => {
             </ScrollReveal>
           </div>
 
-          <div className="relative">
-            <div className="flex gap-5 animate-marquee-slow">
-              {[...Array(2)].map((_, i) => (
-                <div key={i} className="flex gap-5 shrink-0">
-                  {featuredLessons.map((lesson, idx) => {
-                    const wordCount = lesson.content?.split(/\s+/).filter(Boolean).length || 0;
-                    const diffColor = DIFF_COLOR[lesson.difficulty] || DIFF_COLOR.HARD;
-                    const diffLabel = DIFF_LABEL[lesson.difficulty] || lesson.difficulty;
-                    return (
-                      <motion.div
-                        key={`${i}-${idx}`}
-                        whileHover={{ y: -6 }}
-                        transition={CARD_HOVER_TRANSITION}
-                        onClick={() => navigate(`/m/voice/practice/${lesson.id}`)}
-                        className="min-w-[280px] sm:min-w-[340px] bg-white border border-gray-100 rounded-2xl overflow-hidden cursor-pointer hover:border-amber-200 hover:shadow-lg hover:shadow-amber-50 transition-all duration-300 group flex flex-col"
-                      >
-                        {/* Thumbnail */}
-                        <div className="relative h-44 bg-[#09090b] overflow-hidden shrink-0">
-                          {lesson.thumbnailUrl ? (
-                            <LazyImage
-                              src={lesson.thumbnailUrl}
-                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-amber-50">
-                              <div className="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center">
-                                <Mic size={22} className="text-amber-400" />
-                              </div>
-                            </div>
-                          )}
-                          <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-transparent to-transparent" />
-                          {/* Category pill — bottom left over gradient */}
-                          <div className="absolute bottom-3 left-3">
-                            <span className="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-white/80 border border-amber-200/60 text-amber-600 backdrop-blur-sm uppercase tracking-widest shadow-sm">
-                              {lesson.category || 'Luyện đọc'}
-                            </span>
-                          </div>
-                          {/* Difficulty — top right */}
-                          {lesson.difficulty && (
-                            <div className="absolute top-3 right-3">
-                              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border backdrop-blur-sm ${diffColor}`}>
-                                {diffLabel}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Info */}
-                        <div className="p-5 flex flex-col flex-1">
-                          <h4 className="text-[14px] font-semibold text-gray-900 leading-snug line-clamp-2 mb-2 group-hover:text-amber-500 transition-colors duration-200">
-                            {lesson.title}
-                          </h4>
-                          {lesson.description && (
-                            <p className="text-[12px] text-gray-500 line-clamp-2 leading-relaxed mb-4 flex-1">
-                              {lesson.description}
-                            </p>
-                          )}
-                          <div className="flex items-center justify-between pt-3 border-t border-gray-100 mt-auto">
-                            <div className="flex items-center gap-3">
-                              <div className="flex items-center gap-1.5">
-                                <BookOpen size={11} className="text-gray-400" />
-                                <span className="text-[11px] text-gray-400">{wordCount} từ</span>
-                              </div>
-                            </div>
-                            <span className="flex items-center gap-1 text-[11px] font-semibold text-[#f5a623] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                              Luyện ngay <ArrowRight size={11} />
-                            </span>
-                          </div>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-            <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
-            <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
-          </div>
+          <LessonCarousel lessons={featuredLessons} navigate={navigate} />
         </section>
       )}
 

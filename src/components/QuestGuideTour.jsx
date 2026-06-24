@@ -178,7 +178,7 @@ const QuestGuideTour = () => {
     <AnimatePresence>
       {active && (
         <>
-          {/* Click-outside to dismiss */}
+          {/* Backdrop — blocks clicks on page content behind guide */}
           <motion.div
             key="quest-overlay"
             initial={{ opacity: 0 }}
@@ -187,7 +187,6 @@ const QuestGuideTour = () => {
             transition={{ duration: 0.25 }}
             className="fixed inset-0"
             style={{ zIndex: 9997 }}
-            onClick={endGuide}
           />
 
           {/* SVG spotlight mask */}
