@@ -16,8 +16,15 @@ import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { useToast } from '../components/ui/Toast';
 import NewbieQuest from '../components/dashboard/NewbieQuest';
+import StreakWidget from '../components/ui/StreakWidget';
+import StreakCardModal from '../components/ui/StreakCardModal';
+import StreakMilestoneToast from '../components/ui/StreakMilestoneToast';
+
 const Dashboard = () => {
   const { user } = useAuthStore();
+  const [streakData, setStreakData] = useState(null);
+  const [prevStreak, setPrevStreak] = useState(null);
+  const [streakCardOpen, setStreakCardOpen] = useState(false);
   const { t } = useTranslation();
   const toast = useToast();
 
@@ -266,11 +273,31 @@ const Dashboard = () => {
         ))}
       </div>
 
+      {/* Streak widget */}
+      <StreakWidget
+        user={user}
+        onStreakLoaded={(data) => {
+          setPrevStreak(streakData?.loginStreak ?? 0);
+          setStreakData(data);
+        }}
+        onOpenCard={() => setStreakCardOpen(true)}
+      />
+
       {/* Newbie quest — only FREE users */}
       {plan === 'FREE' && (
-      
           <NewbieQuest />
       )}
+
+      {/* Streak card modal */}
+      <StreakCardModal
+        open={streakCardOpen}
+        onClose={() => setStreakCardOpen(false)}
+        user={user}
+        streak={streakData}
+      />
+
+      {/* Milestone toast */}
+      <StreakMilestoneToast streak={streakData} prevStreak={prevStreak} />
 
       {/* Usage warning banner */}
       {showLimitWarning && (

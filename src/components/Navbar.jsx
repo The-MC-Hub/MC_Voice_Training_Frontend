@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import AvatarFrame from './ui/AvatarFrame';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Settings, Menu, X, Trophy,
@@ -13,6 +14,18 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [streakFrame, setStreakFrame] = useState(() => {
+    try { return localStorage.getItem('mchub_streak_frame') || 'NONE'; } catch { return 'NONE'; }
+  });
+  useEffect(() => {
+    const onStorage = () => {
+      try { setStreakFrame(localStorage.getItem('mchub_streak_frame') || 'NONE'); } catch {}
+    };
+    window.addEventListener('storage', onStorage);
+    // Also poll once on mount in case widget already wrote it this session
+    onStorage();
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
 
   const isAuthenticated = !!user;
   const isAdminUser = user && (user.role || '').toLowerCase() === 'admin';
@@ -120,21 +133,17 @@ const Navbar = () => {
               <>
                 {/* Avatar + Settings gear */}
                 <div className="flex items-center gap-1">
-                  {(() => {
-                    const av = user?.avatar;
-                    const isUrl = av && av.startsWith('http');
-                    const isEmoji = av && !av.includes('.') && av.length <= 4;
-                    return (
-                      <div className={`w-7 h-7 rounded-full ring-1 flex items-center justify-center shrink-0 text-base leading-none ${isDark ? 'bg-white/10 ring-white/10' : 'bg-gray-100 ring-black/10'}`}>
-                        {isUrl
-                          ? <img src={av} alt="avatar" className="w-full h-full object-cover rounded-full" />
-                          : isEmoji
-                            ? av
-                            : <span className="text-base">😊</span>
-                        }
-                      </div>
-                    );
-                  })()}
+                  <AvatarFrame
+                    src={user?.avatar?.startsWith('http') ? user.avatar : undefined}
+                    alt={user?.name}
+                    frameKey={user ? streakFrame : 'NONE'}
+                    size={28}
+                    showBadge={streakFrame !== 'NONE'}
+                    fallbackEmoji={
+                      user?.avatar && !user.avatar.startsWith('http') && user.avatar.length <= 4
+                        ? user.avatar : '😊'
+                    }
+                  />
                   <span className={`hidden lg:block text-[13px] font-medium mx-1 ${isDark ? 'text-zinc-300' : 'text-gray-600'}`}>
                     {user?.name?.split(' ')[0]}
                   </span>
