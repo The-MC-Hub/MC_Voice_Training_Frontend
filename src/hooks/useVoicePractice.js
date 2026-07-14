@@ -110,7 +110,7 @@ export function useVoicePractice() {
 
   const EMPTY_BARS = useMemo(() => new Array(36).fill(0), []);
 
-  const { bars, volumeLevel, audioStatus } = useAudioAnalyser(
+  const { bars, volumeLevel, audioStatus, pitchHz, pitchHistory } = useAudioAnalyser(
     recording ? liveStreamRef.current : null,
     { barCount: 36, fftSize: 256 }
   );
@@ -187,7 +187,9 @@ export function useVoicePractice() {
         lessonId: h.lesson_id ?? h.lessonId,
         accuracyScore: h.accuracy_score ?? h.accuracyScore ?? 0,
         rhythmScore: h.rhythm_score ?? h.rhythmScore ?? 0,
+        overallScore: h.overall_score ?? h.overallScore ?? 0,
         speakingRateWpm: h.speaking_rate_wpm ?? h.speakingRateWpm ?? 0,
+        audioUrl: h.audio_url ?? h.audioUrl ?? null,
         createdAt: h.created_at ?? h.createdAt,
       }));
       setHistory(
@@ -405,7 +407,13 @@ export function useVoicePractice() {
   const scriptWordCount = useMemo(() => lesson?.content?.trim().split(/\s+/).length || 0, [lesson]);
   const spokenWordCount = useMemo(() => result?.text_spoken?.trim().split(/\s+/).length || 0, [result]);
   const completionPercent = useMemo(() => clampMetric((spokenWordCount / scriptWordCount) * 100), [scriptWordCount, spokenWordCount]);
-  const overallScore = useMemo(() => clampMetric(accuracy * 0.45 + energy * 0.35 + pacePercent * 0.2), [accuracy, energy, pacePercent]);
+  // Prefer the AI's own overall_score — it's weighted by the lesson's configured evaluationCriteria.
+  // Fall back to the fixed 45/35/20 formula only when the AI didn't return one (e.g. guest/proxy flow).
+  const overallScore = useMemo(() => {
+    const aiScore = Number(result?.overall_score);
+    if (Number.isFinite(aiScore) && aiScore > 0) return clampMetric(aiScore);
+    return clampMetric(accuracy * 0.45 + energy * 0.35 + pacePercent * 0.2);
+  }, [result, accuracy, energy, pacePercent]);
 
   const overallLevel = useMemo(() => {
     if (overallScore >= 85) return { label: "Excellent", color: "text-emerald-400" };
@@ -437,7 +445,7 @@ export function useVoicePractice() {
     // camera
     cameraOn, videoRef, toggleCamera,
     // audio analysis
-    bars, volumeLevel, audioStatus, EMPTY_BARS,
+    bars, volumeLevel, audioStatus, EMPTY_BARS, pitchHz, pitchHistory,
     // script controls
     scriptFontSize, setScriptFontSize,
     scriptAlign, setScriptAlign,

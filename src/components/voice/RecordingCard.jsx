@@ -2,11 +2,44 @@ import { Mic, Square, RefreshCw, Zap, AudioLines, CheckCircle2, Volume1, Volume2
 import { motion, AnimatePresence } from "framer-motion";
 import { ANALYZE_PHASES } from "../../hooks/useVoicePractice";
 
+// Human speaking-voice range gate, matches the AI service's librosa.pyin bounds
+// closely enough for a live sparkline (exact match isn't the goal here).
+const PITCH_MIN_HZ = 70;
+const PITCH_MAX_HZ = 500;
+
+function PitchContour({ pitchHistory, pitchHz }) {
+  if (!pitchHistory.length) {
+    return (
+      <div className="h-8 flex items-center justify-center">
+        <p className="text-[10px] text-zinc-600">Đang chờ giọng nói để vẽ đường ngữ điệu...</p>
+      </div>
+    );
+  }
+  const W = 280, H = 32, pad = 3;
+  const pts = pitchHistory.map((hz, i) => {
+    const x = pad + (i / Math.max(pitchHistory.length - 1, 1)) * (W - pad * 2);
+    const clamped = Math.max(PITCH_MIN_HZ, Math.min(PITCH_MAX_HZ, hz));
+    const y = H - pad - ((clamped - PITCH_MIN_HZ) / (PITCH_MAX_HZ - PITCH_MIN_HZ)) * (H - pad * 2);
+    return `${x},${y}`;
+  }).join(" ");
+  return (
+    <div className="w-full max-w-[280px] mx-auto">
+      <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none">
+        <polyline points={pts} fill="none" stroke="#a78bfa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.85" />
+      </svg>
+      <p className="text-[10px] text-center text-violet-400 font-mono mt-0.5">
+        {pitchHz > 0 ? `${pitchHz} Hz` : "—"} <span className="text-zinc-600">· ngữ điệu trực tiếp</span>
+      </p>
+    </div>
+  );
+}
+
 export default function RecordingCard({
   recording, audioBlob, audioUrl, analyzing,
   recordingTime, formatTime,
   startRecording, stopRecording, handleAnalyze, resetPractice,
   bars, volumeLevel, audioStatus, EMPTY_BARS,
+  pitchHz, pitchHistory,
   cameraOn, videoRef, toggleCamera,
   analyzeProgress, analyzePhase,
   t_vp,
@@ -193,7 +226,10 @@ export default function RecordingCard({
             })}
           </div>
 
-          <p className="text-[13px] font-semibold text-white mb-1">{t_vp("voiceAnalysis")}</p>
+          {/* Live pitch/intonation contour — visual feedback while reading, before AI grading */}
+          {recording && <PitchContour pitchHistory={pitchHistory} pitchHz={pitchHz} />}
+
+          <p className="text-[13px] font-semibold text-white mb-1 mt-2">{t_vp("voiceAnalysis")}</p>
           <p className="text-[11px] text-zinc-500 mb-3">
             {recording ? t_vp("recordingInProgress") : analyzing ? t_vp("analyzingVoice") : t_vp("readScript")}
           </p>

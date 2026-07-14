@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useCallback } from "react";
 import { trackScriptScrollDepth } from '@/utils/analytics';
-import { BookOpen, Minus, Plus, AlignLeft, AlignCenter, AlignRight, Gauge, Play, Square } from "lucide-react";
+import { BookOpen, Minus, Plus, AlignLeft, AlignCenter, AlignRight, Gauge, Play, Square, Mic } from "lucide-react";
+import { useKaraokeHighlight } from "../../hooks/useKaraokeHighlight";
 
 const HIGHLIGHT_COLORS = [
   { id: "yellow", bg: "rgba(253,224,71,0.45)", border: "#fde047" },
@@ -38,6 +39,7 @@ function renderInlineMarkdown(text) {
 // Simple pre-record script: full toolbar (font, size, align, bg, teleprompter) — no annotations
 export function SimpleScriptPanel({
   lesson,
+  recording,
   scriptFontSize, setScriptFontSize,
   scriptAlign, setScriptAlign,
   scriptFont, setScriptFont,
@@ -74,9 +76,34 @@ export function SimpleScriptPanel({
   const setTpRunning = setTeleprompterRunning ?? setLocalRunning;
   const scrollRef = scriptScrollRef ?? localScrollRef;
 
-  // Teleprompter auto-scroll
+  // Karaoke mode — live word-tracking via Web Speech API while recording.
+  const [karaoke, setKaraoke] = React.useState(false);
+  const karaokeHook = useKaraokeHighlight(lesson?.content || "");
+  const { supported: karaokeSupported, wordIndex, scriptWords, start: startKaraoke, stop: stopKaraoke, reset: resetKaraoke } = karaokeHook;
+
   React.useEffect(() => {
-    if (!tpRunning || !tp) return;
+    if (!karaoke || !karaokeSupported) return;
+    if (recording) startKaraoke();
+    else { stopKaraoke(); resetKaraoke(); }
+  }, [karaoke, karaokeSupported, recording, startKaraoke, stopKaraoke, resetKaraoke]);
+
+  // While karaoke is tracking live speech, let real reading progress drive the
+  // scroll instead of the fixed WPM estimate — keeps the current line centered.
+  React.useEffect(() => {
+    if (!karaoke || !recording || wordIndex < 0 || !scrollRef.current) return;
+    const container = scrollRef.current;
+    const activeEl = container.querySelector(`[data-word-idx="${wordIndex}"]`);
+    if (activeEl) {
+      const containerRect = container.getBoundingClientRect();
+      const elRect = activeEl.getBoundingClientRect();
+      const offset = elRect.top - containerRect.top - containerRect.height * 0.35;
+      container.scrollTop += offset;
+    }
+  }, [karaoke, recording, wordIndex, scrollRef]);
+
+  // Teleprompter auto-scroll (fixed WPM) — disabled while karaoke is driving scroll.
+  React.useEffect(() => {
+    if (!tpRunning || !tp || karaoke) return;
     const msPerWord = 60000 / tpWpm;
     const avgWordLen = 5;
     const pxPerMs = (fSize * 1.7) / (msPerWord * avgWordLen);
@@ -85,13 +112,52 @@ export function SimpleScriptPanel({
       if (scrollRef.current) scrollRef.current.scrollTop += pxPerMs * tick;
     }, tick);
     return () => clearInterval(id);
-  }, [tpRunning, tp, tpWpm, fSize, scrollRef]);
+  }, [tpRunning, tp, tpWpm, fSize, scrollRef, karaoke]);
 
   if (!lesson) return null;
 
   const bg = BG_MAP[fBg];
   const textColor = TEXT_MAP[fBg];
   const subColor = SUB_TEXT_MAP[fBg];
+
+  // Karaoke rendering: tokenize the script into words so each one can be
+  // colored by read/current/upcoming state. Falls back to the plain
+  // line-based renderer (below) when karaoke mode is off.
+  const renderKaraokeContent = () => {
+    if (!lesson.content) return <p style={{ color: "#71717a", fontSize: "14px" }}>Không có kịch bản</p>;
+    let idx = -1;
+    return lesson.content.split("\n").map((line, li) => {
+      const h = line.match(/^#{1,3}\s+(.+)$/);
+      if (h) return <p key={li} style={{ fontWeight: 700, fontSize: `${Math.round(fSize * 0.72)}px`, letterSpacing: "0.06em", textTransform: "uppercase", color: subColor, margin: "1.5rem 0 0.5rem", textAlign: "center" }}>{h[1]}</p>;
+      if (!line.trim()) return <br key={li} />;
+      const words = line.replace(/\*\*/g, "").split(/(\s+)/);
+      return (
+        <p key={li} style={{ marginBottom: "0.25rem" }}>
+          {words.map((w, wi) => {
+            if (!w.trim()) return w;
+            idx += 1;
+            const read = idx <= wordIndex;
+            const isCurrent = idx === wordIndex + 1;
+            return (
+              <span
+                key={wi}
+                data-word-idx={idx}
+                style={{
+                  color: read ? "#10b981" : isCurrent ? undefined : textColor,
+                  background: isCurrent ? "rgba(245,166,35,0.28)" : "transparent",
+                  borderRadius: isCurrent ? "3px" : 0,
+                  padding: isCurrent ? "0 2px" : 0,
+                  transition: "color 150ms ease, background 150ms ease",
+                }}
+              >
+                {w}
+              </span>
+            );
+          })}
+        </p>
+      );
+    });
+  };
 
   const renderContent = () => {
     if (!lesson.content) return <p style={{ color: "#71717a", fontSize: "14px" }}>Không có kịch bản</p>;
@@ -156,8 +222,26 @@ export function SimpleScriptPanel({
           >
             <Gauge size={11} /> Teleprompter
           </button>
+          {karaokeSupported && (
+            <button
+              onClick={() => setKaraoke(v => !v)}
+              title="Tự động tô sáng từ đang đọc theo giọng nói thật (dùng nhận diện giọng nói của trình duyệt)"
+              className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium border transition-colors ${karaoke ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" : "text-zinc-500 border-white/[0.07] hover:text-white hover:border-white/20"}`}
+            >
+              <Mic size={11} /> Karaoke
+            </button>
+          )}
         </div>
       </div>
+
+      {karaoke && (
+        <div className="px-4 py-1.5 bg-emerald-500/[0.06] border-b border-emerald-500/20 flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-[10px] text-emerald-400 font-medium">
+            {recording ? `Đang theo dõi giọng đọc — ${karaokeHook.progressPercent}% kịch bản` : "Bấm Bắt đầu ghi âm để chữ tự sáng theo giọng bạn"}
+          </span>
+        </div>
+      )}
 
       {/* Script */}
       <div
@@ -169,7 +253,7 @@ export function SimpleScriptPanel({
           Kịch bản luyện tập
         </h3>
         <div style={{ fontFamily: FONT_MAP[fFont], fontSize: `${fSize}px`, color: textColor, textAlign: fAlign, lineHeight: 1.8 }}>
-          {renderContent()}
+          {karaoke ? renderKaraokeContent() : renderContent()}
         </div>
       </div>
     </div>

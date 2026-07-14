@@ -29,7 +29,7 @@ const VoicePractice = () => {
     recording, audioBlob, audioUrl, analyzing, analyzeProgress, analyzePhase, result, recordingTime,
     startRecording, stopRecording, handleAnalyze, resetPractice,
     cameraOn, videoRef, toggleCamera,
-    bars, volumeLevel, audioStatus, EMPTY_BARS,
+    bars, volumeLevel, audioStatus, EMPTY_BARS, pitchHz, pitchHistory,
     scriptFontSize, setScriptFontSize, scriptAlign, setScriptAlign,
     scriptFont, setScriptFont, scriptBg, setScriptBg,
     teleprompter, setTeleprompter, teleprompterWpm, setTeleprompterWpm,
@@ -247,6 +247,7 @@ const VoicePractice = () => {
                   <div className="flex gap-4 items-stretch min-h-[480px]">
                     <SimpleScriptPanel
                     lesson={lesson}
+                    recording={recording}
                     scriptFontSize={scriptFontSize} setScriptFontSize={setScriptFontSize}
                     scriptAlign={scriptAlign} setScriptAlign={setScriptAlign}
                     scriptFont={scriptFont} setScriptFont={setScriptFont}
@@ -262,6 +263,7 @@ const VoicePractice = () => {
                       startRecording={handleStartRecording} stopRecording={handleStopRecording}
                       handleAnalyze={handleAnalyze} resetPractice={handleResetPractice}
                       bars={bars} volumeLevel={volumeLevel} audioStatus={audioStatus} EMPTY_BARS={EMPTY_BARS}
+                      pitchHz={pitchHz} pitchHistory={pitchHistory}
                       cameraOn={cameraOn} videoRef={videoRef} toggleCamera={toggleCamera}
                       analyzeProgress={analyzeProgress} analyzePhase={analyzePhase}
                       t_vp={t_vp}

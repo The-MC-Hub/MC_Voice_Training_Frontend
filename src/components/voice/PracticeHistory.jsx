@@ -1,17 +1,69 @@
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, Info } from "lucide-react";
+import { ChevronLeft, Info, GitCompare, X } from "lucide-react";
 import { clampMetric } from "../../hooks/useVoicePractice";
+
+// Side-by-side playback + score delta for two picked attempts — lets the user
+// hear how their reading actually changed, not just compare numbers.
+function CompareBar({ selected, onClear, calcScore }) {
+  if (selected.length !== 2) return null;
+  const [older, newer] = [...selected].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  const delta = calcScore(newer) - calcScore(older);
+  const fmtDate = (d) => { const dt = new Date(d); return isNaN(dt.getTime()) ? "?" : dt.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }); };
+
+  return (
+    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+      <div className="mb-3 p-4 rounded-xl bg-violet-500/[0.05] border border-violet-500/20">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-[12px] font-semibold text-violet-300 flex items-center gap-1.5"><GitCompare size={13} /> So sánh 2 lần đọc</p>
+          <button onClick={onClear} className="w-5 h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white"><X size={12} /></button>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          {[older, newer].map((h, i) => (
+            <div key={h.id} className="p-3 rounded-lg bg-[#111113] border border-white/[0.07]">
+              <p className="text-[10px] text-zinc-600 mb-1">{i === 0 ? "Lần trước" : "Lần này"} · {fmtDate(h.createdAt)}</p>
+              <p className="text-[15px] font-bold text-white mb-1.5">{calcScore(h).toFixed(1)}%</p>
+              {h.audioUrl
+                ? <audio controls src={h.audioUrl} className="w-full h-8" style={{ filter: "invert(0.9)" }} />
+                : <p className="text-[10px] text-zinc-700 italic">Không có bản ghi âm</p>}
+            </div>
+          ))}
+        </div>
+        <p className={`text-[12px] font-semibold text-center mt-3 ${delta >= 0 ? "text-emerald-400" : "text-orange-400"}`}>
+          {delta >= 0 ? "↑ Tiến bộ" : "↓ Giảm"} {Math.abs(delta).toFixed(1)}% so với lần trước
+        </p>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function PracticeHistory({
   history, currentPage, setCurrentPage, itemsPerPage, courseId, navigate, t, t_vp,
 }) {
+  const [compareIds, setCompareIds] = useState([]);
   if (!history.length) return null;
 
-  const calcScore = (h) => clampMetric(
-    Number(h.accuracyScore || 0) * 0.45 +
-    Number(h.rhythmScore || 0) * 0.35 +
-    (Math.min(Number(h.speakingRateWpm || 0), 180) / 180) * 20
-  );
+  const toggleCompare = (h, e) => {
+    e.stopPropagation();
+    setCompareIds((prev) => {
+      if (prev.includes(h.id)) return prev.filter((id) => id !== h.id);
+      if (prev.length >= 2) return [prev[1], h.id]; // keep most recent 2 picks
+      return [...prev, h.id];
+    });
+  };
+  const selectedRecords = history.filter((h) => compareIds.includes(h.id));
+
+  // Prefer the AI's own weighted overall_score; fall back to the fixed formula
+  // only for older records saved before this field was tracked.
+  const calcScore = (h) => {
+    const aiScore = Number(h.overallScore || 0);
+    if (aiScore > 0) return clampMetric(aiScore);
+    return clampMetric(
+      Number(h.accuracyScore || 0) * 0.45 +
+      Number(h.rhythmScore || 0) * 0.35 +
+      (Math.min(Number(h.speakingRateWpm || 0), 180) / 180) * 20
+    );
+  };
 
   const scores = [...history].reverse().slice(-8).map(calcScore);
   const min = Math.min(...scores), max = Math.max(...scores);
@@ -51,6 +103,16 @@ export default function PracticeHistory({
         )}
       </div>
 
+      <AnimatePresence>
+        <CompareBar selected={selectedRecords} onClear={() => setCompareIds([])} calcScore={calcScore} />
+      </AnimatePresence>
+
+      {history.length >= 2 && (
+        <p className="text-[10px] text-zinc-600 mb-2">
+          {compareIds.length === 0 ? "Chọn 2 lần để so sánh." : compareIds.length === 1 ? "Chọn thêm 1 lần nữa để so sánh." : ""}
+        </p>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <AnimatePresence mode="popLayout">
           {history.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((h, i) => (
@@ -60,9 +122,16 @@ export default function PracticeHistory({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               onClick={() => navigate(`/m/voice/report/${h.id}${courseId ? `?courseId=${courseId}` : ""}`)}
-              className="cursor-pointer p-4 rounded-xl bg-[#111113] border border-white/[0.07] hover:border-[#f5a623]/20 hover:bg-[#f5a623]/[0.02] transition-colors"
+              className={`relative cursor-pointer p-4 rounded-xl bg-[#111113] border transition-colors ${compareIds.includes(h.id) ? "border-violet-500/50 bg-violet-500/[0.03]" : "border-white/[0.07] hover:border-[#f5a623]/20 hover:bg-[#f5a623]/[0.02]"}`}
             >
-              <div className="flex justify-between items-start mb-3">
+              <button
+                onClick={(e) => toggleCompare(h, e)}
+                title="Chọn để so sánh"
+                className={`absolute top-3 right-3 w-5 h-5 rounded-md flex items-center justify-center border transition-colors ${compareIds.includes(h.id) ? "bg-violet-500 border-violet-500 text-white" : "border-white/[0.15] text-transparent hover:border-violet-400"}`}
+              >
+                <GitCompare size={11} />
+              </button>
+              <div className="flex justify-between items-start mb-3 pr-7">
                 <p className="text-[11px] text-zinc-600">
                   {(() => {
                     const d = new Date(h.createdAt);
@@ -78,7 +147,7 @@ export default function PracticeHistory({
                     <div className="relative group/tt cursor-help">
                       <Info size={9} className="text-zinc-700" />
                       <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-48 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
-                        Điểm tổng hợp = Clarity 45% + Energy 35% + Pace 20%
+                        Điểm tổng hợp theo trọng số tiêu chí của bài học (Phát âm, Biểu cảm, Nhịp điệu...)
                       </div>
                     </div>
                   </div>
