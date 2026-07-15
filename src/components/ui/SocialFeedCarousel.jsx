@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ExternalLink, ChevronLeft, ChevronRight, Facebook } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { fetchActiveSocialPosts } from '../../services/socialPostService';
 
 const CACHE_KEY = 'mchub_social_posts_cache';
@@ -21,6 +22,7 @@ export function invalidateSocialPostCache() { localStorage.removeItem(CACHE_KEY)
 
 // ─── Compact (sidebar) ────────────────────────────────────────────────────────
 function CompactCarousel({ posts }) {
+  const { t } = useTranslation();
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState(1);
   const timerRef = useRef(null);
@@ -39,7 +41,7 @@ function CompactCarousel({ posts }) {
     <div className="w-full bg-[--bg-surface] border border-[--border-subtle] overflow-hidden">
       <div className="flex items-center gap-2 px-3 py-2 border-b border-[--border-subtle]">
         <Facebook size={12} className="text-gold" />
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-[--text-muted]">Từ Fanpage</span>
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-[--text-muted]">{t('socialFeedCarousel.fromFanpage')}</span>
       </div>
       <AnimatePresence mode="wait" custom={dir}>
         <motion.div key={idx} custom={dir}
@@ -51,7 +53,7 @@ function CompactCarousel({ posts }) {
           <p className="text-[11px] text-[--text-secondary] leading-relaxed line-clamp-3 mb-2">{post.description}</p>
           <a href={post.fbLink} target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-[10px] text-gold hover:text-gold/80 transition-colors">
-            <ExternalLink size={10} /> Xem bài đăng
+            <ExternalLink size={10} /> {t('socialFeedCarousel.viewPost')}
           </a>
         </motion.div>
       </AnimatePresence>
@@ -76,6 +78,7 @@ function CompactCarousel({ posts }) {
 
 // ─── Full carousel (Home page) ────────────────────────────────────────────────
 function FullCarousel({ posts }) {
+  const { t } = useTranslation();
   const [idx, setIdx] = useState(0);
   const [dir, setDir] = useState(1);
   const [paused, setPaused] = useState(false);
@@ -121,13 +124,13 @@ function FullCarousel({ posts }) {
             <Facebook size={12} className="text-white" />
           </div>
           <div>
-            <p className="text-[12px] font-bold text-gray-900 leading-none">Cập nhật từ Fanpage</p>
-            <p className="text-[9px] text-gray-400 mt-0.5">MCHub Official</p>
+            <p className="text-[12px] font-bold text-gray-900 leading-none">{t('socialFeedCarousel.updatesFromFanpage')}</p>
+            <p className="text-[9px] text-gray-400 mt-0.5">{t('socialFeedCarousel.official')}</p>
           </div>
         </div>
         <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer"
           className="ml-auto inline-flex items-center gap-1.5 px-2.5 py-1 border border-gold text-gold text-[10px] font-semibold hover:bg-gold hover:text-white transition-all">
-          <Facebook size={11} /> Theo dõi
+          <Facebook size={11} /> {t('socialFeedCarousel.follow')}
         </a>
       </div>
 
@@ -165,14 +168,14 @@ function FullCarousel({ posts }) {
             <div className="flex flex-col gap-3 p-4">
               <div className="flex items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gold/8 text-gold text-[11px] font-semibold uppercase tracking-wider">
-                  <Facebook size={10} /> Fanpage
+                  <Facebook size={10} /> {t('socialFeedCarousel.fromFanpage')}
                 </span>
                 <span className="text-[11px] text-gray-400">#{idx + 1} / {posts.length}</span>
               </div>
               <p className="text-[13px] text-gray-700 leading-relaxed line-clamp-3">{post.description}</p>
               <a href={post.fbLink} target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 bg-gold hover:bg-amber-600 text-white text-[12px] font-semibold transition-colors self-start">
-                <Facebook size={14} /> Xem bài đăng gốc <ExternalLink size={11} />
+                <Facebook size={14} /> {t('socialFeedCarousel.viewOriginalPost')} <ExternalLink size={11} />
               </a>
             </div>
           </motion.div>

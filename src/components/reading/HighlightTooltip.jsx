@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const COLORS = [
   { id: 'yellow', hex: '#fef08a' }, // yellow-200
@@ -9,6 +10,7 @@ const COLORS = [
 ];
 
 const HighlightTooltip = ({ position, onHighlight, onClose }) => {
+  const { t } = useTranslation();
   if (!position) return null;
 
   return (
@@ -29,7 +31,7 @@ const HighlightTooltip = ({ position, onHighlight, onClose }) => {
             }}
             className="w-6 h-6 rounded-full border border-black/20 hover:scale-110 transition-transform shadow-sm"
             style={{ backgroundColor: c.hex }}
-            title="Highlight"
+            title={t('highlightTooltip.highlight')}
           />
         ))}
       </div>
@@ -38,7 +40,7 @@ const HighlightTooltip = ({ position, onHighlight, onClose }) => {
         onClick={onClose}
         className="px-2 py-1 text-[11px] font-medium text-zinc-400 hover:text-white transition-colors"
       >
-        Hủy
+        {t('common.cancel')}
       </button>
     </motion.div>
   );

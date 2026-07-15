@@ -4,8 +4,19 @@ import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../store/useAuthStore";
 import { fetchLessonById, analyzePractice, analyzeGuestPractice, fetchPracticeHistory } from "../controllers/voiceController";
 import { academyService } from "../services/academyService";
+import { getPracticeStats } from "../services/userStatsService";
 import { useAudioAnalyser } from "./useAudioAnalyser";
 import celebrate from "../utils/celebrate";
+
+const BADGE_LABELS = {
+  SESSIONS_10: "🥉 Huy hiệu: 10 bài luyện",
+  SESSIONS_50: "🥈 Huy hiệu: 50 bài luyện",
+  SESSIONS_100: "🥇 Huy hiệu: 100 bài luyện",
+  STREAK_7: "🔥 Huy hiệu: Chuỗi 7 ngày",
+  STREAK_30: "🔥 Huy hiệu: Chuỗi 30 ngày",
+  HIGH_SCORE_STREAK_5: "⭐ Huy hiệu: 5 lần liên tiếp trên 90 điểm",
+  HIGH_SCORE_STREAK_10: "⭐ Huy hiệu: 10 lần liên tiếp trên 90 điểm",
+};
 
 const formatTime = (seconds) => {
   const m = Math.floor(seconds / 60), s = seconds % 60;
@@ -177,6 +188,29 @@ export function useVoicePractice() {
     mediaRecorderRef.current?.stream?.getTracks().forEach((t) => t.stop());
   }, []);
 
+  // Badges are awarded server-side on every practice session (10/50/100
+  // sessions, 7/30-day streak, 5/10 high-score streak). Diff against the
+  // last-seen set (localStorage, per user) so we only celebrate the badge
+  // the moment it's newly earned, not on every subsequent visit.
+  const checkNewBadges = async () => {
+    if (!user?.id) return;
+    try {
+      const stats = await getPracticeStats();
+      const earned = stats?.earned_badges ?? stats?.earnedBadges ?? [];
+      const seenKey = `mchub_seen_badges_${user.id}`;
+      const seen = JSON.parse(localStorage.getItem(seenKey) || "[]");
+      const newBadges = earned.filter((b) => !seen.includes(b));
+      if (newBadges.length > 0) {
+        localStorage.setItem(seenKey, JSON.stringify(earned));
+        setTimeout(() => {
+          celebrate(BADGE_LABELS[newBadges[0]] || `🏆 Huy hiệu mới: ${newBadges[0]}`);
+        }, 1200); // let the lesson-completion celebration finish first
+      }
+    } catch {
+      // Badge check is a non-critical bonus — never block the practice flow.
+    }
+  };
+
   const fetchHistory = async () => {
     if (!user?.id || !id) return;
     try {
@@ -327,6 +361,8 @@ export function useVoicePractice() {
         filler_words: data.filler_words ?? null,
         voice_quality: data.voice_quality ?? null,
         emotion_breakdown: data.emotion_breakdown ?? null,
+        word_alignment: data.word_alignment ?? null,
+        sentence_feedback: data.sentence_feedback ?? null,
         status: "success",
       });
       stopAnalyzeProgress(true);
@@ -342,6 +378,7 @@ export function useVoicePractice() {
       
       if (user) {
         await Promise.all([fetchHistory(), refreshUser()]);
+        checkNewBadges();
       }
     } catch (err) {
       stopAnalyzeProgress(false);

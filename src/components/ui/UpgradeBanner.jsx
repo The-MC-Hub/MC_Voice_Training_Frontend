@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { trackUpgradeBannerView, trackUpgradeBannerClick } from '@/utils/analytics';
 import { Zap, AlertTriangle, Crown, ArrowRight, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 /**
  * UpgradeBanner — reusable upsell component
@@ -17,15 +18,17 @@ import { motion, AnimatePresence } from 'framer-motion';
  *   variant, plan, used, limit, onDismiss (optional)
  */
 
-const PLAN_LABELS = { FREE: 'Miễn phí', BASIC: 'Basic', FULL: 'Full', ANNUAL: 'Annual' };
 const NEXT_PLAN = { FREE: 'BASIC', BASIC: 'FULL', FULL: 'ANNUAL' };
-const NEXT_PLAN_LABEL = { FREE: 'Basic (199k/tháng)', BASIC: 'Full (299k/tháng)', FULL: 'Annual (1.99M/năm)' };
 
 export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used = 0, limit = 5, onDismiss }) {
+    const { t } = useTranslation();
+    const PLAN_LABELS = t('upgradeBanner.planLabels', { returnObjects: true });
+    const planLabelFor = (p) => PLAN_LABELS[(p || '').toLowerCase()] || p;
+    const NEXT_PLAN_LABEL = t('upgradeBanner.nextPlanLabels', { returnObjects: true });
     const pct = limit > 0 ? Math.min(100, (used / limit) * 100) : 100;
     const remaining = Math.max(0, limit - used);
     const nextPlan = NEXT_PLAN[plan] || 'FULL';
-    const nextLabel = NEXT_PLAN_LABEL[plan] || 'Full';
+    const nextLabel = NEXT_PLAN_LABEL[(plan || '').toLowerCase()] || 'Full';
 
     useEffect(() => {
         trackUpgradeBannerView(pct);
@@ -50,8 +53,8 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
                             : <Zap size={13} className="shrink-0 animate-pulse" />
                         }
                         {pct >= 100
-                            ? `Bạn đã dùng hết ${limit} lượt AI của gói ${PLAN_LABELS[plan]}.`
-                            : `Còn ${remaining} lượt AI — gói ${PLAN_LABELS[plan]} giới hạn ${limit} lượt.`
+                            ? t('upgradeBanner.stripLimitReached', { limit, plan: planLabelFor(plan) })
+                            : t('upgradeBanner.stripRemaining', { remaining, plan: planLabelFor(plan), limit })
                         }
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
@@ -60,7 +63,7 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
                             onClick={trackUpgradeBannerClick}
                             className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-500 text-black text-[11px] font-semibold hover:bg-amber-400 transition-colors"
                         >
-                            <Crown size={11} /> Nâng cấp {nextLabel}
+                            <Crown size={11} /> {t('upgradeBanner.upgradeToLabel', { label: nextLabel })}
                         </Link>
                         {onDismiss && (
                             <button onClick={onDismiss} className="text-zinc-500 hover:text-white transition-colors">
@@ -85,8 +88,8 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
                         <Crown size={16} className="text-[#f5a623]" />
                     </div>
                     <div>
-                        <p className="text-[13px] font-semibold text-white mb-0.5">Nâng cấp để luyện tập không giới hạn</p>
-                        <p className="text-[11px] text-zinc-500">Gói {PLAN_LABELS[plan]}: còn {remaining}/{limit} lượt AI</p>
+                        <p className="text-[13px] font-semibold text-white mb-0.5">{t('upgradeBanner.inlineTitle')}</p>
+                        <p className="text-[11px] text-zinc-500">{t('upgradeBanner.inlineUsage', { plan: planLabelFor(plan), remaining, limit })}</p>
                     </div>
                 </div>
 
@@ -102,38 +105,26 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
                         />
                     </div>
                     <div className="flex justify-between mt-1">
-                        <span className="text-[10px] text-zinc-600">{used} đã dùng</span>
-                        <span className={`text-[10px] font-semibold ${pct >= 100 ? 'text-red-400' : 'text-[#f5a623]'}`}>{limit} tổng</span>
+                        <span className="text-[10px] text-zinc-600">{t('upgradeBanner.usedLabel', { count: used })}</span>
+                        <span className={`text-[10px] font-semibold ${pct >= 100 ? 'text-red-400' : 'text-[#f5a623]'}`}>{t('upgradeBanner.totalLabel', { count: limit })}</span>
                     </div>
                 </div>
 
                 {/* Benefits of next plan */}
                 <div className="space-y-1.5 mb-4">
-                    {nextPlan === 'BASIC' && [
-                        '20 lượt phân tích AI/tháng',
-                        'Tất cả danh mục bài học',
-                        'Báo cáo chi tiết',
-                    ].map((b, i) => (
+                    {nextPlan === 'BASIC' && t('upgradeBanner.benefitsBasic', { returnObjects: true }).map((b, i) => (
                         <div key={i} className="flex items-center gap-2 text-[11px] text-zinc-400">
                             <span className="w-1 h-1 rounded-full bg-[#f5a623]/60 shrink-0" />
                             {b}
                         </div>
                     ))}
-                    {nextPlan === 'FULL' && [
-                        'AI không giới hạn',
-                        'Tất cả khóa học cao cấp',
-                        'Coaching AI cá nhân',
-                    ].map((b, i) => (
+                    {nextPlan === 'FULL' && t('upgradeBanner.benefitsFull', { returnObjects: true }).map((b, i) => (
                         <div key={i} className="flex items-center gap-2 text-[11px] text-zinc-400">
                             <span className="w-1 h-1 rounded-full bg-[#f5a623]/60 shrink-0" />
                             {b}
                         </div>
                     ))}
-                    {nextPlan === 'ANNUAL' && [
-                        'Tiết kiệm 44% so với tháng',
-                        'Ưu tiên hỗ trợ',
-                        'Tính năng beta sớm nhất',
-                    ].map((b, i) => (
+                    {nextPlan === 'ANNUAL' && t('upgradeBanner.benefitsAnnual', { returnObjects: true }).map((b, i) => (
                         <div key={i} className="flex items-center gap-2 text-[11px] text-zinc-400">
                             <span className="w-1 h-1 rounded-full bg-[#f5a623]/60 shrink-0" />
                             {b}
@@ -146,7 +137,7 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
                     onClick={trackUpgradeBannerClick}
                     className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-amber-400 transition-colors"
                 >
-                    <Crown size={13} /> Nâng cấp lên {nextLabel} <ArrowRight size={13} />
+                    <Crown size={13} /> {t('upgradeBanner.upgradeToLabelLong', { label: nextLabel })} <ArrowRight size={13} />
                 </Link>
             </motion.div>
         );
@@ -175,14 +166,14 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
                     <div className="flex-1 min-w-0">
                         <p className={`text-[13px] font-semibold mb-0.5 ${variant === 'limit' ? 'text-red-300' : 'text-amber-300'}`}>
                             {variant === 'limit'
-                                ? `Đã hết ${limit} lượt AI của gói ${PLAN_LABELS[plan]}`
-                                : `Sắp hết lượt AI — còn ${remaining}/${limit} lượt`
+                                ? t('upgradeBanner.limitReachedTitle', { limit, plan: planLabelFor(plan) })
+                                : t('upgradeBanner.warningTitle', { remaining, limit })
                             }
                         </p>
                         <p className="text-[11px] text-zinc-500">
                             {variant === 'limit'
-                                ? 'Nâng cấp để tiếp tục phân tích giọng nói với AI.'
-                                : `Mỗi buổi luyện tập dùng 1 lượt. Nâng cấp để không bị gián đoạn.`
+                                ? t('upgradeBanner.limitReachedDesc')
+                                : t('upgradeBanner.warningDesc')
                             }
                         </p>
                         {/* Mini usage bar */}
@@ -202,7 +193,7 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
                     onClick={trackUpgradeBannerClick}
                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors shrink-0 whitespace-nowrap"
                 >
-                    <Crown size={12} /> Nâng cấp ngay
+                    <Crown size={12} /> {t('upgradeBanner.upgradeNow')}
                 </Link>
             </motion.div>
         );

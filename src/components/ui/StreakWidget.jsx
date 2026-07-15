@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Shield, Lock, ImageDown, Trophy, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation, Trans } from 'react-i18next';
 import { STREAK_FRAMES } from './AvatarFrame';
 import api from '../../services/api';
 
@@ -17,20 +18,24 @@ const FRAME_ACCENT = {
   IMMORTAL: '#ec4899',
 };
 
-const FRAME_HERO = {
-  NONE:     { emoji: '🌱', label: 'Mới bắt đầu' },
-  SPARK:    { emoji: '🔥', label: 'Đốm lửa' },
-  FLAME:    { emoji: '🔥', label: 'Ngọn lửa' },
-  STORM:    { emoji: '⚡', label: 'Bão lửa' },
-  LEGEND:   { emoji: '👑', label: 'Huyền thoại' },
-  ELITE:    { emoji: '💎', label: 'Elite' },
-  IMMORTAL: { emoji: '✨', label: 'Bất tử' },
+const FRAME_EMOJI = {
+  NONE: '🌱', SPARK: '🔥', FLAME: '🔥', STORM: '⚡',
+  LEGEND: '👑', ELITE: '💎', IMMORTAL: '✨',
+};
+const FRAME_TIER_KEY = {
+  NONE: 'none', SPARK: 'spark', FLAME: 'flame', STORM: 'storm',
+  LEGEND: 'legend', ELITE: 'elite', IMMORTAL: 'immortal',
 };
 
 const TIER_ORDER = ['NONE', 'SPARK', 'FLAME', 'STORM', 'LEGEND', 'ELITE', 'IMMORTAL'];
 
 // ─── Component ────────────────────────────────────────────────────────────────
 const StreakWidget = ({ onOpenCard, onStreakLoaded }) => {
+  const { t } = useTranslation();
+  const FRAME_HERO = TIER_ORDER.reduce((acc, k) => {
+    acc[k] = { emoji: FRAME_EMOJI[k], label: t(`streakWidget.tiers.${FRAME_TIER_KEY[k]}`) };
+    return acc;
+  }, {});
   const [streak, setStreak] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -108,7 +113,7 @@ const StreakWidget = ({ onOpenCard, onStreakLoaded }) => {
           <p className="text-[30px] font-black tabular-nums leading-none" style={{ color: accent }}>
             {loginStreak}
           </p>
-          <p className="text-[10px] text-gray-400 font-semibold tracking-widest uppercase mt-0.5">ngày</p>
+          <p className="text-[10px] text-gray-400 font-semibold tracking-widest uppercase mt-0.5">{t('streakWidget.daysUnit')}</p>
         </div>
 
         {/* ── Right: info ──────────────────────────────────────────────────── */}
@@ -123,7 +128,7 @@ const StreakWidget = ({ onOpenCard, onStreakLoaded }) => {
               <div className="flex items-center gap-1 mt-0.5">
                 <Trophy size={10} className="text-gray-400" />
                 <span className="text-[11px] text-gray-400">
-                  Kỷ lục: <span className="font-semibold text-gray-600">{longestLoginStreak} ngày</span>
+                  {t('streakWidget.recordLabel')} <span className="font-semibold text-gray-600">{t('streakWidget.recordValue', { count: longestLoginStreak })}</span>
                 </span>
               </div>
             </div>
@@ -132,7 +137,7 @@ const StreakWidget = ({ onOpenCard, onStreakLoaded }) => {
             <div
               className="flex items-center gap-1 px-2 py-1 rounded-lg shrink-0"
               style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.2)' }}
-              title="Bỏ 1 ngày không mất chuỗi. Nạp lại đầu tháng."
+              title={t('streakWidget.freezeTooltip')}
             >
               <Shield size={10} className="text-blue-400" />
               <span className="text-[11px] font-bold text-blue-500">{freezesAvailable}</span>
@@ -142,7 +147,7 @@ const StreakWidget = ({ onOpenCard, onStreakLoaded }) => {
           {/* Progress bar */}
           <div className="mb-3">
             <div className="flex justify-between items-center mb-1">
-              <span className="text-[10px] text-gray-400 font-medium">{loginStreak} / {nextM} ngày</span>
+              <span className="text-[10px] text-gray-400 font-medium">{t('streakWidget.progressLabel', { current: loginStreak, next: nextM })}</span>
               <span className="text-[10px] font-bold tabular-nums" style={{ color: accent }}>{progress}%</span>
             </div>
             <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
@@ -173,7 +178,7 @@ const StreakWidget = ({ onOpenCard, onStreakLoaded }) => {
               return (
                 <div key={tier} className="flex items-center gap-1">
                   <div
-                    title={`${tHero.label} — ${STREAK_FRAMES[tier]?.days} ngày`}
+                    title={`${tHero.label} — ${t('streakWidget.recordValue', { count: STREAK_FRAMES[tier]?.days })}`}
                     className="flex items-center justify-center rounded-full transition-all"
                     style={{
                       width: current ? 22 : 17,
@@ -217,9 +222,11 @@ const StreakWidget = ({ onOpenCard, onStreakLoaded }) => {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[11px] font-semibold text-gray-500 leading-snug">
-              Tiếp theo: <span style={{ color: nextAccent }} className="font-bold">{nextHero.label}</span>
+              {t('streakWidget.nextLabel')} <span style={{ color: nextAccent }} className="font-bold">{nextHero.label}</span>
             </p>
-            <p className="text-[10px] text-gray-400">Còn <strong style={{ color: nextAccent }}>{daysToNextFrame} ngày</strong> nữa để mở khóa</p>
+            <p className="text-[10px] text-gray-400">
+              <Trans i18nKey="streakWidget.daysToUnlock" values={{ days: daysToNextFrame }} components={{ 1: <strong style={{ color: nextAccent }} /> }} />
+            </p>
           </div>
           <Zap size={12} style={{ color: nextAccent, opacity: 0.5 }} className="shrink-0" />
         </div>
@@ -229,7 +236,7 @@ const StreakWidget = ({ onOpenCard, onStreakLoaded }) => {
         <div className="mx-3 mb-3 px-3 py-2 rounded-xl flex items-center gap-2"
           style={{ background: '#fef9c3', border: '1px solid #fde68a' }}>
           <span>✨</span>
-          <p className="text-[11px] font-bold text-yellow-700">Bạn đã đạt khung cao nhất — Bất tử!</p>
+          <p className="text-[11px] font-bold text-yellow-700">{t('streakWidget.maxTierReached')}</p>
         </div>
       )}
 
@@ -239,7 +246,7 @@ const StreakWidget = ({ onOpenCard, onStreakLoaded }) => {
         className="w-full flex items-center justify-center gap-2 py-2.5 border-t border-gray-100 text-[12px] font-medium text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-all"
       >
         <ImageDown size={13} />
-        Lưu ảnh chuỗi
+        {t('streakWidget.saveImageBtn')}
       </button>
     </motion.div>
   );

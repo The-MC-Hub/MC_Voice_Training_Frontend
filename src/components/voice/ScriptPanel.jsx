@@ -1,4 +1,5 @@
-import React, { useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect, useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { trackScriptScrollDepth } from '@/utils/analytics';
 import { BookOpen, Minus, Plus, AlignLeft, AlignCenter, AlignRight, Gauge, Play, Square, Mic } from "lucide-react";
 import { useKaraokeHighlight } from "../../hooks/useKaraokeHighlight";
@@ -49,6 +50,7 @@ export function SimpleScriptPanel({
   teleprompterRunning, setTeleprompterRunning,
   scriptScrollRef,
 }) {
+  const { t: t_vp } = useTranslation("translation", { keyPrefix: "voicePractice" });
   // Fallback local state when props not provided (standalone usage)
   const [localSize, setLocalSize] = React.useState(22);
   const [localAlign, setLocalAlign] = React.useState("center");
@@ -79,7 +81,7 @@ export function SimpleScriptPanel({
   // Karaoke mode — live word-tracking via Web Speech API while recording.
   const [karaoke, setKaraoke] = React.useState(false);
   const karaokeHook = useKaraokeHighlight(lesson?.content || "");
-  const { supported: karaokeSupported, wordIndex, scriptWords, start: startKaraoke, stop: stopKaraoke, reset: resetKaraoke } = karaokeHook;
+  const { supported: karaokeSupported, wordIndex, scriptWords, errorReason: karaokeError, start: startKaraoke, stop: stopKaraoke, reset: resetKaraoke } = karaokeHook;
 
   React.useEffect(() => {
     if (!karaoke || !karaokeSupported) return;
@@ -124,7 +126,7 @@ export function SimpleScriptPanel({
   // colored by read/current/upcoming state. Falls back to the plain
   // line-based renderer (below) when karaoke mode is off.
   const renderKaraokeContent = () => {
-    if (!lesson.content) return <p style={{ color: "#71717a", fontSize: "14px" }}>Không có kịch bản</p>;
+    if (!lesson.content) return <p style={{ color: "#71717a", fontSize: "14px" }}>{t_vp("noScript")}</p>;
     let idx = -1;
     return lesson.content.split("\n").map((line, li) => {
       const h = line.match(/^#{1,3}\s+(.+)$/);
@@ -160,7 +162,7 @@ export function SimpleScriptPanel({
   };
 
   const renderContent = () => {
-    if (!lesson.content) return <p style={{ color: "#71717a", fontSize: "14px" }}>Không có kịch bản</p>;
+    if (!lesson.content) return <p style={{ color: "#71717a", fontSize: "14px" }}>{t_vp("noScript")}</p>;
     return lesson.content.split("\n").map((line, i) => {
       const h = line.match(/^#{1,3}\s+(.+)$/);
       if (h) return <p key={i} style={{ fontWeight: 700, fontSize: `${Math.round(fSize * 0.72)}px`, letterSpacing: "0.06em", textTransform: "uppercase", color: subColor, margin: "1.5rem 0 0.5rem", textAlign: "center" }}>{h[1]}</p>;
@@ -212,7 +214,7 @@ export function SimpleScriptPanel({
                 }}
                 className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium transition-colors ${tpRunning ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-gold/10 text-gold border border-gold/30 hover:bg-gold/20"}`}
               >
-                {tpRunning ? <><Square size={10} /> Dừng</> : <><Play size={10} /> Chạy</>}
+                {tpRunning ? <><Square size={10} /> {t_vp("teleprompterStop")}</> : <><Play size={10} /> {t_vp("teleprompterRun")}</>}
               </button>
             </div>
           )}
@@ -220,25 +222,39 @@ export function SimpleScriptPanel({
             onClick={() => { setTp(v => !v); setTpRunning(false); }}
             className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium border transition-colors ${tp ? "bg-blue-500/10 text-blue-400 border-blue-500/30" : "text-zinc-500 border-white/[0.07] hover:text-white hover:border-white/20"}`}
           >
-            <Gauge size={11} /> Teleprompter
+            <Gauge size={11} /> {t_vp("teleprompter")}
           </button>
           {karaokeSupported && (
             <button
               onClick={() => setKaraoke(v => !v)}
-              title="Tự động tô sáng từ đang đọc theo giọng nói thật (dùng nhận diện giọng nói của trình duyệt)"
+              title={t_vp("karaokeTooltip")}
               className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium border transition-colors ${karaoke ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" : "text-zinc-500 border-white/[0.07] hover:text-white hover:border-white/20"}`}
             >
-              <Mic size={11} /> Karaoke
+              <Mic size={11} /> {t_vp("karaoke")}
             </button>
           )}
         </div>
       </div>
 
-      {karaoke && (
+      {karaoke && karaokeError && karaokeError !== "no-speech" && (
+        <div className="px-4 py-1.5 bg-red-500/[0.06] border-b border-red-500/20 flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+          <span className="text-[10px] text-red-400 font-medium">
+            {karaokeError === "not-allowed" || karaokeError === "service-not-allowed"
+              ? t_vp("karaokeErrorNotAllowed")
+              : karaokeError === "audio-capture"
+              ? t_vp("karaokeErrorAudioCapture")
+              : karaokeError === "network"
+              ? t_vp("karaokeErrorNetwork")
+              : t_vp("karaokeErrorGeneric", { error: karaokeError })}
+          </span>
+        </div>
+      )}
+      {karaoke && (!karaokeError || karaokeError === "no-speech") && (
         <div className="px-4 py-1.5 bg-emerald-500/[0.06] border-b border-emerald-500/20 flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           <span className="text-[10px] text-emerald-400 font-medium">
-            {recording ? `Đang theo dõi giọng đọc — ${karaokeHook.progressPercent}% kịch bản` : "Bấm Bắt đầu ghi âm để chữ tự sáng theo giọng bạn"}
+            {recording ? t_vp("karaokeTracking", { percent: karaokeHook.progressPercent }) : t_vp("karaokeIdleHint")}
           </span>
         </div>
       )}
@@ -250,7 +266,7 @@ export function SimpleScriptPanel({
         style={{ background: bg, scrollbarWidth: "thin", scrollbarColor: `${subColor}40 transparent` }}
       >
         <h3 style={{ color: subColor, textAlign: "center", fontSize: "11px", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "1.5rem" }}>
-          Kịch bản luyện tập
+          {t_vp("practiceScript")}
         </h3>
         <div style={{ fontFamily: FONT_MAP[fFont], fontSize: `${fSize}px`, color: textColor, textAlign: fAlign, lineHeight: 1.8 }}>
           {karaoke ? renderKaraokeContent() : renderContent()}
@@ -277,6 +293,7 @@ export default function ScriptPanel({
   showNoteInput, setShowNoteInput,
   hoveredAnnotation, setHoveredAnnotation,
   annotationPopupRef,
+  audioUrl, wordAlignment, sentenceFeedback,
   t, t_vp,
 }) {
   if (!lesson) return null;
@@ -286,6 +303,19 @@ export default function ScriptPanel({
   const subColor = SUB_TEXT_MAP[scriptBg];
 
   const plainScript = lesson?.content?.replace(/^\[(.+?)\]\s*$/gm, "\n[$1]\n") || "";
+
+  // Playback-sync karaoke: highlights words as the actual recorded audio
+  // plays back, using Whisper's server-side word timestamps (word_alignment)
+  // — accurate and language/browser-independent, unlike the live
+  // SpeechRecognition guess used only during recording (useKaraokeHighlight).
+  const [syncPlayback, setSyncPlayback] = useState(false);
+  const [playbackTime, setPlaybackTime] = useState(0);
+  const audioRef = useRef(null);
+  const hasAlignment = Array.isArray(wordAlignment) && wordAlignment.length > 0;
+
+  const activeAlignmentIdx = hasAlignment
+    ? wordAlignment.findIndex((w) => playbackTime >= w.start && playbackTime < w.end)
+    : -1;
 
   const firedDepthRef = useRef(new Set());
   const handleScriptScroll = useCallback(() => {
@@ -344,6 +374,50 @@ export default function ScriptPanel({
   const overlapsAnnotation = annotationPopup
     ? annotations.some((a) => annotationPopup.startOffset < a.endOffset && annotationPopup.endOffset > a.startOffset)
     : false;
+
+  // Words spoken (from Whisper) rarely equal script word count 1:1 (skipped
+  // words, repeats, "um"s). Map the active spoken-word index onto the
+  // script's word list proportionally — good enough for a visual "roughly
+  // here" cursor during playback, not meant to be exact substring alignment.
+  const scriptWordsForPlayback = plainScript.split(/\s+/).filter(Boolean);
+  const activeScriptWordIdx = hasAlignment && activeAlignmentIdx >= 0 && scriptWordsForPlayback.length
+    ? Math.min(
+        scriptWordsForPlayback.length - 1,
+        Math.round((activeAlignmentIdx / Math.max(1, wordAlignment.length - 1)) * (scriptWordsForPlayback.length - 1))
+      )
+    : -1;
+
+  const renderPlaybackSyncScript = () => {
+    if (!plainScript) return null;
+    let idx = -1;
+    return plainScript.split("\n").map((line, li) => {
+      const bracketHeading = line.match(/^\[(.+?)\]$/);
+      if (bracketHeading) return (
+        <span key={li} style={{ display: "block", textAlign: "center", fontSize: `${Math.round(scriptFontSize * 0.75)}px`, fontWeight: 700, letterSpacing: "0.05em", color: subColor, marginTop: "1.5rem" }}>{bracketHeading[1]}</span>
+      );
+      if (!line.trim()) return <br key={li} />;
+      const words = line.replace(/\*\*/g, "").split(/(\s+)/);
+      return (
+        <p key={li} style={{ marginBottom: "0.25rem" }}>
+          {words.map((w, wi) => {
+            if (!w.trim()) return w;
+            idx += 1;
+            const isPast = idx < activeScriptWordIdx;
+            const isCurrent = idx === activeScriptWordIdx;
+            return (
+              <span key={wi} style={{
+                color: isPast ? "#10b981" : isCurrent ? undefined : textColor,
+                background: isCurrent ? "rgba(245,166,35,0.28)" : "transparent",
+                borderRadius: isCurrent ? "3px" : 0,
+                padding: isCurrent ? "0 2px" : 0,
+                transition: "color 150ms ease, background 150ms ease",
+              }}>{w}</span>
+            );
+          })}
+        </p>
+      );
+    });
+  };
 
   const renderAnnotatedScript = () => {
     if (!plainScript) return null;
@@ -445,7 +519,7 @@ export default function ScriptPanel({
                 }}
                 className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium transition-colors ${teleprompterRunning ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-gold/10 text-gold border border-gold/30 hover:bg-gold/20"}`}
               >
-                {teleprompterRunning ? <><Square size={10} /> Dừng</> : <><Play size={10} /> Chạy</>}
+                {teleprompterRunning ? <><Square size={10} /> {t_vp("teleprompterStop")}</> : <><Play size={10} /> {t_vp("teleprompterRun")}</>}
               </button>
             </div>
           )}
@@ -453,10 +527,50 @@ export default function ScriptPanel({
             onClick={() => { setTeleprompter((t) => !t); setTeleprompterRunning(false); }}
             className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium border transition-colors ${teleprompter ? "bg-blue-500/10 text-blue-400 border-blue-500/30" : "text-zinc-500 border-white/[0.07] hover:text-white hover:border-white/20"}`}
           >
-            <Gauge size={11} /> Teleprompter
+            <Gauge size={11} /> {t_vp("teleprompter")}
           </button>
+          {hasAlignment && audioUrl && (
+            <button
+              onClick={() => setSyncPlayback((v) => !v)}
+              title={t_vp("syncPlaybackTooltip")}
+              className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium border transition-colors ${syncPlayback ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" : "text-zinc-500 border-white/[0.07] hover:text-white hover:border-white/20"}`}
+            >
+              <Mic size={11} /> {t_vp("syncPlaybackButton")}
+            </button>
+          )}
         </div>
       </div>
+
+      {syncPlayback && hasAlignment && audioUrl && (
+        <div className="px-4 py-2 bg-emerald-500/[0.06] border-b border-emerald-500/20 space-y-2">
+          <audio
+            ref={audioRef}
+            controls
+            src={audioUrl}
+            className="w-full h-8"
+            style={{ filter: "invert(1) hue-rotate(180deg) brightness(0.8)", borderRadius: "6px" }}
+            onTimeUpdate={(e) => setPlaybackTime(e.currentTarget.currentTime)}
+          />
+          {Array.isArray(sentenceFeedback) && sentenceFeedback.some((s) => s.needs_rework) && (
+            <div className="flex flex-wrap gap-1.5">
+              <span className="text-[10px] text-zinc-500 uppercase tracking-wider self-center mr-1">{t_vp("sentencesToRework")}</span>
+              {sentenceFeedback.filter((s) => s.needs_rework).map((s, i) => (
+                <button
+                  key={i}
+                  title={s.text}
+                  onClick={() => { if (audioRef.current) { audioRef.current.currentTime = s.start; audioRef.current.play(); } }}
+                  className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 transition-colors"
+                >
+                  <Play size={9} /> {t_vp("sentenceLabel", { n: i + 1 })}
+                  {s.issues.includes("too_fast") && ` · ${t_vp("sentenceIssueTooFast")}`}
+                  {s.issues.includes("too_slow") && ` · ${t_vp("sentenceIssueTooSlow")}`}
+                  {s.issues.includes("flat_pitch") && ` · ${t_vp("sentenceIssueFlatPitch")}`}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Script content */}
       <div style={{ position: "relative" }}>
@@ -474,10 +588,10 @@ export default function ScriptPanel({
                 />
               ))}
               <div style={{ width: 1, height: 16, background: "rgba(255,255,255,0.1)", margin: "0 2px" }} />
-              <button onClick={() => setShowNoteInput((v) => !v)} title="Thêm ghi chú"
+              <button onClick={() => setShowNoteInput((v) => !v)} title={t_vp("addNote")}
                 style={{ display: "flex", alignItems: "center", gap: "4px", padding: "2px 7px", borderRadius: "6px", background: showNoteInput ? "rgba(245,166,35,0.15)" : "rgba(255,255,255,0.06)", border: `1px solid ${showNoteInput ? "rgba(245,166,35,0.4)" : "rgba(255,255,255,0.1)"}`, color: showNoteInput ? "#f5a623" : "#a1a1aa", fontSize: "11px", fontWeight: 600, cursor: "pointer" }}
               >
-                📝 Ghi chú
+                📝 {t_vp("noteLabel")}
               </button>
               {overlapsAnnotation && (
                 <button
@@ -486,10 +600,10 @@ export default function ScriptPanel({
                     toRemove.forEach((a) => removeAnnotation(a.id));
                     setAnnotationPopup(null);
                   }}
-                  title="Xóa highlight/ghi chú"
+                  title={t_vp("removeHighlightOrNote")}
                   style={{ padding: "2px 7px", borderRadius: "6px", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "#f87171", fontSize: "11px", fontWeight: 600, cursor: "pointer" }}
                 >
-                  ✕ Xóa
+                  ✕ {t_vp("deleteLabel")}
                 </button>
               )}
               <button onClick={() => { setAnnotationPopup(null); window.getSelection()?.removeAllRanges(); }}
@@ -499,7 +613,7 @@ export default function ScriptPanel({
             {showNoteInput && (
               <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
                 <textarea
-                  autoFocus value={noteInput} onChange={(e) => setNoteInput(e.target.value)} placeholder="Nhập ghi chú..." rows={3}
+                  autoFocus value={noteInput} onChange={(e) => setNoteInput(e.target.value)} placeholder={t_vp("notePlaceholder")} rows={3}
                   style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", padding: "6px 8px", color: "#e4e4e7", fontSize: "12px", resize: "none", outline: "none", fontFamily: "inherit" }}
                   onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (noteInput.trim()) addAnnotation("note", "yellow"); } }}
                 />
@@ -510,7 +624,7 @@ export default function ScriptPanel({
                     >{c.id[0].toUpperCase()}</button>
                   ))}
                 </div>
-                <p style={{ fontSize: "10px", color: "#52525b" }}>Enter để lưu · Shift+Enter xuống dòng</p>
+                <p style={{ fontSize: "10px", color: "#52525b" }}>{t_vp("noteSaveHint")}</p>
               </div>
             )}
           </div>
@@ -532,7 +646,7 @@ export default function ScriptPanel({
             {t_vp("practiceScript")}
           </h3>
           <div style={{ fontFamily: FONT_MAP[scriptFont], fontSize: `${scriptFontSize}px`, color: textColor, textAlign: scriptAlign, lineHeight: 1.7 }}>
-            {renderAnnotatedScript()}
+            {syncPlayback && hasAlignment ? renderPlaybackSyncScript() : renderAnnotatedScript()}
           </div>
           <p style={{ marginTop: "1.5rem", textAlign: "center", fontSize: "14px", fontStyle: "italic", color: subColor }}>
             — {t("endOfScript")} —

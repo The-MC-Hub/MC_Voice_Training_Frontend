@@ -139,7 +139,7 @@ const CourseCard = ({ course, index }) => {
         <div className="flex items-center justify-between pt-1">
           <span className="text-[11px] text-zinc-600">{typeLabel}</span>
           <span className="flex items-center gap-1 text-[11px] text-zinc-600 group-hover:text-[#f5a623] transition-colors">
-            Xem khoá học <ChevronRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
+            {t('courses.viewCourse')} <ChevronRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
           </span>
         </div>
       </div>
@@ -183,7 +183,7 @@ const CoursesList = () => {
 
   return (
     <div className="max-w-6xl mx-auto pb-16 space-y-8">
-      <Breadcrumb items={[{ label: 'Khóa học' }]} />
+      <Breadcrumb items={[{ label: t('courses.pageTitle') }]} />
       <PageBanner
         icon={<GraduationCap size={22} />}
         eyebrow="MC Academy"
@@ -219,7 +219,7 @@ const CoursesList = () => {
           <div className="w-14 h-14 rounded-xl bg-[#111113] border border-white/[0.07] flex items-center justify-center">
             <BookOpen size={24} className="text-zinc-700" />
           </div>
-          <p className="text-zinc-600 text-[13px]">Chưa có khoá học</p>
+          <p className="text-zinc-600 text-[13px]">{t('courses.noCourses')}</p>
         </div>
       ) : (
         <AnimatePresence mode="wait">

@@ -1,14 +1,17 @@
 import React, { useState, useMemo } from "react";
 import { Download, CheckCircle2, Clock, XCircle, TrendingUp, Filter, ArrowUpDown, CheckCheck } from "lucide-react";
 import api from "../../../services/api";
+import { useTranslation } from "react-i18next";
 
 const fmt = (v) => (v ?? 0).toLocaleString("vi-VN");
 
-const STATUS_CONFIG = {
-  COMPLETED: { label: "Hoàn thành", color: "bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]", icon: CheckCircle2 },
-  PENDING:   { label: "Đang chờ",   color: "bg-gold/10 text-gold border-gold/30",     icon: Clock },
-  FAILED:    { label: "Thất bại",   color: "bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]",           icon: XCircle },
-};
+function useStatusConfig(t) {
+  return {
+    COMPLETED: { label: t("admin.transactionManagement.status.completed"), color: "bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]", icon: CheckCircle2 },
+    PENDING:   { label: t("admin.transactionManagement.status.pending"),   color: "bg-gold/10 text-gold border-gold/30",     icon: Clock },
+    FAILED:    { label: t("admin.transactionManagement.status.failed"),   color: "bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]",           icon: XCircle },
+  };
+}
 
 const PLAN_CONFIG = {
   BASIC:  { color: "bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]" },
@@ -18,6 +21,8 @@ const PLAN_CONFIG = {
 };
 
 const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
+  const { t } = useTranslation();
+  const STATUS_CONFIG = useStatusConfig(t);
   const [filterStatus, setFilterStatus] = useState("ALL");
   const [search, setSearch] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: "createdAt", order: "desc" }); // desc = NEWEST
@@ -26,14 +31,14 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
   const showFlash = (msg) => { setFlash(msg); setTimeout(() => setFlash(""), 4000); };
 
   const handleComplete = async (txId) => {
-    if (!window.confirm("Xác nhận hoàn thành giao dịch này và kích hoạt gói cho người dùng?")) return;
+    if (!window.confirm(t("admin.transactionManagement.confirms.completeTransaction"))) return;
     setCompleting(txId);
     try {
       await api.post(`/payment/admin/complete/${txId}`);
-      showFlash("Giao dịch đã được xác nhận. Gói người dùng đã kích hoạt.");
+      showFlash(t("admin.transactionManagement.flash.completeSuccess"));
       onRefresh?.();
     } catch (err) {
-      showFlash(`Lỗi: ${err.response?.data?.message || "Không thể xác nhận giao dịch."}`);
+      showFlash(t("admin.transactionManagement.flash.completeError", { message: err.response?.data?.message || t("admin.transactionManagement.flash.completeErrorDefault") }));
     } finally {
       setCompleting(null);
     }
@@ -73,7 +78,17 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
 
   const exportCSV = () => {
     if (!filtered.length) return;
-    const headers = ["ID","Order Code","Người dùng","Email","Gói","Số tiền (VND)","Trạng thái","Ngân hàng Ref","Ngày tạo","Ngày hoàn thành"];
+    const headers = [
+      "ID", "Order Code",
+      t("admin.transactionManagement.csv.user"),
+      t("admin.transactionManagement.csv.email"),
+      t("admin.transactionManagement.csv.plan"),
+      t("admin.transactionManagement.csv.amount"),
+      t("admin.transactionManagement.csv.status"),
+      t("admin.transactionManagement.csv.bankRef"),
+      t("admin.transactionManagement.csv.createdAt"),
+      t("admin.transactionManagement.csv.completedAt"),
+    ];
     const rows = filtered.map(t => [
       t.id, t.orderCode, t.userName, t.userEmail, t.plan, t.amount, t.status,
       t.bankRef || "", t.createdAt || "", t.completedAt || ""
@@ -90,14 +105,14 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-[15px] font-semibold text-[--text-primary]">Lịch sử giao dịch</h2>
-          <p className="text-[12px] text-[--text-muted] mt-0.5">Toàn bộ giao dịch thanh toán gói dịch vụ từ người dùng.</p>
+          <h2 className="text-[15px] font-semibold text-[--text-primary]">{t("admin.transactionManagement.title")}</h2>
+          <p className="text-[12px] text-[--text-muted] mt-0.5">{t("admin.transactionManagement.subtitle")}</p>
         </div>
         <button
           onClick={exportCSV}
           className="flex items-center gap-2 px-3 py-2 bg-[--bg-surface] border border-[--border-subtle] hover:border-[--border-subtle] text-[--text-primary] text-[12px] font-medium transition-colors"
         >
-          <Download size={13} /> Xuất CSV
+          <Download size={13} /> {t("admin.transactionManagement.exportCsv")}
         </button>
       </div>
 
@@ -118,7 +133,7 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
                 <span className="text-[11px] font-semibold uppercase tracking-wider text-[--text-secondary]">{cfg.label}</span>
               </div>
               <div className="text-xl font-bold text-[--text-primary]">{fmt(statusRevenue[key])} <span className="text-[10px] text-[--text-muted] font-normal">VND</span></div>
-              <div className="text-[11px] text-[--text-muted] mt-0.5">{countByStatus[key] ?? 0} giao dịch</div>
+              <div className="text-[11px] text-[--text-muted] mt-0.5">{t("admin.transactionManagement.transactionsCount", { count: countByStatus[key] ?? 0 })}</div>
             </div>
           );
         })}
@@ -129,7 +144,7 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
         <div className=" mt-4 bg-[--bg-surface] border border-[--border-subtle] p-4">
           <div className="flex items-center gap-2 mb-4">
             <TrendingUp size={14} className="text-[--text-muted]" />
-            <span className="text-[13px] font-semibold text-[--text-primary]">Doanh thu theo gói (hoàn thành)</span>
+            <span className="text-[13px] font-semibold text-[--text-primary]">{t("admin.transactionManagement.revenueByPlanTitle")}</span>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {Object.entries(revenueStats.revenueByPlan).map(([plan, revenue]) => (
@@ -148,7 +163,7 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
         <div className="flex items-center gap-3 w-full sm:w-auto flex-1">
           <input
             type="text"
-            placeholder="Tìm theo tên, email, gói, nội dung, mã đơn..."
+            placeholder={t("admin.transactionManagement.searchPlaceholder")}
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="flex-1 min-w-[250px] bg-[--bg-surface] border border-[--border-subtle] focus:border-[--border-subtle] px-3 py-2 text-[13px] text-[--text-primary] placeholder:text-zinc-400 outline-none transition-colors"
@@ -167,7 +182,7 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
                     : "text-[--text-muted] border-[--border-subtle] hover:text-[--text-primary]"
                 }`}
               >
-                {s === "ALL" ? "Tất cả" : STATUS_CONFIG[s]?.label}
+                {s === "ALL" ? t("admin.transactionManagement.filters.all") : STATUS_CONFIG[s]?.label}
               </button>
             ))}
           </div>
@@ -181,10 +196,10 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
               }}
               className="bg-[--bg-surface] border border-[--border-subtle] text-[11px] text-[--text-secondary] px-2 py-1.5 outline-none cursor-pointer hover:border-[--text-muted]"
             >
-              <option value="createdAt-desc">Mới nhất trước</option>
-              <option value="createdAt-asc">Cũ nhất trước</option>
-              <option value="amount-desc">Số tiền: Cao → Thấp</option>
-              <option value="amount-asc">Số tiền: Thấp → Cao</option>
+              <option value="createdAt-desc">{t("admin.transactionManagement.sort.newestFirst")}</option>
+              <option value="createdAt-asc">{t("admin.transactionManagement.sort.oldestFirst")}</option>
+              <option value="amount-desc">{t("admin.transactionManagement.sort.amountHighToLow")}</option>
+              <option value="amount-asc">{t("admin.transactionManagement.sort.amountLowToHigh")}</option>
             </select>
           </div>
         </div>
@@ -202,73 +217,73 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
         <table className="w-full text-left border-collapse text-[12px]">
           <thead>
             <tr className="bg-[--bg-elevated] border-b border-[--border-subtle] text-[--text-muted] uppercase text-[10px] font-semibold tracking-wider">
-              <th className="px-4 py-3">Mã đơn</th>
-              <th className="px-4 py-3">Người dùng</th>
-              <th className="px-4 py-3">Gói</th>
-              <th className="px-4 py-3">Số tiền</th>
-              <th className="px-4 py-3">Trạng thái</th>
-              <th className="px-4 py-3">Nội dung (Memo)</th>
-              <th className="px-4 py-3">Bank Ref</th>
-              <th className="px-4 py-3 text-right">Ngày tạo</th>
-              <th className="px-4 py-3 text-right">Hoàn thành</th>
-              <th className="px-4 py-3 text-right">Thao tác</th>
+              <th className="px-4 py-3">{t("admin.transactionManagement.table.orderCode")}</th>
+              <th className="px-4 py-3">{t("admin.transactionManagement.table.user")}</th>
+              <th className="px-4 py-3">{t("admin.transactionManagement.table.plan")}</th>
+              <th className="px-4 py-3">{t("admin.transactionManagement.table.amount")}</th>
+              <th className="px-4 py-3">{t("admin.transactionManagement.table.status")}</th>
+              <th className="px-4 py-3">{t("admin.transactionManagement.table.memo")}</th>
+              <th className="px-4 py-3">{t("admin.transactionManagement.table.bankRef")}</th>
+              <th className="px-4 py-3 text-right">{t("admin.transactionManagement.table.createdAt")}</th>
+              <th className="px-4 py-3 text-right">{t("admin.transactionManagement.table.completed")}</th>
+              <th className="px-4 py-3 text-right">{t("admin.transactionManagement.table.actions")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[--border-subtle] text-[--text-secondary]">
             {!transactions ? (
-              <tr><td colSpan={10} className="px-4 py-8 text-center text-[--text-muted]">Đang tải...</td></tr>
+              <tr><td colSpan={10} className="px-4 py-8 text-center text-[--text-muted]">{t("admin.transactionManagement.table.loading")}</td></tr>
             ) : filtered.length === 0 ? (
-              <tr><td colSpan={10} className="px-4 py-8 text-center text-[--text-muted]">Không có giao dịch nào</td></tr>
-            ) : filtered.map((t, i) => {
-              const statusCfg = STATUS_CONFIG[t.status] || {};
-              const planCfg = PLAN_CONFIG[t.plan] || {};
-              const date = t.createdAt ? new Date(t.createdAt).toLocaleDateString("vi-VN", { day:"2-digit", month:"2-digit", year:"numeric" }) : "—";
+              <tr><td colSpan={10} className="px-4 py-8 text-center text-[--text-muted]">{t("admin.transactionManagement.table.empty")}</td></tr>
+            ) : filtered.map((tx, i) => {
+              const statusCfg = STATUS_CONFIG[tx.status] || {};
+              const planCfg = PLAN_CONFIG[tx.plan] || {};
+              const date = tx.createdAt ? new Date(tx.createdAt).toLocaleDateString("vi-VN", { day:"2-digit", month:"2-digit", year:"numeric" }) : "—";
               return (
-                <tr key={t.id || i} className="hover:bg-[--bg-elevated] transition-colors">
+                <tr key={tx.id || i} className="hover:bg-[--bg-elevated] transition-colors">
                   <td className="px-4 py-3">
-                    <span className="font-mono text-[11px] text-[--text-muted]">#{String(t.orderCode || t.id || "").slice(-8)}</span>
+                    <span className="font-mono text-[11px] text-[--text-muted]">#{String(tx.orderCode || tx.id || "").slice(-8)}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="font-medium text-[--text-primary] block text-[13px]">{t.userName || "—"}</span>
-                    <span className="text-[11px] text-[--text-muted]">{t.userEmail || ""}</span>
+                    <span className="font-medium text-[--text-primary] block text-[13px]">{tx.userName || "—"}</span>
+                    <span className="text-[11px] text-[--text-muted]">{tx.userEmail || ""}</span>
                   </td>
                   <td className="px-4 py-3">
-                    {t.plan ? (
+                    {tx.plan ? (
                       <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold border uppercase ${planCfg.color || "bg-[--bg-elevated] text-[--text-secondary] border-[--border-subtle]"}`}>
-                        {t.plan}
+                        {tx.plan}
                       </span>
                     ) : <span className="text-[--text-muted]">—</span>}
                   </td>
                   <td className="px-4 py-3 font-semibold text-[--text-primary]">
-                    {fmt(t.amount)} <span className="text-[10px] text-[--text-muted] font-normal">VND</span>
+                    {fmt(tx.amount)} <span className="text-[10px] text-[--text-muted] font-normal">VND</span>
                   </td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium border ${statusCfg.color || "bg-[--bg-elevated] text-[--text-muted] border-[--border-subtle]"}`}>
-                      {statusCfg.label || t.status}
+                      {statusCfg.label || tx.status}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="text-[11px] text-[--text-secondary] max-w-[150px] truncate" title={t.memo}>
-                      {t.memo || "—"}
+                    <div className="text-[11px] text-[--text-secondary] max-w-[150px] truncate" title={tx.memo}>
+                      {tx.memo || "—"}
                     </div>
                   </td>
                   <td className="px-4 py-3 font-mono text-[11px] text-[--text-muted]">
-                    {t.bankRef || "—"}
+                    {tx.bankRef || "—"}
                   </td>
                   <td className="px-4 py-3 text-right text-[--text-muted] text-[11px]">{date}</td>
                   <td className="px-4 py-3 text-right text-[--text-muted] text-[11px]">
-                    {t.completedAt ? new Date(t.completedAt).toLocaleDateString("vi-VN", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" }) : "—"}
+                    {tx.completedAt ? new Date(tx.completedAt).toLocaleDateString("vi-VN", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" }) : "—"}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {t.status === "PENDING" && (
+                    {tx.status === "PENDING" && (
                       <button
-                        onClick={() => handleComplete(t.id)}
-                        disabled={completing === t.id}
-                        title="Xác nhận giao dịch thủ công"
+                        onClick={() => handleComplete(tx.id)}
+                        disabled={completing === tx.id}
+                        title={t("admin.transactionManagement.confirmManual")}
                         className="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-semibold bg-emerald-950/60 text-emerald-400 border border-emerald-800/50 hover:bg-emerald-900/60 transition-colors disabled:opacity-50"
                       >
-                        <CheckCheck size={11} className={completing === t.id ? "animate-spin" : ""} />
-                        {completing === t.id ? "..." : "Xác nhận"}
+                        <CheckCheck size={11} className={completing === tx.id ? "animate-spin" : ""} />
+                        {completing === tx.id ? "..." : t("admin.transactionManagement.confirm")}
                       </button>
                     )}
                   </td>
@@ -279,7 +294,7 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
         </table>
         {filtered.length > 0 && (
           <div className="px-4 py-3 border-t border-[--border-subtle] text-[11px] text-[--text-muted]">
-            Hiển thị {filtered.length} / {transactions?.length ?? 0} giao dịch
+            {t("admin.transactionManagement.showingCount", { shown: filtered.length, total: transactions?.length ?? 0 })}
           </div>
         )}
       </div>

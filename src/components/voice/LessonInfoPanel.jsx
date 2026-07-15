@@ -1,6 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { FileText, Target, Award, ListChecks, Info, Video } from "lucide-react";
 
 export default function LessonInfoPanel({ lesson }) {
+  const { t } = useTranslation();
   if (!lesson) return null;
   return (
     <div className="mb-5 rounded-2xl border border-white/[0.07] bg-[#111113] overflow-hidden">
@@ -16,7 +18,7 @@ export default function LessonInfoPanel({ lesson }) {
                   className="w-full h-full object-cover"
                 />
                 <span className="absolute top-2 left-2 flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-black/70 text-[#f5a623] border border-[#f5a623]/30">
-                  <Video size={10} /> Video mẫu
+                  <Video size={10} /> {t("voicePractice.lessonInfoSampleVideo")}
                 </span>
               </div>
             ) : (
@@ -33,7 +35,7 @@ export default function LessonInfoPanel({ lesson }) {
           {lesson.description && (
             <div>
               <p className="flex items-center gap-1.5 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider mb-1.5">
-                <FileText size={12} /> Mô tả bài học
+                <FileText size={12} /> {t("voicePractice.lessonInfoDescription")}
               </p>
               <p className="text-[14px] text-zinc-300 leading-relaxed">{lesson.description}</p>
             </div>
@@ -44,7 +46,7 @@ export default function LessonInfoPanel({ lesson }) {
               <div className="flex items-start gap-2">
                 <Target size={14} className="text-[#f5a623] mt-0.5 shrink-0" />
                 <div>
-                  <p className="text-[11px] text-zinc-600 uppercase tracking-wider">Tốc độ mục tiêu</p>
+                  <p className="text-[11px] text-zinc-600 uppercase tracking-wider">{t("voicePractice.lessonInfoTargetPace")}</p>
                   <p className="text-[14px] font-semibold text-white">
                     {lesson.targetWpmMin}–{lesson.targetWpmMax}{" "}
                     <span className="text-zinc-500 font-normal text-[12px]">wpm</span>
@@ -56,7 +58,7 @@ export default function LessonInfoPanel({ lesson }) {
               <div className="flex items-start gap-2">
                 <Award size={14} className="text-emerald-400 mt-0.5 shrink-0" />
                 <div>
-                  <p className="text-[11px] text-zinc-600 uppercase tracking-wider">Điểm qua bài</p>
+                  <p className="text-[11px] text-zinc-600 uppercase tracking-wider">{t("voicePractice.lessonInfoPassingScore")}</p>
                   <p className="text-[14px] font-semibold text-white">
                     {lesson.passingScore}<span className="text-zinc-500 font-normal text-[12px]">%</span>
                   </p>
@@ -68,7 +70,7 @@ export default function LessonInfoPanel({ lesson }) {
           {lesson.evaluationCriteria?.length > 0 && (
             <div>
               <p className="flex items-center gap-1.5 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider mb-2">
-                <ListChecks size={12} /> Tiêu chí đánh giá
+                <ListChecks size={12} /> {t("voicePractice.lessonInfoEvalCriteria")}
               </p>
               <div className="flex flex-wrap gap-2">
                 {lesson.evaluationCriteria.map((c, i) => (

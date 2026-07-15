@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, MessageSquare, Trash2, Edit2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/useAuthStore';
 import { academyService } from '../../services/academyService';
 
 const NotesSidebar = ({ isOpen, onClose, highlights, onHighlightDeleted, onHighlightUpdated }) => {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const [editingId, setEditingId] = useState(null);
   const [editNote, setEditNote] = useState("");
@@ -49,7 +51,7 @@ const NotesSidebar = ({ isOpen, onClose, highlights, onHighlightDeleted, onHighl
             <div className="flex items-center justify-between p-5 border-b border-white/[0.08]">
               <div className="flex items-center gap-2 text-white">
                 <MessageSquare size={16} className="text-[#f5a623]" />
-                <h3 className="font-semibold text-[15px]">Ghi chú & Highlight</h3>
+                <h3 className="font-semibold text-[15px]">{t('notesSidebar.title')}</h3>
               </div>
               <button onClick={onClose} className="text-zinc-500 hover:text-white transition-colors">
                 <X size={18} />
@@ -62,8 +64,8 @@ const NotesSidebar = ({ isOpen, onClose, highlights, onHighlightDeleted, onHighl
                   <div className="w-12 h-12 rounded-full bg-white/[0.04] mx-auto flex items-center justify-center mb-3">
                     <MessageSquare size={20} className="text-zinc-600" />
                   </div>
-                  <p className="text-zinc-500 text-[13px]">Bạn chưa có ghi chú nào.</p>
-                  <p className="text-zinc-600 text-[11px] mt-1">Bôi đen văn bản để thêm highlight.</p>
+                  <p className="text-zinc-500 text-[13px]">{t('notesSidebar.empty')}</p>
+                  <p className="text-zinc-600 text-[11px] mt-1">{t('notesSidebar.emptyHint')}</p>
                 </div>
               ) : (
                 highlights.map((hl) => (
@@ -84,19 +86,19 @@ const NotesSidebar = ({ isOpen, onClose, highlights, onHighlightDeleted, onHighl
                         <textarea
                           value={editNote}
                           onChange={(e) => setEditNote(e.target.value)}
-                          placeholder="Thêm ghi chú của bạn..."
+                          placeholder={t('notesSidebar.notePlaceholder')}
                           className="w-full bg-[#09090b] border border-white/[0.1] rounded-lg p-2.5 text-[12px] text-white resize-none outline-none focus:border-[#f5a623]/50 min-h-[60px]"
                         />
                         <div className="flex justify-end gap-2">
-                          <button onClick={() => setEditingId(null)} className="px-3 py-1.5 text-[11px] text-zinc-400 hover:text-white">Hủy</button>
-                          <button onClick={() => handleUpdateNote(hl.id)} className="px-3 py-1.5 text-[11px] bg-[#f5a623] text-black font-medium rounded-md">Lưu</button>
+                          <button onClick={() => setEditingId(null)} className="px-3 py-1.5 text-[11px] text-zinc-400 hover:text-white">{t('common.cancel')}</button>
+                          <button onClick={() => handleUpdateNote(hl.id)} className="px-3 py-1.5 text-[11px] bg-[#f5a623] text-black font-medium rounded-md">{t('common.save')}</button>
                         </div>
                       </div>
                     ) : (
                       <div className="mt-2 group/note">
                         <div className="flex items-center justify-between">
                           <p className={`text-[13px] ${hl.noteContent ? 'text-white' : 'text-zinc-600 italic'}`}>
-                            {hl.noteContent || 'Không có ghi chú.'}
+                            {hl.noteContent || t('notesSidebar.noNote')}
                           </p>
                           <button 
                             onClick={() => { setEditingId(hl.id); setEditNote(hl.noteContent || ''); }}

@@ -40,7 +40,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (localStorage.getItem("justVerified")) {
       localStorage.removeItem("justVerified");
-      toast("Email đã xác thực! Chào mừng bạn đến với MC Hub.", "success");
+      toast(t('dashboard.emailVerifiedToast'), "success");
     }
   }, []);
 
@@ -182,7 +182,7 @@ const Dashboard = () => {
       value: `${avgAccuracy}%`,
       tag: 'AVG',
       tagColor: 'text-emerald-400 bg-emerald-500/[0.08] border border-emerald-500/20',
-      sub: avgAccuracy >= 80 ? 'Xuất sắc' : avgAccuracy >= 60 ? 'Tiến bộ tốt' : 'Cần cải thiện',
+      sub: avgAccuracy >= 80 ? t('dashboard.statAccuracyExcellent') : avgAccuracy >= 60 ? t('dashboard.statAccuracyGood') : t('dashboard.statAccuracyNeedsWork'),
       subColor: avgAccuracy >= 80 ? 'text-emerald-500' : avgAccuracy >= 60 ? 'text-blue-400' : 'text-zinc-600',
       bar: parseFloat(avgAccuracy),
       barColor: '#10b981',
@@ -195,7 +195,7 @@ const Dashboard = () => {
       value: totalPractices,
       tag: t('dashboard.sessions'),
       tagColor: 'text-blue-400 bg-blue-500/[0.08] border border-blue-500/20',
-      sub: `${Math.max(0, 20 - totalPractices)} phiên đến cấp tiếp theo`,
+      sub: t('dashboard.sessionsToNextLevel', { count: Math.max(0, 20 - totalPractices) }),
       subColor: 'text-zinc-600',
       bar: Math.min(100, (totalPractices / 20) * 100),
       barColor: '#3b82f6',
@@ -208,7 +208,7 @@ const Dashboard = () => {
       value: levelLabel,
       tag: `Lv ${level}`,
       tagColor: 'text-[#f5a623] bg-[#f5a623]/[0.08] border border-[#f5a623]/20',
-      sub: `${totalPractices} phiên hoàn thành`,
+      sub: t('dashboard.sessionsCompletedSub', { count: totalPractices }),
       subColor: 'text-zinc-600',
       bar: ((totalPractices % 5) / 5) * 100,
       barColor: '#f5a623',
@@ -221,7 +221,7 @@ const Dashboard = () => {
       value: avgWpm,
       tag: 'WPM',
       tagColor: 'text-violet-400 bg-violet-500/[0.08] border border-violet-500/20',
-      sub: avgWpm >= 120 ? 'Tốc độ chuyên nghiệp' : 'Tốc độ trung bình',
+      sub: avgWpm >= 120 ? t('dashboard.paceRateProfessional') : t('dashboard.paceRateAverage'),
       subColor: avgWpm >= 120 ? 'text-violet-400' : 'text-zinc-600',
       bar: Math.min(100, (avgWpm / 150) * 100),
       barColor: '#8b5cf6',
@@ -233,7 +233,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col gap-8 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <Breadcrumb items={[{ label: 'Bảng điều khiển' }]} />
+      <Breadcrumb items={[{ label: t('dashboard.breadcrumbDashboard') }]} />
 
       <PageBanner
         icon={<Zap size={22} />}
@@ -242,7 +242,7 @@ const Dashboard = () => {
         description={t('dashboard.trackProgress')}
         stats={[
           { value: `${avgAccuracy}%`, label: t('dashboard.accuracy') },
-          { value: totalPractices, label: t('dashboard.sessions') || 'Buổi luyện' },
+          { value: totalPractices, label: t('dashboard.sessions') || t('dashboard.sessionsFallback') },
           { value: `${avgWpm}`, label: 'WPM' },
         ]}
       />
@@ -316,14 +316,14 @@ const Dashboard = () => {
             <Clock size={18} className="text-emerald-400" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[14px] font-semibold text-white mb-0.5">Goi Ngay dang hoat dong</p>
-            <p className="text-[12px] text-zinc-500">Con {dailyHours} gio {dailyMinutes} phut · {aiUsed}/{aiLimit} AI sessions da dung</p>
+            <p className="text-[14px] font-semibold text-white mb-0.5">{t('dashboard.dailyPlanActiveTitle')}</p>
+            <p className="text-[12px] text-zinc-500">{t('dashboard.dailyPlanRemaining', { hours: dailyHours, minutes: dailyMinutes, used: aiUsed, limit: aiLimit })}</p>
           </div>
           <Link
             to="/m/payment"
             className="shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-500 text-white text-[13px] font-semibold hover:bg-emerald-400 transition-colors whitespace-nowrap"
           >
-            <Zap size={14} /> Gia han them
+            <Zap size={14} /> {t('dashboard.dailyPlanExtend')}
           </Link>
         </div>
       )}
@@ -335,14 +335,14 @@ const Dashboard = () => {
             <Crown size={18} className="text-gold" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[14px] font-semibold text-white mb-0.5">Nâng cấp để luyện tập không giới hạn</p>
-            <p className="text-[12px] text-zinc-500">Gói Basic 199k/tháng — 20 lần AI coaching, toàn bộ bài học, báo cáo chi tiết.</p>
+            <p className="text-[14px] font-semibold text-white mb-0.5">{t('dashboard.freeUpgradeTitle')}</p>
+            <p className="text-[12px] text-zinc-500">{t('dashboard.freeUpgradeDesc')}</p>
           </div>
           <Link
             to="/m/payment"
             className="shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-gold text-black text-[13px] font-semibold hover:bg-amber-400 transition-colors whitespace-nowrap"
           >
-            <Sparkles size={14} /> Nâng cấp ngay
+            <Sparkles size={14} /> {t('dashboard.freeUpgradeCta')}
           </Link>
         </div>
       )}
@@ -454,7 +454,7 @@ const Dashboard = () => {
                     to="/m/payment"
                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gold/10 border border-gold/20 text-gold text-[12px] font-semibold hover:bg-gold/20 transition-colors"
                   >
-                    <Crown size={12} /> Nâng cấp Basic để luyện tập không giới hạn
+                    <Crown size={12} /> {t('dashboard.upgradeBasicUnlimited')}
                   </Link>
                 )}
               </div>

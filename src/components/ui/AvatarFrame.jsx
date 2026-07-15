@@ -1,76 +1,86 @@
 import React from 'react';
+import i18next from 'i18next';
 
 // ─── Frame configuration — edit these to restyle any tier ────────────────────
+// Labels/descriptions are resolved lazily via i18next so language switches apply live.
+const FRAME_KEYS = {
+  NONE: 'none', SPARK: 'spark', FLAME: 'flame', STORM: 'storm',
+  LEGEND: 'legend', ELITE: 'elite', IMMORTAL: 'immortal',
+};
+
+const frameLabel = (tierKey) => i18next.t(`avatarFrame.frames.${FRAME_KEYS[tierKey]}.label`);
+const frameDesc = (tierKey) => i18next.t(`avatarFrame.frames.${FRAME_KEYS[tierKey]}.description`);
+
 export const STREAK_FRAMES = {
   NONE: {
-    label: 'Chưa có khung',
+    get label() { return frameLabel('NONE'); },
     days: 0,
     border: 'transparent',
     glow: 'none',
     animation: 'none',
     gradient: null,
     icon: null,
-    description: 'Duy trì 3 ngày để mở khóa khung đầu tiên.',
+    get description() { return frameDesc('NONE'); },
   },
   SPARK: {
-    label: 'Đốm lửa',
+    get label() { return frameLabel('SPARK'); },
     days: 3,
     border: '#f5a623',
     glow: '0 0 10px rgba(245,166,35,0.5)',
     animation: 'streak-glow 2.5s ease-in-out infinite',
     gradient: null,
     icon: '🔥',
-    description: 'Duy trì 7 ngày để đạt Ngọn lửa.',
+    get description() { return frameDesc('SPARK'); },
   },
   FLAME: {
-    label: 'Ngọn lửa',
+    get label() { return frameLabel('FLAME'); },
     days: 7,
     border: '#ff6b35',
     glow: '0 0 16px rgba(255,107,53,0.6)',
     animation: 'streak-pulse 1.8s ease-in-out infinite',
     gradient: 'linear-gradient(135deg, #ff6b35, #f5a623)',
     icon: '🔥',
-    description: 'Duy trì 14 ngày để đạt Bão lửa.',
+    get description() { return frameDesc('FLAME'); },
   },
   STORM: {
-    label: 'Bão lửa',
+    get label() { return frameLabel('STORM'); },
     days: 14,
     border: '#ff4500',
     glow: '0 0 20px rgba(255,69,0,0.65)',
     animation: 'streak-shimmer 1.4s linear infinite',
     gradient: 'linear-gradient(135deg, #ff4500, #ff6b35, #f5a623)',
     icon: '⚡',
-    description: 'Duy trì 30 ngày để đạt Huyền thoại.',
+    get description() { return frameDesc('STORM'); },
   },
   LEGEND: {
-    label: 'Huyền thoại',
+    get label() { return frameLabel('LEGEND'); },
     days: 30,
     border: '#ffd700',
     glow: '0 0 24px rgba(255,215,0,0.7)',
     animation: 'streak-sparkle 1.2s linear infinite',
     gradient: 'linear-gradient(135deg, #ffd700, #ffaa00, #ff6b35)',
     icon: '👑',
-    description: 'Duy trì 60 ngày để đạt Elite.',
+    get description() { return frameDesc('LEGEND'); },
   },
   ELITE: {
-    label: 'Elite',
+    get label() { return frameLabel('ELITE'); },
     days: 60,
     border: '#00d4ff',
     glow: '0 0 28px rgba(0,212,255,0.75)',
     animation: 'streak-electric 0.9s linear infinite',
     gradient: 'linear-gradient(135deg, #00d4ff, #0066ff, #7b2fff)',
     icon: '⚡',
-    description: 'Duy trì 100 ngày để đạt Bất tử.',
+    get description() { return frameDesc('ELITE'); },
   },
   IMMORTAL: {
-    label: 'Bất tử',
+    get label() { return frameLabel('IMMORTAL'); },
     days: 100,
     border: 'url(#rainbow-gradient)',
     glow: '0 0 32px rgba(255,100,100,0.6)',
     animation: 'streak-rainbow 2s linear infinite',
     gradient: 'linear-gradient(135deg, #ff0080, #ff6b35, #ffd700, #00ff88, #00d4ff, #7b2fff)',
     icon: '✨',
-    description: 'Đỉnh cao tuyệt đối. Bạn là huyền thoại MC Hub.',
+    get description() { return frameDesc('IMMORTAL'); },
   },
 };
 

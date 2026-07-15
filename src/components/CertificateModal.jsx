@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Download, Award } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Canvas-rendered certificate — single render path for both preview and download,
@@ -198,6 +199,7 @@ function drawCertificate(canvas, { name, courseTitle, date, certId, preview }) {
 }
 
 const CertificateModal = ({ open, onClose, name, courseTitle, courseId, isCompleted }) => {
+  const { t } = useTranslation();
   const canvasRef = useRef(null);
   const [fontsReady, setFontsReady] = useState(false);
 
@@ -250,7 +252,7 @@ const CertificateModal = ({ open, onClose, name, courseTitle, courseId, isComple
               <div className="flex items-center gap-2 text-[#f5a623]">
                 <Award size={18} />
                 <h3 className="text-[15px] font-semibold text-white">
-                  {isCompleted ? 'Chứng chỉ của bạn' : 'Xem trước chứng chỉ'}
+                  {isCompleted ? t('certificateModal.yourCertificate') : t('certificateModal.previewCertificate')}
                 </h3>
               </div>
               <button onClick={onClose}
@@ -268,12 +270,12 @@ const CertificateModal = ({ open, onClose, name, courseTitle, courseId, isComple
             <div className="flex items-center justify-between mt-4 gap-3 flex-wrap">
               <p className="text-[12px] text-zinc-400">
                 {isCompleted
-                  ? 'Chúc mừng! Đây là chứng chỉ chính thức của bạn.'
-                  : 'Đây là bản xem trước — hoàn thành 100% lộ trình và bài trắc nghiệm để nhận bản chính thức (không còn watermark).'}
+                  ? t('certificateModal.completedNote')
+                  : t('certificateModal.previewNote')}
               </p>
               <button onClick={handleDownload}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] active:scale-[0.98] transition-all shrink-0">
-                <Download size={14} /> Tải về PNG
+                <Download size={14} /> {t('certificateModal.downloadPng')}
               </button>
             </div>
           </motion.div>

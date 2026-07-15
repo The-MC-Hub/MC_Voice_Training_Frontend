@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { verifyMC, suspendUser } from "../controllers/adminController";
 import { useAdminData } from "../hooks/useAdminData";
 import {
@@ -39,6 +40,7 @@ const NAV_ITEMS = [
 ];
 
 const AdminDashboard = () => {
+  const { t } = useTranslation();
   const { section = "dashboard" } = useParams();
   const navigate = useNavigate();
   const { logout, user } = useAuthStore();
@@ -133,7 +135,7 @@ const AdminDashboard = () => {
                 </button>
                 {id === "dashboard" && isActive && (
                   <div className="pl-8 pr-3 py-1 space-y-1 mt-1 border-l border-[--border-subtle] ml-4">
-                    {DASHBOARD_NAV.map(({ id: subId, label: subLabel }) => {
+                    {DASHBOARD_NAV.map(({ id: subId, labelKey: subLabelKey }) => {
                       const isSubActive = activeDashboardSection === subId;
                       return (
                         <button
@@ -142,7 +144,7 @@ const AdminDashboard = () => {
                           className={`w-full text-left text-[11px] py-1.5 px-2 transition-colors ${isSubActive ? "text-[#f5a623] font-medium bg-[#f5a623]/10" : "text-[--text-muted] hover:text-[--text-primary]"
                             }`}
                         >
-                          {subLabel}
+                          {t(subLabelKey)}
                         </button>
                       )
                     })}

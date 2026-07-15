@@ -5,7 +5,7 @@ import { clampMetric } from "../../hooks/useVoicePractice";
 
 // Side-by-side playback + score delta for two picked attempts — lets the user
 // hear how their reading actually changed, not just compare numbers.
-function CompareBar({ selected, onClear, calcScore }) {
+function CompareBar({ selected, onClear, calcScore, t_vp }) {
   if (selected.length !== 2) return null;
   const [older, newer] = [...selected].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
   const delta = calcScore(newer) - calcScore(older);
@@ -15,22 +15,22 @@ function CompareBar({ selected, onClear, calcScore }) {
     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
       <div className="mb-3 p-4 rounded-xl bg-violet-500/[0.05] border border-violet-500/20">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-[12px] font-semibold text-violet-300 flex items-center gap-1.5"><GitCompare size={13} /> So sánh 2 lần đọc</p>
+          <p className="text-[12px] font-semibold text-violet-300 flex items-center gap-1.5"><GitCompare size={13} /> {t_vp("compareTwoAttempts")}</p>
           <button onClick={onClear} className="w-5 h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white"><X size={12} /></button>
         </div>
         <div className="grid grid-cols-2 gap-3">
           {[older, newer].map((h, i) => (
             <div key={h.id} className="p-3 rounded-lg bg-[#111113] border border-white/[0.07]">
-              <p className="text-[10px] text-zinc-600 mb-1">{i === 0 ? "Lần trước" : "Lần này"} · {fmtDate(h.createdAt)}</p>
+              <p className="text-[10px] text-zinc-600 mb-1">{i === 0 ? t_vp("previousAttempt") : t_vp("thisAttempt")} · {fmtDate(h.createdAt)}</p>
               <p className="text-[15px] font-bold text-white mb-1.5">{calcScore(h).toFixed(1)}%</p>
               {h.audioUrl
                 ? <audio controls src={h.audioUrl} className="w-full h-8" style={{ filter: "invert(0.9)" }} />
-                : <p className="text-[10px] text-zinc-700 italic">Không có bản ghi âm</p>}
+                : <p className="text-[10px] text-zinc-700 italic">{t_vp("noRecording")}</p>}
             </div>
           ))}
         </div>
         <p className={`text-[12px] font-semibold text-center mt-3 ${delta >= 0 ? "text-emerald-400" : "text-orange-400"}`}>
-          {delta >= 0 ? "↑ Tiến bộ" : "↓ Giảm"} {Math.abs(delta).toFixed(1)}% so với lần trước
+          {delta >= 0 ? t_vp("progressUp") : t_vp("progressDown")} {Math.abs(delta).toFixed(1)}% {t_vp("comparedToLastTime")}
         </p>
       </div>
     </motion.div>
@@ -104,12 +104,12 @@ export default function PracticeHistory({
       </div>
 
       <AnimatePresence>
-        <CompareBar selected={selectedRecords} onClear={() => setCompareIds([])} calcScore={calcScore} />
+        <CompareBar selected={selectedRecords} onClear={() => setCompareIds([])} calcScore={calcScore} t_vp={t_vp} />
       </AnimatePresence>
 
       {history.length >= 2 && (
         <p className="text-[10px] text-zinc-600 mb-2">
-          {compareIds.length === 0 ? "Chọn 2 lần để so sánh." : compareIds.length === 1 ? "Chọn thêm 1 lần nữa để so sánh." : ""}
+          {compareIds.length === 0 ? t_vp("selectTwoToCompare") : compareIds.length === 1 ? t_vp("selectOneMoreToCompare") : ""}
         </p>
       )}
 
@@ -126,7 +126,7 @@ export default function PracticeHistory({
             >
               <button
                 onClick={(e) => toggleCompare(h, e)}
-                title="Chọn để so sánh"
+                title={t_vp("selectToCompare")}
                 className={`absolute top-3 right-3 w-5 h-5 rounded-md flex items-center justify-center border transition-colors ${compareIds.includes(h.id) ? "bg-violet-500 border-violet-500 text-white" : "border-white/[0.15] text-transparent hover:border-violet-400"}`}
               >
                 <GitCompare size={11} />
@@ -147,7 +147,7 @@ export default function PracticeHistory({
                     <div className="relative group/tt cursor-help">
                       <Info size={9} className="text-zinc-700" />
                       <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-48 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
-                        Điểm tổng hợp theo trọng số tiêu chí của bài học (Phát âm, Biểu cảm, Nhịp điệu...)
+                        {t_vp("overallScoreCardTooltip")}
                       </div>
                     </div>
                   </div>
@@ -159,7 +159,7 @@ export default function PracticeHistory({
                     <div className="relative group/tt cursor-help">
                       <Info size={9} className="text-zinc-700" />
                       <div className="pointer-events-none absolute bottom-full right-0 mb-2 w-48 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-right">
-                        Words Per Minute — tốc độ nói. MC chuyên nghiệp: 120-165 WPM.
+                        {t_vp("wpmCardTooltip")}
                       </div>
                     </div>
                   </div>

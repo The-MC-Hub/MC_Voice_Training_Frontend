@@ -1,21 +1,26 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Mic, ChevronRight, BookOpen, Zap, Star } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import SpotlightCard from '../ui/SpotlightCard';
 
-const CATEGORY_META = {
-  WEDDING:      { label: "Đám cưới",     color: "text-pink-400 bg-pink-500/[0.08] border-pink-500/20" },
-  NEWS:         { label: "Tin tức",      color: "text-blue-400 bg-blue-500/[0.08] border-blue-500/20" },
-  PRESENTATION: { label: "Thuyết trình", color: "text-violet-400 bg-violet-500/[0.08] border-violet-500/20" },
-  CEREMONY:     { label: "Lễ hội",       color: "text-orange-400 bg-orange-500/[0.08] border-orange-500/20" },
-  GENERAL:      { label: "Tổng quát",    color: "text-zinc-400 bg-zinc-500/[0.08] border-zinc-500/20" },
+const CATEGORY_KEYS = {
+  WEDDING: "wedding",
+  NEWS: "news",
+  PRESENTATION: "presentation",
+  CEREMONY: "ceremony",
+  GENERAL: "general",
+};
+const CATEGORY_COLOR = {
+  WEDDING:      "text-pink-400 bg-pink-500/[0.08] border-pink-500/20",
+  NEWS:         "text-blue-400 bg-blue-500/[0.08] border-blue-500/20",
+  PRESENTATION: "text-violet-400 bg-violet-500/[0.08] border-violet-500/20",
+  CEREMONY:     "text-orange-400 bg-orange-500/[0.08] border-orange-500/20",
+  GENERAL:      "text-zinc-400 bg-zinc-500/[0.08] border-zinc-500/20",
 };
 
-const DIFF_META = {
-  EASY:   { label: "Dễ",         dot: "bg-emerald-400" },
-  MEDIUM: { label: "Trung bình", dot: "bg-amber-400" },
-  HARD:   { label: "Khó",        dot: "bg-red-400" },
-};
+const DIFF_KEYS = { EASY: "easy", MEDIUM: "medium", HARD: "hard" };
+const DIFF_DOT = { EASY: "bg-emerald-400", MEDIUM: "bg-amber-400", HARD: "bg-red-400" };
 
 const scoreColor = (s) => {
   if (s >= 80) return "text-emerald-400 bg-emerald-500/[0.07] border-emerald-500/20";
@@ -27,14 +32,18 @@ const truncate = (str, len) =>
   str ? str.replace(/\s+/g, " ").trim().slice(0, len) + (str.length > len ? "…" : "") : null;
 
 const SessionCard = ({ session, index, total, locale = "vi-VN" }) => {
+  const { t } = useTranslation();
   const id = session.id || session._id;
   const title = session.lesson_title || `Session #${total - index}`;
   const acc = (session.accuracy_score || 0).toFixed(1);
   const rhy = (session.rhythm_score || 0).toFixed(1);
   const wpm = Math.round(session.speaking_rate_wpm || 0);
   const overall = Math.round(session.overall_score || 0);
-  const cat = CATEGORY_META[session.lesson_category] || CATEGORY_META.GENERAL;
-  const diff = DIFF_META[(session.lesson_difficulty || "").toUpperCase()];
+  const catKey = CATEGORY_KEYS[session.lesson_category] || CATEGORY_KEYS.GENERAL;
+  const cat = { label: t(`dashboard.${catKey}`), color: CATEGORY_COLOR[session.lesson_category] || CATEGORY_COLOR.GENERAL };
+  const diffCode = (session.lesson_difficulty || "").toUpperCase();
+  const diffKey = DIFF_KEYS[diffCode];
+  const diff = diffKey ? { label: t(`dashboard.${diffKey}`), dot: DIFF_DOT[diffCode] } : null;
   const date = session.created_at
     ? new Date(session.created_at).toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" })
     : "—";
@@ -102,10 +111,10 @@ const SessionCard = ({ session, index, total, locale = "vi-VN" }) => {
         {/* Row 3: Metrics */}
         <div className="mt-3 ml-12 flex items-center gap-3 flex-wrap">
           <span className={`text-[11px] font-medium px-2.5 py-1 rounded-lg border ${scoreColor(parseFloat(acc))}`}>
-            {acc}% chính xác
+            {acc}{t('sessionCard.accuracySuffix')}
           </span>
           <span className="text-[11px] text-zinc-600 px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.05]">
-            {rhy}% nhịp điệu
+            {rhy}{t('sessionCard.rhythmSuffix')}
           </span>
           <span className="text-[11px] text-zinc-600 flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.05]">
             <Zap size={10} className="text-zinc-600" />{wpm} WPM

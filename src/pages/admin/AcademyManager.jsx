@@ -6,10 +6,12 @@ import {
 } from 'lucide-react';
 import { academyService } from '../../services/academyService';
 import { fetchLessons } from '../../controllers/voiceController';
+import { useTranslation } from 'react-i18next';
 
 const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
 
 const AcademyManager = () => {
+  const { t } = useTranslation();
   const [milestones, setMilestones] = useState([]);
   const [guides, setGuides] = useState([]);
   const [scripts, setScripts] = useState([]);
@@ -64,12 +66,12 @@ const AcademyManager = () => {
       setIsEditingMilestone(false);
       setFormData({ title: '', description: '', level: 'Associate', order: milestones.length });
       fetchData();
-    } catch { alert("Error saving milestone"); }
+    } catch { alert(t("admin.academyManager.errors.saveMilestone")); }
   };
 
   const handleDeleteMilestone = async (id, e) => {
     e.stopPropagation();
-    if (window.confirm("Are you sure? All contents will be disconnected.")) {
+    if (window.confirm(t("admin.academyManager.confirms.deleteMilestone"))) {
       await academyService.admin.deleteMilestone(id);
       fetchData();
     }
@@ -105,13 +107,13 @@ const AcademyManager = () => {
       await academyService.admin.createContent(payload);
       setIsAddingContent(false);
       fetchData();
-    } catch { alert("Error saving content to milestone"); }
+    } catch { alert(t("admin.academyManager.errors.saveContent")); }
   };
 
   const handleDeleteContent = async (contentId) => {
-    if (window.confirm("Remove this content?")) {
+    if (window.confirm(t("admin.academyManager.confirms.deleteContent"))) {
       try { await academyService.admin.deleteContent(contentId); fetchData(); }
-      catch { alert("Error deleting content"); }
+      catch { alert(t("admin.academyManager.errors.deleteContent")); }
     }
   };
 
@@ -131,7 +133,7 @@ const AcademyManager = () => {
         academyService.admin.createContent({ ...targetItem, order: currentOrder })
       ]);
       fetchData();
-    } catch { alert("Error re-ordering items."); }
+    } catch { alert(t("admin.academyManager.errors.reorder")); }
   };
 
   const handleViewContentDetails = (content) => {
@@ -144,7 +146,7 @@ const AcademyManager = () => {
       if (guide) details = { title: content.title || guide.title, type: 'READING_GUIDE', category: guide.category, content: guide.content, author: guide.author, duration: content.duration };
     }
     if (details) { setSelectedContentDetails(details); setIsPreviewModalOpen(true); }
-    else alert("Source script or guide details could not be found.");
+    else alert(t("admin.academyManager.errors.detailsNotFound"));
   };
 
   const filteredScripts = useMemo(() => {
@@ -169,7 +171,7 @@ const AcademyManager = () => {
   if (loading) return (
     <div className="flex flex-col items-center justify-center py-20 gap-3 text-zinc-500">
       <div className="w-8 h-8 border-2 border-t-[gold] border-white/[0.07] animate-spin" />
-      <p className="text-[12px]">Loading Academy Curriculum...</p>
+      <p className="text-[12px]">{t("admin.academyManager.loading")}</p>
     </div>
   );
 
@@ -177,12 +179,12 @@ const AcademyManager = () => {
     <div className="space-y-5 w-full">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-[15px] font-semibold text-white">Academy Curriculum Roadmap</h2>
-          <p className="text-[12px] text-zinc-500 mt-0.5">Curate academic learning stages, assign content blocks, and arrange training pathways.</p>
+          <h2 className="text-[15px] font-semibold text-white">{t("admin.academyManager.title")}</h2>
+          <p className="text-[12px] text-zinc-500 mt-0.5">{t("admin.academyManager.subtitle")}</p>
         </div>
         <button onClick={() => setIsEditingMilestone(true)}
           className="flex items-center gap-2 px-3 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors">
-          <Plus size={13} /> New Milestone Stage
+          <Plus size={13} /> {t("admin.academyManager.newMilestoneStage")}
         </button>
       </div>
 
@@ -203,7 +205,7 @@ const AcademyManager = () => {
                     <div className="flex items-center gap-2 text-[10px] text-zinc-500 mt-0.5">
                       <span className="text-[gold]">{m.level}</span>
                       <span>·</span>
-                      <span>{contents.length} items</span>
+                      <span>{t("admin.academyManager.itemsCount", { count: contents.length })}</span>
                     </div>
                   </div>
                 </div>
@@ -219,10 +221,10 @@ const AcademyManager = () => {
               {isExpanded && (
                 <div className="px-4 pb-4 border-t border-white/[0.06] pt-4 space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-[10px] text-zinc-600 uppercase tracking-wider font-medium">Syllabus Items</span>
+                    <span className="text-[10px] text-zinc-600 uppercase tracking-wider font-medium">{t("admin.academyManager.syllabusItems")}</span>
                     <button onClick={() => handleAddContent(m.id)}
                       className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#09090b] border border-white/[0.07] hover:border-white/[0.14] text-white text-[11px] font-medium transition-colors">
-                      <Plus size={10} /> Assign Content
+                      <Plus size={10} /> {t("admin.academyManager.assignContent")}
                     </button>
                   </div>
 
@@ -241,7 +243,7 @@ const AcademyManager = () => {
                                 <p className="font-medium text-zinc-200 text-[12px]">{content.title}</p>
                                 <div className="flex items-center gap-2 mt-0.5">
                                   <span className={`text-[8px] font-medium px-1.5 py-0.5 border ${isPractice ? 'bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]' : 'bg-[#09090b] text-zinc-500 border-white/[0.06]'}`}>
-                                    {isPractice ? 'PRACTICE' : 'GUIDE'}
+                                    {isPractice ? t("admin.academyManager.badges.practice") : t("admin.academyManager.badges.guide")}
                                   </span>
                                   <span className="text-[10px] text-zinc-500 flex items-center gap-1">
                                     <Clock size={9} /> {content.duration}
@@ -273,7 +275,7 @@ const AcademyManager = () => {
                     </div>
                   ) : (
                     <div className="text-center py-6 border border-dashed border-white/[0.06]">
-                      <p className="text-[11px] text-zinc-600 italic">No syllabus modules assigned yet.</p>
+                      <p className="text-[11px] text-zinc-600 italic">{t("admin.academyManager.noSyllabusModules")}</p>
                     </div>
                   )}
                 </div>
@@ -288,34 +290,34 @@ const AcademyManager = () => {
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70">
           <div className="w-full max-w-md bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden">
             <form onSubmit={handleSaveMilestone} className="p-6 space-y-4">
-              <h3 className="text-[14px] font-semibold text-white border-b border-white/[0.06] pb-4">New Stage Milestone</h3>
+              <h3 className="text-[14px] font-semibold text-white border-b border-white/[0.06] pb-4">{t("admin.academyManager.modal.newStageMilestone")}</h3>
               <div className="space-y-1">
-                <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Milestone Title</label>
+                <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t("admin.academyManager.modal.milestoneTitle")}</label>
                 <input type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})}
-                  className={inputCls} placeholder="e.g. Basic Modulation Skills..." />
+                  className={inputCls} placeholder={t("admin.academyManager.modal.milestoneTitlePlaceholder")} />
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Skill Level</label>
+                <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t("admin.academyManager.modal.skillLevel")}</label>
                 <select value={formData.level} onChange={e => setFormData({...formData, level: e.target.value})
                 } className={inputCls + " cursor-pointer"}>
-                  <option value="Associate">Associate</option>
-                  <option value="Professional">Professional</option>
-                  <option value="Elite">Elite</option>
+                  <option value="Associate">{t("admin.academyManager.modal.levelAssociate")}</option>
+                  <option value="Professional">{t("admin.academyManager.modal.levelProfessional")}</option>
+                  <option value="Elite">{t("admin.academyManager.modal.levelElite")}</option>
                 </select>
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Description</label>
+                <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t("admin.academyManager.modal.description")}</label>
                 <textarea rows="3" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})}
-                  className={inputCls} placeholder="Summarize stage syllabus benchmarks..." />
+                  className={inputCls} placeholder={t("admin.academyManager.modal.descriptionPlaceholder")} />
               </div>
               <div className="pt-3 border-t border-white/[0.06] flex gap-2">
                 <button type="button" onClick={() => setIsEditingMilestone(false)}
                   className="flex-1 py-2 bg-[#09090b] border border-white/[0.07] text-zinc-400 text-[12px] font-medium hover:border-white/[0.14] transition-colors">
-                  Cancel
+                  {t("admin.academyManager.modal.cancel")}
                 </button>
                 <button type="submit"
                   className="flex-1 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors">
-                  Save Milestone
+                  {t("admin.academyManager.modal.saveMilestone")}
                 </button>
               </div>
             </form>
@@ -329,8 +331,8 @@ const AcademyManager = () => {
           <div className="w-full max-w-4xl bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div className="flex justify-between items-center p-5 border-b border-white/[0.06]">
               <div>
-                <h3 className="text-[14px] font-semibold text-white">Assign Curriculum Content</h3>
-                <p className="text-[11px] text-zinc-500 mt-0.5">Bind practice lessons or guidelines to academic milestones.</p>
+                <h3 className="text-[14px] font-semibold text-white">{t("admin.academyManager.modal.assignCurriculumContent")}</h3>
+                <p className="text-[11px] text-zinc-500 mt-0.5">{t("admin.academyManager.modal.assignCurriculumContentSubtitle")}</p>
               </div>
               <button onClick={() => setIsAddingContent(false)} className="text-zinc-500 hover:text-white transition-colors"><X size={17} /></button>
             </div>
@@ -339,18 +341,18 @@ const AcademyManager = () => {
               <form onSubmit={handleSaveContent} className="lg:col-span-7 p-5 space-y-4 border-b lg:border-b-0 lg:border-r border-white/[0.06]">
                 {/* Type */}
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Content Type</label>
+                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t("admin.academyManager.modal.contentType")}</label>
                   <div className="grid grid-cols-2 gap-2">
                     {[
-                      { type: 'VOICE_PRACTICE', icon: Play, label: 'Voice Script', desc: 'Interactive training templates' },
-                      { type: 'READING_GUIDE', icon: BookOpen, label: 'Reading Guide', desc: 'Theoretical documents' },
-                    ].map(({ type: t, icon: Icon, label, desc }) => (
-                      <div key={t} onClick={() => setContentFormData({
-                          ...contentFormData, type: t,
-                          voiceScriptId: t === 'VOICE_PRACTICE' ? (scripts[0]?.id || '') : '',
-                          readingGuideId: t === 'READING_GUIDE' ? (guides[0]?.id || '') : ''
+                      { type: 'VOICE_PRACTICE', icon: Play, label: t("admin.academyManager.modal.voiceScript"), desc: t("admin.academyManager.modal.voiceScriptDesc") },
+                      { type: 'READING_GUIDE', icon: BookOpen, label: t("admin.academyManager.modal.readingGuide"), desc: t("admin.academyManager.modal.readingGuideDesc") },
+                    ].map(({ type: ct, icon: Icon, label, desc }) => (
+                      <div key={ct} onClick={() => setContentFormData({
+                          ...contentFormData, type: ct,
+                          voiceScriptId: ct === 'VOICE_PRACTICE' ? (scripts[0]?.id || '') : '',
+                          readingGuideId: ct === 'READING_GUIDE' ? (guides[0]?.id || '') : ''
                         })}
-                        className={`p-3 border cursor-pointer transition-colors ${contentFormData.type === t ? 'bg-[gold]/[0.08] border-[gold]/20 text-white' : 'bg-[#09090b] border-white/[0.07] text-zinc-500 hover:border-white/[0.14]'}`}>
+                        className={`p-3 border cursor-pointer transition-colors ${contentFormData.type === ct ? 'bg-[gold]/[0.08] border-[gold]/20 text-white' : 'bg-[#09090b] border-white/[0.07] text-zinc-500 hover:border-white/[0.14]'}`}>
                         <Icon size={13} className="mb-1.5" />
                         <p className="text-[11px] font-semibold uppercase tracking-wide">{label}</p>
                         <p className="text-[10px] text-zinc-600 mt-0.5">{desc}</p>
@@ -362,12 +364,12 @@ const AcademyManager = () => {
                 {/* Search + select */}
                 <div className="space-y-2">
                   <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">
-                    {contentFormData.type === 'VOICE_PRACTICE' ? 'Select Training Script' : 'Select Theory Document'}
+                    {contentFormData.type === 'VOICE_PRACTICE' ? t("admin.academyManager.modal.selectTrainingScript") : t("admin.academyManager.modal.selectTheoryDocument")}
                   </label>
                   <div className="relative">
                     <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
                     <input type="text" value={itemSearchQuery} onChange={e => setItemSearchQuery(e.target.value)}
-                      placeholder="Filter titles..." className={inputCls + " pl-9"} />
+                      placeholder={t("admin.academyManager.modal.filterTitles")} className={inputCls + " pl-9"} />
                   </div>
                   {contentFormData.type === 'VOICE_PRACTICE' ? (
                     <select value={contentFormData.voiceScriptId} onChange={e => setContentFormData({...contentFormData, voiceScriptId: e.target.value})}
@@ -383,13 +385,13 @@ const AcademyManager = () => {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Display Override Title (optional)</label>
+                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t("admin.academyManager.modal.displayOverrideTitle")}</label>
                   <input type="text" value={contentFormData.title} onChange={e => setContentFormData({...contentFormData, title: e.target.value})}
-                    className={inputCls} placeholder="Defaults to resource title" />
+                    className={inputCls} placeholder={t("admin.academyManager.modal.displayOverrideTitlePlaceholder")} />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Estimated Duration</label>
+                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t("admin.academyManager.modal.estimatedDuration")}</label>
                   <div className="flex gap-2 items-center flex-wrap">
                     <input type="text" required value={contentFormData.duration} onChange={e => setContentFormData({...contentFormData, duration: e.target.value})}
                       placeholder="15m" className={inputCls + " w-20 text-center"} />
@@ -405,50 +407,50 @@ const AcademyManager = () => {
                 <div className="pt-3 border-t border-white/[0.06] flex gap-2">
                   <button type="button" onClick={() => setIsAddingContent(false)}
                     className="flex-1 py-2 bg-[#09090b] border border-white/[0.07] text-zinc-400 text-[12px] font-medium hover:border-white/[0.14] transition-colors">
-                    Cancel
+                    {t("admin.academyManager.modal.cancel")}
                   </button>
                   <button type="submit"
                     className="flex-1 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors">
-                    Assign Content
+                    {t("admin.academyManager.modal.assignContent")}
                   </button>
                 </div>
               </form>
 
               {/* Live preview */}
               <div className="lg:col-span-5 p-5 bg-[#09090b]/60 max-h-[500px] overflow-y-auto">
-                <h4 className="text-[10px] font-medium text-zinc-600 uppercase tracking-wider mb-4">Resource Overview</h4>
+                <h4 className="text-[10px] font-medium text-zinc-600 uppercase tracking-wider mb-4">{t("admin.academyManager.modal.resourceOverview")}</h4>
                 {livePreviewData ? (
                   <div className="space-y-4">
                     <div>
                       <span className={`text-[9px] font-medium px-2 py-0.5 border ${livePreviewData.displayType === 'VOICE_PRACTICE' ? 'bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]' : 'bg-[#09090b] text-zinc-500 border-white/[0.06]'}`}>
-                        {livePreviewData.displayType === 'VOICE_PRACTICE' ? 'VOICE SCRIPT' : 'THEORY GUIDE'}
+                        {livePreviewData.displayType === 'VOICE_PRACTICE' ? t("admin.academyManager.badges.voiceScriptUpper") : t("admin.academyManager.badges.theoryGuideUpper")}
                       </span>
                       <h4 className="text-[13px] font-semibold text-white mt-2 leading-snug">{livePreviewData.title}</h4>
                     </div>
                     <div className="grid grid-cols-2 gap-3 border-t border-b border-white/[0.06] py-3 text-[12px]">
                       <div>
-                        <p className="text-[9px] text-zinc-600 uppercase mb-0.5">Category</p>
-                        <p className="text-zinc-300 font-medium">{livePreviewData.category || "General"}</p>
+                        <p className="text-[9px] text-zinc-600 uppercase mb-0.5">{t("admin.academyManager.modal.category")}</p>
+                        <p className="text-zinc-300 font-medium">{livePreviewData.category || t("admin.academyManager.modal.general")}</p>
                       </div>
                       <div>
                         <p className="text-[9px] text-zinc-600 uppercase mb-0.5">
-                          {livePreviewData.displayType === 'VOICE_PRACTICE' ? 'Language' : 'Author'}
+                          {livePreviewData.displayType === 'VOICE_PRACTICE' ? t("admin.academyManager.modal.language") : t("admin.academyManager.modal.author")}
                         </p>
                         <p className="text-zinc-300 font-medium">
-                          {livePreviewData.displayType === 'VOICE_PRACTICE' ? (livePreviewData.language?.toUpperCase() || "VI") : (livePreviewData.author || "System Academy")}
+                          {livePreviewData.displayType === 'VOICE_PRACTICE' ? (livePreviewData.language?.toUpperCase() || t("admin.academyManager.modal.defaultLanguage")) : (livePreviewData.author || t("admin.academyManager.modal.defaultAuthor"))}
                         </p>
                       </div>
                     </div>
                     <div>
-                      <label className="text-[9px] text-zinc-600 uppercase flex items-center gap-1 mb-1.5"><FileText size={9} /> Script content</label>
+                      <label className="text-[9px] text-zinc-600 uppercase flex items-center gap-1 mb-1.5"><FileText size={9} /> {t("admin.academyManager.modal.scriptContent")}</label>
                       <div className="bg-[#111113] border border-white/[0.06] p-3 text-[11px] text-zinc-400 leading-relaxed max-h-36 overflow-y-auto whitespace-pre-wrap">
-                        {livePreviewData.content || "Empty content."}
+                        {livePreviewData.content || t("admin.academyManager.modal.emptyContent")}
                       </div>
                     </div>
                   </div>
                 ) : (
                   <div className="text-center py-10">
-                    <p className="text-[11px] text-zinc-600 italic">Choose a training script or guideline to inspect details.</p>
+                    <p className="text-[11px] text-zinc-600 italic">{t("admin.academyManager.modal.chooseScriptOrGuide")}</p>
                   </div>
                 )}
               </div>
@@ -468,7 +470,7 @@ const AcademyManager = () => {
                 </div>
                 <div>
                   <span className="text-[9px] text-zinc-600 uppercase tracking-wider block">
-                    {selectedContentDetails.type === 'VOICE_PRACTICE' ? 'Voice Script' : 'Study Guide'}
+                    {selectedContentDetails.type === 'VOICE_PRACTICE' ? t("admin.academyManager.modal.voiceScript") : t("admin.academyManager.modal.studyGuide")}
                   </span>
                   <h3 className="font-semibold text-white text-[14px]">{selectedContentDetails.title}</h3>
                 </div>
@@ -479,34 +481,34 @@ const AcademyManager = () => {
             <div className="p-5 space-y-4">
               <div className="grid grid-cols-3 gap-3 bg-[#09090b] border border-white/[0.06] p-3 text-[12px]">
                 <div>
-                  <span className="text-[9px] text-zinc-600 uppercase flex items-center gap-1"><Tag size={9} /> Category</span>
-                  <p className="text-zinc-300 font-medium mt-0.5">{selectedContentDetails.category || "General"}</p>
+                  <span className="text-[9px] text-zinc-600 uppercase flex items-center gap-1"><Tag size={9} /> {t("admin.academyManager.modal.category")}</span>
+                  <p className="text-zinc-300 font-medium mt-0.5">{selectedContentDetails.category || t("admin.academyManager.modal.general")}</p>
                 </div>
                 <div>
-                  <span className="text-[9px] text-zinc-600 uppercase flex items-center gap-1"><Clock size={9} /> Duration</span>
-                  <p className="text-zinc-300 font-medium mt-0.5">{selectedContentDetails.duration || "N/A"}</p>
+                  <span className="text-[9px] text-zinc-600 uppercase flex items-center gap-1"><Clock size={9} /> {t("admin.academyManager.modal.duration")}</span>
+                  <p className="text-zinc-300 font-medium mt-0.5">{selectedContentDetails.duration || t("admin.academyManager.modal.durationNA")}</p>
                 </div>
                 <div>
                   <span className="text-[9px] text-zinc-600 uppercase flex items-center gap-1">
                     {selectedContentDetails.type === 'VOICE_PRACTICE' ? <Globe size={9} /> : <User size={9} />}
-                    {selectedContentDetails.type === 'VOICE_PRACTICE' ? 'Language' : 'Author'}
+                    {selectedContentDetails.type === 'VOICE_PRACTICE' ? t("admin.academyManager.modal.language") : t("admin.academyManager.modal.author")}
                   </span>
                   <p className="text-zinc-300 font-medium mt-0.5">
-                    {selectedContentDetails.type === 'VOICE_PRACTICE' ? (selectedContentDetails.language?.toUpperCase() || "VI") : (selectedContentDetails.author || "System Academy")}
+                    {selectedContentDetails.type === 'VOICE_PRACTICE' ? (selectedContentDetails.language?.toUpperCase() || t("admin.academyManager.modal.defaultLanguage")) : (selectedContentDetails.author || t("admin.academyManager.modal.defaultAuthor"))}
                   </p>
                 </div>
               </div>
 
               <div>
-                <label className="text-[9px] text-zinc-600 uppercase flex items-center gap-1 mb-1.5"><FileText size={9} /> Practice text</label>
+                <label className="text-[9px] text-zinc-600 uppercase flex items-center gap-1 mb-1.5"><FileText size={9} /> {t("admin.academyManager.modal.practiceText")}</label>
                 <div className="bg-[#09090b] border border-white/[0.06] p-4 max-h-56 overflow-y-auto text-[12px] text-zinc-300 leading-relaxed whitespace-pre-wrap">
-                  {selectedContentDetails.content || "No practice text configured."}
+                  {selectedContentDetails.content || t("admin.academyManager.modal.noPracticeText")}
                 </div>
               </div>
 
               <button onClick={() => setIsPreviewModalOpen(false)}
                 className="w-full py-2.5 bg-[#09090b] border border-white/[0.07] hover:border-white/[0.14] text-zinc-300 text-[12px] font-medium transition-colors">
-                Close Preview
+                {t("admin.academyManager.modal.closePreview")}
               </button>
             </div>
           </div>

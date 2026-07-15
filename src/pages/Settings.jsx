@@ -91,6 +91,7 @@ const EMOJI_CATEGORIES = [
 ];
 
 const EmojiAvatarPicker = ({ selected, onSelect, compact = false }) => {
+  const { t } = useTranslation();
   const [activeCategory, setActiveCategory] = useState(0);
   const [search, setSearch] = useState("");
 
@@ -105,7 +106,7 @@ const EmojiAvatarPicker = ({ selected, onSelect, compact = false }) => {
         type="text"
         value={search}
         onChange={e => setSearch(e.target.value)}
-        placeholder="Tìm emoji..."
+        placeholder={t('settings.searchEmoji')}
         className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-[12px] text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-amber-400 transition-colors"
       />
 
@@ -157,6 +158,7 @@ const EmojiAvatarPicker = ({ selected, onSelect, compact = false }) => {
 };
 
 const ReferralCard = ({ user, updateUser }) => {
+  const { t } = useTranslation();
   const [generating, setGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
   const toast = useToast();
@@ -180,7 +182,7 @@ const ReferralCard = ({ user, updateUser }) => {
       const code = res.data?.data?.referralCode;
       if (code && updateUser) updateUser({ referralCode: code });
     } catch (err) {
-      toast?.error?.(err.response?.data?.message || "Không thể tạo mã giới thiệu.");
+      toast?.error?.(err.response?.data?.message || t('settings.referralGenerateFailed'));
     } finally {
       setGenerating(false);
     }
@@ -190,17 +192,17 @@ const ReferralCard = ({ user, updateUser }) => {
     <div className="space-y-3">
       <div className="flex items-center gap-2 mb-1">
         <Gift size={16} className="text-[#f5a623]" />
-        <h2 className="text-[15px] font-semibold text-gray-900">Mã giới thiệu</h2>
+        <h2 className="text-[15px] font-semibold text-gray-900">{t('settings.referralCode')}</h2>
       </div>
       <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[12px] text-gray-500 mb-1">Bạn đã giới thiệu được</p>
-            <p className="text-[28px] font-bold text-gray-900 leading-none">{referralCount} <span className="text-[14px] font-medium text-gray-400">người</span></p>
+            <p className="text-[12px] text-gray-500 mb-1">{t('settings.referralCountLabel')}</p>
+            <p className="text-[28px] font-bold text-gray-900 leading-none">{referralCount} <span className="text-[14px] font-medium text-gray-400">{t('settings.referralPeopleUnit')}</span></p>
           </div>
           {referralCode && (
             <div className="text-right">
-              <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">Mã của bạn</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">{t('settings.yourCode')}</p>
               <span className="font-mono text-[20px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-xl">{referralCode}</span>
             </div>
           )}
@@ -215,14 +217,14 @@ const ReferralCard = ({ user, updateUser }) => {
                 onClick={handleCopy}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all shrink-0 ${copied ? "bg-emerald-500 text-white" : "bg-amber-500 hover:bg-amber-600 text-white"}`}
               >
-                {copied ? <><CheckCircle2 size={12} /> Đã sao chép</> : <><Copy size={12} /> Copy link</>}
+                {copied ? <><CheckCircle2 size={12} /> {t('settings.referralCopied')}</> : <><Copy size={12} /> {t('settings.referralCopyLink')}</>}
               </button>
             </div>
-            <p className="text-[11px] text-gray-400">Chia sẻ link trên để bạn bè đăng ký — mã sẽ được điền tự động.</p>
+            <p className="text-[11px] text-gray-400">{t('settings.referralShareHint')}</p>
           </div>
         ) : (
           <div className="space-y-3">
-            <p className="text-[12px] text-gray-500">Bạn chưa có mã giới thiệu. Tạo ngay để chia sẻ với bạn bè!</p>
+            <p className="text-[12px] text-gray-500">{t('settings.referralNoCode')}</p>
             <button
               type="button"
               onClick={handleGenerate}
@@ -230,7 +232,7 @@ const ReferralCard = ({ user, updateUser }) => {
               className="flex items-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[13px] font-semibold transition-colors disabled:opacity-50"
             >
               {generating ? <Loader2 size={14} className="animate-spin" /> : <Gift size={14} />}
-              {generating ? "Đang tạo..." : "Tạo mã giới thiệu"}
+              {generating ? t('settings.referralGenerating') : t('settings.referralGenerateBtn')}
             </button>
           </div>
         )}
@@ -394,10 +396,10 @@ const Settings = () => {
         ...prev,
         eventPhotos: [...prev.eventPhotos, ...urls]
       }));
-      toast(`Successfully uploaded ${urls.length} photos`, "success");
+      toast(t('settings.portfolioUploadSuccess', { count: urls.length }), "success");
     } catch (err) {
       console.error("Portfolio upload failed:", err);
-      toast("Failed to upload some photos", "error");
+      toast(t('settings.portfolioUploadFailed'), "error");
     } finally {
       setPortfolioLoading(false);
       e.target.value = '';
@@ -442,11 +444,11 @@ const Settings = () => {
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     if (securityData.newPassword !== securityData.confirmPassword) {
-      setError("New passwords do not match.");
+      setError(t('settings.passwordMismatchError'));
       return;
     }
     if (securityData.newPassword.length < 6) {
-      setError("Password must be at least 6 characters.");
+      setError(t('settings.passwordTooShortError'));
       return;
     }
     setLoading(true);
@@ -504,7 +506,7 @@ const Settings = () => {
 
   return (
     <div className="space-y-8 pb-20 max-w-6xl mx-auto px-6">
-      <Breadcrumb items={[{ label: 'Cài đặt' }]} />
+      <Breadcrumb items={[{ label: t('settings.accountSettings') }]} />
       <div className="border-b border-gray-200 pb-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-1">{t('settings.accountSettings')}</h1>
         <p className="text-[13px] text-gray-500">{t('settings.manageAccount')}</p>
@@ -559,14 +561,14 @@ const Settings = () => {
                   <div className="flex items-start gap-5">
                     {/* Current avatar display */}
                     <div className="shrink-0">
-                      <p className={labelCls + " mb-2"}>Avatar</p>
+                      <p className={labelCls + " mb-2"}>{t('settings.avatarLabel')}</p>
                       <div className="w-16 h-16 rounded-2xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center text-[36px] leading-none select-none">
                         {(() => { const a = profileData.avatar || user?.avatar || "🎤"; return (a.includes('.') || a.startsWith('http')) ? "🎤" : a; })()}
                       </div>
                     </div>
                     {/* Picker */}
                     <div className="flex-1 min-w-0" data-quest="quest-avatar-picker">
-                      <p className={labelCls + " mb-2"}>Chọn emoji đại diện</p>
+                      <p className={labelCls + " mb-2"}>{t('settings.chooseEmojiAvatar')}</p>
                       <EmojiAvatarPicker
                         compact
                         selected={(() => { const a = profileData.avatar || user?.avatar || ""; return (a.includes('.') || a.startsWith('http')) ? "" : a; })()}
@@ -938,8 +940,8 @@ const Settings = () => {
                 {/* Replay tour */}
                 <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 border border-gray-100">
                   <div>
-                    <p className="text-[13px] font-medium text-gray-800">Hướng dẫn sử dụng</p>
-                    <p className="text-[11px] text-gray-500 mt-0.5">Xem lại tour giới thiệu các tính năng chính</p>
+                    <p className="text-[13px] font-medium text-gray-800">{t('settings.userGuideTitle')}</p>
+                    <p className="text-[11px] text-gray-500 mt-0.5">{t('settings.userGuideDesc')}</p>
                   </div>
                   <button
                     type="button"
@@ -950,7 +952,7 @@ const Settings = () => {
                     className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 text-[12px] font-semibold hover:bg-amber-100 transition-colors"
                   >
                     <History size={13} />
-                    Xem lại hướng dẫn
+                    {t('settings.reviewGuideBtn')}
                   </button>
                 </div>
                 <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 border border-gray-100">
@@ -984,7 +986,7 @@ const Settings = () => {
                       </button>
                     </div>
                     {i18nInstance.language === 'en' && (
-                      <span className="text-[10px] font-medium text-amber-400/80">⚠ Đang phát triển</span>
+                      <span className="text-[10px] font-medium text-amber-400/80">⚠ {t('settings.inDevelopment')}</span>
                     )}
                   </div>
                 </div>
@@ -1021,23 +1023,23 @@ const Settings = () => {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className={labelCls}>Mật khẩu mới</label>
+                    <label className={labelCls}>{t('settings.newPassword')}</label>
                     <div className={inputWrapCls}>
                       <Shield size={15} className="text-gray-400 shrink-0" />
-                      <input type="password" name="newPassword" className={inputCls} value={securityData.newPassword} onChange={handleSecurityChange} placeholder="Tối thiểu 8 ký tự" />
+                      <input type="password" name="newPassword" className={inputCls} value={securityData.newPassword} onChange={handleSecurityChange} placeholder={t('settings.minCharacters')} />
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <label className={labelCls}>Xác nhận mật khẩu</label>
+                    <label className={labelCls}>{t('settings.confirmNewPassword')}</label>
                     <div className={inputWrapCls}>
                       <Shield size={15} className="text-gray-400 shrink-0" />
-                      <input type="password" name="confirmPassword" className={inputCls} value={securityData.confirmPassword} onChange={handleSecurityChange} placeholder="Nhập lại mật khẩu mới" />
+                      <input type="password" name="confirmPassword" className={inputCls} value={securityData.confirmPassword} onChange={handleSecurityChange} placeholder={t('settings.repeatPassword')} />
                     </div>
                   </div>
                 </div>
                 <div className="flex justify-end pt-1 border-t border-gray-100">
                   <button type="submit" disabled={loading} className="flex items-center gap-2 px-5 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[13px] font-semibold transition-colors disabled:opacity-50">
-                    <Save size={14} /> {loading ? "Đang lưu..." : "Cập nhật mật khẩu"}
+                    <Save size={14} /> {loading ? t('settings.saving') : t('settings.updatePassword')}
                   </button>
                 </div>
               </form>
@@ -1047,20 +1049,20 @@ const Settings = () => {
                 {/* Header */}
                 <div className="px-5 py-3 bg-red-50 border-b border-red-100 flex items-center gap-2">
                   <LogOut size={13} className="text-red-500" />
-                  <p className="text-[11px] font-semibold text-red-600 uppercase tracking-wide">Phiên làm việc</p>
+                  <p className="text-[11px] font-semibold text-red-600 uppercase tracking-wide">{t('settings.sessionLabel')}</p>
                 </div>
                 {/* Logout row */}
                 <div className="p-5  items-center justify-between gap-4">
                   <div>
-                    <p className="text-[13px] font-semibold text-gray-800">Đăng xuất khỏi tài khoản</p>
-                    <p className="text-[11px] text-gray-500 mt-1">Kết thúc phiên hiện tại và quay về trang đăng nhập.</p>
+                    <p className="text-[13px] font-semibold text-gray-800">{t('settings.logoutFromAccount')}</p>
+                    <p className="text-[11px] text-gray-500 mt-1">{t('settings.logoutDesc')}</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => { trackLogoutClick(); logout(); navigate('/'); }}
                     className="mt-4 shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 active:scale-95 text-white text-[12px] font-semibold transition-all duration-150"
                   >
-                    <LogOut size={13} /> Đăng xuất
+                    <LogOut size={13} /> {t('navbar.logout')}
                   </button>
                 </div>
               </div>
@@ -1082,12 +1084,12 @@ const Settings = () => {
                       <Award size={18} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[13px] font-semibold text-gray-900">Gói {user?.plan || 'Premium'} đang hoạt động</p>
+                      <p className="text-[13px] font-semibold text-gray-900">{t('settings.planActive', { plan: user?.plan || 'Premium' })}</p>
                       <p className="text-[11px] text-gray-500 mt-0.5">
-                        {user?.planExpiresAt ? `Hết hạn: ${new Date(user.planExpiresAt).toLocaleDateString('vi-VN')}` : 'Không giới hạn'}
+                        {user?.planExpiresAt ? t('settings.planExpiresAt', { date: new Date(user.planExpiresAt).toLocaleDateString('vi-VN') }) : t('settings.planUnlimited')}
                       </p>
                     </div>
-                    <span className="text-[11px] font-medium text-emerald-400">Active</span>
+                    <span className="text-[11px] font-medium text-emerald-400">{t('settings.planActiveLabel')}</span>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -1097,22 +1099,22 @@ const Settings = () => {
                         <Zap size={16} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-[13px] font-semibold text-gray-900">Gói Miễn Phí</p>
-                        <p className="text-[11px] text-gray-400 mt-0.5">Tài khoản hiện tại của bạn</p>
+                        <p className="text-[13px] font-semibold text-gray-900">{t('settings.freePlanTitle')}</p>
+                        <p className="text-[11px] text-gray-400 mt-0.5">{t('settings.freePlanDesc')}</p>
                       </div>
-                      <span className="text-[11px] font-semibold text-gray-500 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-md uppercase tracking-wide">FREE</span>
+                      <span className="text-[11px] font-semibold text-gray-500 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-md uppercase tracking-wide">{t('settings.freePlanBadge')}</span>
                     </div>
 
                     {/* FREE benefits */}
                     <div className="rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
                       <div className="px-4 py-2.5 bg-gray-50">
-                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Quyền lợi hiện tại</p>
+                        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">{t('settings.currentBenefits')}</p>
                       </div>
                       {[
-                        { label: 'Lượt luyện tập AI', used: user?.aiSessionsUsed ?? 0, total: 5, unit: 'lượt' },
-                        { label: 'Bài học có thể xem', used: null, total: null, note: 'Tất cả bài học công khai' },
-                        { label: 'Tính năng AI Coaching', used: null, total: null, note: 'Không khả dụng' },
-                        { label: 'Chủ đề luyện tập', used: null, total: null, note: 'MC Đám cưới (xem trước)' },
+                        { label: t('settings.benefitAiSessions'), used: user?.aiSessionsUsed ?? 0, total: 5, unit: t('settings.benefitSessionsUnit') },
+                        { label: t('settings.benefitLessonsAccess'), used: null, total: null, note: t('settings.benefitLessonsNote') },
+                        { label: t('settings.benefitAiCoaching'), used: null, total: null, note: t('settings.benefitUnavailable') },
+                        { label: t('settings.benefitPracticeTopics'), used: null, total: null, note: t('settings.benefitTopicsNote') },
                       ].map(({ label, used, total, unit, note }) => (
                         <div key={label} className="flex items-center justify-between px-4 py-3">
                           <span className="text-[12px] text-gray-600">{label}</span>
@@ -1125,7 +1127,7 @@ const Settings = () => {
                                 />
                               </div>
                               <span className={`text-[11px] font-semibold tabular-nums ${used >= total ? 'text-red-500' : 'text-gray-700'}`}>
-                                {total - used} {unit} còn lại
+                                {t('settings.benefitRemaining', { count: total - used, unit })}
                               </span>
                             </div>
                           ) : (
@@ -1138,14 +1140,14 @@ const Settings = () => {
                     {/* Upgrade CTA */}
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-xl bg-amber-50 border border-amber-200">
                       <div>
-                        <p className="text-[13px] font-semibold text-gray-900 mb-0.5">Nâng cấp để mở khoá đầy đủ</p>
-                        <p className="text-[11px] text-gray-500">AI không giới hạn · 3 chủ đề · Theo dõi tiến độ</p>
+                        <p className="text-[13px] font-semibold text-gray-900 mb-0.5">{t('settings.upgradeToUnlockTitle')}</p>
+                        <p className="text-[11px] text-gray-500">{t('settings.upgradeToUnlockDesc')}</p>
                       </div>
                       <button
                         onClick={() => navigate('/m/payment')}
                         className="shrink-0 px-5 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black text-[13px] font-semibold rounded-xl transition-colors"
                       >
-                        Xem gói
+                        {t('settings.viewPlans')}
                       </button>
                     </div>
                   </div>

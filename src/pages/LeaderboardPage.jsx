@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import confetti from 'canvas-confetti';
+import { useTranslation } from 'react-i18next';
 import {
   Trophy, Medal, Award, Crown, Sparkles, Flame,
   Clock, Mic, TrendingUp, RefreshCw, ChevronUp,
@@ -16,27 +17,29 @@ import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
+// Note: `label` fields below are now resolved via i18n at render time using LABEL_KEYS maps,
+// kept here only as fallback technical identifiers where needed.
 
 const TYPES = [
-  { key: 'streak',   label: 'Chuỗi ngày',  icon: Flame,  unit: 'ngày', field: 'currentStreak' },
-  { key: 'diligent', label: 'Giờ luyện',   icon: Clock,  unit: 'giờ',  field: 'totalPracticeHours' },
-  { key: 'sessions', label: 'Số buổi tập', icon: Mic,    unit: 'buổi', field: 'totalSessions' },
+  { key: 'streak',   labelKey: 'leaderboard.typeStreak',   icon: Flame,  unitKey: 'leaderboard.unitDays',      field: 'currentStreak' },
+  { key: 'diligent', labelKey: 'leaderboard.typeDiligent', icon: Clock,  unitKey: 'leaderboard.unitHours',     field: 'totalPracticeHours' },
+  { key: 'sessions', labelKey: 'leaderboard.typeSessions', icon: Mic,    unitKey: 'leaderboard.unitSessions',  field: 'totalSessions' },
 ];
 
 const PERIODS = [
-  { key: 'all_time', label: 'Tất cả' },
-  { key: 'weekly',   label: 'Tuần này' },
+  { key: 'all_time', labelKey: 'leaderboard.periodAllTime' },
+  { key: 'weekly',   labelKey: 'leaderboard.periodWeekly' },
 ];
 
 // Tier thresholds (streak days as baseline reference)
 const TIER_ORDER = ['BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'DIAMOND', 'ELITE_LEGEND'];
 const TIER_THRESHOLDS = {
-  BRONZE:       { min: 0,   max: 6,   label: 'Bronze',       next: 'SILVER',       emoji: '🥉' },
-  SILVER:       { min: 7,   max: 13,  label: 'Silver',       next: 'GOLD',         emoji: '🥈' },
-  GOLD:         { min: 14,  max: 29,  label: 'Gold',         next: 'PLATINUM',     emoji: '🥇' },
-  PLATINUM:     { min: 30,  max: 59,  label: 'Platinum',     next: 'DIAMOND',      emoji: '💎' },
-  DIAMOND:      { min: 60,  max: 99,  label: 'Diamond',      next: 'ELITE_LEGEND', emoji: '💠' },
-  ELITE_LEGEND: { min: 100, max: 999, label: 'Elite Legend', next: null,           emoji: '👑' },
+  BRONZE:       { min: 0,   max: 6,   labelKey: 'leaderboard.tierBronze',      next: 'SILVER',       emoji: '🥉' },
+  SILVER:       { min: 7,   max: 13,  labelKey: 'leaderboard.tierSilver',      next: 'GOLD',         emoji: '🥈' },
+  GOLD:         { min: 14,  max: 29,  labelKey: 'leaderboard.tierGold',        next: 'PLATINUM',     emoji: '🥇' },
+  PLATINUM:     { min: 30,  max: 59,  labelKey: 'leaderboard.tierPlatinum',    next: 'DIAMOND',      emoji: '💎' },
+  DIAMOND:      { min: 60,  max: 99,  labelKey: 'leaderboard.tierDiamond',     next: 'ELITE_LEGEND', emoji: '💠' },
+  ELITE_LEGEND: { min: 100, max: 999, labelKey: 'leaderboard.tierEliteLegend', next: null,           emoji: '👑' },
 };
 
 const TIER_COLORS = {
@@ -57,14 +60,14 @@ const PODIUM_STYLES = [
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const getTierProgress = (tier, streakValue) => {
-  const t = TIER_THRESHOLDS[tier];
-  if (!t || !t.next) return { pct: 100, needed: 0, nextTier: null };
-  const nextT = TIER_THRESHOLDS[t.next];
-  const range = nextT.min - t.min;
-  const done  = Math.min(streakValue - t.min, range);
+  const tt = TIER_THRESHOLDS[tier];
+  if (!tt || !tt.next) return { pct: 100, needed: 0, nextTier: null };
+  const nextT = TIER_THRESHOLDS[tt.next];
+  const range = nextT.min - tt.min;
+  const done  = Math.min(streakValue - tt.min, range);
   const pct   = Math.round((done / range) * 100);
   const needed = nextT.min - streakValue;
-  return { pct: Math.max(0, Math.min(100, pct)), needed: Math.max(0, needed), nextTier: t.next };
+  return { pct: Math.max(0, Math.min(100, pct)), needed: Math.max(0, needed), nextTier: tt.next };
 };
 
 const fireCelebration = () => {
@@ -105,8 +108,9 @@ const AnimatedNumber = ({ value, decimals = 0 }) => {
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 const TierBadge = ({ tier }) => {
+  const { t } = useTranslation();
   const c = TIER_COLORS[tier] || TIER_COLORS.BRONZE;
-  const label = tier === 'ELITE_LEGEND' ? 'ELITE' : tier;
+  const label = tier === 'ELITE_LEGEND' ? t('leaderboard.tierEliteShort') : tier;
   return (
     <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-semibold border ${c.bg} ${c.text} ${c.border}`}>
       {tier === 'ELITE_LEGEND' && <Crown size={8} />}
@@ -151,14 +155,15 @@ const MovementBadge = ({ delta }) => {
   );
 };
 
-const MetricValue = ({ entry, typeKey, field, unit }) => {
+const MetricValue = ({ entry, typeKey, field, unitKey }) => {
+  const { t } = useTranslation();
   let val = entry[field];
   if (typeKey === 'diligent') val = Number(val).toFixed(1);
   const showFire = typeKey === 'streak' && entry.currentStreak >= 3;
   return (
     <span className="text-[13px] font-semibold text-gray-900 tabular-nums flex items-center gap-1">
       {showFire && <Flame size={12} className="text-orange-400 shrink-0" />}
-      {val} <span className="text-gray-400 font-normal text-[11px]">{unit}</span>
+      {val} <span className="text-gray-400 font-normal text-[11px]">{t(unitKey)}</span>
     </span>
   );
 };
@@ -183,11 +188,12 @@ const SkeletonRow = ({ delay = 0 }) => (
 // ─── Feature #2: Share Modal ───────────────────────────────────────────────────
 
 const ShareModal = ({ myEntry, typeMeta, onClose }) => {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
 
   const shareText = myEntry
-    ? `🏆 Tôi đang xếp hạng #${myEntry.rank} trên MC Voice Training!\n🔥 Streak: ${myEntry.currentStreak} ngày | Tier: ${myEntry.currentTier}\nLuyện giọng MC cùng tôi tại MCHub!`
-    : 'Luyện giọng MC tại MCHub!';
+    ? t('leaderboard.shareTextWithRank', { rank: myEntry.rank, streak: myEntry.currentStreak, tier: myEntry.currentTier })
+    : t('leaderboard.shareTextDefault');
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareText).then(() => {
@@ -235,7 +241,7 @@ const ShareModal = ({ myEntry, typeMeta, onClose }) => {
             <div className="flex items-center gap-4 mb-5">
               <Avatar src={myEntry?.userAvatar} name={myEntry?.userName} size="lg" />
               <div>
-                <p className="text-[15px] font-bold text-white">{myEntry?.userName || 'Bạn'}</p>
+                <p className="text-[15px] font-bold text-white">{myEntry?.userName || t('leaderboard.you')}</p>
                 <TierBadge tier={myEntry?.currentTier || 'BRONZE'} />
                 <p className="text-[24px] font-black text-amber-400 leading-none mt-1">
                   #{myEntry?.rank || '?'}
@@ -246,9 +252,9 @@ const ShareModal = ({ myEntry, typeMeta, onClose }) => {
             {/* Stats row */}
             <div className="grid grid-cols-3 gap-2">
               {[
-                { label: 'Streak', value: `${myEntry?.currentStreak || 0} ngày`, icon: '🔥' },
-                { label: 'Giờ luyện', value: `${Number(myEntry?.totalPracticeHours || 0).toFixed(1)}h`, icon: '⏱️' },
-                { label: 'Buổi tập', value: `${myEntry?.totalSessions || 0}`, icon: '🎤' },
+                { label: t('leaderboard.statStreak'), value: `${myEntry?.currentStreak || 0} ${t('leaderboard.unitDays')}`, icon: '🔥' },
+                { label: t('leaderboard.statHours'), value: `${Number(myEntry?.totalPracticeHours || 0).toFixed(1)}h`, icon: '⏱️' },
+                { label: t('leaderboard.statSessions'), value: `${myEntry?.totalSessions || 0}`, icon: '🎤' },
               ].map(s => (
                 <div key={s.label} className="bg-white/4 rounded-lg p-2 text-center">
                   <p className="text-[14px]">{s.icon}</p>
@@ -266,7 +272,7 @@ const ShareModal = ({ myEntry, typeMeta, onClose }) => {
               className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-white/6 hover:bg-white/10 text-[12px] font-medium text-zinc-300 transition-colors"
             >
               {copied ? <Check size={13} className="text-emerald-400" /> : <Copy size={13} />}
-              {copied ? 'Đã sao chép!' : 'Sao chép văn bản'}
+              {copied ? t('leaderboard.copied') : t('leaderboard.copyText')}
             </button>
             <button
               onClick={onClose}
@@ -277,7 +283,7 @@ const ShareModal = ({ myEntry, typeMeta, onClose }) => {
           </div>
         </div>
 
-        <p className="text-center text-[11px] text-zinc-600">Chia sẻ kết quả để truyền cảm hứng cho bạn bè!</p>
+        <p className="text-center text-[11px] text-zinc-600">{t('leaderboard.shareFooter')}</p>
       </motion.div>
     </motion.div>
   );
@@ -286,6 +292,7 @@ const ShareModal = ({ myEntry, typeMeta, onClose }) => {
 // ─── Feature #3: Tier Progress Card ───────────────────────────────────────────
 
 const TierProgressCard = ({ myEntry }) => {
+  const { t } = useTranslation();
   if (!myEntry) return null;
   const tier = myEntry.currentTier || 'BRONZE';
   const streak = myEntry.currentStreak || 0;
@@ -304,7 +311,7 @@ const TierProgressCard = ({ myEntry }) => {
     >
       <div className="px-4 py-3 border-b border-gray-100 bg-gray-50 flex items-center gap-2">
         <Target size={13} className="text-indigo-500" />
-        <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest">Tiến trình Tier</span>
+        <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest">{t('leaderboard.tierProgressTitle')}</span>
       </div>
 
       <div className="p-4 space-y-3">
@@ -312,20 +319,20 @@ const TierProgressCard = ({ myEntry }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             <span className="text-[16px]">{TIER_THRESHOLDS[tier]?.emoji}</span>
-            <span className={`text-[12px] font-bold ${tierC.text}`}>{TIER_THRESHOLDS[tier]?.label}</span>
+            <span className={`text-[12px] font-bold ${tierC.text}`}>{t(TIER_THRESHOLDS[tier]?.labelKey)}</span>
           </div>
           {!isMax && (
             <>
               <ChevronRight size={14} className="text-gray-400" />
               <div className="flex items-center gap-1.5">
                 <span className="text-[16px]">{nextT?.emoji}</span>
-                <span className={`text-[12px] font-bold ${nextC?.text}`}>{nextT?.label}</span>
+                <span className={`text-[12px] font-bold ${nextC?.text}`}>{t(nextT?.labelKey)}</span>
               </div>
             </>
           )}
           {isMax && (
             <span className="text-[11px] text-amber-400 font-semibold flex items-center gap-1">
-              <Crown size={11} /> Đỉnh cao
+              <Crown size={11} /> {t('leaderboard.peakReached')}
             </span>
           )}
         </div>
@@ -342,9 +349,9 @@ const TierProgressCard = ({ myEntry }) => {
               />
             </div>
             <div className="flex items-center justify-between text-[10px]">
-              <span className="text-gray-400">{pct}% hoàn thành</span>
+              <span className="text-gray-400">{t('leaderboard.percentComplete', { pct })}</span>
               <span className={`font-semibold ${nextC?.text}`}>
-                Cần thêm {needed} ngày streak
+                {t('leaderboard.needMoreStreakDays', { needed })}
               </span>
             </div>
           </>
@@ -358,7 +365,7 @@ const TierProgressCard = ({ myEntry }) => {
         {!isMax && (
           <div className="flex items-center gap-2 text-[10px] text-gray-500 bg-orange-50 rounded-lg px-3 py-2">
             <Flame size={10} className="text-orange-400 shrink-0" />
-            Duy trì streak {needed} ngày nữa để lên <span className={`font-semibold ${nextC?.text} ml-1`}>{nextT?.label}</span>
+            {t('leaderboard.maintainStreakHint', { needed })} <span className={`font-semibold ${nextC?.text} ml-1`}>{t(nextT?.labelKey)}</span>
           </div>
         )}
       </div>
@@ -369,6 +376,7 @@ const TierProgressCard = ({ myEntry }) => {
 // ─── Feature #4: Personal Best Badge ──────────────────────────────────────────
 
 const PersonalBestBadge = ({ allTimeEntry, weeklyEntry, typeMeta }) => {
+  const { t } = useTranslation();
   if (!allTimeEntry || !weeklyEntry) return null;
   const field = typeMeta.field;
   const weekly = Number(weeklyEntry[field]) || 0;
@@ -386,14 +394,16 @@ const PersonalBestBadge = ({ allTimeEntry, weeklyEntry, typeMeta }) => {
       className="flex items-center gap-2 px-3 py-2 bg-amber-500/8 border border-amber-500/20 rounded-lg"
     >
       <Star size={12} className="text-amber-400 shrink-0" />
-      <p className="text-[10px] text-amber-400 font-semibold">Tuần bùng nổ! {typeMeta.label} tuần này cao hơn mức trung bình</p>
+      <p className="text-[10px] text-amber-400 font-semibold">{t('leaderboard.bestWeekBadge', { label: t(typeMeta.labelKey) })}</p>
     </motion.div>
   );
 };
 
 // ─── Feature #1: Same-tier Filter Toggle ──────────────────────────────────────
 
-const FilterBar = ({ myTier, filterSameTier, setFilterSameTier, totalShown, totalAll }) => (
+const FilterBar = ({ myTier, filterSameTier, setFilterSameTier, totalShown, totalAll }) => {
+  const { t } = useTranslation();
+  return (
   <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-100 bg-gray-50">
     <button
       onClick={() => setFilterSameTier(v => !v)}
@@ -404,19 +414,22 @@ const FilterBar = ({ myTier, filterSameTier, setFilterSameTier, totalShown, tota
       }`}
     >
       <Filter size={10} />
-      Cùng tier {myTier && filterSameTier ? `(${myTier})` : ''}
+      {t('leaderboard.sameTier')} {myTier && filterSameTier ? `(${myTier})` : ''}
     </button>
     {filterSameTier && (
       <span className="text-[10px] text-gray-400">
-        {totalShown} / {totalAll} người
+        {t('leaderboard.shownOfTotalPeople', { shown: totalShown, total: totalAll })}
       </span>
     )}
   </div>
-);
+  );
+};
 
 // ─── Community Stats Bar ──────────────────────────────────────────────────────
 
-const StatsBar = ({ total }) => (
+const StatsBar = ({ total }) => {
+  const { t } = useTranslation();
+  return (
   <motion.div
     initial={{ opacity: 0, y: -8 }}
     animate={{ opacity: 1, y: 0 }}
@@ -428,7 +441,7 @@ const StatsBar = ({ total }) => (
         <Users size={12} className="text-amber-600" />
       </div>
       <div>
-        <p className="text-[10px] text-gray-500">Tổng thành viên</p>
+        <p className="text-[10px] text-gray-500">{t('leaderboard.totalMembers')}</p>
         <p className="text-[13px] font-bold text-gray-900 tabular-nums">
           <AnimatedNumber value={total} />
         </p>
@@ -440,8 +453,8 @@ const StatsBar = ({ total }) => (
         <Flame size={12} className="text-orange-500" />
       </div>
       <div>
-        <p className="text-[10px] text-gray-500">Đang thi đua</p>
-        <p className="text-[13px] font-bold text-orange-500">🔥 Active</p>
+        <p className="text-[10px] text-gray-500">{t('leaderboard.competing')}</p>
+        <p className="text-[13px] font-bold text-orange-500">🔥 {t('leaderboard.active')}</p>
       </div>
     </div>
     <div className="w-px h-8 bg-gray-200 shrink-0" />
@@ -450,16 +463,18 @@ const StatsBar = ({ total }) => (
         <Zap size={12} className="text-emerald-600" />
       </div>
       <div>
-        <p className="text-[10px] text-gray-500">Cập nhật</p>
-        <p className="text-[13px] font-bold text-emerald-600">Real-time</p>
+        <p className="text-[10px] text-gray-500">{t('leaderboard.updated')}</p>
+        <p className="text-[13px] font-bold text-emerald-600">{t('leaderboard.realTime')}</p>
       </div>
     </div>
   </motion.div>
-);
+  );
+};
 
 // ─── Podium (top 3) ───────────────────────────────────────────────────────────
 
 const Podium = ({ entries, type, currentUserId }) => {
+  const { t } = useTranslation();
   const [first, second, third] = entries;
   const pods = [
     { entry: second, style: PODIUM_STYLES[1], rank: 2 },
@@ -467,8 +482,8 @@ const Podium = ({ entries, type, currentUserId }) => {
     { entry: third,  style: PODIUM_STYLES[2], rank: 3 },
   ].filter(p => p.entry);
 
-  const field = TYPES.find(t => t.key === type.key)?.field;
-  const unit  = TYPES.find(t => t.key === type.key)?.unit;
+  const field = TYPES.find(tp => tp.key === type.key)?.field;
+  const unitKey = TYPES.find(tp => tp.key === type.key)?.unitKey;
 
   return (
     <div className="flex items-end justify-center gap-6 pt-8 pb-8 relative">
@@ -529,7 +544,7 @@ const Podium = ({ entries, type, currentUserId }) => {
                 {entry.userName}
               </p>
               <p className={`text-[12px] font-black ${style.label}`}>
-                {unit === 'giờ' ? Number(entry[field]).toFixed(1) + 'h' : `${entry[field]} ${unit}`}
+                {field === 'totalPracticeHours' ? Number(entry[field]).toFixed(1) + 'h' : `${entry[field]} ${t(unitKey)}`}
               </p>
             </div>
 
@@ -554,6 +569,7 @@ const Podium = ({ entries, type, currentUserId }) => {
 // ─── Leaderboard Row ──────────────────────────────────────────────────────────
 
 const LeaderboardRow = ({ entry, type, isMe, index }) => {
+  const { t } = useTranslation();
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -590,7 +606,7 @@ const LeaderboardRow = ({ entry, type, isMe, index }) => {
         <div className="min-w-0">
           <p className={`text-[13px] font-medium truncate ${isMe ? 'text-emerald-600' : 'text-gray-900'}`}>
             {entry.userName}
-            {isMe && <span className="ml-1.5 text-[10px] text-emerald-500 font-normal">(bạn)</span>}
+            {isMe && <span className="ml-1.5 text-[10px] text-emerald-500 font-normal">{t('leaderboard.youParen')}</span>}
           </p>
           <div className="mt-0.5">
             <TierBadge tier={entry.currentTier} />
@@ -598,7 +614,7 @@ const LeaderboardRow = ({ entry, type, isMe, index }) => {
         </div>
       </div>
 
-      <MetricValue entry={entry} typeKey={type.key} field={type.field} unit={type.unit} />
+      <MetricValue entry={entry} typeKey={type.key} field={type.field} unitKey={type.unitKey} />
     </motion.div>
   );
 };
@@ -606,6 +622,7 @@ const LeaderboardRow = ({ entry, type, isMe, index }) => {
 // ─── My Rank Card ─────────────────────────────────────────────────────────────
 
 const MyRankCard = ({ myEntry, total, typeMeta, onShare }) => {
+  const { t } = useTranslation();
   if (!myEntry) return (
     <motion.div
       initial={{ opacity: 0, x: 12 }}
@@ -615,7 +632,7 @@ const MyRankCard = ({ myEntry, total, typeMeta, onShare }) => {
       <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-3">
         <Trophy size={18} className="text-gray-400" />
       </div>
-      <p className="text-[12px] text-gray-500 leading-relaxed">Chưa có dữ liệu.<br/>Luyện tập để lên bảng!</p>
+      <p className="text-[12px] text-gray-500 leading-relaxed">{t('leaderboard.noDataYet')}<br/>{t('leaderboard.practiceToRank')}</p>
     </motion.div>
   );
 
@@ -632,7 +649,7 @@ const MyRankCard = ({ myEntry, total, typeMeta, onShare }) => {
       <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
         <div className="flex items-center gap-2">
           <Trophy size={13} className="text-amber-500" />
-          <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest">Vị trí của bạn</span>
+          <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-widest">{t('leaderboard.yourRank')}</span>
         </div>
         {/* Feature #2: Share button */}
         <motion.button
@@ -642,7 +659,7 @@ const MyRankCard = ({ myEntry, total, typeMeta, onShare }) => {
           className="flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-700 transition-colors text-[10px] font-medium"
         >
           <Share2 size={10} />
-          Chia sẻ
+          {t('leaderboard.share')}
         </motion.button>
       </div>
 
@@ -657,19 +674,19 @@ const MyRankCard = ({ myEntry, total, typeMeta, onShare }) => {
 
         <div className="grid grid-cols-2 gap-2">
           <div className="bg-amber-50 border border-amber-100 rounded-lg px-3 py-2.5 relative overflow-hidden">
-            <p className="text-[10px] text-gray-500 mb-0.5">Hạng</p>
+            <p className="text-[10px] text-gray-500 mb-0.5">{t('leaderboard.rank')}</p>
             <p className="text-[20px] font-black text-amber-600 leading-none">
               #<AnimatedNumber value={myEntry.rank} />
             </p>
           </div>
           <div className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-2.5 relative overflow-hidden">
-            <p className="text-[10px] text-gray-500 mb-0.5">{typeMeta.label}</p>
+            <p className="text-[10px] text-gray-500 mb-0.5">{t(typeMeta.labelKey)}</p>
             <p className="text-[20px] font-black text-gray-900 leading-none flex items-end gap-1">
               <AnimatedNumber
                 value={typeMeta.key === 'diligent' ? Number(myEntry[typeMeta.field]) : myEntry[typeMeta.field]}
                 decimals={typeMeta.key === 'diligent' ? 1 : 0}
               />
-              <span className="text-[10px] font-normal text-gray-400 mb-0.5">{typeMeta.unit}</span>
+              <span className="text-[10px] font-normal text-gray-400 mb-0.5">{t(typeMeta.unitKey)}</span>
             </p>
           </div>
         </div>
@@ -677,7 +694,7 @@ const MyRankCard = ({ myEntry, total, typeMeta, onShare }) => {
         {/* Percentile bar */}
         <div className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-2.5">
           <div className="flex items-center justify-between mb-1.5">
-            <p className="text-[10px] text-gray-500">Vượt qua</p>
+            <p className="text-[10px] text-gray-500">{t('leaderboard.surpassed')}</p>
             <span className="text-[12px] font-bold text-emerald-400">{percentile}%</span>
           </div>
           <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
@@ -688,23 +705,23 @@ const MyRankCard = ({ myEntry, total, typeMeta, onShare }) => {
               className="h-full bg-linear-to-r from-emerald-600 to-emerald-400 rounded-full"
             />
           </div>
-          <p className="text-[10px] text-gray-400 mt-1">người dùng</p>
+          <p className="text-[10px] text-gray-400 mt-1">{t('leaderboard.usersUnit')}</p>
         </div>
 
         {/* Streak */}
         <div className="flex items-center justify-between px-3 py-2 bg-orange-500/5 border border-orange-500/10 rounded-lg">
           <div className="flex items-center gap-1.5 text-[11px] text-zinc-400">
             <Flame size={12} className="text-orange-400" />
-            <span>Streak hiện tại</span>
+            <span>{t('leaderboard.currentStreak')}</span>
           </div>
-          <span className="text-[13px] font-bold text-orange-500">{myEntry.currentStreak} ngày</span>
+          <span className="text-[13px] font-bold text-orange-500">{myEntry.currentStreak} {t('leaderboard.unitDays')}</span>
         </div>
 
         {/* Goal nudge */}
         <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-100 rounded-lg">
           <Target size={11} className="text-gray-400 shrink-0" />
           <p className="text-[10px] text-gray-400 leading-relaxed">
-            Luyện tập hôm nay để giữ streak &amp; leo hạng!
+            {t('leaderboard.goalNudge')}
           </p>
         </div>
       </div>
@@ -715,6 +732,7 @@ const MyRankCard = ({ myEntry, total, typeMeta, onShare }) => {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 const LeaderboardPage = () => {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const [type, setType]     = useState(TYPES[0]);
   const [period, setPeriod] = useState(PERIODS[0]);
@@ -851,7 +869,7 @@ const LeaderboardPage = () => {
       <PageBanner />
 
       <div className="max-w-6xl mx-auto px-4 py-6">
-        <Breadcrumb items={[{ label: 'Trang chủ', href: '/' }, { label: 'Bảng xếp hạng' }]} />
+        <Breadcrumb items={[{ label: t('navbar.home'), href: '/' }, { label: t('leaderboard.pageTitle') }]} />
 
         {/* Feature #5: Top 10 congrats banner */}
         <AnimatePresence>
@@ -872,8 +890,8 @@ const LeaderboardPage = () => {
                   🎉
                 </motion.span>
                 <div>
-                  <p className="text-[13px] font-bold text-amber-400">Xuất sắc! Bạn đang trong Top {myEntry.rank}!</p>
-                  <p className="text-[11px] text-zinc-500">Tiếp tục duy trì để giữ vị trí này nhé.</p>
+                  <p className="text-[13px] font-bold text-amber-400">{t('leaderboard.topRank', { rank: myEntry.rank })}</p>
+                  <p className="text-[11px] text-zinc-500">{t('leaderboard.keepItUp')}</p>
                 </div>
                 <div className="ml-auto">
                   <span className="text-[24px] font-black text-amber-400/30">#{myEntry.rank}</span>
@@ -900,9 +918,9 @@ const LeaderboardPage = () => {
                 <Trophy size={22} className="text-amber-400" />
               </motion.div>
               <div>
-                <h1 className="text-[28px] font-black text-gray-900 tracking-tight leading-none">Bảng xếp hạng</h1>
+                <h1 className="text-[28px] font-black text-gray-900 tracking-tight leading-none">{t('leaderboard.pageTitle')}</h1>
                 <p className="text-[12px] text-gray-400 mt-0.5 font-mono">
-                  <AnimatedNumber value={total} /> người đang thi đua · cập nhật real-time
+                  {t('leaderboard.competingRealtime', { count: total })}
                 </p>
               </div>
             </div>
@@ -915,7 +933,7 @@ const LeaderboardPage = () => {
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-500 hover:text-gray-700 hover:bg-gray-50 transition-colors text-[12px] disabled:opacity-50 shadow-sm"
           >
             <RefreshCw size={12} className={refreshing ? 'animate-spin' : ''} />
-            Làm mới
+            {t('leaderboard.refresh')}
           </motion.button>
         </motion.div>
 
@@ -940,22 +958,22 @@ const LeaderboardPage = () => {
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 />
               )}
-              <span className="relative z-10">{p.label}</span>
+              <span className="relative z-10">{t(p.labelKey)}</span>
             </button>
           ))}
         </div>
 
         {/* Type tabs */}
         <div className="flex gap-2 mb-6">
-          {TYPES.map(t => {
-            const Icon = t.icon;
-            const active = type.key === t.key;
+          {TYPES.map(tp => {
+            const Icon = tp.icon;
+            const active = type.key === tp.key;
             return (
               <motion.button
-                key={t.key}
+                key={tp.key}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => { setType(t); trackLeaderboardFilter(t.key, period.key); }}
+                onClick={() => { setType(tp); trackLeaderboardFilter(tp.key, period.key); }}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-lg border text-[12px] font-medium transition-all relative overflow-hidden ${
                   active
                     ? 'bg-amber-50 border-amber-200 text-amber-600'
@@ -971,7 +989,7 @@ const LeaderboardPage = () => {
                   />
                 )}
                 <Icon size={13} className="relative z-10" />
-                <span className="relative z-10">{t.label}</span>
+                <span className="relative z-10">{t(tp.labelKey)}</span>
               </motion.button>
             );
           })}
@@ -1025,8 +1043,8 @@ const LeaderboardPage = () => {
                 {/* Column header */}
                 <div className="grid grid-cols-[44px_1fr_auto] gap-3 px-4 py-2.5 border-b border-gray-100 bg-gray-50">
                   <span className="text-[10px] text-gray-400 uppercase tracking-wider">#</span>
-                  <span className="text-[10px] text-gray-400 uppercase tracking-wider">Người dùng</span>
-                  <span className="text-[10px] text-gray-400 uppercase tracking-wider">{type.label}</span>
+                  <span className="text-[10px] text-gray-400 uppercase tracking-wider">{t('leaderboard.userColumn')}</span>
+                  <span className="text-[10px] text-gray-400 uppercase tracking-wider">{t(type.labelKey)}</span>
                 </div>
 
                 {/* Rows */}
@@ -1036,7 +1054,7 @@ const LeaderboardPage = () => {
                   <div className="py-20 text-center">
                     <TrendingUp size={32} className="mx-auto mb-3 text-gray-300" />
                     <p className="text-[13px] text-gray-400">
-                      {filterSameTier ? 'Không có người cùng tier' : 'Chưa có dữ liệu'}
+                      {filterSameTier ? t('leaderboard.noSameTierPeople') : t('leaderboard.noDataYet')}
                     </p>
                   </div>
                 ) : (
@@ -1063,7 +1081,7 @@ const LeaderboardPage = () => {
                     animate={{ opacity: 1 }}
                     className="text-center text-[11px] text-gray-400 py-4"
                   >
-                    Đã hiển thị tất cả {total} người dùng
+                    {t('leaderboard.allShown', { total })}
                   </motion.p>
                 )}
               </motion.div>

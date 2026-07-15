@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Trans } from "react-i18next";
 import { Loader2, ArrowLeft, Award, AlertCircle, Zap, RefreshCw, Square, Play, AudioLines, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useVoicePractice, clampMetric, ANALYZE_PHASES } from "../hooks/useVoicePractice";
@@ -109,7 +110,7 @@ const VoicePractice = () => {
     const m = Math.floor((secs % 3600) / 60);
     const s = secs % 60;
     return h > 0
-      ? `${h}g ${String(m).padStart(2,"0")}p ${String(s).padStart(2,"0")}s`
+      ? `${h}${t_vp("cooldownHourUnit")} ${String(m).padStart(2,"0")}${t_vp("cooldownMinuteUnit")} ${String(s).padStart(2,"0")}${t_vp("cooldownSecondUnit")}`
       : `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
   };
 
@@ -138,15 +139,15 @@ const VoicePractice = () => {
           <div className="flex items-center justify-between gap-3 px-4 py-2.5 bg-amber-500/10 border-b border-amber-500/20 flex-wrap">
             <div className="flex items-center gap-2 text-[13px] text-amber-300">
               <span className="text-base">🎁</span>
-              <span>Bạn đang dùng <strong>thử miễn phí</strong> — kết quả không được lưu.</span>
+              <span><Trans i18nKey="voicePractice.guestTrialBanner" t={t_vp} components={{ 1: <strong /> }} /></span>
               {cooldownLeft > 0 && (
-                <span className="text-zinc-400">· Luyện lại sau <span className="text-amber-400 font-semibold">{fmtCooldown(cooldownLeft)}</span></span>
+                <span className="text-zinc-400">· {t_vp("guestPracticeAgainAfter")} <span className="text-amber-400 font-semibold">{fmtCooldown(cooldownLeft)}</span></span>
               )}
             </div>
             <div className="flex items-center gap-2">
-              <a href="/login" className="text-[12px] text-zinc-400 hover:text-white transition-colors">Đăng nhập</a>
+              <a href="/login" className="text-[12px] text-zinc-400 hover:text-white transition-colors">{t_vp("guestLogin")}</a>
               <a href="/register" className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-500 text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors">
-                Đăng ký miễn phí được tặng ngày một khóa học bất kì →
+                {t_vp("guestRegisterCta")}
               </a>
             </div>
           </div>
@@ -170,8 +171,8 @@ const VoicePractice = () => {
             {/* Breadcrumb */}
             <Breadcrumb items={
               courseId
-                ? [{ label: "Khóa học", href: "/m/courses" }, { label: course?.title || "Chi tiết khóa học", href: `/m/courses/${courseId}` }, { label: lesson?.title || "Bài luyện tập" }]
-                : [{ label: "Luyện tập", href: "/m/voice/library" }, { label: lesson?.title || "Bài luyện tập" }]
+                ? [{ label: t_vp("breadcrumbCourses"), href: "/m/courses" }, { label: course?.title || t_vp("breadcrumbCourseDetail"), href: `/m/courses/${courseId}` }, { label: lesson?.title || t_vp("breadcrumbLessonFallback") }]
+                : [{ label: t_vp("breadcrumbPractice"), href: "/m/voice/library" }, { label: lesson?.title || t_vp("breadcrumbLessonFallback") }]
             } />
 
             {/* Page header */}
@@ -183,7 +184,7 @@ const VoicePractice = () => {
                 </p>
                 {history.length > 0 && (() => {
                   const best = Math.max(...history.map((h) => clampMetric(Number(h.accuracyScore || 0) * 0.45 + Number(h.rhythmScore || 0) * 0.35 + (Math.min(Number(h.speakingRateWpm || 0), 180) / 180) * 20)));
-                  return <span className="inline-flex items-center gap-1 mt-1 text-[11px] px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-400 font-semibold"><Award size={10} /> Best: {best.toFixed(1)}%</span>;
+                  return <span className="inline-flex items-center gap-1 mt-1 text-[11px] px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-400 font-semibold"><Award size={10} /> {t_vp("bestLabel")}: {best.toFixed(1)}%</span>;
                 })()}
               </div>
 
@@ -201,7 +202,7 @@ const VoicePractice = () => {
                   !user && cooldownLeft > 0 ? (
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-800 border border-white/10 text-zinc-400 text-[13px]">
                       <Clock size={13} className="shrink-0 text-amber-400" />
-                      <span>Thử lại sau <span className="font-semibold text-amber-400">{fmtCooldown(cooldownLeft)}</span></span>
+                      <span>{t_vp("guestTryAgainAfter")} <span className="font-semibold text-amber-400">{fmtCooldown(cooldownLeft)}</span></span>
                     </div>
                   ) : (
                     <button onClick={handleAnalyze} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors">
@@ -289,6 +290,7 @@ const VoicePractice = () => {
                     showNoteInput={showNoteInput} setShowNoteInput={setShowNoteInput}
                     hoveredAnnotation={hoveredAnnotation} setHoveredAnnotation={setHoveredAnnotation}
                     annotationPopupRef={annotationPopupRef}
+                    audioUrl={audioUrl} wordAlignment={result?.word_alignment} sentenceFeedback={result?.sentence_feedback}
                     t={t} t_vp={t_vp}
                   />
                 )}
@@ -319,6 +321,8 @@ const VoicePractice = () => {
                 history={history} clampMetric={clampMetric}
                 t={t} t_vp={t_vp}
                 leftWidth={leftWidth}
+                audioUrl={audioUrl} sampleAudioUrl={lesson?.sampleAudioUrl}
+                lessonTitle={lesson?.title}
               />
             </div>
           </div>

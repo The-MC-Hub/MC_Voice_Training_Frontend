@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Flame, BookOpen, Clock, ChevronRight, Mic, PlayCircle, Star } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useTranslation } from 'react-i18next';
 import { fetchFeaturedLessons } from '../../controllers/voiceController';
 
 const EXCLUDED_PATHS = ['/login', '/register', '/m/admin'];
@@ -16,13 +17,13 @@ const CATEGORY_COLOR = {
   PRODUCT_LAUNCH: '#f472b6',
 };
 
-const CATEGORY_LABEL = {
-  WEDDING: 'Đám cưới',
-  GALA: 'Gala',
-  CORPORATE: 'Doanh nghiệp',
-  TALKSHOW: 'Talkshow',
-  GENERAL: 'Tổng hợp',
-  PRODUCT_LAUNCH: 'Ra mắt SP',
+const CATEGORY_KEYS = {
+  WEDDING: 'wedding',
+  GALA: 'gala',
+  CORPORATE: 'corporate',
+  TALKSHOW: 'talkshow',
+  GENERAL: 'general',
+  PRODUCT_LAUNCH: 'productLaunch',
 };
 
 const CATEGORY_ICON = {
@@ -34,23 +35,34 @@ const CATEGORY_ICON = {
   PRODUCT_LAUNCH: '🚀',
 };
 
-const DIFF_META = {
-  EASY:         { label: 'Dễ',          color: '#34d399', tag: 'Người mới' },
-  BEGINNER:     { label: 'Sơ cấp',      color: '#34d399', tag: 'Người mới' },
-  INTERMEDIATE: { label: 'Trung cấp',   color: '#f5a623', tag: 'Có kinh nghiệm' },
-  MEDIUM:       { label: 'Trung cấp',   color: '#f5a623', tag: 'Có kinh nghiệm' },
-  ADVANCED:     { label: 'Nâng cao',    color: '#f87171', tag: 'MC chuyên nghiệp' },
-  HARD:         { label: 'Khó',         color: '#f87171', tag: 'MC chuyên nghiệp' },
+const DIFF_KEYS = {
+  EASY: 'easy',
+  BEGINNER: 'beginner',
+  INTERMEDIATE: 'intermediate',
+  MEDIUM: 'medium',
+  ADVANCED: 'advanced',
+  HARD: 'hard',
+};
+const DIFF_COLOR = {
+  EASY: '#34d399', BEGINNER: '#34d399',
+  INTERMEDIATE: '#f5a623', MEDIUM: '#f5a623',
+  ADVANCED: '#f87171', HARD: '#f87171',
 };
 
 const RANK_MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' };
 
 function LessonCard({ lesson, rank }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const cat = lesson.category || 'GENERAL';
   const accent = CATEGORY_COLOR[cat] || '#f5a623';
   const diff = (lesson.difficulty || 'EASY').toUpperCase();
-  const diffMeta = DIFF_META[diff] || DIFF_META.EASY;
+  const diffKey = DIFF_KEYS[diff] || DIFF_KEYS.EASY;
+  const diffMeta = {
+    label: t(`popularLessonsSidebar.difficulty.${diffKey}.label`),
+    color: DIFF_COLOR[diff] || DIFF_COLOR.EASY,
+    tag: t(`popularLessonsSidebar.difficulty.${diffKey}.tag`),
+  };
   const preview = lesson.content
     ? lesson.content.trim().split(/\s+/).slice(0, 10).join(' ') + '…'
     : null;
@@ -77,7 +89,7 @@ function LessonCard({ lesson, rank }) {
         {/* Rank tag */}
         <div className="flex items-center gap-1.5 mb-1.5">
           <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: accent }}>
-            {RANK_MEDALS[rank] ? `${RANK_MEDALS[rank]} #${rank}` : `#${rank}`} · {CATEGORY_LABEL[cat] || cat}
+            {RANK_MEDALS[rank] ? `${RANK_MEDALS[rank]} #${rank}` : `#${rank}`} · {t(`popularLessonsSidebar.categories.${CATEGORY_KEYS[cat] || 'general'}`)}
           </span>
         </div>
 
@@ -106,7 +118,7 @@ function LessonCard({ lesson, rank }) {
           className="flex items-center justify-center gap-1.5 w-full py-2 text-[11px] font-semibold transition-opacity hover:opacity-85"
           style={{ background: accent, color: '#000' }}
         >
-          <Mic size={10} /> Luyện tập <ChevronRight size={10} />
+          <Mic size={10} /> {t('popularLessonsSidebar.practiceBtn')} <ChevronRight size={10} />
         </button>
       </div>
     </div>
@@ -129,6 +141,7 @@ function saveCache(data) {
 }
 
 export default function PopularLessonsSidebar() {
+  const { t } = useTranslation();
   const location = useLocation();
   const [lessons, setLessons] = useState(loadCache);
 
@@ -176,7 +189,7 @@ export default function PopularLessonsSidebar() {
       <div className="flex flex-col gap-2 p-2 pt-3">
         <div className="flex items-center gap-1.5 px-1 mb-1">
           <Flame size={10} className="text-orange-400" />
-          <p className="text-[9px] text-gray-400 uppercase tracking-widest font-semibold">Bài luyện phổ biến</p>
+          <p className="text-[9px] text-gray-400 uppercase tracking-widest font-semibold">{t('popularLessonsSidebar.heading')}</p>
         </div>
 
         {lessons.map((lesson, i) => (
@@ -188,10 +201,10 @@ export default function PopularLessonsSidebar() {
           onClick={() => { window.location.href = '/m/voice/library'; }}
           className="flex items-center justify-center gap-1 text-[10px] text-gray-400 hover:text-gray-600 transition-colors py-1"
         >
-          <BookOpen size={9} /> Xem tất cả <ChevronRight size={9} />
+          <BookOpen size={9} /> {t('popularLessonsSidebar.viewAll')} <ChevronRight size={9} />
         </button>
 
-        <p className="text-[8px] text-gray-300 text-center mt-1">MCHub · Gợi ý luyện tập</p>
+        <p className="text-[8px] text-gray-300 text-center mt-1">{t('popularLessonsSidebar.footer')}</p>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import {
   ExternalLink, Zap, Bookmark, BookmarkCheck, StickyNote, Bell,
   BellOff, User, BarChart2, Upload, Eye, Copy, Clock,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
 const API_ROOT = BASE_URL.replace(/\/api\/v1$/, "");
@@ -167,6 +168,7 @@ function HighlightedMessage({ msg, search, watchlist = [] }) {
 // ── ApiInspector ────────────────────────────────────────────────────────────
 
 function ApiInspector({ log }) {
+  const { t } = useTranslation();
   const urls = useMemo(() => extractUrls(log.message || ""), [log.message]);
   const [results, setResults] = useState({});
   const [loading, setLoading] = useState({});
@@ -194,7 +196,7 @@ function ApiInspector({ log }) {
   };
 
   if (urls.length === 0)
-    return <div className="text-[11px] text-gray-400 italic">No API URLs detected in this log.</div>;
+    return <div className="text-[11px] text-gray-400 italic">{t("admin.serverLogs.apiInspector.noUrlsDetected")}</div>;
 
   return (
     <div className="space-y-3">
@@ -215,7 +217,7 @@ function ApiInspector({ log }) {
               <button onClick={() => callApi(url)} disabled={!!isLoad}
                 className="flex items-center gap-1 px-2 py-1 bg-amber-400 hover:bg-amber-500 text-black text-[10px] font-semibold rounded transition-colors disabled:opacity-50">
                 {isLoad ? <Loader2 size={10} className="animate-spin" /> : <Zap size={10} />}
-                {isLoad ? "Calling…" : "Call"}
+                {isLoad ? t("admin.serverLogs.apiInspector.calling") : t("admin.serverLogs.apiInspector.call")}
               </button>
               <a href={url.startsWith("/") ? API_ROOT + url : url} target="_blank" rel="noopener noreferrer"
                 className="text-gray-400 hover:text-gray-600"><ExternalLink size={11} /></a>
@@ -245,6 +247,7 @@ function ApiInspector({ log }) {
 // ── UserLookup ───────────────────────────────────────────────────────────────
 
 function UserLookup({ log }) {
+  const { t } = useTranslation();
   const oids = useMemo(() => extractOids(log.message || ""), [log.message]);
   const [results, setResults] = useState({});
   const [loading, setLoading] = useState({});
@@ -280,7 +283,7 @@ function UserLookup({ log }) {
   };
 
   if (oids.length === 0 && !jwtPayload)
-    return <div className="text-[11px] text-gray-400 italic">No user IDs or JWT detected in this log.</div>;
+    return <div className="text-[11px] text-gray-400 italic">{t("admin.serverLogs.userLookup.noUserIdsOrJwt")}</div>;
 
   return (
     <div className="space-y-4">
@@ -289,7 +292,7 @@ function UserLookup({ log }) {
         <div className="border border-purple-200 rounded-lg overflow-hidden">
           <div className="px-3 py-2 bg-purple-50 border-b border-purple-100 flex items-center gap-2">
             <User size={11} className="text-purple-500" />
-            <span className="text-[11px] font-semibold text-purple-700">JWT in log</span>
+            <span className="text-[11px] font-semibold text-purple-700">{t("admin.serverLogs.userLookup.jwtInLog")}</span>
           </div>
           <div className="p-3 space-y-1">
             {["sub", "email", "role", "plan", "exp"].map(k => jwtPayload[k] != null && (
@@ -311,7 +314,7 @@ function UserLookup({ log }) {
         <div className="border border-gray-200 rounded-lg overflow-hidden">
           <div className="px-3 py-2 bg-gray-50 border-b border-gray-100 flex items-center gap-2">
             <User size={11} className="text-gray-400" />
-            <span className="text-[11px] font-semibold text-gray-600">Current admin session</span>
+            <span className="text-[11px] font-semibold text-gray-600">{t("admin.serverLogs.userLookup.currentAdminSession")}</span>
           </div>
           <div className="p-3 space-y-1">
             {["sub", "email", "role"].map(k => sessionJwt[k] != null && (
@@ -327,7 +330,7 @@ function UserLookup({ log }) {
       {/* OID lookup */}
       {oids.length > 0 && (
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-2">ObjectIDs in log</p>
+          <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-2">{t("admin.serverLogs.userLookup.objectIdsInLog")}</p>
           <div className="space-y-2">
             {oids.map(id => {
               const r = results[id];
@@ -339,7 +342,7 @@ function UserLookup({ log }) {
                     <button onClick={() => fetchUser(id)} disabled={!!isLoad}
                       className="flex items-center gap-1 px-2 py-1 bg-amber-400 hover:bg-amber-500 text-black text-[10px] font-semibold rounded disabled:opacity-50">
                       {isLoad ? <Loader2 size={10} className="animate-spin" /> : <User size={10} />}
-                      {isLoad ? "Loading…" : "Lookup"}
+                      {isLoad ? t("admin.serverLogs.userLookup.loading") : t("admin.serverLogs.userLookup.lookup")}
                     </button>
                   </div>
                   {r && (
@@ -354,7 +357,7 @@ function UserLookup({ log }) {
                           ))}
                         </div>
                       ) : (
-                        <p className="text-[11px] text-red-500">{r.err || "User not found"}</p>
+                        <p className="text-[11px] text-red-500">{r.err || t("admin.serverLogs.userLookup.userNotFound")}</p>
                       )}
                     </div>
                   )}
@@ -371,6 +374,7 @@ function UserLookup({ log }) {
 // ── NoteEditor ───────────────────────────────────────────────────────────────
 
 function NoteEditor({ logKey, notes, onSave }) {
+  const { t } = useTranslation();
   const [text, setText] = useState(notes[logKey] || "");
   const saved = notes[logKey] || "";
 
@@ -379,22 +383,22 @@ function NoteEditor({ logKey, notes, onSave }) {
       <textarea
         value={text}
         onChange={e => setText(e.target.value)}
-        placeholder="Add note for this log entry…"
+        placeholder={t("admin.serverLogs.noteEditor.placeholder")}
         rows={4}
         className="w-full text-[11px] font-mono border border-gray-200 rounded p-2 focus:outline-none focus:border-amber-400 resize-none"
       />
       <div className="flex items-center gap-2">
         <button onClick={() => onSave(logKey, text)}
           className="px-3 py-1 bg-amber-400 hover:bg-amber-500 text-black text-[11px] font-semibold rounded transition-colors">
-          Save note
+          {t("admin.serverLogs.noteEditor.saveNote")}
         </button>
         {saved && (
           <button onClick={() => { setText(""); onSave(logKey, ""); }}
             className="px-3 py-1 border border-gray-200 text-[11px] text-gray-500 rounded hover:bg-gray-50">
-            Clear
+            {t("admin.serverLogs.noteEditor.clear")}
           </button>
         )}
-        {saved && <span className="text-[10px] text-emerald-600">✓ Saved</span>}
+        {saved && <span className="text-[10px] text-emerald-600">✓ {t("admin.serverLogs.noteEditor.saved")}</span>}
       </div>
       {saved && (
         <div className="mt-2 p-2 bg-amber-50 border border-amber-200 rounded text-[11px] text-gray-700 whitespace-pre-wrap">
@@ -409,6 +413,7 @@ function NoteEditor({ logKey, notes, onSave }) {
 // SVG bar chart — no lib needed
 
 function TimelineChart({ logs }) {
+  const { t } = useTranslation();
   const BUCKETS = 20;
   const data = useMemo(() => {
     if (!logs.length) return [];
@@ -434,11 +439,11 @@ function TimelineChart({ logs }) {
 
   const COLOR = { ERROR: "#ef4444", WARN: "#f59e0b", INFO: "#3b82f6", DEBUG: "#d1d5db" };
 
-  if (!data.length) return <div className="text-[11px] text-gray-400 italic">Not enough data yet.</div>;
+  if (!data.length) return <div className="text-[11px] text-gray-400 italic">{t("admin.serverLogs.empty.notEnoughData")}</div>;
 
   return (
     <div>
-      <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-2">Last 5 min activity</p>
+      <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-2">{t("admin.serverLogs.analytics.last5MinActivity")}</p>
       <div className="flex items-end gap-px overflow-hidden">
         {data.map((b, i) => {
           const total = b.ERROR + b.WARN + b.INFO + b.DEBUG;
@@ -472,6 +477,7 @@ function TimelineChart({ logs }) {
 // ── TopEndpoints ─────────────────────────────────────────────────────────────
 
 function TopEndpoints({ logs }) {
+  const { t } = useTranslation();
   const top = useMemo(() => {
     const map = {};
     for (const l of logs) {
@@ -484,7 +490,7 @@ function TopEndpoints({ logs }) {
     return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 10);
   }, [logs]);
 
-  if (!top.length) return <div className="text-[11px] text-gray-400 italic">No URLs detected yet.</div>;
+  if (!top.length) return <div className="text-[11px] text-gray-400 italic">{t("admin.serverLogs.empty.noUrlsDetectedYet")}</div>;
 
   const max = top[0][1];
   return (
@@ -507,6 +513,7 @@ function TopEndpoints({ logs }) {
 // ── WatchlistEditor ───────────────────────────────────────────────────────────
 
 function WatchlistEditor({ watchlist, onUpdate }) {
+  const { t } = useTranslation();
   const [input, setInput] = useState("");
   const add = () => {
     const kw = input.trim();
@@ -518,17 +525,17 @@ function WatchlistEditor({ watchlist, onUpdate }) {
   return (
     <div className="space-y-3">
       <p className="text-[11px] text-gray-500">
-        Keywords watched — matched logs auto-highlighted red + browser notification fired.
+        {t("admin.serverLogs.watchlistEditor.description")}
       </p>
       <div className="flex gap-2">
         <input value={input} onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === "Enter" && add()}
-          placeholder="e.g. NullPointer, OutOfMemory"
+          placeholder={t("admin.serverLogs.watchlistEditor.placeholder")}
           className="flex-1 text-[11px] border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-amber-400"
         />
         <button onClick={add}
           className="px-3 py-1 bg-amber-400 hover:bg-amber-500 text-black text-[11px] font-semibold rounded">
-          Add
+          {t("admin.serverLogs.watchlistEditor.add")}
         </button>
       </div>
       <div className="flex flex-wrap gap-1.5">
@@ -540,7 +547,7 @@ function WatchlistEditor({ watchlist, onUpdate }) {
             </button>
           </span>
         ))}
-        {watchlist.length === 0 && <span className="text-[11px] text-gray-400 italic">No keywords yet.</span>}
+        {watchlist.length === 0 && <span className="text-[11px] text-gray-400 italic">{t("admin.serverLogs.empty.noKeywordsYet")}</span>}
       </div>
     </div>
   );
@@ -549,15 +556,16 @@ function WatchlistEditor({ watchlist, onUpdate }) {
 // ── DetailPanel ─────────────────────────────────────────────────────────────
 
 function DetailPanel({ log, bookmarks, notes, onToggleBookmark, onSaveNote, onClose, allLogs }) {
+  const { t } = useTranslation();
   const [tab, setTab] = useState("info");
   const logKey  = makeLogKey(log);
   const isBookmarked = !!bookmarks[logKey];
 
   const TABS = [
-    { key: "info",  label: "Detail" },
-    { key: "api",   label: "API" },
-    { key: "user",  label: "User" },
-    { key: "note",  label: isBookmarked ? "📌 Note" : "Note" },
+    { key: "info",  label: t("admin.serverLogs.detailPanel.tabs.detail") },
+    { key: "api",   label: t("admin.serverLogs.detailPanel.tabs.api") },
+    { key: "user",  label: t("admin.serverLogs.detailPanel.tabs.user") },
+    { key: "note",  label: isBookmarked ? t("admin.serverLogs.detailPanel.tabs.noteBookmarked") : t("admin.serverLogs.detailPanel.tabs.note") },
   ];
 
   const copyLog = () => {
@@ -578,13 +586,13 @@ function DetailPanel({ log, bookmarks, notes, onToggleBookmark, onSaveNote, onCl
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => onToggleBookmark(logKey)} title={isBookmarked ? "Remove bookmark" : "Bookmark"}>
+          <button onClick={() => onToggleBookmark(logKey)} title={isBookmarked ? t("admin.serverLogs.detailPanel.tooltips.removeBookmark") : t("admin.serverLogs.detailPanel.tooltips.bookmark")}>
             {isBookmarked
               ? <BookmarkCheck size={14} className="text-amber-500" />
               : <Bookmark size={14} className="text-gray-400 hover:text-amber-500" />
             }
           </button>
-          <button onClick={copyLog} title="Copy log text">
+          <button onClick={copyLog} title={t("admin.serverLogs.detailPanel.tooltips.copyLogText")}>
             <Copy size={13} className="text-gray-400 hover:text-gray-600" />
           </button>
           <button onClick={onClose}>
@@ -595,12 +603,12 @@ function DetailPanel({ log, bookmarks, notes, onToggleBookmark, onSaveNote, onCl
 
       {/* Tabs */}
       <div className="flex border-b border-gray-200 bg-gray-50 overflow-x-auto">
-        {TABS.map(t => (
-          <button key={t.key} onClick={() => setTab(t.key)}
+        {TABS.map(tb => (
+          <button key={tb.key} onClick={() => setTab(tb.key)}
             className={`px-3 py-2 text-[11px] font-medium whitespace-nowrap transition-colors ${
-              tab === t.key ? "border-b-2 border-amber-400 text-gray-900 bg-white" : "text-gray-500 hover:text-gray-700"
+              tab === tb.key ? "border-b-2 border-amber-400 text-gray-900 bg-white" : "text-gray-500 hover:text-gray-700"
             }`}>
-            {t.label}
+            {tb.label}
           </button>
         ))}
       </div>
@@ -610,28 +618,28 @@ function DetailPanel({ log, bookmarks, notes, onToggleBookmark, onSaveNote, onCl
         {tab === "info" && (
           <div className="space-y-3">
             <div>
-              <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1">Timestamp</p>
+              <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1">{t("admin.serverLogs.detailPanel.fields.timestamp")}</p>
               <p className="text-[11px] font-mono text-gray-800">{fmtFull(log.timestamp)}</p>
             </div>
             <div>
-              <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1">Logger</p>
+              <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1">{t("admin.serverLogs.detailPanel.fields.logger")}</p>
               <p className="text-[11px] font-mono text-gray-800 break-all">{log.logger || "—"}</p>
             </div>
             <div>
-              <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1">Message</p>
+              <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1">{t("admin.serverLogs.detailPanel.fields.message")}</p>
               <pre className="text-[11px] font-mono text-gray-800 whitespace-pre-wrap break-all bg-gray-50 border border-gray-200 rounded p-2">
                 {log.message}
               </pre>
             </div>
             {log.thread && (
               <div>
-                <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1">Thread</p>
+                <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1">{t("admin.serverLogs.detailPanel.fields.thread")}</p>
                 <p className="text-[11px] font-mono text-gray-600">{log.thread}</p>
               </div>
             )}
             {log.exception && (
               <div>
-                <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1">Stack Trace</p>
+                <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1">{t("admin.serverLogs.detailPanel.fields.stackTrace")}</p>
                 <pre className="text-[10px] font-mono text-red-600 whitespace-pre-wrap break-all bg-red-50 border border-red-200 rounded p-2 max-h-[200px] overflow-auto">
                   {log.exception}
                 </pre>
@@ -639,7 +647,7 @@ function DetailPanel({ log, bookmarks, notes, onToggleBookmark, onSaveNote, onCl
             )}
             {notes[logKey] && (
               <div>
-                <p className="text-[10px] uppercase tracking-wider text-amber-500 mb-1">📌 Note</p>
+                <p className="text-[10px] uppercase tracking-wider text-amber-500 mb-1">{t("admin.serverLogs.detailPanel.fields.note")}</p>
                 <div className="text-[11px] text-gray-700 bg-amber-50 border border-amber-200 rounded p-2 whitespace-pre-wrap">
                   {notes[logKey]}
                 </div>
@@ -650,9 +658,8 @@ function DetailPanel({ log, bookmarks, notes, onToggleBookmark, onSaveNote, onCl
 
         {tab === "api" && (
           <div>
-            <p className="text-[11px] text-gray-500 mb-3">
-              URLs detected from log. Click <strong>Call</strong> to execute and inspect response.
-            </p>
+            <p className="text-[11px] text-gray-500 mb-3"
+              dangerouslySetInnerHTML={{ __html: t("admin.serverLogs.detailPanel.hints.apiTab") }} />
             <ApiInspector log={log} />
           </div>
         )}
@@ -660,7 +667,7 @@ function DetailPanel({ log, bookmarks, notes, onToggleBookmark, onSaveNote, onCl
         {tab === "user" && (
           <div>
             <p className="text-[11px] text-gray-500 mb-3">
-              Lookup users by ObjectID found in log, or inspect JWT payload.
+              {t("admin.serverLogs.detailPanel.hints.userTab")}
             </p>
             <UserLookup log={log} />
           </div>
@@ -669,7 +676,7 @@ function DetailPanel({ log, bookmarks, notes, onToggleBookmark, onSaveNote, onCl
         {tab === "note" && (
           <div>
             <p className="text-[11px] text-gray-500 mb-3">
-              Notes are saved to localStorage and persist across sessions.
+              {t("admin.serverLogs.detailPanel.hints.noteTab")}
             </p>
             <NoteEditor logKey={logKey} notes={notes} onSave={onSaveNote} />
           </div>
@@ -710,6 +717,7 @@ const LogLine = React.memo(({ log, onClick, selected, search, bookmarked, hasNot
 // ── ErrorGroupView ───────────────────────────────────────────────────────────
 
 function ErrorGroupView({ logs, onSelect }) {
+  const { t } = useTranslation();
   const groups = useMemo(() => {
     const map = {};
     for (const l of logs) {
@@ -726,7 +734,7 @@ function ErrorGroupView({ logs, onSelect }) {
     <div className="flex items-center justify-center flex-1 text-[13px] text-gray-400">
       <div className="text-center space-y-2">
         <CheckCircle size={32} className="mx-auto opacity-20" />
-        <p>No errors or warnings</p>
+        <p>{t("admin.serverLogs.empty.noErrorsOrWarnings")}</p>
       </div>
     </div>
   );
@@ -753,12 +761,13 @@ function ErrorGroupView({ logs, onSelect }) {
 // ── BookmarksView ─────────────────────────────────────────────────────────────
 
 function BookmarksView({ bookmarks, notes, onSelect, onRemove }) {
+  const { t } = useTranslation();
   const entries = Object.entries(bookmarks);
   if (entries.length === 0) return (
     <div className="flex items-center justify-center flex-1 text-[13px] text-gray-400">
       <div className="text-center space-y-2">
         <Bookmark size={32} className="mx-auto opacity-20" />
-        <p>No bookmarks yet — click 🔖 on any log to save it.</p>
+        <p>{t("admin.serverLogs.empty.noBookmarksYet")}</p>
       </div>
     </div>
   );
@@ -793,11 +802,12 @@ function BookmarksView({ bookmarks, notes, onSelect, onRemove }) {
 // ── AnalyticsPanel ────────────────────────────────────────────────────────────
 
 function AnalyticsPanel({ logs }) {
+  const { t } = useTranslation();
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-6">
       <TimelineChart logs={logs} />
       <div>
-        <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-2">Top endpoints</p>
+        <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-2">{t("admin.serverLogs.analytics.topEndpoints")}</p>
         <TopEndpoints logs={logs} />
       </div>
     </div>
@@ -813,6 +823,7 @@ const MAIN_VIEWS = ["logs", "bookmarks", "analytics", "watchlist"];
 // ── ServerLogs (main) ────────────────────────────────────────────────────────
 
 const ServerLogs = () => {
+  const { t } = useTranslation();
   const [logs, setLogs]           = useState([]);
   const [paused, setPaused]       = useState(false);
   const [filterLevel, setLevel]   = useState("ALL");
@@ -887,8 +898,8 @@ const ServerLogs = () => {
           errWindow.current = errWindow.current.filter(t => now - t < 60000);
           if (notifOn && errWindow.current.length === errorThresh) {
             if (Notification.permission === "granted") {
-              new Notification("⚠️ Server Alert", {
-                body: `${errorThresh} errors in the last minute`,
+              new Notification(t("admin.serverLogs.notifications.serverAlertTitle"), {
+                body: t("admin.serverLogs.notifications.serverAlertBody", { count: errorThresh }),
                 icon: "/favicon.ico",
               });
             }
@@ -899,7 +910,7 @@ const ServerLogs = () => {
         const msgLower = (entry.message || "").toLowerCase();
         const hit = watchlist.find(kw => kw && msgLower.includes(kw.toLowerCase()));
         if (hit && notifOn && Notification.permission === "granted") {
-          new Notification(`🔴 Watchlist hit: ${hit}`, {
+          new Notification(t("admin.serverLogs.notifications.watchlistHitTitle", { keyword: hit }), {
             body: (entry.message || "").slice(0, 100),
           });
         }
@@ -1007,10 +1018,10 @@ const ServerLogs = () => {
       {/* ── Left sidebar nav ─────────────────────────────────────── */}
       <div className="w-[42px] shrink-0 border-r border-gray-200 bg-gray-50 flex flex-col items-center py-2 gap-1">
         {[
-          { key: "logs",      icon: Activity,   title: "Live Logs" },
-          { key: "bookmarks", icon: Bookmark,    title: `Bookmarks (${bookmarkCount})` },
-          { key: "analytics", icon: BarChart2,   title: "Analytics" },
-          { key: "watchlist", icon: Eye,         title: "Watchlist" },
+          { key: "logs",      icon: Activity,   title: t("admin.serverLogs.sidebar.liveLogs") },
+          { key: "bookmarks", icon: Bookmark,    title: t("admin.serverLogs.sidebar.bookmarksTitle", { count: bookmarkCount }) },
+          { key: "analytics", icon: BarChart2,   title: t("admin.serverLogs.sidebar.analytics") },
+          { key: "watchlist", icon: Eye,         title: t("admin.serverLogs.sidebar.watchlist") },
         ].map(({ key, icon: Icon, title }) => (
           <button key={key} onClick={() => setView(key)} title={title}
             className={`w-8 h-8 flex items-center justify-center rounded transition-all ${
@@ -1021,11 +1032,11 @@ const ServerLogs = () => {
         ))}
 
         <div className="mt-auto flex flex-col items-center gap-1 pb-1">
-          <label title="Load log file" className="w-8 h-8 flex items-center justify-center rounded text-gray-400 hover:bg-gray-200 cursor-pointer">
+          <label title={t("admin.serverLogs.sidebar.loadLogFile")} className="w-8 h-8 flex items-center justify-center rounded text-gray-400 hover:bg-gray-200 cursor-pointer">
             <Upload size={14} />
             <input type="file" accept=".txt,.log" onChange={loadFile} className="hidden" />
           </label>
-          <button onClick={enableNotif} title={notifOn ? "Disable notifications" : "Enable notifications"}
+          <button onClick={enableNotif} title={notifOn ? t("admin.serverLogs.sidebar.disableNotifications") : t("admin.serverLogs.sidebar.enableNotifications")}
             className={`w-8 h-8 flex items-center justify-center rounded transition-all ${
               notifOn ? "bg-red-100 text-red-500" : "text-gray-400 hover:bg-gray-200"
             }`}>
@@ -1043,7 +1054,7 @@ const ServerLogs = () => {
             <div className="shrink-0 flex flex-wrap items-center gap-2 px-4 py-2.5 bg-gray-50 border-b border-gray-200">
               <div className="flex items-center gap-2">
                 <div className={`w-2 h-2 rounded-full ${connected ? "bg-emerald-500 animate-pulse" : "bg-red-500"}`} />
-                <span className="text-[11px] text-gray-500">{connected ? "Live" : "Offline"}</span>
+                <span className="text-[11px] text-gray-500">{connected ? t("admin.serverLogs.toolbar.live") : t("admin.serverLogs.toolbar.offline")}</span>
                 {connected && (
                   <span className="text-[10px] font-mono text-amber-600 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">
                     {rateSec}/s
@@ -1078,7 +1089,7 @@ const ServerLogs = () => {
               <div className="relative flex-1 min-w-[120px] max-w-[200px]">
                 <Search size={10} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input type="text" value={search} onChange={e => setSearch(e.target.value)}
-                  placeholder="Search…"
+                  placeholder={t("admin.serverLogs.searchPlaceholder")}
                   className="w-full pl-6 pr-6 py-1 text-[11px] border border-gray-200 rounded bg-white focus:outline-none focus:border-amber-400" />
                 {search && (
                   <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
@@ -1092,13 +1103,13 @@ const ServerLogs = () => {
                   className={`flex items-center gap-1 px-2 py-1 border text-[10px] font-medium rounded transition-all ${
                     groupMode ? "border-amber-400 bg-amber-50 text-amber-600" : "border-gray-200 text-gray-500 hover:bg-gray-100"
                   }`}>
-                  <Layers size={11} /> Group
+                  <Layers size={11} /> {t("admin.serverLogs.toolbar.group")}
                 </button>
                 <span className="h-4 w-px bg-gray-200" />
                 <button onClick={togglePause}
                   className={`flex items-center gap-1 px-2 py-1 border border-gray-200 text-[11px] rounded transition-all hover:bg-gray-100 ${paused ? "text-amber-500" : "text-gray-500"}`}>
                   {paused ? <Play size={11} /> : <Pause size={11} />}
-                  {paused ? `+${bufRef.current.length}` : "Pause"}
+                  {paused ? `+${bufRef.current.length}` : t("admin.serverLogs.toolbar.pause")}
                 </button>
                 <button onClick={download} className="p-1.5 border border-gray-200 text-gray-500 rounded hover:bg-gray-100">
                   <Download size={12} />
@@ -1123,7 +1134,7 @@ const ServerLogs = () => {
                 </button>
               ))}
               <span className="ml-auto text-[10px] text-gray-400 font-mono tabular-nums">
-                total <span className="text-gray-600 font-semibold">{logs.length}</span>
+                {t("admin.serverLogs.sectionHeader.total")} <span className="text-gray-600 font-semibold">{logs.length}</span>
               </span>
             </div>
           </>
@@ -1132,14 +1143,14 @@ const ServerLogs = () => {
         {/* ── Section header for non-log views ─────────────────── */}
         {view !== "logs" && (
           <div className="shrink-0 px-4 py-2.5 bg-gray-50 border-b border-gray-200 flex items-center gap-2">
-            {view === "bookmarks" && <><Bookmark size={13} className="text-amber-500" /><span className="text-[12px] font-semibold text-gray-700">Bookmarks</span><span className="text-[11px] text-gray-400">— {bookmarkCount} saved</span></>}
-            {view === "analytics" && <><BarChart2 size={13} className="text-blue-500" /><span className="text-[12px] font-semibold text-gray-700">Analytics</span></>}
+            {view === "bookmarks" && <><Bookmark size={13} className="text-amber-500" /><span className="text-[12px] font-semibold text-gray-700">{t("admin.serverLogs.sidebar.bookmarksLabel")}</span><span className="text-[11px] text-gray-400">{t("admin.serverLogs.sectionHeader.bookmarksSaved", { count: bookmarkCount })}</span></>}
+            {view === "analytics" && <><BarChart2 size={13} className="text-blue-500" /><span className="text-[12px] font-semibold text-gray-700">{t("admin.serverLogs.sidebar.analytics")}</span></>}
             {view === "watchlist" && (
               <>
                 <Eye size={13} className="text-red-500" />
-                <span className="text-[12px] font-semibold text-gray-700">Watchlist</span>
+                <span className="text-[12px] font-semibold text-gray-700">{t("admin.serverLogs.sidebar.watchlist")}</span>
                 <div className="ml-auto flex items-center gap-2">
-                  <span className="text-[11px] text-gray-500">Error threshold/min:</span>
+                  <span className="text-[11px] text-gray-500">{t("admin.serverLogs.sectionHeader.errorThresholdPerMin")}</span>
                   <input type="number" min={1} max={100} value={errorThresh}
                     onChange={e => setThresh(Number(e.target.value))}
                     className="w-12 text-[11px] border border-gray-200 rounded px-1.5 py-0.5 text-center focus:outline-none focus:border-amber-400"
@@ -1149,7 +1160,7 @@ const ServerLogs = () => {
                       notifOn ? "border-red-300 bg-red-50 text-red-600" : "border-gray-200 text-gray-500 hover:bg-gray-100"
                     }`}>
                     {notifOn ? <Bell size={11} /> : <BellOff size={11} />}
-                    {notifOn ? "Notif ON" : "Notif OFF"}
+                    {notifOn ? t("admin.serverLogs.sectionHeader.notifOn") : t("admin.serverLogs.sectionHeader.notifOff")}
                   </button>
                 </div>
               </>
@@ -1180,11 +1191,11 @@ const ServerLogs = () => {
             {/* Column headers */}
             {!groupMode && (
               <div className="shrink-0 flex items-center gap-3 px-4 py-1.5 bg-gray-100 border-b border-gray-200 font-mono text-[10px] uppercase tracking-wider text-gray-400">
-                <span className="w-[80px]">Time</span>
-                <span className="w-[14px]">Src</span>
-                <span className="w-[44px]">Level</span>
-                <span className="w-[120px] hidden md:block">Logger</span>
-                <span className="flex-1">Message</span>
+                <span className="w-[80px]">{t("admin.serverLogs.columns.time")}</span>
+                <span className="w-[14px]">{t("admin.serverLogs.columns.src")}</span>
+                <span className="w-[44px]">{t("admin.serverLogs.columns.level")}</span>
+                <span className="w-[120px] hidden md:block">{t("admin.serverLogs.columns.logger")}</span>
+                <span className="flex-1">{t("admin.serverLogs.columns.message")}</span>
                 <span className="w-[30px]" />
               </div>
             )}
@@ -1197,7 +1208,7 @@ const ServerLogs = () => {
                   <div className="flex items-center justify-center h-full text-[13px] text-gray-400">
                     <div className="text-center space-y-2">
                       <Activity size={32} className="mx-auto opacity-20" />
-                      <p>{search ? `No logs matching "${search}"` : "Waiting for logs…"}</p>
+                      <p>{search ? t("admin.serverLogs.empty.noLogsMatching", { search }) : t("admin.serverLogs.empty.waitingForLogs")}</p>
                     </div>
                   </div>
                 ) : (

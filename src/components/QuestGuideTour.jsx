@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronRight, ChevronLeft, MapPin } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useQuestGuide } from "../contexts/QuestGuideContext";
 
 const PAD = 12;
@@ -31,17 +32,18 @@ const getRect = (target) => {
   };
 };
 
-// Quest accent color map
-const QUEST_COLORS = {
-  profile:     { accent: "#16a34a", bg: "#f0fdf4", label: "Hoàn thiện hồ sơ" },
-  practice:    { accent: "#16a34a", bg: "#f0fdf4", label: "Luyện tập đầu tiên" },
-  courses:     { accent: "#16a34a", bg: "#f0fdf4", label: "Khám phá khóa học" },
-  reading:     { accent: "#16a34a", bg: "#f0fdf4", label: "Đọc 1 bài học" },
-  leaderboard: { accent: "#16a34a", bg: "#f0fdf4", label: "Xem bảng xếp hạng" },
-};
-
 const QuestGuideTour = () => {
+  const { t } = useTranslation();
   const { active, questId, currentStep, stepIdx, steps, nextStep, prevStep, endGuide, waitingForNav } = useQuestGuide();
+
+  // Quest accent color map
+  const QUEST_COLORS = {
+    profile:     { accent: "#16a34a", bg: "#f0fdf4", label: t('questGuide.profile') },
+    practice:    { accent: "#16a34a", bg: "#f0fdf4", label: t('questGuide.practice') },
+    courses:     { accent: "#16a34a", bg: "#f0fdf4", label: t('questGuide.courses') },
+    reading:     { accent: "#16a34a", bg: "#f0fdf4", label: t('questGuide.reading') },
+    leaderboard: { accent: "#16a34a", bg: "#f0fdf4", label: t('questGuide.leaderboard') },
+  };
   const [rect, setRect] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ top: 0, left: 0 });
   const [arrowLeft, setArrowLeft] = useState(50);
@@ -165,7 +167,7 @@ const QuestGuideTour = () => {
             style={{ width: 8, height: 8, borderRadius: "50%", background: "rgba(255,255,255,0.9)", flexShrink: 0 }}
           />
           <span style={{ fontSize: "13px", fontWeight: 600, color: "#fff", whiteSpace: "nowrap" }}>
-            Nhấn vào bài học để tiếp tục hướng dẫn
+            {t('questGuide.clickToContinue')}
           </span>
         </motion.div>
       </AnimatePresence>
@@ -376,7 +378,7 @@ const QuestGuideTour = () => {
                         onClick={endGuide}
                         className="text-[11px] text-gray-400 hover:text-gray-600 transition-colors px-1"
                       >
-                        Bỏ qua
+                        {t('questGuide.skip')}
                       </button>
                     )}
                     <button
@@ -384,7 +386,7 @@ const QuestGuideTour = () => {
                       className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-white text-[12px] font-bold transition-all active:scale-95 hover:opacity-90"
                       style={{ background: colors.accent }}
                     >
-                      {isLast ? "Hoàn tất ✓" : "Tiếp"}
+                      {isLast ? t('questGuide.finish') : t('questGuide.next')}
                       {!isLast && <ChevronRight size={12} />}
                     </button>
                   </div>

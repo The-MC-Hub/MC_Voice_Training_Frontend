@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Crown, X, Sparkles, Zap, Star, ChevronRight, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
-const PLAN_LABELS = { FREE: 'Miễn phí', BASIC: 'Basic', FULL: 'Full', ANNUAL: 'Annual' };
 const NEXT_PLAN = { FREE: 'BASIC', BASIC: 'FULL', FULL: 'ANNUAL' };
 
 const NEXT_PLAN_PRICES = {
@@ -12,70 +12,37 @@ const NEXT_PLAN_PRICES = {
   FULL: '1.990.000đ/năm',
 };
 
-const UPSELL_CARDS = {
+const UPSELL_CARDS_META = {
   FREE: [
-    {
-      icon: Zap,
-      accent: '#f5a623',
-      tag: 'Phổ biến nhất',
-      title: 'Phân tích AI không giới hạn',
-      desc: 'Gói FREE chỉ có 5 lượt tổng. Basic cho bạn 20 lượt/tháng + báo cáo chi tiết.',
-      cta: 'Nâng lên Basic',
-    },
-    {
-      icon: Star,
-      accent: '#a78bfa',
-      tag: 'Học nhanh hơn 3×',
-      title: 'Mở toàn bộ 50+ bài học',
-      desc: 'Free lock nhiều bài nâng cao. Nâng cấp để học đầy đủ lộ trình MC chuyên nghiệp.',
-      cta: 'Xem gói Basic',
-    },
-    {
-      icon: Sparkles,
-      accent: '#34d399',
-      tag: 'Mới',
-      title: 'Script AI cá nhân hoá',
-      desc: 'AI viết kịch bản MC theo phong cách riêng của bạn. Chỉ có từ gói Basic trở lên.',
-      cta: 'Thử ngay',
-    },
+    { icon: Zap, accent: '#f5a623' },
+    { icon: Star, accent: '#a78bfa' },
+    { icon: Sparkles, accent: '#34d399' },
   ],
   BASIC: [
-    {
-      icon: Crown,
-      accent: '#f5a623',
-      tag: 'Nâng cấp cao nhất',
-      title: 'AI không giới hạn + Coaching cá nhân',
-      desc: 'Full plan: phân tích AI vô hạn, khóa học cao cấp, coaching 1-1 với AI.',
-      cta: 'Nâng lên Full',
-    },
-    {
-      icon: Sparkles,
-      accent: '#60a5fa',
-      tag: 'Tiết kiệm 44%',
-      title: 'Annual — chỉ 166k/tháng',
-      desc: 'Trả 1 năm, tiết kiệm gần 1 triệu so với trả tháng. Unlock toàn bộ tính năng.',
-      cta: 'Xem Annual',
-    },
+    { icon: Crown, accent: '#f5a623' },
+    { icon: Sparkles, accent: '#60a5fa' },
   ],
   FULL: [
-    {
-      icon: Crown,
-      accent: '#f5a623',
-      tag: 'Tiết kiệm 44%',
-      title: 'Chuyển sang Annual',
-      desc: 'Trả 1 năm chỉ 1.990.000đ — tiết kiệm 980.000đ so với trả tháng.',
-      cta: 'Nâng lên Annual',
-    },
+    { icon: Crown, accent: '#f5a623' },
   ],
 };
 
 const SESSION_KEY = 'floating_upgrade_dismissed';
 
 export default function FloatingUpgradeCard({ plan = 'FREE' }) {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const [cardIdx, setCardIdx] = useState(0);
 
-  const cards = UPSELL_CARDS[plan] || [];
+  const PLAN_LABELS = { FREE: t('floatingUpgradeCard.planFree'), BASIC: 'Basic', FULL: 'Full', ANNUAL: 'Annual' };
+  const planKey = (plan || 'FREE').toLowerCase();
+  const cards = (UPSELL_CARDS_META[plan] || []).map((m, i) => ({
+    ...m,
+    tag: t(`floatingUpgradeCard.cards.${planKey}.${i}.tag`),
+    title: t(`floatingUpgradeCard.cards.${planKey}.${i}.title`),
+    desc: t(`floatingUpgradeCard.cards.${planKey}.${i}.desc`),
+    cta: t(`floatingUpgradeCard.cards.${planKey}.${i}.cta`),
+  }));
 
   useEffect(() => {
     if (!cards.length) return;
@@ -210,7 +177,7 @@ export default function FloatingUpgradeCard({ plan = 'FREE' }) {
                 onClick={dismiss}
                 className="w-full text-center text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors mt-2"
               >
-                Để sau
+                {t('floatingUpgradeCard.later')}
               </button>
             </div>
           </div>

@@ -82,7 +82,7 @@ const Community = () => {
 
   return (
     <div className="max-w-6xl mx-auto pb-16 space-y-12">
-      <Breadcrumb items={[{ label: 'Cộng đồng' }]} />
+      <Breadcrumb items={[{ label: t('community.breadcrumb') }]} />
       <PageBanner
         icon={<Users size={22} />}
         eyebrow={t('community.arenaTitle')}
@@ -147,7 +147,7 @@ const Community = () => {
                         <div className="flex justify-between items-center">
                           <span className="px-3 py-1 rounded-lg bg-[#f5a623]/[0.08] border border-[#f5a623]/20 text-[11px] text-[#f5a623] flex items-center gap-1.5">
                             <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                            {slide.competition.type} CHALLENGE
+                            {slide.competition.type} {t('community.challengeSuffix')}
                           </span>
                           <span className="text-[11px] text-zinc-600 flex items-center gap-1.5 bg-[#09090b] px-3 py-1 rounded-lg border border-white/[0.06]">
                             <Clock size={11} className="text-[#f5a623]" />

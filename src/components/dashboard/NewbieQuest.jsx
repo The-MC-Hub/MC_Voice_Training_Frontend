@@ -1,18 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, Circle, Gift, ChevronRight, Copy, Check, ChevronDown, Sparkles, Trophy } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { questService } from '../../services/questService';
 import { useNavigate } from 'react-router-dom';
 import { useQuestGuide } from '../../contexts/QuestGuideContext';
 
-const QUEST_META = [
-  { id: 'profile',      label: 'Hoàn thiện hồ sơ',    desc: 'Điền đầy đủ tên và ảnh đại diện',     link: '/m/settings',     cta: 'Cập nhật hồ sơ' },
-  { id: 'practice',    label: 'Luyện tập đầu tiên',   desc: 'Hoàn thành 1 bài AI coaching',         link: '/m/voice/library', cta: 'Bắt đầu luyện tập' },
-  { id: 'courses',     label: 'Khám phá khóa học',    desc: 'Ghé thăm trang Khóa học',              link: '/m/courses',       cta: 'Xem khóa học' },
-{ id: 'leaderboard', label: 'Xem bảng xếp hạng',   desc: 'Ghé thăm trang Xếp hạng',              link: '/m/leaderboard',   cta: 'Xem bảng xếp hạng' },
-];
+const QUEST_IDS = ['profile', 'practice', 'courses', 'leaderboard'];
+const QUEST_LINKS = {
+  profile: '/m/settings',
+  practice: '/m/voice/library',
+  courses: '/m/courses',
+  leaderboard: '/m/leaderboard',
+};
 
 const NewbieQuest = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { startGuide } = useQuestGuide();
   const [progress, setProgress] = useState(null);
@@ -84,9 +87,9 @@ const NewbieQuest = () => {
               <div className="w-16 h-16 rounded-2xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center mx-auto mb-4">
                 <Gift size={30} className="text-amber-500" />
               </div>
-              <h2 className="text-[20px] font-bold text-gray-900 mb-1">Chúc mừng Tân binh!</h2>
+              <h2 className="text-[20px] font-bold text-gray-900 mb-1">{t('newbieQuest.congratsTitle')}</h2>
               <p className="text-[13px] text-gray-500 mb-5 leading-relaxed">
-                Bạn đã hoàn thành tất cả nhiệm vụ. Đây là voucher <span className="font-semibold text-amber-600">giảm 50%</span> gói Basic dành riêng cho bạn.
+                {t('newbieQuest.congratsDescPrefix')} <span className="font-semibold text-amber-600">{t('newbieQuest.discountLabel')}</span> {t('newbieQuest.congratsDescSuffix')}
               </p>
               <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-2">
                 <span className="flex-1 font-mono font-bold text-[15px] text-amber-700 tracking-widest">{voucherCode}</span>
@@ -97,18 +100,18 @@ const NewbieQuest = () => {
                   {copied ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} className="text-amber-600" />}
                 </button>
               </div>
-              <p className="text-[11px] text-gray-400 mb-6">Hiệu lực 30 ngày · Chỉ dùng 1 lần · Áp dụng cho gói Basic</p>
+              <p className="text-[11px] text-gray-400 mb-6">{t('newbieQuest.voucherTerms')}</p>
               <button
                 onClick={() => { setVoucherCode(null); navigate('/m/payment'); }}
                 className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-[14px] rounded-2xl transition-colors flex items-center justify-center gap-2"
               >
-                Dùng ngay <ChevronRight size={16} />
+                {t('newbieQuest.useNow')} <ChevronRight size={16} />
               </button>
               <button
                 onClick={() => setVoucherCode(null)}
                 className="mt-3 text-[12px] text-gray-400 hover:text-gray-600 transition-colors"
               >
-                Để sau
+                {t('newbieQuest.later')}
               </button>
             </motion.div>
           </motion.div>
@@ -141,20 +144,20 @@ const NewbieQuest = () => {
           {/* Text */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-0.5">
-              <span className="text-[11px] font-bold text-amber-700 uppercase tracking-widest">Nhiệm vụ tân binh</span>
+              <span className="text-[11px] font-bold text-amber-700 uppercase tracking-widest">{t('newbieQuest.title')}</span>
               <span className="px-1.5 py-0.5 rounded-md bg-amber-100 border border-amber-300/60 text-[10px] font-bold text-amber-700">
                 {doneCount}/{totalQuests}
               </span>
               {allDone && (
                 <span className="px-1.5 py-0.5 rounded-md bg-emerald-100 border border-emerald-300/60 text-[10px] font-bold text-emerald-700">
-                  Hoàn thành ✓
+                  {t('newbieQuest.allDoneBadge')}
                 </span>
               )}
             </div>
             <p className="text-[12px] text-amber-700/70 truncate">
               {allDone
-                ? 'Nhận voucher -50% gói Basic ngay!'
-                : `Còn ${totalQuests - doneCount} nhiệm vụ · Nhận voucher -50% gói Basic`
+                ? t('newbieQuest.claimNowDesc')
+                : t('newbieQuest.remainingDesc', { count: totalQuests - doneCount })
               }
             </p>
           </div>
@@ -218,8 +221,9 @@ const NewbieQuest = () => {
 
               {/* Quest list */}
               <div className="px-4 py-2 space-y-0.5">
-                {QUEST_META.map((q, i) => {
-                  const done = completedQuests.includes(q.id);
+                {QUEST_IDS.map((qid, i) => {
+                  const done = completedQuests.includes(qid);
+                  const q = { id: qid, label: t(`newbieQuest.quests.${qid}.label`), desc: t(`newbieQuest.quests.${qid}.desc`), link: QUEST_LINKS[qid] };
                   return (
                     <motion.div
                       key={q.id}
@@ -270,7 +274,7 @@ const NewbieQuest = () => {
                     style={{ background: 'linear-gradient(135deg, #f59e0b, #f97316)' }}
                   >
                     <Gift size={15} />
-                    {claiming ? 'Đang nhận...' : 'Nhận voucher -50% ngay'}
+                    {claiming ? t('newbieQuest.claiming') : t('newbieQuest.claimBtn')}
                   </motion.button>
                 </div>
               )}

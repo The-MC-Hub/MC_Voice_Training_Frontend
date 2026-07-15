@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Download, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
 import { STREAK_FRAMES } from './AvatarFrame';
 
 // ─── Card visual config — edit to restyle the exported image ─────────────────
@@ -13,7 +15,6 @@ const CARD_NAME_COLOR    = '#111827';
 const CARD_SUB_COLOR     = '#6b7280';
 const CARD_MUTED_COLOR   = '#9ca3af';
 const CARD_DIVIDER_COLOR = '#f3f4f6';
-const CARD_BRAND_TEXT    = 'MC Hub · Voice Training';
 
 // Hero emoji per frame (same as StreakWidget)
 const FRAME_HERO_EMOJI = {
@@ -133,7 +134,7 @@ async function drawStreakCard(canvas, { user, streak }) {
   ctx.font = 'bold 16px system-ui, sans-serif';
   ctx.fillStyle = CARD_NAME_COLOR;
   ctx.textBaseline = 'alphabetic';
-  ctx.fillText(user?.name || 'MC Hub User', TX, CY - 34);
+  ctx.fillText(user?.name || i18next.t('streakCardModal.defaultUserName'), TX, CY - 34);
 
   // Streak number
   ctx.font = 'bold 48px system-ui, sans-serif';
@@ -141,15 +142,15 @@ async function drawStreakCard(canvas, { user, streak }) {
   ctx.fillText(`${streak.loginStreak}`, TX, CY + 16);
   const numW = ctx.measureText(`${streak.loginStreak}`).width;
 
-  // "ngày liên tiếp" inline
+  // consecutive days label inline
   ctx.font = '13px system-ui, sans-serif';
   ctx.fillStyle = CARD_SUB_COLOR;
-  ctx.fillText('ngày liên tiếp', TX + numW + 8, CY + 8);
+  ctx.fillText(i18next.t('streakCardModal.consecutiveDays'), TX + numW + 8, CY + 8);
 
   // Record
   ctx.font = '11px system-ui, sans-serif';
   ctx.fillStyle = CARD_MUTED_COLOR;
-  ctx.fillText(`🏆  Kỷ lục: ${streak.longestLoginStreak} ngày`, TX, CY + 36);
+  ctx.fillText(i18next.t('streakCardModal.recordLabel', { count: streak.longestLoginStreak }), TX, CY + 36);
 
   // ── Progress bar ─────────────────────────────────────────────────────────────
   const PX = TX, PY = CY + 52, PW = W - TX - 28, PH = 6;
@@ -176,7 +177,7 @@ async function drawStreakCard(canvas, { user, streak }) {
 
   ctx.font = '10px system-ui, sans-serif';
   ctx.fillStyle = CARD_MUTED_COLOR;
-  ctx.fillText(`${streak.loginStreak} / ${nextM} ngày`, PX, PY + 17);
+  ctx.fillText(i18next.t('streakCardModal.progressLabel', { current: streak.loginStreak, next: nextM }), PX, PY + 17);
 
   // ── Bottom brand strip ────────────────────────────────────────────────────────
   ctx.save();
@@ -195,7 +196,7 @@ async function drawStreakCard(canvas, { user, streak }) {
   ctx.fillStyle = CARD_MUTED_COLOR;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(CARD_BRAND_TEXT, W / 2, H - 14);
+  ctx.fillText(i18next.t('streakCardModal.brandText'), W / 2, H - 14);
   ctx.textAlign = 'right';
   ctx.fillText(new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }), W - 14, H - 14);
   ctx.textAlign = 'left';
@@ -204,6 +205,7 @@ async function drawStreakCard(canvas, { user, streak }) {
 
 // ─── Modal component ──────────────────────────────────────────────────────────
 const StreakCardModal = ({ open, onClose, user, streak }) => {
+  const { t } = useTranslation();
   const canvasRef = useRef(null);
   const [rendering, setRendering] = useState(false);
   const [ready, setReady] = useState(false);
@@ -224,7 +226,7 @@ const StreakCardModal = ({ open, onClose, user, streak }) => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `mchub-streak-${streak?.loginStreak ?? 0}-ngay.png`;
+      a.download = `mchub-streak-${streak?.loginStreak ?? 0}-${t('streakCardModal.filenameSuffix')}.png`;
       a.click();
       URL.revokeObjectURL(url);
     }, 'image/png');
@@ -258,8 +260,8 @@ const StreakCardModal = ({ open, onClose, user, streak }) => {
               {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
                 <div>
-                  <h3 className="text-[15px] font-bold text-gray-900">Ảnh chuỗi của bạn</h3>
-                  <p className="text-[11px] text-gray-400 mt-0.5">Lưu và chia sẻ thành tích luyện tập</p>
+                  <h3 className="text-[15px] font-bold text-gray-900">{t('streakCardModal.title')}</h3>
+                  <p className="text-[11px] text-gray-400 mt-0.5">{t('streakCardModal.subtitle')}</p>
                 </div>
                 <button
                   onClick={onClose}
@@ -274,7 +276,7 @@ const StreakCardModal = ({ open, onClose, user, streak }) => {
                 {rendering && (
                   <div className="flex items-center gap-2 text-gray-400 py-10">
                     <Loader2 size={16} className="animate-spin" />
-                    <span className="text-[12px]">Đang tạo ảnh...</span>
+                    <span className="text-[12px]">{t('streakCardModal.generating')}</span>
                   </div>
                 )}
                 <canvas
@@ -298,10 +300,10 @@ const StreakCardModal = ({ open, onClose, user, streak }) => {
                   style={{ background: accent }}
                 >
                   <Download size={14} />
-                  Tải về máy (.PNG)
+                  {t('streakCardModal.downloadBtn')}
                 </button>
                 <p className="text-[10px] text-gray-400 text-center mt-2">
-                  Ảnh PNG 480×240px · không có watermark
+                  {t('streakCardModal.downloadHint')}
                 </p>
               </div>
             </div>

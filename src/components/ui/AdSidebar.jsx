@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Crown, Sparkles, Zap, Star, ArrowRight, ExternalLink, Facebook, Flame, Clock, Tag, Ticket } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { fetchActiveSocialPosts, recordSocialPostClick } from '../../services/socialPostService';
 import { getFlashDeals } from '../../services/communityService';
 import { useAuthStore } from '../../store/useAuthStore';
@@ -10,69 +11,38 @@ import { useAuthStore } from '../../store/useAuthStore';
 // Routes where ad sidebar should NOT appear
 const EXCLUDED_PATHS = ['/login', '/register', '/m/admin'];
 
-const UPGRADE_ADS = {
+const UPGRADE_ADS_META = {
   FREE: [
-    {
-      icon: Zap,
-      accent: '#f5a623',
-      tag: 'Phổ biến nhất',
-      title: 'Nâng cấp Basic',
-      body: '20 lượt AI/tháng · Mở toàn bộ bài học · Báo cáo chi tiết',
-      cta: 'Nâng cấp ngay',
-      price: '199k/tháng',
-    },
-    {
-      icon: Star,
-      accent: '#a78bfa',
-      tag: 'Học nhanh 3×',
-      title: 'Mở 50+ bài học',
-      body: 'Gói Free giới hạn nội dung. Basic unlock toàn bộ lộ trình MC chuyên nghiệp.',
-      cta: 'Xem gói Basic',
-      price: '199k/tháng',
-    },
-    {
-      icon: Crown,
-      accent: '#f5a623',
-      tag: 'Cao cấp nhất',
-      title: 'Gói Full — AI vô hạn',
-      body: 'Phân tích AI không giới hạn · Coaching cá nhân · Khóa học nâng cao',
-      cta: 'Khám phá Full',
-      price: '299k/tháng',
-    },
+    { icon: Zap, accent: '#f5a623', price: '199k/tháng' },
+    { icon: Star, accent: '#a78bfa', price: '199k/tháng' },
+    { icon: Crown, accent: '#f5a623', price: '299k/tháng' },
   ],
   BASIC: [
-    {
-      icon: Crown,
-      accent: '#f5a623',
-      tag: 'Nâng cấp',
-      title: 'Gói Full — AI vô hạn',
-      body: 'AI không giới hạn · Tất cả khóa học cao cấp · Coaching 1-1 với AI.',
-      cta: 'Nâng lên Full',
-      price: '299k/tháng',
-    },
-    {
-      icon: Sparkles,
-      accent: '#34d399',
-      tag: 'Tiết kiệm 44%',
-      title: 'Annual — 166k/tháng',
-      body: 'Trả 1 năm tiết kiệm gần 1 triệu. Unlock toàn bộ tính năng vĩnh viễn.',
-      cta: 'Xem Annual',
-      price: '1.99M/năm',
-    },
+    { icon: Crown, accent: '#f5a623', price: '299k/tháng' },
+    { icon: Sparkles, accent: '#34d399', price: '1.99M/năm' },
   ],
   FULL: [
-    {
-      icon: Crown,
-      accent: '#f5a623',
-      tag: 'Tiết kiệm 44%',
-      title: 'Chuyển sang Annual',
-      body: 'Chỉ 1.990.000đ/năm — tiết kiệm 980.000đ so với trả tháng.',
-      cta: 'Nâng lên Annual',
-      price: '1.99M/năm',
-    },
+    { icon: Crown, accent: '#f5a623', price: '1.99M/năm' },
   ],
   ANNUAL: [],
 };
+
+function useUpgradeAds() {
+  const { t } = useTranslation();
+  const build = (planKey, metas) => metas.map((m, i) => ({
+    ...m,
+    tag: t(`adSidebar.ads.${planKey}.${i}.tag`),
+    title: t(`adSidebar.ads.${planKey}.${i}.title`),
+    body: t(`adSidebar.ads.${planKey}.${i}.body`),
+    cta: t(`adSidebar.ads.${planKey}.${i}.cta`),
+  }));
+  return {
+    FREE: build('free', UPGRADE_ADS_META.FREE),
+    BASIC: build('basic', UPGRADE_ADS_META.BASIC),
+    FULL: build('full', UPGRADE_ADS_META.FULL),
+    ANNUAL: [],
+  };
+}
 
 const SOCIAL_CACHE_KEY = 'mchub_ad_social_cache';
 function loadSocialCache() {
@@ -121,6 +91,7 @@ function UpgradeCard({ ad }) {
 }
 
 function SocialCard({ post }) {
+  const { t } = useTranslation();
   return (
     <div className="w-full bg-white border border-black/8 overflow-hidden">
       {post.image ? (
@@ -135,7 +106,7 @@ function SocialCard({ post }) {
       <div className="p-3">
         <div className="flex items-center gap-1.5 mb-1.5">
           <Facebook size={10} className="text-blue-400 shrink-0" />
-          <span className="text-[9px] font-semibold uppercase tracking-wider text-blue-400">Fanpage</span>
+          <span className="text-[9px] font-semibold uppercase tracking-wider text-blue-400">{t('adSidebar.fanpageTag')}</span>
         </div>
         <p className="text-[10px] text-gray-600 leading-relaxed line-clamp-3 mb-2">{post.description}</p>
         <a
@@ -145,7 +116,7 @@ function SocialCard({ post }) {
           onClick={() => recordSocialPostClick(post.id)}
           className="inline-flex items-center gap-1 text-[10px] text-blue-400 hover:text-blue-300 transition-colors"
         >
-          <ExternalLink size={9} /> Xem bài đăng
+          <ExternalLink size={9} /> {t('adSidebar.viewPost')}
         </a>
       </div>
     </div>
@@ -169,6 +140,7 @@ function useCountdown(expiresAt) {
 }
 
 function FlashDealCard({ deal, onClaim }) {
+  const { t } = useTranslation();
   const { h, m, s, pad, expired } = useCountdown(deal.expiresAt);
   const remaining = deal.maxUses > 0 ? deal.maxUses - deal.usedCount : null;
   const pct = remaining !== null ? Math.round((remaining / deal.maxUses) * 100) : 100;
@@ -184,7 +156,7 @@ function FlashDealCard({ deal, onClaim }) {
     ? deal.applicablePlans[0]
     : deal.applicablePlans?.length > 0
       ? deal.applicablePlans.join(' / ')
-      : 'Tất cả gói';
+      : t('adSidebar.allPlans');
 
   return (
     <motion.div
@@ -217,7 +189,7 @@ function FlashDealCard({ deal, onClaim }) {
             <motion.div animate={{ scale: [1, 1.25, 1] }} transition={{ duration: 1.2, repeat: Infinity }}>
               <Flame size={11} style={{ color: '#f59e0b' }} />
             </motion.div>
-            <span className="text-[9px] font-black uppercase tracking-[0.12em]" style={{ color: '#f59e0b' }}>Lucky Time</span>
+            <span className="text-[9px] font-black uppercase tracking-[0.12em]" style={{ color: '#f59e0b' }}>{t('adSidebar.luckyTime')}</span>
           </div>
           {isLastChance && (
             <motion.div
@@ -226,7 +198,7 @@ function FlashDealCard({ deal, onClaim }) {
               className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-sm"
               style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)' }}
             >
-              <span className="text-[8px] font-bold text-red-400 uppercase tracking-wide">Sắp hết</span>
+              <span className="text-[8px] font-bold text-red-400 uppercase tracking-wide">{t('adSidebar.almostGone')}</span>
             </motion.div>
           )}
         </div>
@@ -247,10 +219,10 @@ function FlashDealCard({ deal, onClaim }) {
           </div>
           <div className="min-w-0 pt-0.5 mt-4">
             <p className="text-[10px] font-semibold leading-snug" style={{ color: 'rgba(255,255,255,0.85)' }}>
-              {deal.description || 'Ưu đãi đặc biệt'}
+              {deal.description || t('adSidebar.specialOffer')}
             </p>
             <p className="text-[9px] mt-0.5" style={{ color: 'rgba(255,255,255,0.32)' }}>
-              Gói {planLabel}
+              {t('adSidebar.planPrefix')} {planLabel}
             </p>
           </div>
         </div>
@@ -264,7 +236,7 @@ function FlashDealCard({ deal, onClaim }) {
             <Ticket size={9} style={{ color: '#f59e0b' }} className="shrink-0" />
             <span className="font-mono font-bold text-[11px] tracking-[0.15em]" style={{ color: '#fcd34d' }}>{deal.code}</span>
           </div>
-          <span className="text-[8px] font-semibold uppercase tracking-wide" style={{ color: 'rgba(251,191,36,0.45)' }}>Mã KM</span>
+          <span className="text-[8px] font-semibold uppercase tracking-wide" style={{ color: 'rgba(251,191,36,0.45)' }}>{t('adSidebar.promoCode')}</span>
         </div>
 
         {/* Countdown */}
@@ -272,17 +244,17 @@ function FlashDealCard({ deal, onClaim }) {
           <div className="flex items-center justify-between mb-1.5">
             <div className="flex items-center gap-1">
               <Clock size={8} style={{ color: 'rgba(255,255,255,0.28)' }} />
-              <span className="text-[8px]" style={{ color: 'rgba(255,255,255,0.28)' }}>Kết thúc sau</span>
+              <span className="text-[8px]" style={{ color: 'rgba(255,255,255,0.28)' }}>{t('adSidebar.endsIn')}</span>
             </div>
             {h === 0 && m < 10 && (
               <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 0.8, repeat: Infinity }}
                 className="text-[8px] font-semibold" style={{ color: '#f87171' }}>
-                Còn ít phút!
+                {t('adSidebar.fewMinutesLeft')}
               </motion.span>
             )}
           </div>
           <div className="flex items-center justify-center gap-1">
-            {[{ v: pad(h), label: 'GIỜ' }, { v: pad(m), label: 'PHÚT' }, { v: pad(s), label: 'GIÂY' }].map(({ v, label }, i) => (
+            {[{ v: pad(h), label: t('adSidebar.hoursUnit') }, { v: pad(m), label: t('adSidebar.minutesUnit') }, { v: pad(s), label: t('adSidebar.secondsUnit') }].map(({ v, label }, i) => (
               <React.Fragment key={i}>
                 {i > 0 && (
                   <motion.span
@@ -319,9 +291,9 @@ function FlashDealCard({ deal, onClaim }) {
         {remaining !== null && (
           <div className="mb-2.5">
             <div className="flex justify-between mb-1">
-              <span className="text-[8px]" style={{ color: 'rgba(255,255,255,0.28)' }}>Còn lại</span>
+              <span className="text-[8px]" style={{ color: 'rgba(255,255,255,0.28)' }}>{t('adSidebar.remaining')}</span>
               <span className="text-[8px] font-semibold" style={{ color: pct <= 30 ? '#f87171' : '#f59e0b' }}>
-                {remaining} / {deal.maxUses} lượt
+                {remaining} / {deal.maxUses} {t('adSidebar.usesUnit')}
               </span>
             </div>
             <div className="h-0.75 w-full rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
@@ -350,7 +322,7 @@ function FlashDealCard({ deal, onClaim }) {
           }}
         >
           <Flame size={10} />
-          Dùng ngay
+          {t('adSidebar.useNow')}
           <ArrowRight size={10} />
         </motion.button>
 
@@ -367,10 +339,12 @@ const slideVariants = {
 const slideTransition = { duration: 0.3, ease: [0.16, 1, 0.3, 1] };
 
 export default function AdSidebar() {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const plan = user?.plan || 'FREE';
   const location = useLocation();
   const navigate = useNavigate();
+  const UPGRADE_ADS = useUpgradeAds();
 
   const [socialPosts, setSocialPosts] = useState(loadSocialCache);
   const [adIdx, setAdIdx] = useState(0);
@@ -453,7 +427,7 @@ export default function AdSidebar() {
           )}
         </AnimatePresence>
 
-        <p className="text-[9px] text-gray-400 uppercase tracking-widest font-semibold px-1">ĐĂNG KÍ GÓI THÔI BẠN ƠI 😘</p>
+        <p className="text-[9px] text-gray-400 uppercase tracking-widest font-semibold px-1">{t('adSidebar.subscribePrompt')}</p>
 
         {/* Upgrade ads */}
         {upgradeAds.length > 0 && (
@@ -487,14 +461,14 @@ export default function AdSidebar() {
         {socialPosts.length > 0 && (
           <>
             <div className="h-px bg-black/6 mx-1" />
-            <p className="text-[9px] text-gray-400 uppercase tracking-widest font-semibold px-1">Bài đăng Fanpage</p>
+            <p className="text-[9px] text-gray-400 uppercase tracking-widest font-semibold px-1">{t('adSidebar.fanpagePosts')}</p>
             {socialPosts.map(post => (
               <SocialCard key={post.id} post={post} />
             ))}
           </>
         )}
 
-        <p className="text-[8px] text-gray-300 text-center mt-1">MCHub · Quảng cáo</p>
+        <p className="text-[8px] text-gray-300 text-center mt-1">{t('adSidebar.adFooter')}</p>
       </div>
     </div>
   );

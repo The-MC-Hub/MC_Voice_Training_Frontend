@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import { useTranslation, Trans } from 'react-i18next';
 import { STREAK_FRAMES } from './AvatarFrame';
 
 // ─── Toast display config ─────────────────────────────────────────────────────
@@ -57,6 +58,7 @@ function MiniConfetti({ accent }) {
  *   prevStreak — previous loginStreak value (before latest login)
  */
 const StreakMilestoneToast = ({ streak, prevStreak }) => {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const [milestoneDays, setMilestoneDays] = useState(0);
 
@@ -110,15 +112,15 @@ const StreakMilestoneToast = ({ streak, prevStreak }) => {
               {/* Content */}
               <div className="flex-1 min-w-0">
                 <p className="text-[13px] font-bold text-white leading-snug">
-                  🎉 Chuỗi {milestoneDays} ngày!
+                  {t('streakMilestoneToast.milestoneReached', { days: milestoneDays })}
                 </p>
                 {isNewFrame ? (
                   <p className="text-[12px] mt-0.5" style={{ color: accent }}>
-                    Mở khóa khung mới: <strong>{frame.label}</strong> {frame.icon}
+                    {t('streakMilestoneToast.unlockedNewFrame')} <strong>{frame.label}</strong> {frame.icon}
                   </p>
                 ) : (
                   <p className="text-[12px] text-zinc-400 mt-0.5">
-                    Bạn đang giữ chuỗi <strong>{streak.loginStreak} ngày</strong> liên tiếp.
+                    <Trans i18nKey="streakMilestoneToast.keepingStreak" values={{ days: streak.loginStreak }} components={{ 1: <strong /> }} />
                   </p>
                 )}
               </div>

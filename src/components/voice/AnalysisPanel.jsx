@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AudioLines, BarChart3, Award, Clock, Sparkles, Info, Loader2 } from "lucide-react";
+import { AudioLines, BarChart3, Award, Clock, Sparkles, Info, Loader2, Download } from "lucide-react";
 import TypewriterMarkdown from "../TypewriterMarkdown";
+import SampleComparisonCard from "./SampleComparisonCard";
 
 export default function AnalysisPanel({
   result, analyzing,
@@ -11,7 +13,34 @@ export default function AnalysisPanel({
   history, clampMetric,
   t, t_vp,
   leftWidth,
+  audioUrl, sampleAudioUrl,
+  lessonTitle,
 }) {
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownloadPdf = async () => {
+    const element = document.getElementById("voice-report-pdf-content");
+    if (!element) return;
+    setIsDownloading(true);
+    try {
+      const html2pdfModule = await import("html2pdf.js");
+      const html2pdf = html2pdfModule.default || html2pdfModule;
+      const opt = {
+        margin: 10,
+        filename: `BaoCaoLuyenDoc_${(lessonTitle || "bai-tap").replace(/[^\p{L}\p{N}]+/gu, "_")}_${new Date().toLocaleDateString("vi-VN").replace(/\//g, "-")}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: "#0a0a0b" },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      };
+      const generator = typeof html2pdf === "function" ? html2pdf : html2pdf.default;
+      await generator().set(opt).from(element).save();
+    } catch (err) {
+      console.error("PDF export failed:", err);
+      alert(t_vp("pdfExportError"));
+    } finally {
+      setIsDownloading(false);
+    }
+  };
   return (
     <AnimatePresence>
       {result && (
@@ -23,6 +52,16 @@ export default function AnalysisPanel({
           style={{ width: `${100 - leftWidth}%` }}
           className="space-y-4 min-w-[25%]"
         >
+          <button
+            onClick={handleDownloadPdf}
+            disabled={isDownloading}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium bg-white/[0.04] border border-white/[0.08] text-zinc-400 hover:text-white hover:border-white/20 transition-colors disabled:opacity-50"
+          >
+            {isDownloading ? <Loader2 size={12} className="animate-spin" /> : <Download size={12} />}
+            {isDownloading ? t_vp("pdfGenerating") : t_vp("pdfDownload")}
+          </button>
+
+          <div id="voice-report-pdf-content" className="space-y-4">
           {/* Vocal dynamics */}
           <div className="rounded-2xl border border-white/[0.07] bg-[#111113] p-5">
             <div className="flex items-center justify-between mb-4">
@@ -50,6 +89,10 @@ export default function AnalysisPanel({
             </div>
           </div>
 
+          {sampleAudioUrl && (
+            <SampleComparisonCard userAudioUrl={audioUrl} sampleAudioUrl={sampleAudioUrl} />
+          )}
+
           {/* Voice Quality — Phase 2+3 */}
           {(result.voice_quality || result.spectral_features || result.filler_words || result.wer_rate > 0 || result.cer_rate > 0) && (
             <div className="rounded-2xl border border-white/[0.07] bg-[#111113] p-5">
@@ -61,9 +104,9 @@ export default function AnalysisPanel({
                 {result.voice_quality && (
                   <div className="grid grid-cols-3 gap-2">
                     {[
-                      { label: "Jitter", value: result.voice_quality.jitter_pct, unit: "%", color: (v) => v < 1.0 ? "text-emerald-400" : v < 2.0 ? "text-amber-400" : "text-red-400", tooltip: "Độ rung tần số cơ bản. < 1% = ổn định, 1-2% = chấp nhận được, > 2% = giọng run/không đều" },
-                      { label: "Shimmer", value: result.voice_quality.shimmer_pct, unit: "%", color: (v) => v < 3.0 ? "text-emerald-400" : v < 5.0 ? "text-amber-400" : "text-red-400", tooltip: "Độ biến động biên độ. < 3% = tốt, 3-5% = bình thường, > 5% = giọng yếu hoặc mệt" },
-                      { label: "HNR", value: result.voice_quality.hnr_db, unit: "dB", color: (v) => v >= 15 ? "text-emerald-400" : v >= 10 ? "text-amber-400" : "text-red-400", tooltip: "Tỷ lệ hài âm/tạp âm (Harmonics-to-Noise Ratio). ≥ 15dB = giọng trong, 10-15dB = chấp nhận được, < 10dB = nhiều tạp âm" },
+                      { label: "Jitter", value: result.voice_quality.jitter_pct, unit: "%", color: (v) => v < 1.0 ? "text-emerald-400" : v < 2.0 ? "text-amber-400" : "text-red-400", tooltip: t_vp("jitterTooltip") },
+                      { label: "Shimmer", value: result.voice_quality.shimmer_pct, unit: "%", color: (v) => v < 3.0 ? "text-emerald-400" : v < 5.0 ? "text-amber-400" : "text-red-400", tooltip: t_vp("shimmerTooltip") },
+                      { label: "HNR", value: result.voice_quality.hnr_db, unit: "dB", color: (v) => v >= 15 ? "text-emerald-400" : v >= 10 ? "text-amber-400" : "text-red-400", tooltip: t_vp("hnrTooltip") },
                     ].map((m) => (
                       <div key={m.label} className="p-3 rounded-xl bg-[#09090b] border border-white/[0.05] text-center">
                         <div className="flex items-center justify-center gap-1 mb-1">
@@ -87,7 +130,7 @@ export default function AnalysisPanel({
                     <div className="p-3 rounded-xl bg-[#09090b] border border-white/[0.05]">
                       <div className="flex items-center gap-1 mb-1">
                         <span className="text-[10px] text-zinc-600">Spectral Centroid</span>
-                        <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">Trọng tâm phổ tần số. Giá trị cao hơn = giọng sáng, rõ hơn. Lý tưởng cho MC: ≥ 1500 Hz.</div></div>
+                        <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">{t_vp("spectralCentroidTooltip")}</div></div>
                       </div>
                       <p className={`text-[14px] font-bold tabular-nums ${(result.spectral_features.spectral_centroid_hz ?? 0) < 1500 ? "text-amber-400" : "text-emerald-400"}`}>
                         {Math.round(result.spectral_features.spectral_centroid_hz ?? 0)}<span className="text-[10px] text-zinc-600"> Hz</span>
@@ -96,7 +139,7 @@ export default function AnalysisPanel({
                     <div className="p-3 rounded-xl bg-[#09090b] border border-white/[0.05]">
                       <div className="flex items-center gap-1 mb-1">
                         <span className="text-[10px] text-zinc-600">MFCC Stability</span>
-                        <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">Độ ổn định cấu trúc âm thanh (MFCC). ≥ 50/100 = phát âm nhất quán, ổn định. Thấp = phát âm không đều.</div></div>
+                        <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">{t_vp("mfccStabilityTooltip")}</div></div>
                       </div>
                       <p className={`text-[14px] font-bold tabular-nums ${(result.spectral_features.mfcc_stability_score ?? 0) >= 50 ? "text-emerald-400" : "text-amber-400"}`}>
                         {(result.spectral_features.mfcc_stability_score ?? 0).toFixed(1)}<span className="text-[10px] text-zinc-600">/100</span>
@@ -108,7 +151,7 @@ export default function AnalysisPanel({
                   <div className="flex items-center gap-3 p-3 rounded-xl bg-[#09090b] border border-white/[0.05]">
                     <div className="flex items-center gap-1 w-24 shrink-0">
                       <span className="text-[11px] text-zinc-500">Pitch Contour</span>
-                      <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-0 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">Xu hướng cao độ giọng. Rising (↗) = giọng lên, thường hỏi. Falling (↘) = giọng xuống, khẳng định. Flat (→) = đều đặn.</div></div>
+                      <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-0 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">{t_vp("pitchContourTooltip")}</div></div>
                     </div>
                     <span className={`text-[12px] font-semibold px-2 py-0.5 rounded-md ${result.pitch_contour.pitch_contour === "rising" ? "bg-cyan-500/10 text-cyan-400" : result.pitch_contour.pitch_contour === "falling" ? "bg-purple-500/10 text-purple-400" : "bg-amber-500/10 text-amber-400"}`}>
                       {result.pitch_contour.pitch_contour === "rising" ? "↗ Rising" : result.pitch_contour.pitch_contour === "falling" ? "↘ Falling" : "→ Flat"}
@@ -121,7 +164,7 @@ export default function AnalysisPanel({
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-1">
                         <span className="text-[11px] text-zinc-500">Filler Words</span>
-                        <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-0 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">Từ đệm không cần thiết (ừm, ờ, thì là, kiểu như…). Nhiều filler words → giảm tính chuyên nghiệp. MC nên giảm xuống ≤ 2%.</div></div>
+                        <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-0 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">{t_vp("fillerWordsTooltip")}</div></div>
                       </div>
                       <span className="text-[12px] font-semibold text-amber-400">{result.filler_words.filler_count} detected</span>
                     </div>
@@ -137,8 +180,8 @@ export default function AnalysisPanel({
                 {(result.wer_rate > 0 || result.cer_rate > 0) && (
                   <div className="grid grid-cols-2 gap-2">
                     {[
-                      { label: "WER", value: result.wer_rate, unit: "%", desc: "Word Error Rate — tỷ lệ từ bị nhận dạng sai. MC chuyên nghiệp nên đạt < 15%. Càng thấp càng chính xác.", color: (v) => v < 15 ? "text-emerald-400" : v < 30 ? "text-amber-400" : "text-red-400" },
-                      { label: "CER", value: result.cer_rate, unit: "%", desc: "Character Error Rate — tỷ lệ ký tự bị nhận dạng sai. Phản ánh độ rõ từng âm. Tốt: < 10%.", color: (v) => v < 10 ? "text-emerald-400" : v < 20 ? "text-amber-400" : "text-red-400" },
+                      { label: "WER", value: result.wer_rate, unit: "%", desc: t_vp("werTooltip"), color: (v) => v < 15 ? "text-emerald-400" : v < 30 ? "text-amber-400" : "text-red-400" },
+                      { label: "CER", value: result.cer_rate, unit: "%", desc: t_vp("cerTooltip"), color: (v) => v < 10 ? "text-emerald-400" : v < 20 ? "text-amber-400" : "text-red-400" },
                     ].map((m) => (
                       <div key={m.label} className="p-3 rounded-xl bg-[#09090b] border border-white/[0.05]">
                         <div className="flex items-center gap-1 mb-1">
@@ -218,7 +261,7 @@ export default function AnalysisPanel({
                     <motion.div className="h-full rounded-full bg-gradient-to-r from-[#f5a623] to-[#f5a623]/70" animate={{ width: `${analyzeProgress}%` }} transition={{ duration: 0.3, ease: "easeOut" }} />
                   </div>
                   <div className="flex justify-between mt-1.5">
-                    <span className="text-[10px] text-zinc-600">AI đang xử lý</span>
+                    <span className="text-[10px] text-zinc-600">{t_vp("aiProcessing")}</span>
                     <span className="text-[10px] font-semibold text-[#f5a623]">{analyzeProgress}%</span>
                   </div>
                 </div>
@@ -268,7 +311,7 @@ export default function AnalysisPanel({
                         {history.length >= 1 && (() => {
                           const prev = clampMetric(Number(history[0].accuracyScore || 0) * 0.45 + Number(history[0].rhythmScore || 0) * 0.35 + (Math.min(Number(history[0].speakingRateWpm || 0), 180) / 180) * 20);
                           const delta = overallScore - prev;
-                          if (Math.abs(delta) < 0.1) return <span className="text-[11px] text-zinc-600 mb-1">= lần trước</span>;
+                          if (Math.abs(delta) < 0.1) return <span className="text-[11px] text-zinc-600 mb-1">{t_vp("sameAsLastTime")}</span>;
                           return <span className={`text-[12px] font-semibold mb-1 ${delta > 0 ? "text-emerald-400" : "text-red-400"}`}>{delta > 0 ? "↑" : "↓"} {Math.abs(delta).toFixed(1)}%</span>;
                         })()}
                       </div>
@@ -297,6 +340,7 @@ export default function AnalysisPanel({
                 <p className="text-[13px] text-zinc-600">{t("recordToUnlock")}</p>
               </div>
             )}
+          </div>
           </div>
         </motion.div>
       )}

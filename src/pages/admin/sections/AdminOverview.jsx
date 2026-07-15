@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell,
@@ -46,7 +47,9 @@ const KPI = ({ label, value, sub, icon: Icon, color, isMoney, delta }) => (
 );
 
 // ── Revenue status card ───────────────────────────────────────────────────────
-const RevCard = ({ icon: Icon, label, colorCls, borderCls, revenue, count }) => (
+const RevCard = ({ icon: Icon, label, colorCls, borderCls, revenue, count }) => {
+  const { t } = useTranslation();
+  return (
   <div className={`rounded-2xl p-5 border ${borderCls} flex flex-col gap-3`} style={{background:"var(--bg-surface)"}}>
     <div className="flex items-center gap-2">
       <Icon size={16} className={colorCls} />
@@ -56,13 +59,15 @@ const RevCard = ({ icon: Icon, label, colorCls, borderCls, revenue, count }) => 
       <div className="text-2xl font-bold" style={{color:"var(--text-primary)"}}>
         {fmt(revenue)} <span className="text-[12px] font-normal" style={{color:"var(--text-muted)"}}>VND</span>
       </div>
-      <div className="text-[12px] mt-0.5" style={{color:"var(--text-muted)"}}>{count ?? 0} giao dịch</div>
+      <div className="text-[12px] mt-0.5" style={{color:"var(--text-muted)"}}>{t("admin.overview.transactionsUnit", { count: count ?? 0 })}</div>
     </div>
   </div>
-);
+  );
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 const AdminOverview = ({ stats, revenueData, revenueStats, userData, totalUsers }) => {
+  const { t } = useTranslation();
   const statusRevenue = revenueStats?.revenueByStatus || {};
   const countByStatus = revenueStats?.countByStatus   || {};
 
@@ -75,19 +80,19 @@ const AdminOverview = ({ stats, revenueData, revenueStats, userData, totalUsers 
 
       {/* ── KPI grid ──────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPI label="Tong nguoi dung"      value={stats[0]?.value} icon={stats[0]?.icon ?? Users}       color={stats[0]?.color ?? "text-[--text-primary]"}   sub={stats[0]?.trend} />
-        <KPI label="GD thanh cong"        value={stats[1]?.value} icon={stats[1]?.icon ?? CheckCircle2} color={stats[1]?.color ?? "text-emerald-400"} sub={stats[1]?.trend} />
-        <KPI label="Tong giao dich"       value={stats[2]?.value} icon={stats[2]?.icon ?? CreditCard}  color={stats[2]?.color ?? "text-amber-400"}  sub={stats[2]?.trend} />
-        <KPI label="Doanh thu thuc te"    value={stats[3]?.value} icon={stats[3]?.icon ?? TrendingUp}  color={stats[3]?.color ?? "text-purple-400"} sub={stats[3]?.trend} isMoney />
+        <KPI label={t("admin.overview.totalUsers")}      value={stats[0]?.value} icon={stats[0]?.icon ?? Users}       color={stats[0]?.color ?? "text-[--text-primary]"}   sub={stats[0]?.trend} />
+        <KPI label={t("admin.overview.successfulTransactions")}        value={stats[1]?.value} icon={stats[1]?.icon ?? CheckCircle2} color={stats[1]?.color ?? "text-emerald-400"} sub={stats[1]?.trend} />
+        <KPI label={t("admin.overview.totalTransactions")}       value={stats[2]?.value} icon={stats[2]?.icon ?? CreditCard}  color={stats[2]?.color ?? "text-amber-400"}  sub={stats[2]?.trend} />
+        <KPI label={t("admin.overview.actualRevenue")}    value={stats[3]?.value} icon={stats[3]?.icon ?? TrendingUp}  color={stats[3]?.color ?? "text-purple-400"} sub={stats[3]?.trend} isMoney />
       </div>
 
       {/* ── Revenue by status ─────────────────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <RevCard icon={CheckCircle2} label="Hoan thanh" colorCls="text-emerald-400" borderCls="border-[--border-subtle]"
+        <RevCard icon={CheckCircle2} label={t("admin.overview.completed")} colorCls="text-emerald-400" borderCls="border-[--border-subtle]"
           revenue={statusRevenue.COMPLETED} count={countByStatus.COMPLETED} />
-        <RevCard icon={Clock}        label="Dang cho"   colorCls="text-amber-400"   borderCls="border-gold/30"
+        <RevCard icon={Clock}        label={t("admin.overview.pending")}   colorCls="text-amber-400"   borderCls="border-gold/30"
           revenue={statusRevenue.PENDING}   count={countByStatus.PENDING} />
-        <RevCard icon={XCircle}      label="That bai"   colorCls="text-red-400"     borderCls="border-[--border-subtle]"
+        <RevCard icon={XCircle}      label={t("admin.overview.failed")}   colorCls="text-red-400"     borderCls="border-[--border-subtle]"
           revenue={statusRevenue.FAILED}    count={countByStatus.FAILED} />
       </div>
 
@@ -99,16 +104,16 @@ const AdminOverview = ({ stats, revenueData, revenueStats, userData, totalUsers 
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <BarChart3 size={16} style={{color:"var(--text-muted)"}} />
-              <h3 className="text-[15px] font-semibold" style={{color:"var(--text-primary)"}}>Doanh thu theo thang</h3>
+              <h3 className="text-[15px] font-semibold" style={{color:"var(--text-primary)"}}>{t("admin.overview.revenueByMonth")}</h3>
             </div>
             <span className="text-[12px] px-3 py-1 rounded-lg border" style={{color:"var(--text-muted)",background:"var(--bg-elevated)",borderColor:"var(--border-subtle)"}}>
-              Chi GD hoan thanh
+              {t("admin.overview.completedOnly")}
             </span>
           </div>
           {revenueData.length === 0 ? (
             <div className="h-72 flex flex-col items-center justify-center gap-2" style={{color:"var(--text-muted)"}}>
               <BarChart3 size={28} className="opacity-30" />
-              <span className="text-[13px]">Chua co du lieu doanh thu</span>
+              <span className="text-[13px]">{t("admin.overview.noRevenueData")}</span>
             </div>
           ) : (
             <div className="h-72">
@@ -124,7 +129,7 @@ const AdminOverview = ({ stats, revenueData, revenueStats, userData, totalUsers 
                   <XAxis dataKey="name" stroke="#52525b" fontSize={12} tickLine={false} axisLine={false} dy={8} />
                   <YAxis stroke="#52525b" fontSize={11} tickLine={false} axisLine={false} tickFormatter={fmtM} width={36} />
                   <Tooltip {...TIP} cursor={{ stroke: "gold", strokeWidth: 1, strokeDasharray: "3 3" }}
-                    formatter={(v) => [`${fmt(v)} VND`, "Doanh thu"]} />
+                    formatter={(v) => [`${fmt(v)} VND`, t("admin.overview.revenueTooltip")]} />
                   <Area type="monotone" dataKey="revenue" stroke="gold" fill="url(#gRev)" strokeWidth={2} dot={false} />
                 </AreaChart>
               </ResponsiveContainer>
@@ -136,7 +141,7 @@ const AdminOverview = ({ stats, revenueData, revenueStats, userData, totalUsers 
         <div className="lg:col-span-4 rounded-2xl p-6 flex flex-col border" style={{background:"var(--bg-surface)",borderColor:"var(--border-subtle)"}}>
           <div className="flex items-center gap-2 mb-4">
             <Activity size={16} style={{color:"var(--text-muted)"}} />
-            <h3 className="text-[15px] font-semibold" style={{color:"var(--text-primary)"}}>Phan bo nguoi dung</h3>
+            <h3 className="text-[15px] font-semibold" style={{color:"var(--text-primary)"}}>{t("admin.overview.userDistribution")}</h3>
           </div>
           <div className="relative flex-1 min-h-[180px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -145,11 +150,11 @@ const AdminOverview = ({ stats, revenueData, revenueStats, userData, totalUsers 
                   paddingAngle={3} dataKey="value" stroke="none">
                   {userData.map((e, i) => <Cell key={i} fill={e.color} />)}
                 </Pie>
-                <Tooltip {...TIP} formatter={(v) => [v, "Nguoi dung"]} />
+                <Tooltip {...TIP} formatter={(v) => [v, t("admin.overview.usersTooltip")]} />
               </PieChart>
             </ResponsiveContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-[11px] uppercase tracking-wider" style={{color:"var(--text-muted)"}}>Tong</span>
+              <span className="text-[11px] uppercase tracking-wider" style={{color:"var(--text-muted)"}}>{t("admin.overview.total")}</span>
               <span className="text-2xl font-bold" style={{color:"var(--text-primary)"}}>{totalUsers}</span>
             </div>
           </div>
@@ -175,9 +180,9 @@ const AdminOverview = ({ stats, revenueData, revenueStats, userData, totalUsers 
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <TrendingUp size={16} style={{color:"var(--text-muted)"}} />
-              <h3 className="text-[15px] font-semibold" style={{color:"var(--text-primary)"}}>Doanh thu theo goi dich vu</h3>
+              <h3 className="text-[15px] font-semibold" style={{color:"var(--text-primary)"}}>{t("admin.overview.revenueByPlan")}</h3>
             </div>
-            <span className="text-[12px]" style={{color:"var(--text-muted)"}}>Chi GD hoan thanh</span>
+            <span className="text-[12px]" style={{color:"var(--text-muted)"}}>{t("admin.overview.completedOnly")}</span>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             {/* Bar chart */}
@@ -187,7 +192,7 @@ const AdminOverview = ({ stats, revenueData, revenueStats, userData, totalUsers 
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
                   <XAxis dataKey="name" stroke="#52525b" fontSize={13} tickLine={false} axisLine={false} />
                   <YAxis stroke="#52525b" fontSize={11} tickLine={false} axisLine={false} tickFormatter={fmtM} width={40} />
-                  <Tooltip {...TIP} formatter={(v) => [`${fmt(v)} VND`, "Doanh thu"]} />
+                  <Tooltip {...TIP} formatter={(v) => [`${fmt(v)} VND`, t("admin.overview.revenueTooltip")]} />
                   <Bar dataKey="revenue" radius={[6, 6, 0, 0]}>
                     {planData.map((e, i) => <Cell key={i} fill={PLAN_COLORS[e.name] || "#6366f1"} />)}
                   </Bar>

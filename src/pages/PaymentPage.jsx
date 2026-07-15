@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import api from "../services/api";
 import { useAuth } from "../hooks/useAuth";
 import { useToast } from "../components/ui/Toast";
@@ -29,7 +30,7 @@ function formatPrice(vnd) {
 }
 
 // Transform API PlanDefinition → local PLANS shape
-function adaptPlans(apiPlans) {
+function adaptPlans(apiPlans, dailyPlanName) {
   return apiPlans
     .filter(p => p.plan !== "FREE")
     .sort((a, b) => (PLAN_ORDER[a.plan] ?? 99) - (PLAN_ORDER[b.plan] ?? 99))
@@ -38,7 +39,7 @@ function adaptPlans(apiPlans) {
       const icons = v.highlight;
       return {
         key: p.plan,
-        name: p.plan === 'DAILY' ? 'Gói Ngày' : p.displayName,
+        name: p.plan === 'DAILY' ? dailyPlanName : p.displayName,
         price: formatPrice(p.priceVnd),
         priceNum: p.priceVnd,
         originalPrice: p.discountedPriceVnd > 0 ? formatPrice(p.priceVnd) : null,
@@ -60,19 +61,21 @@ function adaptPlans(apiPlans) {
     });
 }
 
-// Comparison table data
-const COMPARISON_ROWS = [
-  { feature: "Bài luyện tập", FREE: "Xem trước", DAILY: "50 bài", BASIC: "50 bài", FULL: "50 bài", ANNUAL: "50 bài + ưu tiên mới" },
-  { feature: "Chủ đề MC", FREE: "—", DAILY: "Tất cả", BASIC: "MC Đám cưới", FULL: "3 chủ đề", ANNUAL: "3 chủ đề + Beta" },
-  { feature: "AI coaching", FREE: "5 lượt tổng", DAILY: "10 lượt/ngày", BASIC: "20 lượt/tháng", FULL: "Không giới hạn", ANNUAL: "Không giới hạn" },
-  { feature: "Phân tích giọng (Clarity, Energy, Pace)", FREE: "❌", DAILY: "✓ Cơ bản", BASIC: "✓ Cơ bản", FULL: "✓ Chi tiết", ANNUAL: "✓ Chi tiết" },
-  { feature: "WER · CER · Jitter · HNR", FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "✓", ANNUAL: "✓" },
-  { feature: "Biểu đồ tiến độ & lịch sử", FREE: "❌", DAILY: "✓", BASIC: "❌", FULL: "✓", ANNUAL: "✓" },
-  { feature: "Trắc nghiệm lý thuyết", FREE: "❌", DAILY: "✓", BASIC: "✓", FULL: "✓", ANNUAL: "✓" },
-  { feature: "Huy hiệu Annual Elite", FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
-  { feature: "Ưu tiên hỗ trợ 24/7", FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
-  { feature: "Truy cập tính năng Beta", FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
-];
+// Comparison table data (built from i18n keys — see getComparisonRows)
+function getComparisonRows(t) {
+  return [
+    { feature: t('payment.rowPracticeLessons'), FREE: t('payment.valPreview'), DAILY: t('payment.val50Lessons'), BASIC: t('payment.val50Lessons'), FULL: t('payment.val50Lessons'), ANNUAL: t('payment.val50LessonsPriority') },
+    { feature: t('payment.rowMcTopics'), FREE: "—", DAILY: t('payment.valAll'), BASIC: t('payment.valWeddingMc'), FULL: t('payment.val3Topics'), ANNUAL: t('payment.val3TopicsBeta') },
+    { feature: t('payment.rowAiCoaching'), FREE: t('payment.val5Total'), DAILY: t('payment.val10PerDay'), BASIC: t('payment.val20PerMonth'), FULL: t('payment.valUnlimited'), ANNUAL: t('payment.valUnlimited') },
+    { feature: t('payment.rowVoiceAnalysis'), FREE: "❌", DAILY: t('payment.valBasicCheck'), BASIC: t('payment.valBasicCheck'), FULL: t('payment.valDetailedCheck'), ANNUAL: t('payment.valDetailedCheck') },
+    { feature: t('payment.rowAdvancedMetrics'), FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "✓", ANNUAL: "✓" },
+    { feature: t('payment.rowProgressCharts'), FREE: "❌", DAILY: "✓", BASIC: "❌", FULL: "✓", ANNUAL: "✓" },
+    { feature: t('payment.rowQuizzes'), FREE: "❌", DAILY: "✓", BASIC: "✓", FULL: "✓", ANNUAL: "✓" },
+    { feature: t('payment.rowEliteBadge'), FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
+    { feature: t('payment.rowPrioritySupport'), FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
+    { feature: t('payment.rowBetaAccess'), FREE: "❌", DAILY: "❌", BASIC: "❌", FULL: "❌", ANNUAL: "✓" },
+  ];
+}
 
 const IS_DEV = import.meta.env.VITE_DEV_MODE === 'true';
 
@@ -87,6 +90,7 @@ function getDefaultPlan(userPlan) {
 }
 
 const PaymentPage = () => {
+  const { t } = useTranslation();
   const { user, updateUser, refreshUser } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -122,7 +126,7 @@ const PaymentPage = () => {
   useEffect(() => {
     api.get("/payment/plans")
       .then(res => {
-        const adapted = adaptPlans(res.data?.data || []);
+        const adapted = adaptPlans(res.data?.data || [], t('payment.dailyPlanName'));
         setPlans(adapted);
       })
       .catch(() => {/* keep empty, UI shows nothing */})
@@ -135,7 +139,7 @@ const PaymentPage = () => {
     const planParam = searchParams.get('plan');
     if (codeParam) {
       setDiscountCode(codeParam.toUpperCase());
-      toast.info(`Mã "${codeParam.toUpperCase()}" đã được điền tự động. Nhấn Áp dụng để xác nhận.`);
+      toast.info(t('payment.codeAutoFilled', { code: codeParam.toUpperCase() }));
     }
     if (planParam && PLAN_ORDER[planParam.toUpperCase()] !== undefined) {
       setSelectedPlan(planParam.toUpperCase());
@@ -155,7 +159,7 @@ const PaymentPage = () => {
       await fetchOrder(selectedPlan, res.data?.data?.code);
     } catch (e) {
       trackDiscountCodeApplied(discountCode.trim().toUpperCase(), false);
-      setDiscountError(e.response?.data?.message || "Mã không hợp lệ");
+      setDiscountError(e.response?.data?.message || t('payment.invalidCode'));
     } finally {
       setApplyingDiscount(false);
     }
@@ -179,14 +183,14 @@ const PaymentPage = () => {
         updateUser({ isPremium: true, plan: data.plan });
         await refreshUser();
         setSuccess(true);
-        toast.showSuccess("Kích hoạt thành công với mã giảm giá!");
+        toast.showSuccess(t('payment.activatedWithDiscount'));
         setTimeout(() => navigate("/m/dashboard"), 2500);
         return;
       }
-      
+
       setOrderData(data);
     } catch (e) {
-      setError(e.response?.data?.message || "Không thể tạo đơn hàng. Vui lòng thử lại.");
+      setError(e.response?.data?.message || t('payment.orderCreateFailed'));
     } finally {
       setLoading(false);
     }
@@ -210,7 +214,7 @@ const PaymentPage = () => {
           updateUser({ isPremium: true, plan: statusData.plan, aiSessionsUsed: 0, planExpiresAt: statusData.planExpiresAt });
           await refreshUser();
           setSuccess(true);
-          toast.showSuccess("Thanh toán thành công! Tài khoản đã được nâng cấp.");
+          toast.showSuccess(t('payment.paymentSuccessUpgraded'));
           setTimeout(() => navigate("/m/dashboard"), 2500);
         }
       } catch {}
@@ -226,10 +230,10 @@ const PaymentPage = () => {
       updateUser({ isPremium: true, plan: simData?.plan || selectedPlan, aiSessionsUsed: 0, planExpiresAt: simData?.planExpiresAt });
       await refreshUser();
       setSuccess(true);
-      toast.showSuccess("Kích hoạt thành công!");
+      toast.showSuccess(t('payment.activatedSuccess'));
       setTimeout(() => navigate("/m/dashboard"), 2500);
     } catch {
-      toast.showError("Simulation failed");
+      toast.showError(t('payment.simulationFailed'));
     } finally {
       setSimulating(false);
     }
@@ -247,9 +251,9 @@ const PaymentPage = () => {
           >
             <ShieldCheck size={32} className="text-emerald-500" />
           </motion.div>
-          <h2 className="text-xl font-bold text-gray-900">Kích hoạt thành công!</h2>
+          <h2 className="text-xl font-bold text-gray-900">{t('payment.activatedSuccess')}</h2>
           <p className="text-gray-500 text-[13px] leading-relaxed">
-            Chào mừng đến với <span className="text-gold font-semibold">MC Hub Premium</span>. Đang chuyển hướng...
+            {t('payment.welcomeTo')} <span className="text-gold font-semibold">MC Hub Premium</span>. {t('payment.redirecting')}
           </p>
         </div>
       </div>
@@ -258,11 +262,12 @@ const PaymentPage = () => {
 
   const currentPlanOrder = PLAN_ORDER[(user?.plan || "FREE").toUpperCase()] ?? 0;
   const selectedPlanData = plans.find(p => p.key === selectedPlan);
+  const comparisonRows = getComparisonRows(t);
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
       <div className="max-w-6xl mx-auto px-6 py-12 space-y-12">
-        <Breadcrumb items={[{ label: 'Bảng giá' }]} />
+        <Breadcrumb items={[{ label: t('navbar.pricing') }]} />
 
         {/* Back + Header */}
         <div>
@@ -271,13 +276,13 @@ const PaymentPage = () => {
             className="flex items-center gap-2 text-gray-400 hover:text-gray-900 transition-colors text-[13px] mb-6 group"
           >
             <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
-            Quay lại
+            {t('common.back')}
           </button>
-          <h1 className="text-[28px] font-bold text-gray-900 mb-1 tracking-tight">Chọn gói phù hợp với bạn</h1>
+          <h1 className="text-[28px] font-bold text-gray-900 mb-1 tracking-tight">{t('payment.choosePlanTitle')}</h1>
           <p className="text-gray-400 text-[14px]">
             {currentPlanOrder === 0
-              ? "Bắt đầu luyện tập nghiêm túc — MC chuyên nghiệp không để giọng tự phát triển."
-              : `Bạn đang dùng gói ${user?.plan}. Nâng cấp để mở khoá toàn bộ tiềm năng.`}
+              ? t('payment.startTrainingSeriously')
+              : t('payment.currentlyUsingPlan', { plan: user?.plan })}
           </p>
         </div>
 
@@ -292,16 +297,16 @@ const PaymentPage = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[14px] font-bold text-gray-500">Free</span>
+                      <span className="text-[14px] font-bold text-gray-500">{t('payment.free')}</span>
                       <span className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-gray-100 border-gray-300 text-gray-500">
-                        Gói hiện tại
+                        {t('payment.currentPlanBadge')}
                       </span>
                     </div>
-                    <p className="text-[12px] text-gray-400">5 lượt AI · Không có coaching · Không theo dõi tiến độ</p>
+                    <p className="text-[12px] text-gray-400">{t('payment.freePlanQuickDesc')}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-lg font-bold text-gray-400">0đ</p>
-                    <p className="text-[11px] text-gray-400">{user?.aiSessionsUsed ?? 0}/5 lượt đã dùng</p>
+                    <p className="text-[11px] text-gray-400">{t('payment.usedOutOfFive', { count: user?.aiSessionsUsed ?? 0 })}</p>
                   </div>
                 </div>
               </div>
@@ -311,8 +316,8 @@ const PaymentPage = () => {
             <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 border border-amber-200">
               <span className="text-[18px] shrink-0">🎓</span>
               <p className="text-[12px] text-amber-800 leading-relaxed">
-                <span className="font-semibold">Toàn bộ khóa học MC</span> (lộ trình, bài đọc, trắc nghiệm, chứng chỉ) được bao gồm trong gói <span className="font-semibold">Basic trở lên</span>.
-                Người dùng Free vẫn có thể mua lẻ từng khóa với giá <span className="font-semibold">199.000đ/khóa</span> — sở hữu vĩnh viễn.
+                <span className="font-semibold">{t('payment.allCoursesIncluded')}</span> {t('payment.allCoursesIncludedDesc')} <span className="font-semibold">Basic+</span>.
+                {' '}{t('payment.freeUserCanBuySingle')} <span className="font-semibold">199.000đ</span> {t('payment.perCourseLifetime')}
               </p>
             </div>
 
@@ -371,7 +376,7 @@ const PaymentPage = () => {
                           </span>
                           {isCurrentPlan ? (
                             <span className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-emerald-50 border-emerald-300 text-emerald-700 flex items-center gap-1">
-                              <CheckCircle2 size={9} /> Gói hiện tại
+                              <CheckCircle2 size={9} /> {t('payment.currentPlanBadge')}
                             </span>
                           ) : plan.badge && (
                             <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold ${plan.badgeColor}`}>
@@ -385,7 +390,7 @@ const PaymentPage = () => {
                             const minutes = Math.floor((remaining % 3600000) / 60000);
                             return (
                               <span className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-emerald-50 border-emerald-300 text-emerald-700 flex items-center gap-1">
-                                <Clock size={9} /> Con {hours}g {minutes}p
+                                <Clock size={9} /> {t('payment.remainingTime', { hours, minutes })}
                               </span>
                             );
                           })()}
@@ -456,10 +461,10 @@ const PaymentPage = () => {
                             {(() => {
                               const limit = user?.plan === 'BASIC' ? 20 : null;
                               const used = user?.aiSessionsUsed ?? 0;
-                              if (!limit) return <p className="text-[11px] text-gray-400">Không giới hạn lượt AI</p>;
+                              if (!limit) return <p className="text-[11px] text-gray-400">{t('payment.unlimitedAiSessions')}</p>;
                               return <>
                                 <div className="flex justify-between mb-1">
-                                  <span className="text-[11px] text-gray-500">Lượt AI đã dùng</span>
+                                  <span className="text-[11px] text-gray-500">{t('payment.aiSessionsUsed')}</span>
                                   <span className={`text-[11px] font-semibold ${used >= limit ? 'text-red-500' : 'text-gray-600'}`}>{used}/{limit}</span>
                                 </div>
                                 <div className="h-1.5 rounded-full bg-gray-200 overflow-hidden">
@@ -500,9 +505,9 @@ const PaymentPage = () => {
             {/* Trust signals */}
             <div className="flex flex-wrap gap-x-5 gap-y-2 pt-2 px-1">
               {[
-                { icon: Lock, text: "Thanh toán bảo mật SSL" },
-                { icon: Zap, text: "Kích hoạt tức thì" },
-                { icon: CheckCircle2, text: "Hoàn tiền 7 ngày nếu không hài lòng" },
+                { icon: Lock, text: t('payment.trustSsl') },
+                { icon: Zap, text: t('payment.trustInstant') },
+                { icon: CheckCircle2, text: t('payment.trustRefund') },
               ].map(({ icon: Icon, text }, i) => (
                 <div key={i} className="flex items-center gap-1.5 text-gray-400">
                   <Icon size={10} />
@@ -518,7 +523,7 @@ const PaymentPage = () => {
             {/* Selected plan summary header */}
             {selectedPlanData && (
               <div className="px-6 pt-5 pb-4 border-b border-gray-100">
-                <p className="text-[11px] text-gray-400 uppercase tracking-wider mb-1">Gói đang chọn</p>
+                <p className="text-[11px] text-gray-400 uppercase tracking-wider mb-1">{t('payment.selectedPlan')}</p>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-[16px] font-bold text-gray-900">{selectedPlanData.name}</p>
@@ -548,7 +553,7 @@ const PaymentPage = () => {
                   className="flex items-center gap-2 text-[11px] text-amber-600 font-semibold uppercase tracking-wider mb-2 hover:text-amber-700 transition-colors"
                 >
                   <Award size={13} />
-                  Voucher của bạn ({myVouchers.length})
+                  {t('payment.yourVouchers', { count: myVouchers.length })}
                   <span className="ml-auto text-gray-400">{showVoucherList ? "▲" : "▼"}</span>
                 </button>
                 <AnimatePresence>
@@ -589,8 +594,8 @@ const PaymentPage = () => {
                               <div className="flex flex-col items-end gap-0.5">
                                 <span className="text-[13px] font-bold text-amber-600">-{v.discountPercent}%</span>
                                 {isExpired
-                                  ? <span className="text-[10px] text-red-400">Hết hạn</span>
-                                  : daysLeft !== null && <span className="text-[10px] text-gray-400">Còn {daysLeft} ngày</span>
+                                  ? <span className="text-[10px] text-red-400">{t('payment.expired')}</span>
+                                  : daysLeft !== null && <span className="text-[10px] text-gray-400">{t('payment.daysLeft', { count: daysLeft })}</span>
                                 }
                               </div>
                             </div>
@@ -606,13 +611,13 @@ const PaymentPage = () => {
             {/* Discount code input */}
             {selectedPlanData && (
               <div className="px-6 py-4 border-b border-gray-100">
-                <p className="text-[11px] text-gray-400 uppercase tracking-wider mb-2">Mã giảm giá</p>
+                <p className="text-[11px] text-gray-400 uppercase tracking-wider mb-2">{t('payment.discountCode')}</p>
                 <div className="flex gap-2">
                   <input
                     type="text"
                     value={discountCode}
                     onChange={e => { setDiscountCode(e.target.value.toUpperCase()); setDiscountInfo(null); setDiscountError(null); }}
-                    placeholder="Nhập mã..."
+                    placeholder={t('payment.enterCodePlaceholder')}
                     className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-[13px] font-mono uppercase placeholder:normal-case placeholder:text-gray-400 focus:outline-none focus:border-amber-400 transition-colors"
                   />
                   <button
@@ -620,12 +625,12 @@ const PaymentPage = () => {
                     disabled={applyingDiscount || !discountCode.trim()}
                     className="px-4 py-2 bg-amber-500 text-white text-[12px] font-semibold rounded-xl hover:bg-amber-600 disabled:opacity-40 transition-colors"
                   >
-                    {applyingDiscount ? "..." : "Áp dụng"}
+                    {applyingDiscount ? "..." : t('payment.apply')}
                   </button>
                 </div>
                 {discountInfo && (
                   <div className="mt-2 flex items-center justify-between text-[12px]">
-                    <span className="text-emerald-600 font-medium">✓ Giảm {discountInfo.discountAmount?.toLocaleString("vi-VN")}đ</span>
+                    <span className="text-emerald-600 font-medium">✓ {t('payment.discountApplied', { amount: discountInfo.discountAmount?.toLocaleString("vi-VN") })}</span>
                     <span className="text-gray-900 font-bold">{discountInfo.finalPrice?.toLocaleString("vi-VN")}đ</span>
                   </div>
                 )}
@@ -637,7 +642,7 @@ const PaymentPage = () => {
               {loading ? (
                 <div className="flex flex-col items-center justify-center gap-4 py-12">
                   <div className="h-8 w-8 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />
-                  <p className="text-[12px] text-gray-400">Đang tạo đơn hàng...</p>
+                  <p className="text-[12px] text-gray-400">{t('payment.creatingOrder')}</p>
                 </div>
               ) : error ? (
                 <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
@@ -647,16 +652,16 @@ const PaymentPage = () => {
                     onClick={() => fetchOrder(selectedPlan)}
                     className="px-5 py-2 bg-white border border-gray-200 rounded-xl text-[12px] font-medium text-gray-900 hover:border-gray-300 transition-colors"
                   >
-                    Thử lại
+                    {t('payment.tryAgain')}
                   </button>
                 </div>
               ) : orderData ? (
                 <div className="flex flex-col items-center gap-5 w-full">
                   {/* Amount */}
                   <div className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center">
-                    <p className="text-[11px] text-gray-400 uppercase tracking-wider mb-1">Số tiền thanh toán</p>
+                    <p className="text-[11px] text-gray-400 uppercase tracking-wider mb-1">{t('payment.amountToPay')}</p>
                     <p className="text-3xl font-bold text-gray-900">{orderData.amount?.toLocaleString("vi-VN")}đ</p>
-                    <p className="text-[12px] text-gray-400 mt-1">Gói {orderData.plan}</p>
+                    <p className="text-[12px] text-gray-400 mt-1">{t('payment.planLabel', { plan: orderData.plan })}</p>
                   </div>
 
                   {/* PayOS CTA */}
@@ -667,17 +672,17 @@ const PaymentPage = () => {
                     className="w-full py-4 bg-amber-500 hover:bg-amber-600 text-white font-bold text-[15px] rounded-2xl transition-colors flex items-center justify-center gap-3"
                   >
                     <CreditCard size={18} />
-                    Thanh toán qua PayOS
+                    {t('payment.payViaPayOS')}
                   </motion.button>
 
                   <p className="text-[11px] text-gray-400 text-center leading-relaxed">
-                    Được chuyển đến trang thanh toán PayOS an toàn.<br />
-                    Hỗ trợ chuyển khoản ngân hàng, ví điện tử, QR Code.
+                    {t('payment.payOsRedirectNote')}<br />
+                    {t('payment.payOsSupportNote')}
                   </p>
 
                   <div className="flex items-center gap-2 text-gray-400">
                     <Lock size={11} />
-                    <span className="text-[11px]">Bảo mật SSL · Mã hoá end-to-end</span>
+                    <span className="text-[11px]">{t('payment.sslEncrypted')}</span>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -686,7 +691,7 @@ const PaymentPage = () => {
                         <div key={d} className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: `${d}ms` }} />
                       ))}
                     </div>
-                    <span className="text-[11px] text-gray-400">Đang chờ xác nhận thanh toán...</span>
+                    <span className="text-[11px] text-gray-400">{t('payment.waitingConfirmation')}</span>
                   </div>
 
                 </div>
@@ -698,15 +703,15 @@ const PaymentPage = () => {
         {/* ── Comparison Table ── */}
         <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
           <div className="px-6 py-5 border-b border-gray-100">
-            <p className="text-[16px] font-bold text-gray-900">So sánh quyền lợi các gói</p>
-            <p className="text-[12px] text-gray-400 mt-0.5">Xem chi tiết từng tính năng bạn nhận được</p>
+            <p className="text-[16px] font-bold text-gray-900">{t('payment.compareBenefitsTitle')}</p>
+            <p className="text-[12px] text-gray-400 mt-0.5">{t('payment.compareBenefitsDesc')}</p>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-[13px]">
               <thead>
                 <tr className="border-b border-gray-100">
-                  <th className="text-left px-6 py-3 font-semibold text-gray-500 text-[11px] uppercase tracking-wider w-[28%]">Tính năng</th>
+                  <th className="text-left px-6 py-3 font-semibold text-gray-500 text-[11px] uppercase tracking-wider w-[28%]">{t('payment.featureColumn')}</th>
                   {['Free', 'Daily', 'Basic', 'Full', 'Annual'].map((name) => {
                     const planKey = name.toUpperCase();
                     const isCurrent = (user?.plan || 'FREE').toUpperCase() === planKey;
@@ -716,7 +721,7 @@ const PaymentPage = () => {
                       <th key={name} className={`text-center px-3 py-3 font-bold text-[13px] ${isCurrent ? 'text-emerald-600' : isHighlighted ? 'text-gray-900' : 'text-gray-400'}`}>
                         <div className="flex flex-col items-center gap-1">
                           <span>{name}</span>
-                          {isCurrent && <span className="text-[9px] font-semibold text-emerald-500 uppercase tracking-wide">Hiện tại</span>}
+                          {isCurrent && <span className="text-[9px] font-semibold text-emerald-500 uppercase tracking-wide">{t('payment.currentColumnLabel')}</span>}
                           {isHighlighted && !isCurrent && <div className="h-0.5 w-8 rounded-full" style={{ background: accent }} />}
                         </div>
                       </th>
@@ -725,7 +730,7 @@ const PaymentPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {COMPARISON_ROWS.map((row, i) => (
+                {comparisonRows.map((row, i) => (
                   <tr key={i} className={`border-b border-gray-50 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
                     <td className="px-6 py-3 text-gray-600 text-[12px]">{row.feature}</td>
                     {['FREE', 'DAILY', 'BASIC', 'FULL', 'ANNUAL'].map(key => {
@@ -759,14 +764,14 @@ const PaymentPage = () => {
           {/* Bottom CTA */}
           <div className="px-6 py-5 bg-linear-to-r from-amber-50 to-orange-50 border-t border-amber-100 flex items-center justify-between gap-4">
             <div>
-              <p className="text-[14px] font-bold text-gray-900">MC chuyên nghiệp không để giọng tự phát triển.</p>
-              <p className="text-[12px] text-gray-500 mt-0.5">Bắt đầu luyện tập có AI hỗ trợ từ hôm nay.</p>
+              <p className="text-[14px] font-bold text-gray-900">{t('payment.bottomCtaTitle')}</p>
+              <p className="text-[12px] text-gray-500 mt-0.5">{t('payment.bottomCtaDesc')}</p>
             </div>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className="shrink-0 px-5 py-2.5 bg-gold hover:bg-[#e09515] text-white text-[13px] font-semibold rounded-xl transition-colors"
             >
-              Chọn gói ngay
+              {t('payment.choosePlanNow')}
             </button>
           </div>
         </div>
@@ -774,23 +779,23 @@ const PaymentPage = () => {
         {/* Testimonials strip */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { name: "Nguyễn Minh Khoa", role: "MC Đám cưới", quote: "Từ 64% lên 91% sau 2 tuần — điểm phát âm tăng rõ rệt nhờ AI feedback.", plan: "FULL" },
-            { name: "Trần Thị Bảo Châu", role: "Dẫn chương trình TV", quote: "Luyện lúc 11 giờ đêm, không cần ai chấm điểm. Tiện không tưởng.", plan: "ANNUAL" },
-            { name: "Lê Đức Anh", role: "MC Sự kiện doanh nghiệp", quote: "Phân tích nhịp điệu và tốc độ nói rất chính xác — chính xác hơn cả huấn luyện viên thật.", plan: "FULL" },
-          ].map((t, i) => (
+            { name: "Nguyễn Minh Khoa", role: t('payment.testimonial1Role'), quote: t('payment.testimonial1Quote'), plan: "FULL" },
+            { name: "Trần Thị Bảo Châu", role: t('payment.testimonial2Role'), quote: t('payment.testimonial2Quote'), plan: "ANNUAL" },
+            { name: "Lê Đức Anh", role: t('payment.testimonial3Role'), quote: t('payment.testimonial3Quote'), plan: "FULL" },
+          ].map((item, i) => (
             <div key={i} className="bg-white border border-gray-200 rounded-2xl p-5">
               <div className="flex gap-0.5 mb-3">
                 {[...Array(5)].map((_, j) => <Star key={j} size={11} className="text-amber-400 fill-amber-400" />)}
               </div>
-              <p className="text-[13px] text-gray-600 leading-relaxed mb-4">"{t.quote}"</p>
+              <p className="text-[13px] text-gray-600 leading-relaxed mb-4">"{item.quote}"</p>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-[13px] font-semibold text-gray-900">{t.name}</p>
-                  <p className="text-[11px] text-gray-400">{t.role}</p>
+                  <p className="text-[13px] font-semibold text-gray-900">{item.name}</p>
+                  <p className="text-[11px] text-gray-400">{item.role}</p>
                 </div>
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${
-                  t.plan === 'ANNUAL' ? 'bg-purple-50 border-purple-200 text-purple-600' : 'bg-blue-50 border-blue-200 text-blue-600'
-                }`}>{t.plan}</span>
+                  item.plan === 'ANNUAL' ? 'bg-purple-50 border-purple-200 text-purple-600' : 'bg-blue-50 border-blue-200 text-blue-600'
+                }`}>{item.plan}</span>
               </div>
             </div>
           ))}

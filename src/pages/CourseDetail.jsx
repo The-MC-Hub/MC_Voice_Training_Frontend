@@ -16,16 +16,16 @@ import Breadcrumb from '../components/ui/Breadcrumb';
 import CertificateModal from '../components/CertificateModal';
 
 const DIFFICULTY_MAP = {
-  BEGINNER:     { label: 'Cơ Bản',    color: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/[0.06]' },
-  INTERMEDIATE: { label: 'Trung Cấp', color: 'text-[#f5a623] border-[#f5a623]/20 bg-[#f5a623]/[0.06]' },
-  ADVANCED:     { label: 'Nâng Cao',  color: 'text-red-400 border-red-500/20 bg-red-500/[0.06]' },
+  BEGINNER:     { labelKey: 'courses.difficultyBeginner',     color: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/[0.06]' },
+  INTERMEDIATE: { labelKey: 'courses.difficultyIntermediate', color: 'text-[#f5a623] border-[#f5a623]/20 bg-[#f5a623]/[0.06]' },
+  ADVANCED:     { labelKey: 'courses.difficultyAdvanced',     color: 'text-red-400 border-red-500/20 bg-red-500/[0.06]' },
 };
 
-const DEFAULT_OUTCOMES = [
-  'Làm chủ giọng nói: nhịp điệu, ngữ điệu và cảm xúc khi dẫn chương trình',
-  'Xây dựng kịch bản và dẫn dắt trọn vẹn một sự kiện từ mở màn đến bế mạc',
-  'Xử lý tình huống bất ngờ trên sân khấu một cách chuyên nghiệp',
-  'Tự tin trình diễn trước đám đông với phong thái MC chuyên nghiệp',
+const DEFAULT_OUTCOME_KEYS = [
+  'courses.defaultOutcome1',
+  'courses.defaultOutcome2',
+  'courses.defaultOutcome3',
+  'courses.defaultOutcome4',
 ];
 
 const EmptyState = ({ icon: Icon, label }) => (
@@ -57,40 +57,41 @@ const nodeVisual = (item, isCurrent) => {
   };
 };
 
-const typeMeta = (item) => {
-  if (item.type === 'quiz')    return { label: 'Trắc nghiệm cuối khóa', sub: 'Đạt ≥ 60% để nhận chứng chỉ', color: 'text-purple-400' };
-  if (item.type === 'reading') return { label: 'Bài đọc lý thuyết', sub: '~10 phút đọc', color: 'text-sky-400' };
-  return { label: 'Luyện giọng cùng AI', sub: '~5 phút luyện tập', color: 'text-[#f5a623]' };
+const typeMeta = (item, t) => {
+  if (item.type === 'quiz')    return { label: t('courses.pathQuizLabel'), sub: t('courses.pathQuizSub'), color: 'text-purple-400' };
+  if (item.type === 'reading') return { label: t('courses.pathReadingLabel'), sub: t('courses.pathReadingSub'), color: 'text-sky-400' };
+  return { label: t('courses.pathLessonLabel'), sub: t('courses.pathLessonSub'), color: 'text-[#f5a623]' };
 };
 
 const DECOR_ICONS = [Mic, Star, Trophy, BookOpen, Award, GraduationCap];
 
 // 3 chặng — mỗi chặng một màu nền, một câu truyền cảm hứng
-const SECTIONS = [
+const SECTION_KEYS = [
   {
-    name: 'Chặng 1 · Khởi động',
+    nameKey: 'courses.section1Name',
     color: '#f5a623', rgb: '245,166,35',
-    quotes: ['“Mọi MC vĩ đại đều bắt đầu từ lời chào đầu tiên.”', '“Hành trình nghìn dặm bắt đầu từ một bước chân.”'],
-    cheer: 'Khởi đầu thật tuyệt — cứ giữ nhịp này nhé! 🔥',
+    quoteKeys: ['courses.section1Quote1', 'courses.section1Quote2'],
+    cheerKey: 'courses.section1Cheer',
   },
   {
-    name: 'Chặng 2 · Tăng tốc',
+    nameKey: 'courses.section2Name',
     color: '#38bdf8', rgb: '56,189,248',
-    quotes: ['“Kiên trì luyện tập hôm nay, tỏa sáng trên sân khấu ngày mai.”', '“Giọng nói hay không phải bẩm sinh — đó là kết quả của luyện tập.”'],
-    cheer: 'Đã đi được nửa đường — bạn giỏi hơn bạn nghĩ! 💪',
+    quoteKeys: ['courses.section2Quote1', 'courses.section2Quote2'],
+    cheerKey: 'courses.section2Cheer',
   },
   {
-    name: 'Chặng 3 · Về đích',
+    nameKey: 'courses.section3Name',
     color: '#10b981', rgb: '16,185,129',
-    quotes: ['“Chặng cuối cùng — chứng chỉ MC Hub đang chờ bạn!”', '“Sân khấu lớn nhất là nơi bạn dám đứng lên.”'],
-    cheer: 'Sắp về đích rồi — bùng nổ nào! 🏆',
+    quoteKeys: ['courses.section3Quote1', 'courses.section3Quote2'],
+    cheerKey: 'courses.section3Cheer',
   },
 ];
 
 const SECTION_HEADER_H = 120;
 
 const PathMap = ({ items, onOpen }) => {
-  if (!items.length) return <EmptyState icon={Map} label="Chưa có nội dung" />;
+  const { t } = useTranslation();
+  if (!items.length) return <EmptyState icon={Map} label={t('courses.noContent')} />;
 
   const firstPending = items.findIndex(it => !it.done);
   const currentIdx = firstPending === -1 ? items.length - 1 : firstPending;
@@ -119,7 +120,13 @@ const PathMap = ({ items, onOpen }) => {
     <div className="relative mx-auto max-w-2xl" style={{ height: totalH }}>
       {/* ── Section zones: bg + header + quote + floating icons ── */}
       {zones.map(([s, e], zi) => {
-        const sec = SECTIONS[zi];
+        const secDef = SECTION_KEYS[zi];
+        const sec = {
+          ...secDef,
+          name: t(secDef.nameKey),
+          quotes: secDef.quoteKeys.map(k => t(k)),
+          cheer: t(secDef.cheerKey),
+        };
         const zoneTop = zi === 0 ? 0 : pts[s].y - STEP_H / 2 - SECTION_HEADER_H + 20;
         const zoneBottom = zi === zones.length - 1
           ? totalH
@@ -143,7 +150,7 @@ const PathMap = ({ items, onOpen }) => {
                 style={{ borderColor: sec.color, color: sec.color }}>
                 {zoneDone ? <Trophy size={14} /> : <Star size={14} />}
                 {sec.name}
-                {zoneDone && <span className="text-[10px]">✓ HOÀN THÀNH</span>}
+                {zoneDone && <span className="text-[10px]">✓ {t('courses.sectionComplete')}</span>}
               </div>
               <p className="mt-2 text-[12px] italic font-medium" style={{ color: sec.color }}>
                 {sec.quotes[0]}
@@ -188,7 +195,7 @@ const PathMap = ({ items, onOpen }) => {
       {items.map((item, i) => {
         const isCurrent = i === currentIdx && !item.done;
         const v = nodeVisual(item, isCurrent);
-        const meta = typeMeta(item);
+        const meta = typeMeta(item, t);
         const onLeft = pts[i].x > 0; // label flips to opposite side of curve
         return (
           <div key={item.key} className="absolute" style={{ top: pts[i].y, left: '50%', transform: `translate(calc(-50% + ${pts[i].x}px), -50%)` }}>
@@ -199,7 +206,7 @@ const PathMap = ({ items, onOpen }) => {
                 transition={{ y: { repeat: Infinity, duration: 1.2, ease: 'easeInOut' } }}
                 className="absolute -top-11 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-xl bg-[#f5a623] text-black text-[11px] font-bold uppercase tracking-wider whitespace-nowrap shadow-lg z-10"
               >
-                Bắt đầu
+                {t('common.start')}
                 <span className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-2 h-2 bg-[#f5a623] rotate-45" />
               </motion.div>
             )}
@@ -223,7 +230,7 @@ const PathMap = ({ items, onOpen }) => {
                 {item.title}
               </p>
               <p className={`text-[10px] mt-0.5 ${meta.color}`}>{meta.label}</p>
-              <p className="text-[10px] text-gray-400">{item.done ? 'Đã hoàn thành ✓' : meta.sub}</p>
+              <p className="text-[10px] text-gray-400">{item.done ? t('courses.pathItemDone') : meta.sub}</p>
             </div>
           </div>
         );
@@ -237,12 +244,13 @@ const PathMap = ({ items, onOpen }) => {
 const OPTION_LABELS = ['A', 'B', 'C', 'D'];
 
 const QuizTab = ({ questions, courseId }) => {
+  const { t } = useTranslation();
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
 
-  if (!questions || questions.length === 0) return <EmptyState icon={HelpCircle} label="Chưa có câu hỏi" />;
+  if (!questions || questions.length === 0) return <EmptyState icon={HelpCircle} label={t('courses.noQuiz')} />;
 
   const total = questions.length;
   const q = questions[current];
@@ -273,25 +281,25 @@ const QuizTab = ({ questions, courseId }) => {
             <div className="w-12 h-12 mx-auto rounded-xl bg-[#f5a623] flex items-center justify-center">
               <Award size={24} className="text-black" />
             </div>
-            <h3 className="text-[15px] font-semibold text-[#f5a623]">Chứng Chỉ Đạt Được!</h3>
-            <p className="text-zinc-500 text-[13px]">Chúc mừng! Bạn đã hoàn thành và nhận được chứng chỉ khoá học.</p>
+            <h3 className="text-[15px] font-semibold text-[#f5a623]">{t('courses.certEarned')}</h3>
+            <p className="text-zinc-500 text-[13px]">{t('courses.certMsg')}</p>
           </div>
         )}
         <div className={`p-6 rounded-2xl border text-center space-y-2 ${passed ? 'bg-emerald-500/[0.04] border-emerald-500/20' : 'bg-red-500/[0.04] border-red-500/20'}`}>
           <div className={`text-5xl font-bold ${passed ? 'text-emerald-400' : 'text-red-400'}`}>{Math.round(score)}%</div>
-          <div className={`text-[11px] font-medium uppercase tracking-wider ${passed ? 'text-emerald-400' : 'text-red-400'}`}>{passed ? 'Đạt' : 'Chưa Đạt'}</div>
-          {!passed && <p className="text-zinc-600 text-[12px]">Hãy ôn tập thêm và thử lại!</p>}
+          <div className={`text-[11px] font-medium uppercase tracking-wider ${passed ? 'text-emerald-400' : 'text-red-400'}`}>{passed ? t('courses.passed') : t('courses.failed')}</div>
+          {!passed && <p className="text-zinc-600 text-[12px]">{t('courses.reviewAndRetry')}</p>}
         </div>
         {feedback.length > 0 && (
           <div className="space-y-2">
-            <p className="text-[11px] text-zinc-600 uppercase tracking-wider">Kết Quả Từng Câu</p>
+            <p className="text-[11px] text-zinc-600 uppercase tracking-wider">{t('courses.resultPerQuestion')}</p>
             {feedback.map((fb, i) => (
               <div key={i} className={`p-3.5 rounded-xl border flex items-start gap-3 ${fb.correct ? 'bg-emerald-500/[0.04] border-emerald-500/20' : 'bg-red-500/[0.04] border-red-500/20'}`}>
                 <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${fb.correct ? 'bg-emerald-500/[0.08] text-emerald-400' : 'bg-red-500/[0.08] text-red-400'}`}>
                   {fb.correct ? <CheckCircle2 size={13} /> : <AlertCircle size={13} />}
                 </div>
                 <div>
-                  <p className="text-[13px] font-medium text-white">Câu {i + 1}</p>
+                  <p className="text-[13px] font-medium text-white">{t('courses.question')} {i + 1}</p>
                   {fb.explanation && <p className="text-[12px] text-zinc-500 mt-0.5 leading-relaxed">{fb.explanation}</p>}
                 </div>
               </div>
@@ -300,7 +308,7 @@ const QuizTab = ({ questions, courseId }) => {
         )}
         <button onClick={() => { setResult(null); setCurrent(0); setAnswers({}); }}
           className="w-full py-3 rounded-xl border border-white/[0.07] text-zinc-500 hover:text-white hover:border-[#f5a623]/30 text-[12px] font-medium transition-colors">
-          Làm Lại
+          {t('courses.retry')}
         </button>
       </motion.div>
     );
@@ -309,8 +317,8 @@ const QuizTab = ({ questions, courseId }) => {
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between text-[11px] text-zinc-600">
-        <span>Câu {current + 1} / {total}</span>
-        <span className="text-[#f5a623]">{answered} / {total} Đã Trả Lời</span>
+        <span>{t('courses.question')} {current + 1} / {total}</span>
+        <span className="text-[#f5a623]">{answered} / {total} {t('courses.answered')}</span>
       </div>
       <div className="h-1 w-full bg-white/[0.06] rounded-full overflow-hidden">
         <motion.div animate={{ width: `${((current + 1) / total) * 100}%` }} transition={{ duration: 0.3 }} className="h-full bg-[#f5a623] rounded-full" />
@@ -340,17 +348,17 @@ const QuizTab = ({ questions, courseId }) => {
       <div className="flex items-center gap-2.5 pt-1">
         <button onClick={() => setCurrent(p => Math.max(0, p - 1))} disabled={current === 0}
           className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-white/[0.07] text-[12px] text-zinc-500 hover:text-white hover:border-white/[0.14] transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
-          <ChevronLeft size={13} /> Trước
+          <ChevronLeft size={13} /> {t('common.prev')}
         </button>
         {current < total - 1 ? (
           <button onClick={() => setCurrent(p => Math.min(total - 1, p + 1))}
             className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl border border-[#f5a623]/20 bg-[#f5a623]/[0.06] text-[#f5a623] text-[12px] hover:bg-[#f5a623]/[0.1] transition-colors">
-            Tiếp <ChevronRight size={13} />
+            {t('common.next')} <ChevronRight size={13} />
           </button>
         ) : (
           <button onClick={handleSubmit} disabled={!allAnswered || submitting}
             className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#f5a623] text-black text-[12px] font-semibold hover:bg-[#e09520] transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
-            {submitting ? <div className="w-3.5 h-3.5 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <><Trophy size={13} /> Nộp Bài</>}
+            {submitting ? <div className="w-3.5 h-3.5 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <><Trophy size={13} /> {t('courses.submit')}</>}
           </button>
         )}
       </div>
@@ -418,19 +426,19 @@ const CourseDetail = () => {
       if (lessons[i])  items.push({ key: `l-${lessons[i].id}`,  type: 'lesson',  title: lessons[i].title,  id: lessons[i].id,  done: doneL.has(lessons[i].id) });
     }
     if ((course.quizQuestions || []).length > 0) {
-      items.push({ key: 'quiz', type: 'quiz', title: 'Trắc nghiệm cuối khóa & Chứng chỉ', done: !!course.myProgress?.isCompleted });
+      items.push({ key: 'quiz', type: 'quiz', title: t('courses.finalQuizAndCert'), done: !!course.myProgress?.isCompleted });
     }
     return items;
-  }, [course]);
+  }, [course, t]);
 
   if (loading) return <PageLoader />;
-  if (!course) return <div className="text-white text-center py-32 text-[14px]">Không tìm thấy khoá học.</div>;
+  if (!course) return <div className="text-white text-center py-32 text-[14px]">{t('courses.courseNotFound')}</div>;
 
   const diff = DIFFICULTY_MAP[course.difficulty] || DIFFICULTY_MAP.BEGINNER;
   const enrolled = !!course.myProgress?.enrollmentId;
   const progress = course.myProgress?.completionRate ?? 0;
   const isCompleted = course.myProgress?.isCompleted;
-  const outcomes = course.outcomes?.length ? course.outcomes : DEFAULT_OUTCOMES;
+  const outcomes = course.outcomes?.length ? course.outcomes : DEFAULT_OUTCOME_KEYS.map(k => t(k));
   const seed = [...String(id)].reduce((a, c) => a + c.charCodeAt(0), 0);
   const learners = course.enrolledCount ?? course.enrollmentCount ?? (150 + (seed % 850));
   const doneSteps = pathItems.filter(it => it.done).length;
@@ -462,7 +470,7 @@ const CourseDetail = () => {
 
   return (
     <div className="max-w-6xl mx-auto pb-16 space-y-6">
-      <Breadcrumb items={[{ label: 'Khóa học', href: '/m/courses' }, { label: course?.title || 'Chi tiết khóa học' }]} />
+      <Breadcrumb items={[{ label: t('courses.pageTitle'), href: '/m/courses' }, { label: course?.title || t('courses.courseDetailBreadcrumb') }]} />
       <button onClick={() => navigate(-1)}
         className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-[13px] group">
         <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform" />
@@ -475,9 +483,9 @@ const CourseDetail = () => {
         <div className="flex flex-col lg:flex-row gap-8 justify-between items-start">
           <div className="flex-1 space-y-4">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className={`px-2.5 py-0.5 rounded-lg border text-[11px] font-medium ${diff.color}`}>{diff.label}</span>
+              <span className={`px-2.5 py-0.5 rounded-lg border text-[11px] font-medium ${diff.color}`}>{t(diff.labelKey)}</span>
               <span className="flex items-center gap-1 text-[11px] text-zinc-600"><Clock size={11} /> {course.estimatedHours}h</span>
-              <span className="flex items-center gap-1 text-[11px] text-zinc-600"><Users size={11} /> {learners.toLocaleString('vi-VN')} học viên</span>
+              <span className="flex items-center gap-1 text-[11px] text-zinc-600"><Users size={11} /> {learners.toLocaleString('vi-VN')} {t('courses.learners')}</span>
               {isCompleted && <span className="flex items-center gap-1 text-[11px] text-emerald-400"><ShieldCheck size={11} /> {t('courses.completed')}</span>}
             </div>
             <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">{course.title}</h1>
@@ -486,7 +494,7 @@ const CourseDetail = () => {
             {/* Outcomes */}
             <div className="pt-2">
               <p className="flex items-center gap-1.5 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider mb-3">
-                <Target size={12} className="text-[#f5a623]" /> Mục tiêu đầu ra
+                <Target size={12} className="text-[#f5a623]" /> {t('courses.learningOutcomes')}
               </p>
               <div className="grid sm:grid-cols-2 gap-2.5 max-w-2xl">
                 {outcomes.map((o, i) => (
@@ -505,14 +513,14 @@ const CourseDetail = () => {
                 <GraduationCap size={20} className="text-black" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[13px] font-semibold text-[#f5a623]">Chứng chỉ hoàn thành khóa học</p>
+                <p className="text-[13px] font-semibold text-[#f5a623]">{t('courses.completionCertTitle')}</p>
                 <p className="text-[11px] text-zinc-500 mt-0.5">
-                  Hoàn thành 100% lộ trình và đạt ≥ 60% bài trắc nghiệm cuối khóa để nhận chứng chỉ MC Hub — có thể chia sẻ trên hồ sơ cá nhân.
+                  {t('courses.completionCertDesc')}
                 </p>
               </div>
               <button onClick={() => setShowCert(true)}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#f5a623]/40 text-[#f5a623] text-[12px] font-semibold hover:bg-[#f5a623] hover:text-black transition-colors shrink-0">
-                <Award size={13} /> {isCompleted ? 'Xem chứng chỉ' : 'Xem trước'}
+                <Award size={13} /> {isCompleted ? t('courses.viewCertificate') : t('courses.previewCertificate')}
               </button>
             </div>
           </div>
@@ -536,7 +544,7 @@ const CourseDetail = () => {
             <div className="space-y-1.5">
               <div className="flex justify-between text-[11px] text-zinc-600">
                 <span>{t('courses.progress')}</span>
-                <span className="text-[#f5a623]">{Math.round(progress)}% · {doneSteps}/{pathItems.length} bước</span>
+                <span className="text-[#f5a623]">{Math.round(progress)}% · {doneSteps}/{pathItems.length} {t('courses.steps')}</span>
               </div>
               <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden">
                 <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }} transition={{ duration: 1, ease: 'easeOut' }}
@@ -546,7 +554,7 @@ const CourseDetail = () => {
 
             <div className="flex items-center gap-1.5 text-[11px] text-zinc-600">
               <Star size={11} className="text-[#f5a623]" />
-              <span>Lộ trình tuần tự — học theo từng bước như bản đồ</span>
+              <span>{t('courses.sequentialPathHint')}</span>
             </div>
 
             {enrolled ? (
@@ -580,14 +588,14 @@ const CourseDetail = () => {
                   className="w-full py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-60">
                   {buying
                     ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                    : <>Mua khóa học lẻ <ChevronRight size={14} /></>}
+                    : <>{t('courses.buySingleCourse')} <ChevronRight size={14} /></>}
                 </button>
                 <button onClick={() => navigate('/m/payment')}
                   className="w-full py-2.5 rounded-xl border border-[#f5a623]/30 text-[#f5a623] text-[12px] font-semibold hover:bg-[#f5a623]/[0.08] transition-colors">
-                  Nâng cấp gói Basic+ — học mọi khóa
+                  {t('courses.upgradeBasicPlan')}
                 </button>
                 <p className="text-[10px] text-zinc-600 text-center leading-relaxed">
-                  Gói Basic trở lên được học toàn bộ khóa học, hoặc mua lẻ khóa này một lần — sở hữu vĩnh viễn.
+                  {t('courses.basicPlanDesc')}
                 </p>
               </div>
             )}
@@ -600,12 +608,12 @@ const CourseDetail = () => {
         <div className="flex items-center justify-between border-b border-white/[0.07] px-5 py-4">
           <div className="flex items-center gap-1.5 text-[12px] font-medium text-[#f5a623]">
             {activeTab === 'quiz' ? <HelpCircle size={13} /> : <Map size={13} />}
-            <span>{activeTab === 'quiz' ? 'Trắc nghiệm cuối khóa' : 'Lộ trình học'}</span>
+            <span>{activeTab === 'quiz' ? t('courses.finalQuiz') : t('courses.learningPath')}</span>
           </div>
           {activeTab === 'quiz' && (
             <button onClick={() => setActiveTab('path')}
               className="flex items-center gap-1.5 text-[12px] text-zinc-500 hover:text-[#f5a623] transition-colors">
-              <ArrowLeft size={13} /> Quay lại lộ trình
+              <ArrowLeft size={13} /> {t('courses.backToPath')}
             </button>
           )}
         </div>
