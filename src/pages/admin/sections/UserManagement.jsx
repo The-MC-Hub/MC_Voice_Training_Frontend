@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Search, CheckCircle, XCircle, ShieldAlert, ShieldCheck, Eye, Loader2,
   UserPlus, Mail, Key, Trash2, X, BarChart2, Bell, User as UserIcon,
@@ -71,7 +72,7 @@ const TIER_COLOR = {
 };
 
 // Smart notification suggestions
-const buildSuggestions = (stats) => {
+const buildSuggestions = (stats, t) => {
   if (!stats) return [];
   const suggestions = [];
   const now = Date.now();
@@ -83,9 +84,9 @@ const buildSuggestions = (stats) => {
       suggestions.push({
         id: "inactive",
         icon: "😴",
-        label: `Lâu rồi chưa đăng nhập (${daysSinceLogin} ngày)`,
-        subject: "Chúng tôi nhớ bạn! — MCHub Voice Training",
-        content: `Xin chào ${stats.userName},\n\nChúng tôi nhận thấy bạn chưa đăng nhập MCHub Voice Training trong ${daysSinceLogin} ngày qua.\n\nHãy quay lại luyện tập hôm nay — mỗi ngày 15 phút sẽ giúp bạn cải thiện đáng kể giọng MC chuyên nghiệp!\n\nTruy cập: https://mchub.vn\n\nMCHub Team`,
+        label: t("admin.userManagement.suggestions.inactiveLabel", { days: daysSinceLogin }),
+        subject: t("admin.userManagement.suggestions.inactiveSubject"),
+        content: t("admin.userManagement.suggestions.inactiveContent", { name: stats.userName, days: daysSinceLogin }),
       });
     }
   }
@@ -95,9 +96,9 @@ const buildSuggestions = (stats) => {
     suggestions.push({
       id: "active_learner",
       icon: "🔥",
-      label: `Học viên tích cực (${stats.totalSessions} buổi)`,
-      subject: "Bạn đang tiến bộ rất nhanh! — MCHub",
-      content: `Xin chào ${stats.userName},\n\nBạn đã hoàn thành ${stats.totalSessions} buổi luyện tập — thật tuyệt vời!\n\nĐiểm trung bình của bạn là ${fmtScore(stats.avgScore)}/100. Hãy tiếp tục duy trì phong độ này.\n\nNếu bạn cần tư vấn thêm về lộ trình phát triển MC, đội ngũ MCHub luôn sẵn sàng hỗ trợ.\n\nMCHub Team`,
+      label: t("admin.userManagement.suggestions.activeLearnerLabel", { count: stats.totalSessions }),
+      subject: t("admin.userManagement.suggestions.activeLearnerSubject"),
+      content: t("admin.userManagement.suggestions.activeLearnerContent", { name: stats.userName, count: stats.totalSessions, score: fmtScore(stats.avgScore) }),
     });
   }
 
@@ -106,9 +107,9 @@ const buildSuggestions = (stats) => {
     suggestions.push({
       id: "low_score",
       icon: "💪",
-      label: `Điểm trung bình thấp (${fmtScore(stats.avgScore)}/100)`,
-      subject: "Mẹo cải thiện giọng nói MC — MCHub",
-      content: `Xin chào ${stats.userName},\n\nChúng tôi nhận thấy bạn đang nỗ lực luyện tập. Điểm trung bình hiện tại: ${fmtScore(stats.avgScore)}/100.\n\nMột số mẹo để cải thiện:\n• Luyện tập đều đặn mỗi ngày, ít nhất 10 phút\n• Tập trung vào bài học nhịp điệu và ngữ điệu\n• Nghe lại bản ghi âm để tự đánh giá\n\nChúc bạn sớm đạt điểm cao!\n\nMCHub Team`,
+      label: t("admin.userManagement.suggestions.lowScoreLabel", { score: fmtScore(stats.avgScore) }),
+      subject: t("admin.userManagement.suggestions.lowScoreSubject"),
+      content: t("admin.userManagement.suggestions.lowScoreContent", { name: stats.userName, score: fmtScore(stats.avgScore) }),
     });
   }
 
@@ -117,9 +118,9 @@ const buildSuggestions = (stats) => {
     suggestions.push({
       id: "high_score",
       icon: "⭐",
-      label: `Điểm xuất sắc (${fmtScore(stats.avgScore)}/100)`,
-      subject: "Chúc mừng thành tích của bạn! — MCHub",
-      content: `Xin chào ${stats.userName},\n\nBạn đang đạt điểm trung bình ${fmtScore(stats.avgScore)}/100 — thuộc nhóm top học viên trên nền tảng!\n\nMCHub trân trọng sự nỗ lực của bạn. Hãy chia sẻ hành trình của bạn với cộng đồng MC để truyền cảm hứng cho những người khác nhé.\n\nMCHub Team`,
+      label: t("admin.userManagement.suggestions.highScoreLabel", { score: fmtScore(stats.avgScore) }),
+      subject: t("admin.userManagement.suggestions.highScoreSubject"),
+      content: t("admin.userManagement.suggestions.highScoreContent", { name: stats.userName, score: fmtScore(stats.avgScore) }),
     });
   }
 
@@ -128,9 +129,9 @@ const buildSuggestions = (stats) => {
     suggestions.push({
       id: "streak",
       icon: "🏆",
-      label: `Chuỗi ${stats.currentStreak} ngày liên tiếp`,
-      subject: `Chuỗi ${stats.currentStreak} ngày — Tiếp tục phá vỡ giới hạn!`,
-      content: `Xin chào ${stats.userName},\n\nBạn đang có chuỗi luyện tập ${stats.currentStreak} ngày liên tiếp — thật ấn tượng!\n\nKỷ lục cá nhân của bạn là ${stats.longestStreak} ngày. Hãy tiếp tục duy trì để phá kỷ lục nhé!\n\nMCHub Team`,
+      label: t("admin.userManagement.suggestions.streakLabel", { count: stats.currentStreak }),
+      subject: t("admin.userManagement.suggestions.streakSubject", { count: stats.currentStreak }),
+      content: t("admin.userManagement.suggestions.streakContent", { name: stats.userName, count: stats.currentStreak, longest: stats.longestStreak }),
     });
   }
 
@@ -139,9 +140,9 @@ const buildSuggestions = (stats) => {
     suggestions.push({
       id: "upgrade",
       icon: "🚀",
-      label: "Đang dùng gói FREE — gợi ý nâng cấp",
-      subject: "Mở khóa toàn bộ tính năng MCHub",
-      content: `Xin chào ${stats.userName},\n\nBạn đang sử dụng gói FREE của MCHub. Để tận dụng toàn bộ bài học, phân tích AI nâng cao và không giới hạn buổi luyện tập, hãy khám phá các gói Premium của chúng tôi.\n\nXem chi tiết tại: https://mchub.vn/pricing\n\nMCHub Team`,
+      label: t("admin.userManagement.suggestions.upgradeLabel"),
+      subject: t("admin.userManagement.suggestions.upgradeSubject"),
+      content: t("admin.userManagement.suggestions.upgradeContent", { name: stats.userName }),
     });
   }
 
@@ -150,6 +151,7 @@ const buildSuggestions = (stats) => {
 
 // ── Side Panel ─────────────────────────────────────────────────────────────────
 const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) => {
+  const { t } = useTranslation();
   const [tab, setTab] = useState("info"); // info | stats | notify
   const [stats, setStats] = useState(null);
   const [statsLoading, setStatsLoading] = useState(false);
@@ -205,18 +207,18 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
         targetPlans: [],
         recipientIds: [user._id || user.id],
       });
-      flashNotify("✓ Đã tạo bản nháp — vào Thông báo → Chờ duyệt để gửi.");
+      flashNotify(t("admin.userManagement.draftCreatedFlash"));
       setNotifySubject("");
       setNotifyContent("");
     } catch (err) {
-      flashNotify("✗ " + (err.response?.data?.message || "Tạo thất bại."));
+      flashNotify("✗ " + (err.response?.data?.message || t("admin.userManagement.createFailed")));
     } finally {
       setNotifyLoading(false);
     }
   };
 
   const roleCls = (role) => ROLE_BADGE[(role || "client").toLowerCase()] || ROLE_BADGE.client;
-  const suggestions = buildSuggestions(stats);
+  const suggestions = buildSuggestions(stats, t);
 
   return (
     <div className="flex flex-col h-full bg-white border-l border-gray-200">
@@ -245,9 +247,9 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
       {/* Tab bar */}
       <div className="flex border-b border-gray-100 shrink-0">
         {[
-          { id: "info", icon: UserIcon, label: "Thông tin" },
-          { id: "stats", icon: BarChart2, label: "Thống kê" },
-          { id: "notify", icon: Bell, label: "Thông báo" },
+          { id: "info", icon: UserIcon, label: t("admin.userManagement.tabInfo") },
+          { id: "stats", icon: BarChart2, label: t("admin.userManagement.tabStats") },
+          { id: "notify", icon: Bell, label: t("admin.userManagement.tabNotify") },
         ].map(({ id, icon: Icon, label }) => (
           <button
             key={id}
@@ -275,21 +277,21 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
               <Badge cls={roleCls(user.role)}>{(user.role || "CLIENT").toUpperCase()}</Badge>
               <Badge cls={PLAN_BADGE[user.plan] || PLAN_BADGE.FREE}>{user.plan || "FREE"}</Badge>
               {user.isActive
-                ? <Badge cls="bg-emerald-50 text-emerald-600 border-emerald-200"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Hoạt động</Badge>
-                : <Badge cls="bg-red-50 text-red-600 border-red-200"><span className="w-1.5 h-1.5 rounded-full bg-red-500" /> Bị khóa</Badge>
+                ? <Badge cls="bg-emerald-50 text-emerald-600 border-emerald-200"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> {t("admin.userManagement.active")}</Badge>
+                : <Badge cls="bg-red-50 text-red-600 border-red-200"><span className="w-1.5 h-1.5 rounded-full bg-red-500" /> {t("admin.userManagement.locked")}</Badge>
               }
-              {user.isVerified && <Badge cls="bg-emerald-50 text-emerald-700 border-emerald-200"><ShieldCheck size={10} /> Certified</Badge>}
+              {user.isVerified && <Badge cls="bg-emerald-50 text-emerald-700 border-emerald-200"><ShieldCheck size={10} /> {t("admin.userManagement.certified")}</Badge>}
             </div>
 
             {/* Fields */}
             <div className="space-y-2">
               {[
                 ["User ID", user._id, true],
-                ["Email", user.email, false],
-                ["Số điện thoại", user.phoneNumber, false],
-                ["Ngày đăng ký", fmtDate(user.createdAt), false],
-                ["AI Sessions đã dùng", user.aiSessionsUsed || 0, true],
-                ["Hết hạn gói", fmtDate(user.planExpiresAt), false],
+                [t("admin.userManagement.email"), user.email, false],
+                [t("admin.userManagement.phoneNumber"), user.phoneNumber, false],
+                [t("admin.userManagement.registeredAt"), fmtDate(user.createdAt), false],
+                [t("admin.userManagement.aiSessionsUsed"), user.aiSessionsUsed || 0, true],
+                [t("admin.userManagement.planExpiresAt"), fmtDate(user.planExpiresAt), false],
               ].map(([label, value, mono]) => (
                 <div key={label} className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-2.5">
                   <p className="text-[9px] text-gray-400 uppercase tracking-wider mb-0.5">{label}</p>
@@ -301,16 +303,16 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
             {/* MC Profile */}
             {user.role?.toLowerCase() === "mc" && (
               <div className="border-t border-gray-100 pt-4">
-                <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-3">Hồ sơ MC</p>
+                <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-3">{t("admin.userManagement.mcProfile")}</p>
                 {!mcProfile ? (
-                  <p className="text-[12px] text-gray-400 italic">Chưa có hồ sơ MC.</p>
+                  <p className="text-[12px] text-gray-400 italic">{t("admin.userManagement.noMcProfile")}</p>
                 ) : (
                   <div className="space-y-2">
                     {[
-                      ["Tên nghệ danh", mcProfile.stageName || user.name],
-                      ["Địa điểm", mcProfile.location],
-                      ["Kinh nghiệm", mcProfile.experience ? `${mcProfile.experience} năm` : null],
-                      ["Mức giá", mcProfile.rates?.min ? `${mcProfile.rates.min.toLocaleString("vi-VN")} VND` : null],
+                      [t("admin.userManagement.stageName"), mcProfile.stageName || user.name],
+                      [t("admin.userManagement.location"), mcProfile.location],
+                      [t("admin.userManagement.experience"), mcProfile.experience ? t("admin.userManagement.yearsUnit", { count: mcProfile.experience }) : null],
+                      [t("admin.userManagement.rate"), mcProfile.rates?.min ? `${mcProfile.rates.min.toLocaleString("vi-VN")} VND` : null],
                     ].map(([l, v]) => v ? (
                       <div key={l} className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-2.5">
                         <p className="text-[9px] text-gray-400 uppercase tracking-wider mb-0.5">{l}</p>
@@ -319,7 +321,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                     ) : null)}
                     {mcProfile.specialties?.length > 0 && (
                       <div className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-2.5">
-                        <p className="text-[9px] text-gray-400 uppercase tracking-wider mb-1.5">Chuyên môn</p>
+                        <p className="text-[9px] text-gray-400 uppercase tracking-wider mb-1.5">{t("admin.userManagement.specialties")}</p>
                         <div className="flex flex-wrap gap-1">
                           {mcProfile.specialties.map(s => (
                             <span key={s} className="px-1.5 py-0.5 bg-white border border-gray-200 text-[10px] text-gray-700 rounded">{s}</span>
@@ -334,17 +336,17 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
 
             {/* Quick actions */}
             <div className="border-t border-gray-100 pt-4 space-y-2">
-              <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-2">Thao tác nhanh</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-2">{t("admin.userManagement.quickActions")}</p>
               {user.role?.toLowerCase() === "mc" && (
                 <button onClick={() => handleVerify(user._id, user.isVerified)}
                   className="w-full flex items-center justify-between px-3 py-2.5 text-[12px] font-medium border border-gray-200 hover:border-amber-300 hover:bg-amber-50 rounded-lg transition-colors text-gray-700">
-                  <span className="flex items-center gap-2"><ShieldAlert size={13} />{user.isVerified ? "Thu hồi chứng nhận" : "Cấp chứng nhận MC"}</span>
+                  <span className="flex items-center gap-2"><ShieldAlert size={13} />{user.isVerified ? t("admin.userManagement.revokeCertification") : t("admin.userManagement.grantCertification")}</span>
                   <ChevronRight size={12} className="text-gray-400" />
                 </button>
               )}
               <button onClick={() => handleSuspend(user._id, user.isActive)}
                 className="w-full flex items-center justify-between px-3 py-2.5 text-[12px] font-medium border border-gray-200 hover:border-gray-400 rounded-lg transition-colors text-gray-700">
-                <span className="flex items-center gap-2">{user.isActive ? <XCircle size={13} /> : <CheckCircle size={13} />}{user.isActive ? "Khóa tài khoản" : "Mở khóa tài khoản"}</span>
+                <span className="flex items-center gap-2">{user.isActive ? <XCircle size={13} /> : <CheckCircle size={13} />}{user.isActive ? t("admin.userManagement.lockAccount") : t("admin.userManagement.unlockAccount")}</span>
                 <ChevronRight size={12} className="text-gray-400" />
               </button>
             </div>
@@ -357,13 +359,13 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
             {statsLoading ? (
               <div className="flex items-center justify-center py-16 text-gray-400 gap-2">
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-[12px]">Đang tải thống kê...</span>
+                <span className="text-[12px]">{t("admin.userManagement.loadingStats")}</span>
               </div>
             ) : !stats ? (
               <div className="flex flex-col items-center justify-center py-16 gap-3">
                 <BarChart2 size={32} className="text-gray-200" />
-                <p className="text-[12px] text-gray-400">Không có dữ liệu thống kê</p>
-                <button onClick={loadStats} className="px-4 py-2 bg-amber-500 text-white text-[11px] font-semibold rounded-lg hover:bg-amber-600">Tải lại</button>
+                <p className="text-[12px] text-gray-400">{t("admin.userManagement.noStatsData")}</p>
+                <button onClick={loadStats} className="px-4 py-2 bg-amber-500 text-white text-[11px] font-semibold rounded-lg hover:bg-amber-600">{t("admin.userManagement.reload")}</button>
               </div>
             ) : (
               <div className="space-y-5">
@@ -373,25 +375,25 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                     <Award size={11} /> {stats.currentTier || "BRONZE"}
                   </span>
                   <span className="text-[11px] text-gray-400">
-                    <span className="font-semibold text-amber-600">{Math.round(stats.cumulativeXP || 0)}</span> XP tổng
+                    <span className="font-semibold text-amber-600">{Math.round(stats.cumulativeXP || 0)}</span> {t("admin.userManagement.totalXp")}
                   </span>
                 </div>
 
                 {/* Key stats grid */}
                 <div className="grid grid-cols-2 gap-2.5">
-                  <StatCard label="Tổng buổi luyện" value={stats.totalSessions} color="text-gray-900" />
-                  <StatCard label="Điểm trung bình" value={fmtScore(stats.avgScore)} sub="/100" color={stats.avgScore >= 80 ? "text-emerald-600" : stats.avgScore >= 60 ? "text-amber-600" : "text-red-500"} />
-                  <StatCard label="Điểm cao nhất" value={fmtScore(stats.bestScore)} sub="/100" color="text-violet-600" />
+                  <StatCard label={t("admin.userManagement.totalSessions")} value={stats.totalSessions} color="text-gray-900" />
+                  <StatCard label={t("admin.userManagement.avgScore")} value={fmtScore(stats.avgScore)} sub="/100" color={stats.avgScore >= 80 ? "text-emerald-600" : stats.avgScore >= 60 ? "text-amber-600" : "text-red-500"} />
+                  <StatCard label={t("admin.userManagement.bestScore")} value={fmtScore(stats.bestScore)} sub="/100" color="text-violet-600" />
                   <StatCard label="AI Sessions" value={stats.aiSessionsUsed || 0} color="text-sky-600" />
-                  <StatCard label="Chuỗi hiện tại" value={`${stats.currentStreak}🔥`} sub={`Kỷ lục: ${stats.longestStreak} ngày`} />
-                  <StatCard label="Tuần này" value={`${Math.round(stats.weeklyXP || 0)} XP`} color="text-amber-600" />
+                  <StatCard label={t("admin.userManagement.currentStreak")} value={`${stats.currentStreak}🔥`} sub={t("admin.userManagement.recordDays", { count: stats.longestStreak })} />
+                  <StatCard label={t("admin.userManagement.thisWeek")} value={`${Math.round(stats.weeklyXP || 0)} XP`} color="text-amber-600" />
                 </div>
 
                 {/* Last practice */}
                 <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
                   <Clock size={14} className="text-gray-400 shrink-0" />
                   <div>
-                    <p className="text-[10px] text-gray-400 uppercase tracking-wider">Lần luyện cuối</p>
+                    <p className="text-[10px] text-gray-400 uppercase tracking-wider">{t("admin.userManagement.lastPractice")}</p>
                     <p className="text-[12px] font-medium text-gray-700">{fmtDateTime(stats.lastPracticeTime)}</p>
                   </div>
                 </div>
@@ -400,15 +402,15 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                 <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100 rounded-xl px-4 py-3 flex items-center gap-3">
                   <TrendingUp size={14} className="text-amber-500 shrink-0" />
                   <div>
-                    <p className="text-[10px] text-amber-600 uppercase tracking-wider">Tổng giờ luyện tập</p>
-                    <p className="text-[18px] font-bold text-amber-700">{(stats.totalPracticeHours || 0).toFixed(1)} giờ</p>
+                    <p className="text-[10px] text-amber-600 uppercase tracking-wider">{t("admin.userManagement.totalPracticeHours")}</p>
+                    <p className="text-[18px] font-bold text-amber-700">{t("admin.userManagement.hoursValue", { hours: (stats.totalPracticeHours || 0).toFixed(1) })}</p>
                   </div>
                 </div>
 
                 {/* Recent sessions */}
                 {stats.recentSessions?.length > 0 && (
                   <div>
-                    <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-2">5 buổi gần nhất</p>
+                    <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-2">{t("admin.userManagement.last5Sessions")}</p>
                     <div className="space-y-2">
                       {stats.recentSessions.map((s, i) => (
                         <div key={i} className="bg-white border border-gray-100 rounded-lg px-3 py-2.5 flex items-center justify-between">
@@ -438,14 +440,14 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
             {/* Load stats if needed for suggestions */}
             {!stats && !statsLoading && (
               <button onClick={loadStats} className="w-full py-2 text-[11px] text-amber-600 border border-dashed border-amber-200 rounded-lg hover:bg-amber-50 transition-colors flex items-center justify-center gap-1.5">
-                <Sparkles size={11} /> Tải thống kê để nhận gợi ý thông minh
+                <Sparkles size={11} /> {t("admin.userManagement.loadStatsForSuggestions")}
               </button>
             )}
 
             {/* Smart suggestions */}
             {stats && suggestions.length > 0 && (
               <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-2">Gợi ý thông minh</p>
+                <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-2">{t("admin.userManagement.smartSuggestions")}</p>
                 <div className="space-y-1.5">
                   {suggestions.map(s => (
                     <button
@@ -465,28 +467,28 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
             {statsLoading && (
               <div className="flex items-center gap-2 py-3 text-gray-400">
                 <Loader2 size={12} className="animate-spin" />
-                <span className="text-[11px]">Đang phân tích...</span>
+                <span className="text-[11px]">{t("admin.userManagement.analyzing")}</span>
               </div>
             )}
 
             {/* Compose form */}
             <div className="border-t border-gray-100 pt-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-3">Soạn email</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-3">{t("admin.userManagement.composeEmail")}</p>
               <form onSubmit={sendNotification} className="space-y-3">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Tiêu đề</label>
+                  <label className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">{t("admin.userManagement.subject")}</label>
                   <input
                     type="text" value={notifySubject} onChange={e => setNotifySubject(e.target.value)}
-                    placeholder="Chủ đề email..."
+                    placeholder={t("admin.userManagement.emailSubjectPlaceholder")}
                     className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[12px] focus:outline-none focus:border-amber-400 text-gray-900 placeholder:text-gray-400"
                     required
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Nội dung</label>
+                  <label className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">{t("admin.userManagement.content")}</label>
                   <textarea
                     value={notifyContent} onChange={e => setNotifyContent(e.target.value)}
-                    placeholder="Nội dung email..."
+                    placeholder={t("admin.userManagement.emailContentPlaceholder")}
                     rows={8}
                     className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[12px] focus:outline-none focus:border-amber-400 text-gray-900 placeholder:text-gray-400 resize-none leading-relaxed"
                     required
@@ -502,7 +504,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                 <div className="bg-amber-50 border border-amber-100 rounded-lg px-3 py-2.5 flex items-start gap-2">
                   <Mail size={12} className="text-amber-500 mt-0.5 shrink-0" />
                   <p className="text-[10px] text-amber-700 leading-relaxed">
-                    Sẽ tạo bản nháp gửi đến <strong>{user.email}</strong> · Vào <strong>Thông báo → Chờ duyệt</strong> để xem xét và gửi thật.
+                    {t("admin.userManagement.draftHintPrefix")} <strong>{user.email}</strong> · {t("admin.userManagement.draftHintSuffix")}
                   </p>
                 </div>
 
@@ -511,7 +513,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                   className="w-full flex items-center justify-center gap-2 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg disabled:opacity-50 transition-colors"
                 >
                   {notifyLoading ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
-                  {notifyLoading ? "Đang tạo..." : "Tạo bản nháp"}
+                  {notifyLoading ? t("admin.userManagement.creating") : t("admin.userManagement.createDraft")}
                 </button>
               </form>
             </div>
@@ -524,6 +526,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
 
 // ── Main component ─────────────────────────────────────────────────────────────
 const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = React.useState("");
   const [filterRole, setFilterRole] = React.useState("ALL");
   const [filterPlan, setFilterPlan] = React.useState("ALL");
@@ -603,7 +606,7 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
   const handleAddUser = async (e) => {
     e.preventDefault();
     setAddError("");
-    if (!addForm.name || !addForm.email || !addForm.password) { setAddError("Vui lòng điền đầy đủ thông tin."); return; }
+    if (!addForm.name || !addForm.email || !addForm.password) { setAddError(t("admin.userManagement.fillAllFields")); return; }
     setAddLoading(true);
     try {
       const payload = { ...addForm };
@@ -614,45 +617,45 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
       await api.post("/admin/users", payload);
       setShowAddModal(false);
       setAddForm({ name: "", email: "", password: "", role: "CLIENT", phoneNumber: "", adminNote: "", plan: "", couponId: "" });
-      flash("Đã tạo tài khoản thành công.");
+      flash(t("admin.userManagement.createAccountSuccess"));
       onRefresh?.();
     } catch (err) {
-      setAddError(err.response?.data?.message || "Tạo tài khoản thất bại.");
+      setAddError(err.response?.data?.message || t("admin.userManagement.createAccountFailed"));
     } finally { setAddLoading(false); }
   };
 
   const handleSendResetEmail = async (userId, userName) => {
     try {
       await api.post(`/admin/users/${userId}/send-reset-email`);
-      flash(`Đã gửi email đặt lại mật khẩu cho ${userName}.`);
+      flash(t("admin.userManagement.resetEmailSentFlash", { name: userName }));
     } catch (err) {
-      flash(`Lỗi: ${err.response?.data?.message || "Không thể gửi email."}`);
+      flash(t("admin.userManagement.errorPrefix", { message: err.response?.data?.message || t("admin.userManagement.sendEmailFailed") }));
     }
   };
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
     setPwdError("");
-    if (!newPwd || newPwd.length < 6) { setPwdError("Mật khẩu tối thiểu 6 ký tự."); return; }
+    if (!newPwd || newPwd.length < 6) { setPwdError(t("admin.userManagement.passwordMinLength")); return; }
     setPwdLoading(true);
     try {
       await api.post(`/admin/users/${pwdModal}/change-password`, { newPassword: newPwd });
       setPwdModal(null); setNewPwd("");
-      flash("Đã đổi mật khẩu thành công.");
+      flash(t("admin.userManagement.changePasswordSuccess"));
     } catch (err) {
-      setPwdError(err.response?.data?.message || "Đổi mật khẩu thất bại.");
+      setPwdError(err.response?.data?.message || t("admin.userManagement.changePasswordFailed"));
     } finally { setPwdLoading(false); }
   };
 
   const handleDeleteUser = async (userId, userName) => {
-    if (!window.confirm(`Vô hiệu hóa tài khoản "${userName}"? Tài khoản sẽ bị khóa nhưng dữ liệu được giữ lại.`)) return;
+    if (!window.confirm(t("admin.userManagement.confirmDisableAccount", { name: userName }))) return;
     try {
       await api.delete(`/admin/users/${userId}`);
-      flash(`Đã vô hiệu hóa tài khoản ${userName}.`);
+      flash(t("admin.userManagement.disableAccountSuccess", { name: userName }));
       if (selectedUser?._id === userId) setSelectedUser(null);
       onRefresh?.();
     } catch (err) {
-      flash(`Lỗi: ${err.response?.data?.message || "Không thể vô hiệu hóa tài khoản."}`);
+      flash(t("admin.userManagement.errorPrefix", { message: err.response?.data?.message || t("admin.userManagement.disableAccountFailed") }));
     }
   };
 
@@ -719,9 +722,9 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-3 shrink-0">
           <div>
-            <h2 className="text-[16px] font-semibold text-gray-900">Quản lý người dùng</h2>
+            <h2 className="text-[16px] font-semibold text-gray-900">{t("admin.userManagement.title")}</h2>
             <p className="text-[12px] text-gray-400 mt-1">
-              Tổng <span className="font-semibold text-gray-700">{users?.length ?? 0}</span> tài khoản
+              {t("admin.userManagement.totalPrefix")} <span className="font-semibold text-gray-700">{users?.length ?? 0}</span> {t("admin.userManagement.accountsUnit")}
               &nbsp;·&nbsp; <span className="font-medium text-amber-600">{counts.mc ?? 0} MC</span>
               &nbsp;·&nbsp; <span className="font-medium text-sky-600">{counts.client ?? 0} Client</span>
               &nbsp;·&nbsp; <span className="font-medium text-violet-600">{counts.admin ?? 0} Admin</span>
@@ -731,19 +734,19 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
             <div className="relative flex-1 sm:w-60">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               <input
-                type="text" placeholder="Tìm theo tên, email..."
+                type="text" placeholder={t("admin.userManagement.searchPlaceholder")}
                 value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full bg-white border border-gray-200 rounded-xl py-2.5 pl-9 pr-4 text-[13px] focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 placeholder:text-gray-400 shadow-sm"
               />
             </div>
             <button onClick={handleRefresh} disabled={refreshing}
               className="flex items-center gap-1.5 px-3 py-2.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-500 text-[12px] font-medium rounded-lg transition-colors shrink-0 disabled:opacity-50"
-              title="Làm mới danh sách">
+              title={t("admin.userManagement.refreshList")}>
               <RefreshCw size={13} className={refreshing ? 'animate-spin' : ''} />
             </button>
             <button onClick={openAddModal}
               className="flex items-center gap-1.5 px-3.5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg transition-colors shrink-0">
-              <UserPlus size={13} /> Thêm
+              <UserPlus size={13} /> {t("admin.userManagement.add")}
             </button>
           </div>
         </div>
@@ -751,7 +754,7 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
         {/* Role filter tabs */}
         <div className="flex gap-2 flex-wrap pb-3 shrink-0">
           {[
-            { key: "ALL", label: "Tất cả", count: users?.length ?? 0 },
+            { key: "ALL", label: t("admin.userManagement.all"), count: users?.length ?? 0 },
             { key: "ADMIN", label: "Admin", count: counts.admin ?? 0 },
             { key: "MC", label: "MC", count: counts.mc ?? 0 },
             { key: "CLIENT", label: "Client", count: counts.client ?? 0 },
@@ -769,7 +772,7 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
         <div className="flex items-center justify-between gap-3 pb-3 shrink-0 flex-wrap">
           <div className="flex gap-1.5 flex-wrap">
             {[
-              { key: "ALL", label: "Tất cả gói" },
+              { key: "ALL", label: t("admin.userManagement.allPlans") },
               { key: "FREE", label: "Free" },
               { key: "BASIC", label: "Basic" },
               { key: "FULL", label: "Full" },
@@ -787,10 +790,10 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
           </div>
           <select value={sortBy} onChange={e => setSortBy(e.target.value)}
             className="px-3 py-1.5 text-[12px] border border-gray-200 rounded-lg bg-white text-gray-600 focus:outline-none focus:border-amber-400 cursor-pointer shrink-0">
-            <option value="newest">Mới nhất</option>
-            <option value="name">Tên A→Z</option>
-            <option value="sessions">Sessions ↓</option>
-            <option value="plan">Gói cao nhất</option>
+            <option value="newest">{t("admin.userManagement.sortNewest")}</option>
+            <option value="name">{t("admin.userManagement.sortNameAZ")}</option>
+            <option value="sessions">{t("admin.userManagement.sortSessions")}</option>
+            <option value="plan">{t("admin.userManagement.sortHighestPlan")}</option>
           </select>
         </div>
 
@@ -799,19 +802,19 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
           <table className="w-full text-left border-collapse text-[12px]">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200 text-gray-500 uppercase text-[10px] font-bold tracking-wider sticky top-0">
-                <th className="px-4 py-3">Người dùng</th>
-                <th className="px-4 py-3">Vai trò</th>
-                <th className="px-4 py-3">Gói</th>
-                <th className="px-4 py-3">Mã GT</th>
-                <th className="px-4 py-3 text-center">Đã GT</th>
+                <th className="px-4 py-3">{t("admin.userManagement.colUser")}</th>
+                <th className="px-4 py-3">{t("admin.userManagement.colRole")}</th>
+                <th className="px-4 py-3">{t("admin.userManagement.colPlan")}</th>
+                <th className="px-4 py-3">{t("admin.userManagement.colReferralCode")}</th>
+                <th className="px-4 py-3 text-center">{t("admin.userManagement.colReferred")}</th>
                 <th className="px-4 py-3">Sessions</th>
-                <th className="px-4 py-3">Trạng thái</th>
-                <th className="px-4 py-3 text-right">Thao tác</th>
+                <th className="px-4 py-3">{t("admin.userManagement.colStatus")}</th>
+                <th className="px-4 py-3 text-right">{t("admin.userManagement.colActions")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {filtered.length === 0 && (
-                <tr><td colSpan={8} className="px-6 py-12 text-center text-gray-400 text-[13px]">Không tìm thấy người dùng</td></tr>
+                <tr><td colSpan={8} className="px-6 py-12 text-center text-gray-400 text-[13px]">{t("admin.userManagement.noUsersFound")}</td></tr>
               )}
               {filtered.map(u => {
                 const isSelected = selectedUser?._id === u._id;
@@ -850,36 +853,36 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                     <td className="px-4 py-3"><span className="font-mono text-[11px] text-gray-600">{u.aiSessionsUsed || 0}</span></td>
                     <td className="px-4 py-3">
                       {u.isActive
-                        ? <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-md"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Active</span>
-                        : <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold bg-red-50 text-red-600 border border-red-200 rounded-md"><span className="w-1.5 h-1.5 rounded-full bg-red-500" /> Locked</span>
+                        ? <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-md"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> {t("admin.userManagement.active")}</span>
+                        : <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold bg-red-50 text-red-600 border border-red-200 rounded-md"><span className="w-1.5 h-1.5 rounded-full bg-red-500" /> {t("admin.userManagement.locked")}</span>
                       }
                     </td>
                     {/* Actions */}
                     <td className="px-4 py-3 text-right" onClick={e => e.stopPropagation()}>
                       <div className="flex justify-end gap-1 flex-wrap">
-                        <button onClick={() => setSelectedUser(isSelected ? null : u)} title="Xem chi tiết"
+                        <button onClick={() => setSelectedUser(isSelected ? null : u)} title={t("admin.userManagement.viewDetails")}
                           className={`p-1.5 border transition-colors rounded ${isSelected ? "bg-amber-100 text-amber-600 border-amber-200" : "bg-white text-gray-400 hover:text-gray-700 border-gray-200"}`}>
                           <Eye size={12} />
                         </button>
-                        <button onClick={() => handleSendResetEmail(u._id, u.name)} title="Gửi email reset"
+                        <button onClick={() => handleSendResetEmail(u._id, u.name)} title={t("admin.userManagement.sendResetEmail")}
                           className="p-1.5 bg-white text-gray-400 hover:text-blue-600 border border-gray-200 hover:border-blue-300 transition-colors rounded">
                           <Mail size={12} />
                         </button>
-                        <button onClick={() => { setPwdModal(u._id); setNewPwd(""); setPwdError(""); }} title="Đổi mật khẩu"
+                        <button onClick={() => { setPwdModal(u._id); setNewPwd(""); setPwdError(""); }} title={t("admin.userManagement.changePassword")}
                           className="p-1.5 bg-white text-gray-400 hover:text-amber-600 border border-gray-200 hover:border-amber-300 transition-colors rounded">
                           <Key size={12} />
                         </button>
                         {u.role?.toLowerCase() === "mc" && (
-                          <button onClick={() => handleVerify(u._id, u.isVerified)} title={u.isVerified ? "Thu hồi" : "Chứng nhận"}
+                          <button onClick={() => handleVerify(u._id, u.isVerified)} title={u.isVerified ? t("admin.userManagement.revoke") : t("admin.userManagement.certify")}
                             className={`p-1.5 border transition-colors rounded ${u.isVerified ? "bg-white text-gray-400 border-gray-200" : "bg-gray-800 text-white border-gray-800"}`}>
                             <ShieldAlert size={12} />
                           </button>
                         )}
-                        <button onClick={() => handleSuspend(u._id, u.isActive)} title={u.isActive ? "Khóa" : "Mở khóa"}
+                        <button onClick={() => handleSuspend(u._id, u.isActive)} title={u.isActive ? t("admin.userManagement.lock") : t("admin.userManagement.unlock")}
                           className="p-1.5 bg-white text-gray-400 hover:text-gray-700 border border-gray-200 hover:border-gray-400 transition-colors rounded">
                           {u.isActive ? <XCircle size={12} /> : <CheckCircle size={12} />}
                         </button>
-                        <button onClick={() => handleDeleteUser(u._id, u.name)} title="Vô hiệu hóa"
+                        <button onClick={() => handleDeleteUser(u._id, u.name)} title={t("admin.userManagement.disable")}
                           className="p-1.5 bg-white text-gray-400 hover:text-orange-600 border border-gray-200 hover:border-orange-300 transition-colors rounded">
                           <Trash2 size={12} />
                         </button>
@@ -922,12 +925,12 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
         <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 p-4">
           <div className="bg-white border border-gray-200 w-full max-w-md shadow-xl rounded-xl overflow-hidden">
             <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
-              <h2 className="text-[15px] font-semibold text-gray-900">Thêm tài khoản mới</h2>
+              <h2 className="text-[15px] font-semibold text-gray-900">{t("admin.userManagement.addNewAccount")}</h2>
               <button onClick={() => setShowAddModal(false)} className="text-gray-400 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100"><X size={16} /></button>
             </div>
             <form onSubmit={handleAddUser} className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto">
               {addError && <div className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-lg p-3">{addError}</div>}
-              {[["Tên hiển thị", "name", "text", "Nguyễn Văn A", true], ["Email", "email", "email", "user@example.com", true], ["Mật khẩu", "password", "password", "Tối thiểu 6 ký tự", true], ["Số điện thoại", "phoneNumber", "tel", "0901234567", false]].map(([label, key, type, ph, req]) => (
+              {[[t("admin.userManagement.displayName"), "name", "text", t("admin.userManagement.displayNamePlaceholder"), true], ["Email", "email", "email", "user@example.com", true], [t("admin.userManagement.password"), "password", "password", t("admin.userManagement.passwordMinPlaceholder"), true], [t("admin.userManagement.phoneNumber"), "phoneNumber", "tel", "0901234567", false]].map(([label, key, type, ph, req]) => (
                 <div key={key} className="space-y-1">
                   <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{label}</label>
                   <input type={type} value={addForm[key]} onChange={e => setAddForm(p => ({ ...p, [key]: e.target.value }))}
@@ -935,7 +938,7 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                 </div>
               ))}
               <div className="space-y-1">
-                <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Vai trò</label>
+                <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t("admin.userManagement.role")}</label>
                 <select value={addForm.role} onChange={e => setAddForm(p => ({ ...p, role: e.target.value }))}
                   className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 bg-white">
                   <option value="CLIENT">Client</option>
@@ -944,41 +947,41 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                 </select>
               </div>
               <div className="space-y-1">
-                <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Ghi chú nội bộ</label>
+                <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t("admin.userManagement.internalNote")}</label>
                 <textarea value={addForm.adminNote} onChange={e => setAddForm(p => ({ ...p, adminNote: e.target.value }))}
-                  rows={2} placeholder="Ghi chú cho admin (không hiển thị cho người dùng)..."
+                  rows={2} placeholder={t("admin.userManagement.internalNotePlaceholder")}
                   className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 resize-none" />
               </div>
               {/* Plan activation */}
               <div className="border border-amber-100 rounded-xl p-4 bg-amber-50/50 space-y-3">
-                <p className="text-[11px] font-semibold text-amber-700 uppercase tracking-wider">Kích hoạt gói ngay (tuỳ chọn)</p>
+                <p className="text-[11px] font-semibold text-amber-700 uppercase tracking-wider">{t("admin.userManagement.activatePlanNow")}</p>
                 <select value={addForm.plan} onChange={e => setAddForm(p => ({ ...p, plan: e.target.value }))}
                   className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 bg-white">
-                  <option value="">— Không kích hoạt gói —</option>
-                  <option value="BASIC">BASIC (30 ngày)</option>
-                  <option value="FULL">FULL (30 ngày)</option>
-                  <option value="ANNUAL">ANNUAL (365 ngày)</option>
+                  <option value="">{t("admin.userManagement.noPlanActivation")}</option>
+                  <option value="BASIC">{t("admin.userManagement.basic30Days")}</option>
+                  <option value="FULL">{t("admin.userManagement.full30Days")}</option>
+                  <option value="ANNUAL">{t("admin.userManagement.annual365Days")}</option>
                 </select>
-                {addForm.plan && <p className="text-[11px] text-amber-600">Bypass PayOS — gói sẽ được kích hoạt ngay khi tạo tài khoản.</p>}
+                {addForm.plan && <p className="text-[11px] text-amber-600">{t("admin.userManagement.bypassPayosHint")}</p>}
               </div>
               {/* Coupon */}
               <div className="border border-sky-100 rounded-xl p-4 bg-sky-50/50 space-y-3">
-                <p className="text-[11px] font-semibold text-sky-700 uppercase tracking-wider">Tặng mã giảm giá (tuỳ chọn)</p>
+                <p className="text-[11px] font-semibold text-sky-700 uppercase tracking-wider">{t("admin.userManagement.giftDiscountCode")}</p>
                 <select value={addForm.couponId} onChange={e => setAddForm(p => ({ ...p, couponId: e.target.value }))}
                   className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-sky-400 bg-white">
-                  <option value="">— Không tặng coupon —</option>
+                  <option value="">{t("admin.userManagement.noCoupon")}</option>
                   {discounts.map(d => (
                     <option key={d.id} value={d.id}>
                       {d.code} — {d.type === "PERCENT" ? `${d.discountValue}%` : `${d.discountValue.toLocaleString("vi-VN")}đ`} off{d.description ? ` · ${d.description}` : ""}
                     </option>
                   ))}
                 </select>
-                <p className="text-[11px] text-sky-600">Coupon sẽ được đánh dấu đã sử dụng 1 lần.</p>
+                <p className="text-[11px] text-sky-600">{t("admin.userManagement.couponUseOnceHint")}</p>
               </div>
               <div className="flex justify-end gap-3 pt-2 border-t border-gray-100 sticky bottom-0 bg-white pb-1">
-                <button type="button" onClick={() => setShowAddModal(false)} className="px-4 py-2 text-[12px] text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">Hủy</button>
+                <button type="button" onClick={() => setShowAddModal(false)} className="px-4 py-2 text-[12px] text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">{t("admin.userManagement.cancel")}</button>
                 <button type="submit" disabled={addLoading} className="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg disabled:opacity-50">
-                  {addLoading ? "Đang tạo..." : "Tạo tài khoản"}
+                  {addLoading ? t("admin.userManagement.creating") : t("admin.userManagement.createAccount")}
                 </button>
               </div>
             </form>
@@ -991,20 +994,20 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
         <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 p-4">
           <div className="bg-white border border-gray-200 w-full max-w-sm shadow-xl rounded-xl overflow-hidden">
             <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
-              <h2 className="text-[15px] font-semibold text-gray-900">Đổi mật khẩu</h2>
+              <h2 className="text-[15px] font-semibold text-gray-900">{t("admin.userManagement.changePassword")}</h2>
               <button onClick={() => setPwdModal(null)} className="text-gray-400 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100"><X size={16} /></button>
             </div>
             <form onSubmit={handleChangePassword} className="px-6 py-5 space-y-4">
               {pwdError && <div className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-lg p-3">{pwdError}</div>}
               <div className="space-y-1">
-                <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Mật khẩu mới</label>
+                <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t("admin.userManagement.newPassword")}</label>
                 <input type="password" value={newPwd} onChange={e => setNewPwd(e.target.value)}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400" placeholder="Tối thiểu 6 ký tự" required />
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400" placeholder={t("admin.userManagement.passwordMinPlaceholder")} required />
               </div>
               <div className="flex justify-end gap-3 pt-2 border-t border-gray-100">
-                <button type="button" onClick={() => setPwdModal(null)} className="px-4 py-2 text-[12px] text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">Hủy</button>
+                <button type="button" onClick={() => setPwdModal(null)} className="px-4 py-2 text-[12px] text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">{t("admin.userManagement.cancel")}</button>
                 <button type="submit" disabled={pwdLoading} className="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg disabled:opacity-50">
-                  {pwdLoading ? "Đang lưu..." : "Cập nhật"}
+                  {pwdLoading ? t("admin.userManagement.saving") : t("admin.userManagement.update")}
                 </button>
               </div>
             </form>

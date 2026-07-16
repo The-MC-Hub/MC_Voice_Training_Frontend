@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { GraduationCap, Pencil, Check, X, Users, Tag, RefreshCw } from 'lucide-react';
 import { academyService } from '../../../services/academyService';
 
 const fmt = (n) => (n ?? 0).toLocaleString('vi-VN');
 
 const CoursePricingManager = () => {
+  const { t } = useTranslation();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editId, setEditId] = useState(null);
@@ -43,20 +45,20 @@ const CoursePricingManager = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-[18px] font-bold text-[--text-primary] flex items-center gap-2">
-            <GraduationCap size={18} className="text-amber-500" /> Khóa học — Giá & Giảm giá
+            <GraduationCap size={18} className="text-amber-500" /> {t('admin.coursePricingManager.title')}
           </h2>
           <p className="text-[12px] text-[--text-muted] mt-1">
-            Gói Basic trở lên học mọi khóa. Người dùng Free có thể mua lẻ từng khóa theo giá bên dưới.
+            {t('admin.coursePricingManager.subtitle')}
           </p>
         </div>
         <button onClick={load}
           className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[--border-subtle] text-[12px] text-[--text-secondary] hover:border-amber-500/40 transition-colors">
-          <RefreshCw size={13} /> Tải lại
+          <RefreshCw size={13} /> {t('admin.coursePricingManager.reload')}
         </button>
       </div>
 
       {loading ? (
-        <div className="py-16 text-center text-[12px] text-[--text-muted]">Đang tải...</div>
+        <div className="py-16 text-center text-[12px] text-[--text-muted]">{t('admin.coursePricingManager.loading')}</div>
       ) : (
         <div className="space-y-2.5">
           {courses.map(c => {
@@ -69,9 +71,9 @@ const CoursePricingManager = () => {
                 <div className="flex-1 min-w-0">
                   <p className="text-[14px] font-semibold text-[--text-primary] truncate">{c.title}</p>
                   <div className="flex items-center gap-3 mt-1 text-[11px] text-[--text-muted]">
-                    <span>{c.totalLessons ?? 0} bài luyện · {c.totalReadings ?? 0} bài đọc · {c.totalQuizQuestions ?? 0} quiz</span>
+                    <span>{t('admin.coursePricingManager.statsLine', { lessons: c.totalLessons ?? 0, readings: c.totalReadings ?? 0, quiz: c.totalQuizQuestions ?? 0 })}</span>
                     {c.totalEnrollments != null && (
-                      <span className="flex items-center gap-1"><Users size={11} /> {c.totalEnrollments} học viên</span>
+                      <span className="flex items-center gap-1"><Users size={11} /> {t('admin.coursePricingManager.enrollments', { count: c.totalEnrollments })}</span>
                     )}
                   </div>
                 </div>
@@ -79,19 +81,19 @@ const CoursePricingManager = () => {
                 {editing ? (
                   <div className="flex items-center gap-2.5 flex-wrap">
                     <div>
-                      <label className="block text-[10px] text-[--text-muted] uppercase mb-1">Giá (VNĐ)</label>
+                      <label className="block text-[10px] text-[--text-muted] uppercase mb-1">{t('admin.coursePricingManager.priceLabel')}</label>
                       <input type="number" min="0" step="1000" value={form.priceVnd}
                         onChange={e => setForm(f => ({ ...f, priceVnd: e.target.value }))}
                         className="w-32 px-3 py-2 rounded-lg bg-[--bg-base] border border-[--border-subtle] text-[13px] text-[--text-primary] focus:border-amber-500 outline-none" />
                     </div>
                     <div>
-                      <label className="block text-[10px] text-[--text-muted] uppercase mb-1">Giảm (%)</label>
+                      <label className="block text-[10px] text-[--text-muted] uppercase mb-1">{t('admin.coursePricingManager.discountLabel')}</label>
                       <input type="number" min="0" max="100" value={form.discountPercent}
                         onChange={e => setForm(f => ({ ...f, discountPercent: e.target.value }))}
                         className="w-20 px-3 py-2 rounded-lg bg-[--bg-base] border border-[--border-subtle] text-[13px] text-[--text-primary] focus:border-amber-500 outline-none" />
                     </div>
                     <div className="text-right mr-1">
-                      <p className="text-[10px] text-[--text-muted] uppercase mb-1">Giá cuối</p>
+                      <p className="text-[10px] text-[--text-muted] uppercase mb-1">{t('admin.coursePricingManager.finalPriceLabel')}</p>
                       <p className="text-[14px] font-bold text-amber-500">{fmt(finalPrice)}đ</p>
                     </div>
                     <button onClick={() => save(c.id)} disabled={saving}
@@ -118,7 +120,7 @@ const CoursePricingManager = () => {
                     )}
                     <button onClick={() => startEdit(c)}
                       className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-[--border-subtle] text-[12px] text-[--text-secondary] hover:border-amber-500/40 hover:text-amber-500 transition-colors">
-                      <Pencil size={12} /> Chỉnh giá
+                      <Pencil size={12} /> {t('admin.coursePricingManager.editPrice')}
                     </button>
                   </div>
                 )}
@@ -126,7 +128,7 @@ const CoursePricingManager = () => {
             );
           })}
           {!courses.length && (
-            <div className="py-16 text-center text-[12px] text-[--text-muted]">Chưa có khóa học nào.</div>
+            <div className="py-16 text-center text-[12px] text-[--text-muted]">{t('admin.coursePricingManager.empty')}</div>
           )}
         </div>
       )}

@@ -693,10 +693,22 @@
     "claiming": "Claiming...",
     "claimBtn": "Claim -50% Voucher Now",
     "quests": {
-      "profile": { "label": "Complete your profile", "desc": "Fill in your name and profile picture" },
-      "practice": { "label": "First practice", "desc": "Complete 1 AI coaching lesson" },
-      "courses": { "label": "Explore courses", "desc": "Visit the Courses page" },
-      "leaderboard": { "label": "Check the leaderboard", "desc": "Visit the Leaderboard page" }
+      "profile": {
+        "label": "Complete your profile",
+        "desc": "Fill in your name and profile picture"
+      },
+      "practice": {
+        "label": "First practice",
+        "desc": "Complete 1 AI coaching lesson"
+      },
+      "courses": {
+        "label": "Explore courses",
+        "desc": "Visit the Courses page"
+      },
+      "leaderboard": {
+        "label": "Check the leaderboard",
+        "desc": "Visit the Leaderboard page"
+      }
     }
   },
   "sessionCard": {
@@ -725,29 +737,80 @@
     "useNow": "Use Now",
     "ads": {
       "free": {
-        "0": { "tag": "Most Popular", "title": "Upgrade to Basic", "body": "20 AI sessions/month · Unlock all lessons · Detailed reports", "cta": "Upgrade Now" },
-        "1": { "tag": "Learn 3× Faster", "title": "Unlock 50+ Lessons", "body": "Free plan limits content. Basic unlocks the full professional MC path.", "cta": "View Basic Plan" },
-        "2": { "tag": "Top Tier", "title": "Full Plan — Unlimited AI", "body": "Unlimited AI analysis · Personal coaching · Advanced courses", "cta": "Explore Full" }
+        "0": {
+          "tag": "Most Popular",
+          "title": "Upgrade to Basic",
+          "body": "20 AI sessions/month · Unlock all lessons · Detailed reports",
+          "cta": "Upgrade Now"
+        },
+        "1": {
+          "tag": "Learn 3× Faster",
+          "title": "Unlock 50+ Lessons",
+          "body": "Free plan limits content. Basic unlocks the full professional MC path.",
+          "cta": "View Basic Plan"
+        },
+        "2": {
+          "tag": "Top Tier",
+          "title": "Full Plan — Unlimited AI",
+          "body": "Unlimited AI analysis · Personal coaching · Advanced courses",
+          "cta": "Explore Full"
+        }
       },
       "basic": {
-        "0": { "tag": "Upgrade", "title": "Full Plan — Unlimited AI", "body": "Unlimited AI · All premium courses · 1-on-1 AI coaching.", "cta": "Upgrade to Full" },
-        "1": { "tag": "Save 44%", "title": "Annual — 166k/month", "body": "Pay yearly and save nearly 1M VND. Unlock everything permanently.", "cta": "View Annual" }
+        "0": {
+          "tag": "Upgrade",
+          "title": "Full Plan — Unlimited AI",
+          "body": "Unlimited AI · All premium courses · 1-on-1 AI coaching.",
+          "cta": "Upgrade to Full"
+        },
+        "1": {
+          "tag": "Save 44%",
+          "title": "Annual — 166k/month",
+          "body": "Pay yearly and save nearly 1M VND. Unlock everything permanently.",
+          "cta": "View Annual"
+        }
       },
       "full": {
-        "0": { "tag": "Save 44%", "title": "Switch to Annual", "body": "Just 1,990,000đ/year — save 980,000đ compared to monthly.", "cta": "Upgrade to Annual" }
+        "0": {
+          "tag": "Save 44%",
+          "title": "Switch to Annual",
+          "body": "Just 1,990,000đ/year — save 980,000đ compared to monthly.",
+          "cta": "Upgrade to Annual"
+        }
       }
     }
   },
   "avatarFrame": {
     "unlockHint3Days": "Keep a 3-day streak to unlock your first frame.",
     "frames": {
-      "none": { "label": "No Frame", "description": "Keep a 3-day streak to unlock your first frame." },
-      "spark": { "label": "Spark", "description": "Keep a 7-day streak to reach Flame." },
-      "flame": { "label": "Flame", "description": "Keep a 14-day streak to reach Storm." },
-      "storm": { "label": "Storm", "description": "Keep a 30-day streak to reach Legend." },
-      "legend": { "label": "Legend", "description": "Keep a 60-day streak to reach Elite." },
-      "elite": { "label": "Elite", "description": "Keep a 100-day streak to reach Immortal." },
-      "immortal": { "label": "Immortal", "description": "The absolute pinnacle. You're an MC Hub legend." }
+      "none": {
+        "label": "No Frame",
+        "description": "Keep a 3-day streak to unlock your first frame."
+      },
+      "spark": {
+        "label": "Spark",
+        "description": "Keep a 7-day streak to reach Flame."
+      },
+      "flame": {
+        "label": "Flame",
+        "description": "Keep a 14-day streak to reach Storm."
+      },
+      "storm": {
+        "label": "Storm",
+        "description": "Keep a 30-day streak to reach Legend."
+      },
+      "legend": {
+        "label": "Legend",
+        "description": "Keep a 60-day streak to reach Elite."
+      },
+      "elite": {
+        "label": "Elite",
+        "description": "Keep a 100-day streak to reach Immortal."
+      },
+      "immortal": {
+        "label": "Immortal",
+        "description": "The absolute pinnacle. You're an MC Hub legend."
+      }
     }
   },
   "floatingUpgradeCard": {
@@ -755,16 +818,46 @@
     "later": "Later",
     "cards": {
       "free": {
-        "0": { "tag": "Most Popular", "title": "Unlimited AI Analysis", "desc": "The FREE plan only has 5 total sessions. Basic gives you 20/month + detailed reports.", "cta": "Upgrade to Basic" },
-        "1": { "tag": "Learn 3× Faster", "title": "Unlock all 50+ lessons", "desc": "Free locks many advanced lessons. Upgrade to learn the full professional MC path.", "cta": "View Basic Plan" },
-        "2": { "tag": "New", "title": "Personalized AI Scripts", "desc": "AI writes MC scripts in your own style. Available from the Basic plan and up.", "cta": "Try Now" }
+        "0": {
+          "tag": "Most Popular",
+          "title": "Unlimited AI Analysis",
+          "desc": "The FREE plan only has 5 total sessions. Basic gives you 20/month + detailed reports.",
+          "cta": "Upgrade to Basic"
+        },
+        "1": {
+          "tag": "Learn 3× Faster",
+          "title": "Unlock all 50+ lessons",
+          "desc": "Free locks many advanced lessons. Upgrade to learn the full professional MC path.",
+          "cta": "View Basic Plan"
+        },
+        "2": {
+          "tag": "New",
+          "title": "Personalized AI Scripts",
+          "desc": "AI writes MC scripts in your own style. Available from the Basic plan and up.",
+          "cta": "Try Now"
+        }
       },
       "basic": {
-        "0": { "tag": "Top Upgrade", "title": "Unlimited AI + Personal Coaching", "desc": "Full plan: unlimited AI analysis, premium courses, 1-on-1 AI coaching.", "cta": "Upgrade to Full" },
-        "1": { "tag": "Save 44%", "title": "Annual — just 166k/month", "desc": "Pay yearly and save nearly 1M VND compared to monthly. Unlock everything.", "cta": "View Annual" }
+        "0": {
+          "tag": "Top Upgrade",
+          "title": "Unlimited AI + Personal Coaching",
+          "desc": "Full plan: unlimited AI analysis, premium courses, 1-on-1 AI coaching.",
+          "cta": "Upgrade to Full"
+        },
+        "1": {
+          "tag": "Save 44%",
+          "title": "Annual — just 166k/month",
+          "desc": "Pay yearly and save nearly 1M VND compared to monthly. Unlock everything.",
+          "cta": "View Annual"
+        }
       },
       "full": {
-        "0": { "tag": "Save 44%", "title": "Switch to Annual", "desc": "Pay yearly for just 1,990,000đ — save 980,000đ compared to monthly.", "cta": "Upgrade to Annual" }
+        "0": {
+          "tag": "Save 44%",
+          "title": "Switch to Annual",
+          "desc": "Pay yearly for just 1,990,000đ — save 980,000đ compared to monthly.",
+          "cta": "Upgrade to Annual"
+        }
       }
     }
   },
@@ -781,12 +874,30 @@
       "productLaunch": "Product Launch"
     },
     "difficulty": {
-      "easy": { "label": "Easy", "tag": "Beginner" },
-      "beginner": { "label": "Beginner", "tag": "Beginner" },
-      "intermediate": { "label": "Intermediate", "tag": "Experienced" },
-      "medium": { "label": "Intermediate", "tag": "Experienced" },
-      "advanced": { "label": "Advanced", "tag": "Professional MC" },
-      "hard": { "label": "Hard", "tag": "Professional MC" }
+      "easy": {
+        "label": "Easy",
+        "tag": "Beginner"
+      },
+      "beginner": {
+        "label": "Beginner",
+        "tag": "Beginner"
+      },
+      "intermediate": {
+        "label": "Intermediate",
+        "tag": "Experienced"
+      },
+      "medium": {
+        "label": "Intermediate",
+        "tag": "Experienced"
+      },
+      "advanced": {
+        "label": "Advanced",
+        "tag": "Professional MC"
+      },
+      "hard": {
+        "label": "Hard",
+        "tag": "Professional MC"
+      }
     },
     "practiceBtn": "Practice",
     "heading": "Popular Lessons",
@@ -841,8 +952,17 @@
     }
   },
   "upgradeBanner": {
-    "planLabels": { "free": "Free", "basic": "Basic", "full": "Full", "annual": "Annual" },
-    "nextPlanLabels": { "free": "Basic (199k/month)", "basic": "Full (299k/month)", "full": "Annual (1.99M/year)" },
+    "planLabels": {
+      "free": "Free",
+      "basic": "Basic",
+      "full": "Full",
+      "annual": "Annual"
+    },
+    "nextPlanLabels": {
+      "free": "Basic (199k/month)",
+      "basic": "Full (299k/month)",
+      "full": "Annual (1.99M/year)"
+    },
     "stripLimitReached": "You've used all {{limit}} AI sessions of the {{plan}} plan.",
     "stripRemaining": "{{remaining}} AI sessions left — {{plan}} plan limits {{limit}}.",
     "upgradeToLabel": "Upgrade {{label}}",
@@ -851,9 +971,21 @@
     "usedLabel": "{{count}} used",
     "totalLabel": "{{count}} total",
     "upgradeToLabelLong": "Upgrade to {{label}}",
-    "benefitsBasic": ["20 AI analyses/month", "All lesson categories", "Detailed reports"],
-    "benefitsFull": ["Unlimited AI", "All premium courses", "Personal AI coaching"],
-    "benefitsAnnual": ["Save 44% vs monthly", "Priority support", "Earliest beta features"],
+    "benefitsBasic": [
+      "20 AI analyses/month",
+      "All lesson categories",
+      "Detailed reports"
+    ],
+    "benefitsFull": [
+      "Unlimited AI",
+      "All premium courses",
+      "Personal AI coaching"
+    ],
+    "benefitsAnnual": [
+      "Save 44% vs monthly",
+      "Priority support",
+      "Earliest beta features"
+    ],
     "limitReachedTitle": "You've used all {{limit}} AI sessions of the {{plan}} plan",
     "warningTitle": "Running low on AI sessions — {{remaining}}/{{limit}} left",
     "limitReachedDesc": "Upgrade to keep analyzing your voice with AI.",
@@ -874,7 +1006,65 @@
     "units": "Units",
     "backToHome": "Back to Home",
     "start": "Start",
-    "page": "Page"
+    "page": "Page",
+    "level": "Level",
+    "cancel": "Cancel"
+  },
+  "certificateModal": {
+    "yourCertificate": "Your Certificate",
+    "previewCertificate": "Certificate Preview",
+    "completedNote": "Congratulations! You've successfully completed this and earned the certificate.",
+    "previewNote": "This is a preview — complete the course to unlock the official certificate.",
+    "downloadPng": "Download PNG"
+  },
+  "premiumModal": {
+    "initError": "Could not initialize the upgrade order. Please try again.",
+    "simulationError": "Payment simulation failed. Please try again.",
+    "upgradeSuccess": "Upgrade Successful!",
+    "welcomeTo": "Welcome to",
+    "unlimitedUnlocked": "You've unlocked all unlimited features.",
+    "premiumTier": "Premium Tier",
+    "upgradeTo": "Upgrade to",
+    "tagline": "Unlimited practice, deep AI analysis, ad-free experience.",
+    "feature1Title": "Unlimited AI Coaching",
+    "feature1Desc": "Practice as much as you want, no daily session limits.",
+    "feature2Title": "Deep Analytics",
+    "feature2Desc": "Unlock every advanced metric: voice quality, filler words, intonation.",
+    "feature3Title": "Ad-Free Experience",
+    "feature3Desc": "Stay focused on your practice without ad interruptions.",
+    "promoOffer": "Special Offer",
+    "generatingQr": "Generating payment QR code...",
+    "tryAgain": "Try Again",
+    "accountOwner": "Account Owner",
+    "bank": "Bank",
+    "accountNo": "Account Number",
+    "transferMemo": "Transfer Memo",
+    "doubleClickCopy": "Double-click to copy",
+    "upgrading": "Upgrading...",
+    "simulatePayment": "Simulate Payment",
+    "waitingPayment": "Waiting for payment...",
+    "autoDetected": "The system will automatically detect once payment is confirmed."
+  },
+  "questGuide": {
+    "profile": "Profile",
+    "practice": "Practice",
+    "courses": "Courses",
+    "reading": "Reading",
+    "leaderboard": "Leaderboard",
+    "clickToContinue": "Click to continue",
+    "skip": "Skip",
+    "finish": "Finish",
+    "next": "Next"
+  },
+  "highlightTooltip": {
+    "highlight": "Highlight"
+  },
+  "notesSidebar": {
+    "title": "Notes",
+    "empty": "No notes yet",
+    "emptyHint": "Highlight text to add a note.",
+    "notePlaceholder": "Enter your note...",
+    "noNote": "No note content yet"
   },
   "learning": {
     "title": "Career Roadmap",
@@ -1269,33 +1459,66 @@
       "triggers": {
         "newLesson": {
           "label": "New Lesson",
-          "fields": { "lessonTitle": "Lesson name" },
-          "placeholders": { "lessonTitle": "Voice pausing technique" }
+          "fields": {
+            "lessonTitle": "Lesson name"
+          },
+          "placeholders": {
+            "lessonTitle": "Voice pausing technique"
+          }
         },
         "discount": {
           "label": "Discount",
-          "fields": { "planName": "Plan name", "discountPercent": "% off", "discountCode": "Code" },
-          "placeholders": { "planName": "FULL plan" }
+          "fields": {
+            "planName": "Plan name",
+            "discountPercent": "% off",
+            "discountCode": "Code"
+          },
+          "placeholders": {
+            "planName": "FULL plan"
+          }
         },
         "maintenance": {
           "label": "Maintenance",
-          "fields": { "time": "Time", "duration": "Duration" },
-          "placeholders": { "time": "Sunday 7/14 from 2:00-4:00", "duration": "2 hours" }
+          "fields": {
+            "time": "Time",
+            "duration": "Duration"
+          },
+          "placeholders": {
+            "time": "Sunday 7/14 from 2:00-4:00",
+            "duration": "2 hours"
+          }
         },
         "socialPost": {
           "label": "FB Post",
-          "fields": { "postTitle": "Title", "postUrl": "Link" },
-          "placeholders": { "postTitle": "10 common MC mistakes" }
+          "fields": {
+            "postTitle": "Title",
+            "postUrl": "Link"
+          },
+          "placeholders": {
+            "postTitle": "10 common MC mistakes"
+          }
         },
         "featureUpdate": {
           "label": "New Feature",
-          "fields": { "featureName": "Feature name", "description": "Description" },
-          "placeholders": { "featureName": "Voice analysis v2", "description": "40% improvement..." }
+          "fields": {
+            "featureName": "Feature name",
+            "description": "Description"
+          },
+          "placeholders": {
+            "featureName": "Voice analysis v2",
+            "description": "40% improvement..."
+          }
         },
         "competition": {
           "label": "Competition",
-          "fields": { "competitionName": "Competition name", "description": "Description" },
-          "placeholders": { "competitionName": "MC Talent July", "description": "First prize 500k..." }
+          "fields": {
+            "competitionName": "Competition name",
+            "description": "Description"
+          },
+          "placeholders": {
+            "competitionName": "MC Talent July",
+            "description": "First prize 500k..."
+          }
         }
       },
       "triggerPanel": {
@@ -1710,6 +1933,1274 @@
         "upgradeRate": "Upgrade Rate",
         "certifiedMcRatio": "Certified MC / Total MC",
         "footerNote": "Internal document, auto-generated from The MC Hub Admin System."
+      }
+    },
+    "analyticsSection": {
+      "noData": "No data yet",
+      "ga4ReportTitle": "GA4 Tracking System Report",
+      "ga4MeasurementId": "Measurement ID: G-S6MV5SK3E0 · MC Voice Training Web",
+      "openGa4": "Open GA4",
+      "tabData": "System Data",
+      "tabGa4": "📊 GA4 Report",
+      "usersToday": "Users Today",
+      "newRegistrations": "New Registrations",
+      "loginsToday": "Logins Today",
+      "activeSessions": "Active Sessions",
+      "sessionsToday": "Sessions Today",
+      "aiSessions": "AI Sessions",
+      "premiumUsers": "Premium Users",
+      "payingUsers": "Paying Users",
+      "totalUsers": "Total Users",
+      "allTime": "All time",
+      "active7d": "Active (7 days)",
+      "hasLoggedIn": "Has logged in",
+      "totalLogins30d": "Total Logins 30d",
+      "last30Days": "Last 30 days",
+      "sessions30d": "Sessions 30 days",
+      "loginTrend": "Login Trend",
+      "loginTrendSub": "Login sessions over time",
+      "todayByHour": "Today by hour",
+      "last12Months": "Last 12 months",
+      "last30DaysShort": "Last 30 days",
+      "hour": "Hour",
+      "day": "Day",
+      "month": "Month",
+      "loginsTooltip": "Logins",
+      "aiSessionTrend": "AI Practice Sessions",
+      "aiSessionTrendSub": "Number of voice practice sessions over time",
+      "sessionsTooltip": "Sessions",
+      "newUsersByDay": "New Users by Day",
+      "newUsersByMonth": "New Users by Month",
+      "newUsersTooltip": "New Users",
+      "peakHoursTitle": "Peak Access Hours",
+      "peakHoursSub": "Login distribution by hour of day (30 days)",
+      "topHour": "Top hour:",
+      "usesUnit": "uses",
+      "accountStatus": "Account Status",
+      "accountStatusSub": "Active vs inactive",
+      "activeStatus": "Active",
+      "inactiveStatus": "Inactive",
+      "active7dLabel": "Active 7 days",
+      "planDistribution": "Plan Distribution",
+      "planDistributionSub": "Number of users per plan",
+      "usersTooltip": "Users",
+      "roleDistribution": "Role Distribution",
+      "roleDistributionSub": "Number of users by system role",
+      "loginsByMonth": "Logins by Month"
+    },
+    "marketingManager": {
+      "title": "Marketing",
+      "subtitle": "Manage social feed and send marketing emails to users.",
+      "tabSocialFeed": "Social Feed",
+      "tabEmailCampaigns": "Email Campaigns",
+      "tabTemplates": "Templates",
+      "tabSendCampaign": "Send Campaign",
+      "tabHistory": "History",
+      "socialFeedDesc": "Manage Facebook posts shown on the homepage.",
+      "preview": "Preview",
+      "addPost": "Add Post",
+      "previewCarouselHint": "Carousel preview (live data from DB)",
+      "addNewPost": "Add New Post",
+      "editPost": "Edit Post",
+      "imageOptional": "Image (optional)",
+      "uploadImage": "Upload image",
+      "thumbnailHint": "16:9 thumbnail image. Or enter a URL:",
+      "descriptionRequired": "Description *",
+      "shortDescPlaceholder": "Short description...",
+      "fbLinkRequired": "Facebook post link *",
+      "priority": "Priority",
+      "visibility": "Visibility",
+      "show": "Show",
+      "hide": "Hide",
+      "saving": "Saving...",
+      "savePost": "Save Post",
+      "cancel": "Cancel",
+      "loading": "Loading...",
+      "noPosts": "No posts yet.",
+      "clicksCount": "{{count}} clicks",
+      "visibleOfTotal": "{{visible}} visible / {{total}} total",
+      "saveFailed": "Save failed.",
+      "confirmDeletePost": "Delete this post?",
+      "deleteFailed": "Delete failed.",
+      "toggleFailed": "Failed to change status.",
+      "previewEmail": "Preview email",
+      "exactRenderHint": "Renders exactly as in the inbox",
+      "fillContentHint": "Fill in content on the left to preview the email here",
+      "templatesDesc": "Create and manage HTML templates for email campaigns.",
+      "createTemplate": "Create Template",
+      "editTemplateTitle": "Edit Template",
+      "createTemplateTitle": "Create Template",
+      "templateName": "Template name",
+      "emailSubject": "Email subject",
+      "designBuilder": "Design Builder",
+      "rawHtml": "Raw HTML",
+      "rawHtmlHint": "Direct HTML, bypasses builder",
+      "generateFromFieldsHint": "Generate HTML from fields",
+      "rawHtmlRequired": "Raw HTML *",
+      "personalizeHintPrefix": "Use",
+      "and": "and",
+      "personalizeHintSuffix": "to personalize.",
+      "contentTitle": "Content title",
+      "ctaButtonText": "CTA button text",
+      "ctaButtonLink": "CTA button link",
+      "logoUrl": "Logo URL",
+      "bannerUrl": "Banner URL",
+      "mainContent": "Main content",
+      "update": "Update",
+      "noTemplates": "No templates yet.",
+      "subjectLabel": "Subject",
+      "test": "Test",
+      "edit": "Edit",
+      "testEmailPlaceholder": "Test recipient email...",
+      "sendTest": "Send test",
+      "confirmDeleteTemplate": "Delete this template?",
+      "testMailSent": "Test email sent!",
+      "sendFailed": "Send failed.",
+      "dedupHint": "The system automatically dedups and sends to each person with a 2-second delay.",
+      "chooseTemplate": "Choose template",
+      "subjectPlaceholder": "Subject shown in the inbox...",
+      "targetAudience": "Target audience",
+      "targetAll": "All",
+      "targetByPlan": "By plan",
+      "targetByRole": "By role",
+      "targetPremium": "Premium",
+      "targetCustomEmail": "Custom email",
+      "choosePlanMulti": "Choose plans (multiple allowed)",
+      "chooseRoleMulti": "Choose roles (multiple allowed)",
+      "customEmailListHint": "Email list (one per line or comma-separated)",
+      "loadList": "Load list",
+      "reloadList": "Reload list",
+      "selectedPrefix": "Selected",
+      "peopleUnit": "people",
+      "sendCampaign": "Send Campaign",
+      "noRecipientsSelected": "No recipients selected.",
+      "confirmSendCampaign": "Send campaign to {{count}} selected people?",
+      "campaignStarted": "Campaign started",
+      "totalRecipients": "Total recipients",
+      "checkHistoryTabHint": "Check the \"History\" tab to track progress.",
+      "campaignHistoryDesc": "History of campaigns that have been run.",
+      "refresh": "Refresh",
+      "noCampaigns": "No campaigns yet.",
+      "noLogsYet": "No logs yet.",
+      "selectAll": "Select all",
+      "checkedOfTotalPeople": "{{checked}} / {{total}} people",
+      "loadingList": "Loading list...",
+      "noRecipientsFound": "No recipients found."
+    },
+    "userManagement": {
+      "title": "User Management",
+      "totalPrefix": "Total",
+      "accountsUnit": "accounts",
+      "searchPlaceholder": "Search by name, email...",
+      "refreshList": "Refresh list",
+      "add": "Add",
+      "all": "All",
+      "allPlans": "All plans",
+      "sortNewest": "Newest",
+      "sortNameAZ": "Name A→Z",
+      "sortSessions": "Sessions ↓",
+      "sortHighestPlan": "Highest plan",
+      "colUser": "User",
+      "colRole": "Role",
+      "colPlan": "Plan",
+      "colReferralCode": "Referral Code",
+      "colReferred": "Referred",
+      "colStatus": "Status",
+      "colActions": "Actions",
+      "noUsersFound": "No users found",
+      "viewDetails": "View details",
+      "sendResetEmail": "Send reset email",
+      "changePassword": "Change password",
+      "revoke": "Revoke",
+      "certify": "Certify",
+      "lock": "Lock",
+      "unlock": "Unlock",
+      "disable": "Disable",
+      "active": "Active",
+      "locked": "Locked",
+      "addNewAccount": "Add New Account",
+      "displayName": "Display name",
+      "displayNamePlaceholder": "John Doe",
+      "password": "Password",
+      "passwordMinPlaceholder": "At least 6 characters",
+      "phoneNumber": "Phone number",
+      "role": "Role",
+      "internalNote": "Internal note",
+      "internalNotePlaceholder": "Note for admin (not shown to user)...",
+      "activatePlanNow": "Activate plan now (optional)",
+      "noPlanActivation": "— No plan activation —",
+      "basic30Days": "BASIC (30 days)",
+      "full30Days": "FULL (30 days)",
+      "annual365Days": "ANNUAL (365 days)",
+      "bypassPayosHint": "Bypasses PayOS — the plan will be activated immediately upon account creation.",
+      "giftDiscountCode": "Gift discount code (optional)",
+      "noCoupon": "— No coupon —",
+      "couponUseOnceHint": "The coupon will be marked as used once.",
+      "cancel": "Cancel",
+      "creating": "Creating...",
+      "createAccount": "Create Account",
+      "newPassword": "New password",
+      "saving": "Saving...",
+      "update": "Update",
+      "fillAllFields": "Please fill in all required information.",
+      "createAccountSuccess": "Account created successfully.",
+      "createAccountFailed": "Failed to create account.",
+      "resetEmailSentFlash": "Password reset email sent to {{name}}.",
+      "errorPrefix": "Error: {{message}}",
+      "sendEmailFailed": "Could not send email.",
+      "passwordMinLength": "Password must be at least 6 characters.",
+      "changePasswordSuccess": "Password changed successfully.",
+      "changePasswordFailed": "Failed to change password.",
+      "confirmDisableAccount": "Disable account \"{{name}}\"? The account will be locked but data will be retained.",
+      "disableAccountSuccess": "Account {{name}} disabled.",
+      "disableAccountFailed": "Could not disable account.",
+      "tabInfo": "Info",
+      "tabStats": "Stats",
+      "tabNotify": "Notify",
+      "certified": "Certified",
+      "email": "Email",
+      "registeredAt": "Registered",
+      "aiSessionsUsed": "AI Sessions used",
+      "planExpiresAt": "Plan expires",
+      "mcProfile": "MC Profile",
+      "noMcProfile": "No MC profile yet.",
+      "stageName": "Stage name",
+      "location": "Location",
+      "experience": "Experience",
+      "yearsUnit": "{{count}} years",
+      "rate": "Rate",
+      "specialties": "Specialties",
+      "quickActions": "Quick actions",
+      "revokeCertification": "Revoke certification",
+      "grantCertification": "Grant MC certification",
+      "lockAccount": "Lock account",
+      "unlockAccount": "Unlock account",
+      "loadingStats": "Loading stats...",
+      "noStatsData": "No stats data",
+      "reload": "Reload",
+      "totalXp": "total XP",
+      "totalSessions": "Total sessions",
+      "avgScore": "Average score",
+      "bestScore": "Best score",
+      "currentStreak": "Current streak",
+      "recordDays": "Record: {{count}} days",
+      "thisWeek": "This week",
+      "lastPractice": "Last practice",
+      "totalPracticeHours": "Total practice hours",
+      "hoursValue": "{{hours}} hrs",
+      "last5Sessions": "Last 5 sessions",
+      "loadStatsForSuggestions": "Load stats for smart suggestions",
+      "smartSuggestions": "Smart suggestions",
+      "analyzing": "Analyzing...",
+      "composeEmail": "Compose email",
+      "subject": "Subject",
+      "emailSubjectPlaceholder": "Email subject...",
+      "content": "Content",
+      "emailContentPlaceholder": "Email content...",
+      "draftHintPrefix": "This will create a draft sent to",
+      "draftHintSuffix": "Go to Notifications → Pending to review and send for real.",
+      "draftCreatedFlash": "✓ Draft created — go to Notifications → Pending to send.",
+      "createFailed": "Creation failed.",
+      "createDraft": "Create draft",
+      "suggestions": {
+        "inactiveLabel": "Hasn't logged in for a while ({{days}} days)",
+        "inactiveSubject": "We miss you! — MCHub Voice Training",
+        "inactiveContent": "Hi {{name}},\n\nWe noticed you haven't logged in to MCHub Voice Training in {{days}} days.\n\nCome back and practice today — just 15 minutes a day can significantly improve your professional MC voice!\n\nVisit: https://mchub.vn\n\nMCHub Team",
+        "activeLearnerLabel": "Active learner ({{count}} sessions)",
+        "activeLearnerSubject": "You're making great progress! — MCHub",
+        "activeLearnerContent": "Hi {{name}},\n\nYou've completed {{count}} practice sessions — that's fantastic!\n\nYour average score is {{score}}/100. Keep up this momentum.\n\nIf you need further guidance on your MC development path, the MCHub team is always ready to help.\n\nMCHub Team",
+        "lowScoreLabel": "Low average score ({{score}}/100)",
+        "lowScoreSubject": "Tips to improve your MC voice — MCHub",
+        "lowScoreContent": "Hi {{name}},\n\nWe noticed you're putting in effort practicing. Your current average score: {{score}}/100.\n\nSome tips to improve:\n• Practice consistently every day, at least 10 minutes\n• Focus on rhythm and intonation lessons\n• Listen back to your recordings to self-assess\n\nWe hope you reach a high score soon!\n\nMCHub Team",
+        "highScoreLabel": "Excellent score ({{score}}/100)",
+        "highScoreSubject": "Congratulations on your achievement! — MCHub",
+        "highScoreContent": "Hi {{name}},\n\nYou're achieving an average score of {{score}}/100 — among the top learners on the platform!\n\nMCHub appreciates your effort. Share your journey with the MC community to inspire others.\n\nMCHub Team",
+        "streakLabel": "{{count}}-day streak",
+        "streakSubject": "{{count}}-day streak — Keep breaking limits!",
+        "streakContent": "Hi {{name}},\n\nYou're on a {{count}}-day practice streak — impressive!\n\nYour personal record is {{longest}} days. Keep going to beat your record!\n\nMCHub Team",
+        "upgradeLabel": "Currently on FREE plan — upgrade suggestion",
+        "upgradeSubject": "Unlock all MCHub features",
+        "upgradeContent": "Hi {{name}},\n\nYou're currently using MCHub's FREE plan. To take full advantage of all lessons, advanced AI analysis, and unlimited practice sessions, explore our Premium plans.\n\nSee details at: https://mchub.vn/pricing\n\nMCHub Team"
+      }
+    },
+    "securityLogs": {
+      "title": "Security Logs",
+      "reload": "Reload",
+      "recordsCount": "{{count}} records",
+      "failedCount": "{{count}} failed",
+      "searchPlaceholder": "Search IP, userId, action...",
+      "allStatuses": "All statuses",
+      "success": "Success",
+      "failed": "Failed",
+      "allActions": "All actions",
+      "purgeLogsOlderThan": "Purge logs older than",
+      "daysUnit": "days",
+      "purge": "Purge",
+      "min3DaysWarningPrefix": "Logs from the",
+      "min3DaysWarningBold": "last 3 days",
+      "min3DaysWarningSuffix": "cannot be deleted regardless of setting — to ensure traceability in case of recent intrusion.",
+      "loading": "Loading...",
+      "noRecords": "No records found.",
+      "colTime": "Time",
+      "colAction": "Action",
+      "colIp": "IP",
+      "colDevice": "Device",
+      "colStatus": "Status",
+      "showingCount": "Showing {{shown}} / {{total}} records",
+      "cannotPurgeUnder3Days": "Cannot purge logs newer than 3 days.",
+      "confirmPurge": "Purge all logs older than {{days}} days?\n\nLogs from the last 3 days will always be retained regardless of setting.\nThis action cannot be undone.",
+      "purgeResult": "Deleted {{count}} records (older than {{days}} days).",
+      "purgeFailed": "Purge failed: {{message}}",
+      "userInfo": "User information",
+      "fullName": "Full name",
+      "phoneNumber": "Phone number",
+      "role": "Role",
+      "status": "Status",
+      "active": "Active",
+      "locked": "Locked",
+      "plan": "Plan",
+      "registered": "Registered",
+      "userNotFound": "User information not found (may have been deleted)",
+      "details": "Details",
+      "error": "Error",
+      "actions": {
+        "authLogin": "Login",
+        "authLogout": "Logout",
+        "authRegister": "Register",
+        "authChangePassword": "Change password",
+        "authResetPassword": "Reset password",
+        "adminLoginOtpVerify": "Admin OTP verify",
+        "adminDeleteUser": "Delete user",
+        "adminUpdateUserStatus": "Update status",
+        "adminChangePassword": "Admin change password",
+        "adminCreateUser": "Create user",
+        "adminSendResetEmail": "Send reset email",
+        "adminNotifyEmail": "Send email notification",
+        "adminMigrateDb": "Migrate database",
+        "adminPurgeLogs": "Purge old logs",
+        "adminBanUser": "Ban account",
+        "adminUnbanUser": "Unban account",
+        "paymentInitiate": "Initiate payment",
+        "paymentSuccess": "Payment successful",
+        "paymentFailed": "Payment failed",
+        "profileUpdate": "Update profile"
+      }
+    },
+    "coursePricingManager": {
+      "title": "Courses — Pricing & Discounts",
+      "subtitle": "Basic plan and above can study any course. Free users can purchase individual courses at the price below.",
+      "reload": "Reload",
+      "loading": "Loading...",
+      "statsLine": "{{lessons}} lessons · {{readings}} readings · {{quiz}} quiz",
+      "enrollments": "{{count}} students",
+      "priceLabel": "Price (VND)",
+      "discountLabel": "Discount (%)",
+      "finalPriceLabel": "Final price",
+      "editPrice": "Edit price",
+      "empty": "No courses yet."
+    },
+    "lessonManagement": {
+      "title": "Lesson Catalog",
+      "subtitle": "Manage scripts, guidelines, difficulties, and practice assets for MC training.",
+      "addScript": "Add Practice Script",
+      "colLesson": "Lesson",
+      "colCategory": "Category",
+      "colDifficulty": "Difficulty",
+      "colWordCount": "Word Count",
+      "colActions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "empty": "No lessons yet",
+      "updateFailed": "Failed to update lesson",
+      "createFailed": "Failed to create lesson",
+      "confirmHide": "Hide this lesson? It will no longer be visible to users but the data will be kept.",
+      "hideFailed": "Failed to hide lesson",
+      "editScript": "Edit Practice Script",
+      "createScript": "Create Practice Script",
+      "formTitle": "Title",
+      "formTitlePlaceholder": "Wedding opening script...",
+      "formCategory": "Category",
+      "categoryGala": "Gala Dinner",
+      "categoryWedding": "Wedding",
+      "categoryCorporate": "Corporate",
+      "categoryLaunch": "Product Launch",
+      "formDescription": "Short Description",
+      "formDescriptionPlaceholder": "Overview of the script scenario...",
+      "formContent": "Practice Content Script",
+      "formContentPlaceholder": "Paste practice lines here...",
+      "formDifficulty": "Difficulty",
+      "formCoverImage": "Cover Image",
+      "chooseFile": "Choose File",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "saveLesson": "Save Lesson"
+    },
+    "planManager": {
+      "saveFailed": "Save failed",
+      "saveFailedDot": "Save failed.",
+      "visible": "Visible",
+      "hidden": "Hidden",
+      "basicInfo": "Basic Info",
+      "displayName": "Display Name",
+      "priceVnd": "Price (VND)",
+      "durationDays": "Duration (days)",
+      "forever": "Forever",
+      "daysCount": "{{count}} days",
+      "aiSessionPerMonth": "AI sessions/month",
+      "unlimited": "Unlimited",
+      "tagline": "Tagline",
+      "taglinePlaceholder": "Short description shown below plan name...",
+      "detailedDescription": "Detailed Description",
+      "detailedDescriptionPlaceholder": "Full description content (optional)...",
+      "marketing": "Marketing",
+      "badge": "Badge",
+      "badgePlaceholder": "Most popular...",
+      "socialProof": "Social proof",
+      "socialProofPlaceholder": "92% of MCs choose...",
+      "urgencyText": "Urgency text",
+      "urgencyTextPlaceholder": "Only 8 spots left...",
+      "highlights": "Highlights",
+      "highlightPlaceholder": "Add a highlight and press Enter...",
+      "directDiscount": "Direct discount on plan",
+      "removeDiscount": "Remove discount",
+      "discountPercent": "Discount (%)",
+      "discountAmount": "Discount amount (VND)",
+      "priceAfterDiscount": "Price after discount",
+      "noDiscountYet": "No discount yet",
+      "userPreview": "User preview",
+      "savingsAmount": "save {{amount}} ({{percent}}%)",
+      "showing": "Showing",
+      "hiding": "Hidden",
+      "saveChanges": "Save Changes",
+      "confirmDeleteCode": "Delete code \"{{code}}\"?",
+      "deleteFailed": "Delete failed",
+      "statusOff": "Off",
+      "statusExpired": "Expired",
+      "statusUsedUp": "Used Up",
+      "statusNotStarted": "Not Started",
+      "statusActive": "Active",
+      "usedCountOf": "{{used}}/{{max}} uses",
+      "remainingCount": "{{count}} left",
+      "fromDate": "From {{date}}",
+      "sidebar": "Sidebar",
+      "editingCode": "Editing — {{code}}",
+      "discountCode": "Discount Code",
+      "discountType": "Type",
+      "percentType": "Percent (%)",
+      "fixedType": "Fixed amount (VND)",
+      "valuePercent": "Value (%)",
+      "valueVnd": "Value (VND)",
+      "effectiveTime": "Effective time",
+      "startsAt": "Starts",
+      "expiresAt": "Expires",
+      "emptyMeansNow": "(empty = immediately)",
+      "emptyMeansNoExpiry": "(empty = never expires)",
+      "maxUses": "Max uses",
+      "zeroMeansUnlimited": "(0 = unlimited)",
+      "applicablePlans": "Applicable plans",
+      "emptyMeansAll": "(empty = all)",
+      "internalNote": "Internal note",
+      "internalNotePlaceholder": "Note for admin...",
+      "cancel": "Cancel",
+      "showInSidebar": "Show in sidebar",
+      "hideFromSidebar": "Hide from sidebar",
+      "enterCode": "Enter discount code",
+      "createFailed": "Create failed",
+      "createDiscountCode": "Create Discount Code",
+      "createNewDiscountCode": "Create New Discount Code",
+      "flashDealEffectiveTime": "Effective time (Flash Deal)",
+      "flashDealPlaceholder": "Lucky Time flash deal 8pm-9pm...",
+      "activate": "Activate",
+      "draft": "Draft",
+      "createCode": "Create Code",
+      "tabPlans": "Subscription Plans",
+      "tabDiscounts": "Discount Codes",
+      "tabSettings": "Settings",
+      "plansTabDesc": "Edit the display info for each plan. Changes take effect immediately on the Payment page.",
+      "refresh": "Refresh",
+      "loading": "Loading...",
+      "noPlansInDb": "No plans in the database yet.",
+      "restartBackendHint": "Restart the backend to seed default data.",
+      "guestCooldownTitle": "Voice Practice Cooldown (Guests)",
+      "guestCooldownDesc": "Unregistered users must wait after each free voice practice session.",
+      "currentLabel": "Currently",
+      "hoursCount": "{{count}} hours",
+      "hoursUnit": "hours",
+      "save": "Save",
+      "cooldownRangeHint": "Range: 1 - 168 hours. Applies immediately after saving.",
+      "cooldownRangeError": "Value must be between 1 and 168 hours.",
+      "cooldownUpdated": "Updated: {{hours}} hours.",
+      "discountsTabDesc": "{{count}} discount codes · Users enter codes on the Payment page before checkout.",
+      "statActive": "Active",
+      "statOfCodes": "/ {{count}} codes",
+      "statRemainingUses": "Remaining Uses",
+      "statUnlimitedCodes": "+ {{count}} unlimited codes",
+      "statTotalLimited": "total limited",
+      "statUsed": "Used",
+      "statTotalUses": "total uses",
+      "noDiscountsYet": "No discount codes yet.",
+      "discountTableHeader": "Code · Value · Uses · Applicable Plans · Status"
+    },
+    "competitionManager": {
+      "title": "Voice Duel Challenge Arenas",
+      "subtitle": "Configure daily or weekly speech battle competitions and script references.",
+      "newArena": "New Contest Arena",
+      "saveFailed": "Failed to save competition",
+      "confirmDelete": "Delete this competition? This action cannot be undone.",
+      "deleteFailed": "Failed to delete competition",
+      "unknownScript": "Unknown Script",
+      "loadingArenas": "Loading Arenas...",
+      "active": "ACTIVE",
+      "inactive": "INACTIVE",
+      "scriptReference": "Script Reference",
+      "edit": "Edit",
+      "delete": "Delete",
+      "noArenas": "No Arenas Registered. Click \"New Contest Arena\" to start.",
+      "editArena": "Edit Contest Arena",
+      "createArena": "Create Contest Arena",
+      "arenaTitle": "Arena Title",
+      "arenaTitlePlaceholder": "Weekly Wedding Voice Duel...",
+      "description": "Description",
+      "descriptionPlaceholder": "Contest scenario objectives, rewards...",
+      "challengeScript": "Challenge Script",
+      "contestInterval": "Contest Interval",
+      "dailyContest": "Daily Contest",
+      "weeklyContest": "Weekly Contest",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "cancel": "Cancel",
+      "saveArena": "Save Arena"
+    },
+    "dashboard": {
+      "navDashboard": "Dashboard",
+      "navUsers": "Users",
+      "navLessons": "Lessons",
+      "navTransactions": "Transactions",
+      "navAcademy": "Academy",
+      "navCourses": "Courses",
+      "navCompetitions": "Competitions",
+      "navServerLogs": "Server Logs",
+      "navMarketing": "Marketing",
+      "navPlans": "Plans & Discounts",
+      "navNotifications": "Notifications",
+      "navGuide": "Guide",
+      "navSecurityLogs": "Security Logs",
+      "adminControl": "Admin Control",
+      "menu": "Menu",
+      "systemOnline": "System Online",
+      "logout": "Log Out",
+      "realDataFromMongo": "Real data from MongoDB",
+      "live": "Live",
+      "verificationFailed": "Verification failed",
+      "suspendFailed": "Suspend failed",
+      "statTotalUsers": "Total Users",
+      "statRegistered": "Registered",
+      "statSuccessfulTransactions": "Successful Transactions",
+      "statPendingFailed": "Pending: {{pending}} · Failed: {{failed}}",
+      "statTotalTransactions": "Total Transactions",
+      "statSystemWide": "System-wide",
+      "statActualRevenue": "Actual Revenue",
+      "statCompletedTransactions": "Completed transactions"
+    },
+    "guide": {
+      "dashboard-overview": {
+        "title": "Read overview KPIs",
+        "summary": "Quickly grasp the 4 key metrics: revenue, transactions, users.",
+        "steps": {
+          "0": "Go to Admin → Dashboard (the default landing page).",
+          "1": "Top row of 4 KPI cards: Total Users · Successful Transactions · Total Transactions · Actual Revenue.",
+          "2": "The \"Successful Transactions\" card also shows the Pending and Failed counts below it.",
+          "3": "The \"Actual Revenue\" card only counts COMPLETED transactions — PENDING/FAILED are excluded.",
+          "4": "Data is live from MongoDB — press F5 to refresh.",
+          "5": "If all cards show 0, check that the backend is running (Admin → Server Logs)."
+        }
+      },
+      "dashboard-revenue-chart": {
+        "title": "Read the monthly revenue chart",
+        "summary": "Analyze revenue trends via the area chart.",
+        "steps": {
+          "0": "The \"Monthly Revenue\" area chart sits in the middle of the Dashboard.",
+          "1": "X-axis = month (Jan–Dec) · Y-axis = revenue (in VND).",
+          "2": "Hover over a data point → tooltip shows the exact amount.",
+          "3": "Months with no COMPLETED transactions show 0 — this is normal.",
+          "4": "The chart only shows the current year. Previous-year data is not shown here."
+        }
+      },
+      "dashboard-user-donut": {
+        "title": "Read the user distribution by role",
+        "summary": "View the MC / Client ratio in the system.",
+        "steps": {
+          "0": "The \"User Distribution\" donut chart shows the MC (blue) / Client (green) ratio.",
+          "1": "ADMIN accounts are not counted in this chart.",
+          "2": "Hover over a slice → tooltip shows the count and corresponding percentage.",
+          "3": "If you only see one color, all current users share the same role."
+        }
+      },
+      "dashboard-plan-bar": {
+        "title": "Read revenue by subscription plan",
+        "summary": "Compare the contribution of BASIC / FULL / ANNUAL plans.",
+        "steps": {
+          "0": "The bar chart at the bottom of the Dashboard shows revenue per plan.",
+          "1": "Click a bar to quickly filter over to the Transactions tab (if linked).",
+          "2": "The FREE plan contributes no revenue — its bar is always 0.",
+          "3": "Use this chart to decide which plan needs a promotion to boost conversion."
+        }
+      },
+      "user-view": {
+        "title": "View and search the user list",
+        "summary": "Find users by name/email, filter by role.",
+        "steps": {
+          "0": "Go to Admin → Users.",
+          "1": "Use the Search box (top corner) to search by name or email (case-insensitive).",
+          "2": "Use the Role filter chips (ALL / MC / CLIENT / ADMIN) to narrow the list.",
+          "3": "The table shows: Avatar · Name · Email · Role · Status (Active/Suspended) · Verified.",
+          "4": "Click a row to open the Side Panel with 3 tabs: Info · Stats · Notify.",
+          "5": "If the list is empty after filtering, try clearing the filter and searching again."
+        }
+      },
+      "user-detail-info": {
+        "title": "View a user's detail info",
+        "summary": "Read the full profile: avatar, plan, status.",
+        "steps": {
+          "0": "Click a user in the table → the Side Panel opens on the right.",
+          "1": "The Info tab shows: Name, Email, Role, Current Plan, Created Date, Lock/Unlock status.",
+          "2": "Green badge = MC Verified · Yellow badge = not yet verified.",
+          "3": "Red badge = Suspended · Blue badge = Active.",
+          "4": "Current Plan indicates whether the user is on Free/Basic/Full/Annual."
+        }
+      },
+      "user-detail-stats": {
+        "title": "View a user's practice statistics",
+        "summary": "Check the user's activity level, score, and streak.",
+        "steps": {
+          "0": "Click a user → Side Panel → Stats tab.",
+          "1": "Metrics: Total Sessions · Average Score · Current Streak · Completed Lessons.",
+          "2": "Use this to identify inactive users (0 sessions in 30 days) → needs re-engagement.",
+          "3": "New users with no practice yet will show all 0s — this is normal."
+        }
+      },
+      "user-add": {
+        "title": "Manually add a new user",
+        "summary": "Create an account for an internal member or for testing.",
+        "steps": {
+          "0": "Go to Admin → Users → click \"Add\" (top-right corner).",
+          "1": "Fill in: Display Name, Email (must be unique), Password (≥6 characters).",
+          "2": "Choose Role: ADMIN / MC / CLIENT.",
+          "3": "Click \"Create\" — the user appears in the table immediately.",
+          "4": "A duplicate email will show an error — check for duplicates before creating.",
+          "5": "Do not grant ADMIN to anyone outside the team — it has full system access.",
+          "6": "Manually created users default to the FREE plan."
+        }
+      },
+      "user-verify-mc": {
+        "title": "Verify / Unverify an MC",
+        "summary": "Verify or revoke the professional MC badge.",
+        "steps": {
+          "0": "Find a user with the MC role in the table (filter Role = MC).",
+          "1": "Click the row → Side Panel → Info tab.",
+          "2": "Click \"Verify MC\" to verify → a blue badge appears on the profile.",
+          "3": "Click \"Unverify\" to revoke the badge if the MC violated the rules.",
+          "4": "The Verified badge is visible to other users viewing the MC profile.",
+          "5": "Only verify an MC after confirming their real information."
+        }
+      },
+      "user-suspend": {
+        "title": "Suspend / Unlock an account",
+        "summary": "Temporarily suspend login access for a violating user.",
+        "steps": {
+          "0": "Click a user → Side Panel → Info tab.",
+          "1": "Click \"Suspend\" to lock — the user loses login access immediately.",
+          "2": "Click \"Unlock\" to restore — the user can log in normally again.",
+          "3": "Suspending an account does not delete the user's data.",
+          "4": "If the user is online when suspended, their current token is invalidated immediately — they are logged out.",
+          "5": "Use this feature for rule violations, spam, or suspicious accounts."
+        }
+      },
+      "user-password": {
+        "title": "Reset a user's password",
+        "summary": "Admin sets a new password when a user forgets theirs or needs a reset.",
+        "steps": {
+          "0": "Click a user → Side Panel → Info tab.",
+          "1": "Click \"Change Password\" → enter a new password (≥6 characters).",
+          "2": "Click \"Update\" — the password changes immediately.",
+          "3": "The password cannot be viewed again after saving — use a temporary password and ask the user to change it.",
+          "4": "Notify the user of the temporary password via email or Zalo.",
+          "5": "You do not need to know the old password to perform this action."
+        }
+      },
+      "user-notify-single": {
+        "title": "Send a personal email to a single user",
+        "summary": "Send an email directly to a specific account.",
+        "steps": {
+          "0": "Click a user → Side Panel → Notify tab.",
+          "1": "The system suggests smart content based on the user's status (inactive / high score / streak, etc.) — click a suggestion to pre-fill.",
+          "2": "Edit the Subject and Content as needed.",
+          "3": "Use {{name}} in the content — the system automatically replaces it with the user's name.",
+          "4": "Click \"Send\" — the email reaches the user's inbox within seconds.",
+          "5": "Do not send emails unrelated to the service — this may be reported as spam.",
+          "6": "Emails are sent via Brevo SMTP from themchubtraining@gmail.com."
+        }
+      },
+      "user-delete": {
+        "title": "Delete a user account",
+        "summary": "Permanently delete a user from the system.",
+        "steps": {
+          "0": "Click a user → Side Panel → Info tab → find the \"Delete Account\" button (red, bottom of panel).",
+          "1": "The system requires confirmation — enter the user's email to confirm.",
+          "2": "Click \"Confirm Delete\".",
+          "3": "THIS CANNOT BE UNDONE. All the user's data, practice history, and transactions are deleted.",
+          "4": "Only delete when the user requests account deletion under GDPR or to confirm a fake account.",
+          "5": "Consider Suspend instead of Delete if you only want to temporarily block access."
+        }
+      },
+      "lesson-view": {
+        "title": "View and search practice lessons",
+        "summary": "Look up all MC scripts in the system.",
+        "steps": {
+          "0": "Go to Admin → Lessons.",
+          "1": "The table shows: Title · Category · Difficulty · Practice Count · Average Score.",
+          "2": "Use Search (by title) and the Category filter to narrow the list.",
+          "3": "Sort by name, creation date, or usage count.",
+          "4": "The lesson with the most usage is the most popular — keep its script quality high."
+        }
+      },
+      "lesson-add": {
+        "title": "Add a new practice lesson",
+        "summary": "Create a new MC script for learners to practice their voice.",
+        "steps": {
+          "0": "Go to Admin → Lessons → click \"Add Practice Script\".",
+          "1": "Enter a Title (concise, describes the event).",
+          "2": "Choose a Category: Wedding MC / Corporate Event / Talkshow MC / General.",
+          "3": "Enter the Script content in the textarea — write it like a real MC script (use [MC Name], [Guest Name]).",
+          "4": "Choose Difficulty: Easy (beginner) / Medium / Hard (professional).",
+          "5": "Add a short Description so learners know what skill this lesson practices.",
+          "6": "Upload a cover image (JPG/PNG, max 2MB) or leave it blank.",
+          "7": "Click Save — the lesson appears immediately in the Voice Library.",
+          "8": "A script that is too short (<50 words) is hard for the AI to analyze — aim for ≥150 words.",
+          "9": "Evaluation criteria are tied to the category — no additional configuration needed."
+        }
+      },
+      "lesson-edit": {
+        "title": "Edit a practice lesson's content",
+        "summary": "Update the script, difficulty, and category of an existing lesson.",
+        "steps": {
+          "0": "Go to Admin → Lessons → find the lesson to edit.",
+          "1": "Click the pencil icon at the end of the row → the edit form opens.",
+          "2": "Edit the necessary fields.",
+          "3": "Click Save.",
+          "4": "Editing the script of a lesson currently used in an Academy Milestone affects the experience of learners currently on it — consider adding a new lesson instead of editing."
+        }
+      },
+      "lesson-delete": {
+        "title": "Delete a practice lesson",
+        "summary": "Remove a lesson that is no longer relevant from the system.",
+        "steps": {
+          "0": "Find the lesson to delete → click the trash icon.",
+          "1": "The system warns if the lesson is currently assigned to an Academy Milestone.",
+          "2": "Confirm → the lesson is removed from the Voice Library and the admin list.",
+          "3": "Learners who already practiced this lesson keep their score history — they just can't practice it again.",
+          "4": "It's best to remove the lesson from the Academy Milestone before deleting it, to avoid display errors."
+        }
+      },
+      "lesson-reading-guide": {
+        "title": "Manage Reading Guides",
+        "summary": "View and add theory materials for learners.",
+        "steps": {
+          "0": "Go to Admin → Lessons → Reading Guides tab (if available).",
+          "1": "A Reading Guide is a theory document: speaking techniques, event coordination, MC style, etc.",
+          "2": "Add a guide: fill in Title, Content (Markdown supported), Category, Estimated reading time.",
+          "3": "Assign the guide to an Academy Milestone via the Academy module → Assign Content → READING_GUIDE.",
+          "4": "A Reading Guide does not require a mic — learners read and self-study the theory."
+        }
+      },
+      "academy-overview": {
+        "title": "Understand the Academy structure",
+        "summary": "Grasp the course logic: Course → Milestone → Content Item.",
+        "steps": {
+          "0": "The Academy has 3 levels: Course → Milestone/Stage → Content Item (a specific lesson).",
+          "1": "Example: Course \"Wedding MC\" → Milestone \"Associate Level\" → Item \"Traditional Wedding Script\".",
+          "2": "Learners must complete all items in a milestone to unlock the next milestone.",
+          "3": "3 standard Levels: Associate (basic) · Professional (intermediate) · Elite (professional)."
+        }
+      },
+      "academy-course-create": {
+        "title": "Create a new Course",
+        "summary": "Initialize an overall course that contains milestones.",
+        "steps": {
+          "0": "Go to Admin → Academy → click \"New Course\".",
+          "1": "Fill in: Course Name, Description, Category (Wedding/Corporate/Talkshow, etc.).",
+          "2": "Upload a course cover image.",
+          "3": "Click Save — the created course has no milestones yet and is not visible to learners.",
+          "4": "Add milestones to the course (see the \"Create Milestone\" guide).",
+          "5": "A course only becomes visible to learners once it has at least 1 active milestone."
+        }
+      },
+      "academy-milestone": {
+        "title": "Create a Milestone (learning stage)",
+        "summary": "Add a new stage to the learning path.",
+        "steps": {
+          "0": "Go to Admin → Academy → expand the course to add to → click \"New Milestone Stage\".",
+          "1": "Fill in: Stage Title, Level (Associate / Professional / Elite).",
+          "2": "Fill in a Description — learners see it when hovering over the milestone on the path.",
+          "3": "Set the Order number to arrange the sequence (1 = first).",
+          "4": "Click Save — the milestone appears as an expandable accordion for assigning content.",
+          "5": "Milestone order affects the learning path — set it correctly from the start."
+        }
+      },
+      "academy-content": {
+        "title": "Assign content to a Milestone",
+        "summary": "Add a lesson or reading material to a stage.",
+        "steps": {
+          "0": "Expand the milestone to add content to → click \"Assign Content\".",
+          "1": "Choose the type: VOICE_PRACTICE (voice practice script) or READING_GUIDE (theory material).",
+          "2": "Search and select a lesson from the dropdown list.",
+          "3": "Set a Display Title within the milestone (can differ from the lesson's original name — optional).",
+          "4": "Choose the Estimated Duration: 5m / 10m / 15m / 30m / 45m / 1h.",
+          "5": "Click Save.",
+          "6": "Use the ▲▼ buttons on the right of each item to reorder within the milestone.",
+          "7": "The right panel previews the selected content before saving."
+        }
+      },
+      "academy-content-reorder": {
+        "title": "Reorder content",
+        "summary": "Change the order of lessons within a milestone.",
+        "steps": {
+          "0": "Expand the milestone you want to reorder.",
+          "1": "Click ▲ to move an item up · Click ▼ to move it down.",
+          "2": "The order saves immediately — no need to press Save.",
+          "3": "Learners see this order when going through the learning path."
+        }
+      },
+      "academy-content-remove": {
+        "title": "Remove content from a Milestone",
+        "summary": "Delete an item from the milestone (does not delete the original lesson).",
+        "steps": {
+          "0": "Expand the milestone → find the item to remove → click the X icon or Delete.",
+          "1": "Confirm → the item is removed from the milestone.",
+          "2": "The original lesson remains in the Voice Library — only the link between the milestone and the lesson is removed.",
+          "3": "Learners currently on this milestone will see the removed item disappear — notify them beforehand if needed."
+        }
+      },
+      "academy-quiz": {
+        "title": "Manage Quiz questions",
+        "summary": "Add/edit multiple-choice questions within a Course.",
+        "steps": {
+          "0": "Go to Admin → Academy → expand the course → Quiz Questions tab.",
+          "1": "Click \"Add Question\" → fill in the question, 4 answer options, the correct answer, and difficulty.",
+          "2": "Choose the type: MULTIPLE_CHOICE (1 answer) or TRUE_FALSE.",
+          "3": "Fill in the explanation so learners understand the correct answer.",
+          "4": "Click Save.",
+          "5": "The quiz appears at the end of the course — learners take it after completing all milestones."
+        }
+      },
+      "competition-overview": {
+        "title": "Understand the competition system structure",
+        "summary": "Grasp the Arena → Submission → Leaderboard logic.",
+        "steps": {
+          "0": "The competition system consists of: Arena (contest) → Submission (entry) → Leaderboard (ranking).",
+          "1": "Each Arena has one challenge script, a reset cycle (Daily/Weekly), and an active period.",
+          "2": "Learners record their entry and submit → AI scores it → it appears on the leaderboard.",
+          "3": "The leaderboard resets according to Interval: DAILY = resets at midnight every day · WEEKLY = resets at midnight on Monday."
+        }
+      },
+      "competition-create": {
+        "title": "Create a new competition Arena",
+        "summary": "Launch a voice-training contest based on a specific script.",
+        "steps": {
+          "0": "Go to Admin → Competitions → click \"New Contest Arena\".",
+          "1": "Fill in: Arena Title, Short Description.",
+          "2": "Choose a Challenge Script: a script from the lesson list (voice practice).",
+          "3": "Choose the Contest Interval: DAILY (resets daily) or WEEKLY (resets weekly).",
+          "4": "Set the Start Date and End Date.",
+          "5": "Toggle Active on to activate — the Arena appears immediately for learners.",
+          "6": "Click Save.",
+          "7": "It's recommended to run only 1 ACTIVE Arena at a time to concentrate participation.",
+          "8": "A script that's too long (>500 words) is hard for beginners — choose Medium/Easy for the Arena."
+        }
+      },
+      "competition-edit": {
+        "title": "Edit / Deactivate an Arena",
+        "summary": "Update timing, or deactivate a contest early.",
+        "steps": {
+          "0": "Go to Admin → Competitions → find the Arena to edit.",
+          "1": "Click Edit → adjust the end date, description, or toggle Active off.",
+          "2": "Click Save.",
+          "3": "Changing the Challenge script of an active Arena affects submissions still awaiting scoring — avoid changing it mid-contest.",
+          "4": "Turning off Active does not delete the leaderboard — results are still kept."
+        }
+      },
+      "competition-leaderboard": {
+        "title": "View the leaderboard & submissions",
+        "summary": "Check who's leading and manage entries.",
+        "steps": {
+          "0": "Click into an Arena → Leaderboard tab.",
+          "1": "The leaderboard shows: Rank · Name · Avatar · Score · Submission Date.",
+          "2": "Click a submission to listen to the recording and see the detailed score per criterion.",
+          "3": "If a submission is found to be cheating (using voice AI) → click \"Disqualify\".",
+          "4": "Scores are graded by AI — if you suspect an error, review the detailed analysis before deciding."
+        }
+      },
+      "plan-overview": {
+        "title": "Understand the subscription plan structure",
+        "summary": "Learn the 4 plans and each plan's feature limits.",
+        "steps": {
+          "0": "4 plans: FREE · BASIC · FULL · ANNUAL.",
+          "1": "FREE: basic practice, limited AI sessions per month.",
+          "2": "BASIC/FULL/ANNUAL: progressively higher AI session limits, unlocks advanced features.",
+          "3": "Go to Admin → Plans & Discounts to view and configure each plan."
+        }
+      },
+      "plan-edit": {
+        "title": "Update subscription plan details",
+        "summary": "Change price, description, and feature limits.",
+        "steps": {
+          "0": "Go to Admin → Plans & Discounts → Plans tab.",
+          "1": "Expand the plan to edit (FREE / BASIC / FULL / ANNUAL).",
+          "2": "Edit: Display Name, Price (VND), Duration (days), AI sessions/month limit.",
+          "3": "Update the Tagline and the list of Highlighted Features (one feature per line).",
+          "4": "Toggle Active to show/hide the plan from users.",
+          "5": "Click \"Save changes\".",
+          "6": "Price changes do NOT affect users already on that plan — only new subscribers.",
+          "7": "Don't disable Active on a plan with many active users — they won't be able to renew."
+        }
+      },
+      "plan-discount": {
+        "title": "Set a direct discount on a plan",
+        "summary": "Apply a % or fixed-amount discount directly on the pricing table.",
+        "steps": {
+          "0": "Expand the plan to discount → find the Discount section.",
+          "1": "Choose the type: Percent (%) or Fixed (fixed amount).",
+          "2": "Enter the value → the system automatically shows the discounted price for confirmation.",
+          "3": "Click \"Save changes\".",
+          "4": "This discount appears directly on the Pricing page — users see both the original and discounted price.",
+          "5": "To remove a discount: enter 0 in the Value field and save."
+        }
+      },
+      "coupon-create": {
+        "title": "Create a discount Coupon",
+        "summary": "Create a coupon for promotions or campaigns.",
+        "steps": {
+          "0": "Go to Admin → Plans & Discounts → Coupons tab → click \"Create Coupon\".",
+          "1": "Enter the Code (e.g. SUMMER30, WELCOME50) — uppercase, no spaces.",
+          "2": "Choose the Type: PERCENT (%) or FIXED (fixed VND amount).",
+          "3": "Enter the Value: e.g. 30 (= 30%) or 50000 (= 50,000 VND).",
+          "4": "Set Max Uses: the maximum number of redemptions (leave blank = unlimited).",
+          "5": "Set the Expiry Date.",
+          "6": "Choose Applicable Plans: which plans the coupon applies to (multiple selectable).",
+          "7": "Click Save.",
+          "8": "The code automatically expires when the date passes or the usage limit is reached.",
+          "9": "The code is case-sensitive — a user entering \"summer30\" cannot redeem \"SUMMER30\"."
+        }
+      },
+      "coupon-manage": {
+        "title": "Manage created coupons",
+        "summary": "View, disable, or delete coupons.",
+        "steps": {
+          "0": "Go to Admin → Plans & Discounts → Coupons tab.",
+          "1": "The table shows: Code · Type · Value · Used/Max · Expiry Date · Status.",
+          "2": "Click the Active/Inactive toggle to enable/disable a code without deleting it.",
+          "3": "Click the trash icon → confirm → permanently delete the code.",
+          "4": "A code that has already been used can still be deleted — it only affects future redemptions."
+        }
+      },
+      "transaction-view": {
+        "title": "View & search transactions",
+        "summary": "Find payments by status, user, plan, or order code.",
+        "steps": {
+          "0": "Go to Admin → Transactions.",
+          "1": "Filter by Status chip: ALL / COMPLETED / PENDING / FAILED.",
+          "2": "Search in the search box: user name, email, plan name, payment memo, or order code.",
+          "3": "Sort: Newest / Oldest / Highest amount / Lowest amount.",
+          "4": "3 overview cards at the top: Total Revenue · COMPLETED transactions · PENDING."
+        }
+      },
+      "transaction-detail": {
+        "title": "View a single transaction's details",
+        "summary": "Check full information: user, plan, PayOS, timing.",
+        "steps": {
+          "0": "Click on a transaction row in the table.",
+          "1": "Details shown: Order Code, User, Subscription Plan, Amount, Status, Created Time, Completed Time.",
+          "2": "If a Coupon was used: shows the code applied and the discounted amount.",
+          "3": "The PayOS order code is used to reconcile with the payment gateway when verification is needed."
+        }
+      },
+      "transaction-pending": {
+        "title": "Handle PENDING transactions",
+        "summary": "When a user reports they've paid but the transaction is still PENDING.",
+        "steps": {
+          "0": "Filter Status = PENDING to see the list awaiting processing.",
+          "1": "Check the PayOS order code on the PayOS admin portal (outside the MC Hub system).",
+          "2": "If PayOS has received the payment but the webhook hasn't fired → contact the dev to trigger the webhook manually.",
+          "3": "Do not manually change the status to COMPLETED in the DB unless the payment is confirmed.",
+          "4": "PENDING for over 24h usually indicates a webhook failure — escalate to dev."
+        }
+      },
+      "transaction-refund": {
+        "title": "Handle refund requests",
+        "summary": "The process when a user requests a refund for a paid plan.",
+        "steps": {
+          "0": "Verify the corresponding COMPLETED transaction in Transactions.",
+          "1": "Go to the PayOS portal to process the refund from the payment gateway side.",
+          "2": "After the refund succeeds on PayOS, update the note in Admin (if a memo field exists).",
+          "3": "Go to Users → downgrade the user to the FREE plan or an appropriate plan.",
+          "4": "MC Hub does not auto-refund — it must be done directly on the PayOS portal.",
+          "5": "Log every refund in the internal tracking spreadsheet for reconciliation."
+        }
+      },
+      "transaction-export": {
+        "title": "Export CSV report",
+        "summary": "Download a CSV file for financial reporting and reconciliation.",
+        "steps": {
+          "0": "Filter the data you want to export (choose Status, search by plan or time range).",
+          "1": "Click the \"Export CSV\" button at the top right.",
+          "2": "The downloaded file contains: Order Code · User · Plan · Amount · Status · Created Date · Completed Date.",
+          "3": "The CSV exports the entire filtered result set — not paginated.",
+          "4": "Open with Google Sheets or Excel — use UTF-8 encoding to display Vietnamese text correctly."
+        }
+      },
+      "notif-overview": {
+        "title": "Understand the notification creation and sending flow",
+        "summary": "Grasp the 3 steps: Compose → Draft → Approve → Send.",
+        "steps": {
+          "0": "Notification flow: Compose → Save as DRAFT → Review → Actually send.",
+          "1": "DRAFT is not sent to anyone yet — it's only saved in the system for review.",
+          "2": "After sending: it cannot be recalled. Always preview first.",
+          "3": "The \"History\" tab stores all sent notifications for later reference."
+        }
+      },
+      "notif-compose": {
+        "title": "Compose a new notification",
+        "summary": "Create an email notification and save it as a Draft for approval.",
+        "steps": {
+          "0": "Go to Admin → Notifications → \"+ Create New\" tab.",
+          "1": "Choose the Notification Type: New Lesson / Promotion / Maintenance / Competition / New Feature / Social Post.",
+          "2": "Fill in the Internal Title (visible only to admins, to distinguish notifications).",
+          "3": "Fill in the Email Subject (the subject line the user sees in their inbox).",
+          "4": "Write the content — use {{name}} so the system auto-fills the recipient's name.",
+          "5": "Choose the recipients: ALL or filter by plan (FREE/BASIC/FULL/ANNUAL).",
+          "6": "Click \"Preview email\" to preview the email layout before sending.",
+          "7": "Click \"Create notification\" → saves as DRAFT status.",
+          "8": "Once sent, it cannot be recalled — always preview and review the Draft first."
+        }
+      },
+      "notif-send": {
+        "title": "Approve and send notifications",
+        "summary": "Move a Draft to the actually-sent state.",
+        "steps": {
+          "0": "Go to Admin → Notifications → \"Pending Approval\" tab.",
+          "1": "View the list of pending DRAFT notifications.",
+          "2": "Click a notification to review its content and estimated recipient count.",
+          "3": "Click \"Send\" → confirm → the system sends emails asynchronously (one at a time).",
+          "4": "Send rate: ~1-2 emails/second via Brevo SMTP — 100 recipients ≈ 1-2 minutes.",
+          "5": "Do not send the same content twice within 24h — it may get flagged as spam."
+        }
+      },
+      "notif-trigger": {
+        "title": "Use automatic notification triggers",
+        "summary": "Quickly create a Draft from a system-event template.",
+        "steps": {
+          "0": "Go to Admin → Notifications → \"Auto Suggestions\" tab.",
+          "1": "Choose the trigger matching the event you want to notify about.",
+          "2": "Fill in the trigger's specific variables (e.g. lessonTitle, discountPercent, code, date...).",
+          "3": "Click \"Create draft\" — the system generates the content and saves it as DRAFT.",
+          "4": "Go to the \"Pending Approval\" tab to review and send.",
+          "5": "Available triggers: New Lesson · Promotion · Maintenance · New Feature · Competition."
+        }
+      },
+      "notif-history": {
+        "title": "View sent notification history",
+        "summary": "Look up the content and stats of past notifications.",
+        "steps": {
+          "0": "Go to Admin → Notifications → \"History\" tab.",
+          "1": "The table shows: Title · Type · Recipients · Sent Date · Status.",
+          "2": "Click a row to view the full content that was sent.",
+          "3": "Use this as reference when composing new notifications, to avoid repeating content."
+        }
+      },
+      "notif-delete-draft": {
+        "title": "Delete a notification Draft",
+        "summary": "Cancel a draft notification that is no longer needed.",
+        "steps": {
+          "0": "Go to the \"Pending Approval\" tab → find the Draft to delete.",
+          "1": "Click the trash icon → confirm.",
+          "2": "The Draft is permanently deleted — if you need to send it again, create a new one from scratch.",
+          "3": "Sent notifications (status = SENT) cannot be deleted from the UI."
+        }
+      },
+      "marketing-social-add": {
+        "title": "Add a Social Feed post",
+        "summary": "Bring a Facebook/Instagram post into the homepage carousel.",
+        "steps": {
+          "0": "Go to Admin → Marketing → Social Feed tab.",
+          "1": "Click \"Add post\".",
+          "2": "Fill in the Post description (text shown below the image).",
+          "3": "Enter the Facebook post link (required) — format https://facebook.com/...",
+          "4": "Upload a thumbnail image (JPG/PNG) or enter an image URL directly.",
+          "5": "Set the Priority order — lower numbers display first in the carousel.",
+          "6": "Turn on the Active toggle to display it immediately on the homepage.",
+          "7": "Click Preview to see the carousel before saving.",
+          "8": "Click Save.",
+          "9": "The homepage updates immediately — no backend refresh needed."
+        }
+      },
+      "marketing-social-manage": {
+        "title": "Edit / Hide / Delete a Social Feed post",
+        "summary": "Update or remove a posted item.",
+        "steps": {
+          "0": "Go to Admin → Marketing → Social Feed tab.",
+          "1": "Find the post to act on in the list.",
+          "2": "Hide temporarily: turn off the Active toggle → post no longer shows on the homepage but stays saved.",
+          "3": "Edit: click Edit → adjust fields → Save.",
+          "4": "Delete: click the trash icon → confirm → the post is permanently deleted."
+        }
+      },
+      "marketing-template-create": {
+        "title": "Create a campaign Email Template",
+        "summary": "Design a reusable email template for multiple campaigns.",
+        "steps": {
+          "0": "Go to Admin → Marketing → Email Campaigns tab → Templates tab → click \"Create template\".",
+          "1": "Choose the editing mode: Design Builder (fill in fields visually) or Raw HTML (paste HTML).",
+          "2": "Design Builder: fill in Logo URL, Banner URL, Headline, Main content, CTA button (text + link).",
+          "3": "The right panel shows a real-time email preview as you type.",
+          "4": "Click \"Test\" → enter a test email → click \"Send test\" to check a real inbox.",
+          "5": "Click \"Create template\" to save.",
+          "6": "Use {{name}} in the HTML to personalize the recipient's name.",
+          "7": "Images in the HTML must be public URLs (https://...) — not localhost or local files."
+        }
+      },
+      "marketing-template-edit": {
+        "title": "Edit / Delete an Email Template",
+        "summary": "Update template content or clean up old templates.",
+        "steps": {
+          "0": "Go to Admin → Marketing → Email Campaigns → Templates tab.",
+          "1": "Find the template to edit → click Edit.",
+          "2": "Modify the content → click \"Update\".",
+          "3": "Click the trash icon → confirm → deletes the template.",
+          "4": "Do not delete a template that is being used by a campaign that hasn't finished sending."
+        }
+      },
+      "marketing-template-test": {
+        "title": "Send a template test email",
+        "summary": "Verify a template before using it in a real campaign.",
+        "steps": {
+          "0": "Open the template to test (Edit or view details).",
+          "1": "Click the \"Test\" button → enter the email address to receive the test.",
+          "2": "Click \"Send test\" → check the inbox within a few seconds.",
+          "3": "Check: layout displays correctly, images load, CTA link works.",
+          "4": "If images don't display in the test email, the image URL may be blocked or not public.",
+          "5": "Send tests to several different email clients (Gmail, Outlook) to check compatibility."
+        }
+      },
+      "marketing-campaign-send": {
+        "title": "Send a bulk email campaign",
+        "summary": "Choose a template → choose recipients → send the campaign.",
+        "steps": {
+          "0": "Go to Admin → Marketing → Email Campaigns → Send Campaign tab.",
+          "1": "Choose a template from the dropdown — the right panel shows a template preview.",
+          "2": "Adjust the Subject (email title) if needed.",
+          "3": "Choose the Audience: All / By plan / By role / Premium / Custom emails.",
+          "4": "The system automatically loads the recipient list — you can tick/untick individual recipients.",
+          "5": "Click \"Send campaign\" → confirm the recipient count.",
+          "6": "Track progress in the History tab (SENDING → COMPLETED).",
+          "7": "Maximum 1 campaign/day for the same user group — to avoid spam.",
+          "8": "When sending, the system automatically deduplicates repeated emails — no need to worry about sending twice to the same person."
+        }
+      },
+      "marketing-campaign-custom": {
+        "title": "Send a campaign to a custom email list",
+        "summary": "Manually enter specific emails to send a targeted campaign.",
+        "steps": {
+          "0": "Go to the Send Campaign tab → choose a template.",
+          "1": "Choose Audience: \"Custom emails\".",
+          "2": "Type each email into the field → press Enter to add it (shown as a chip).",
+          "3": "Click \"Load list\" to confirm the emails exist in the system and preview them.",
+          "4": "Tick/untick individual recipients in the confirmation list.",
+          "5": "Click \"Send campaign\".",
+          "6": "Emails that don't exist in the system will be skipped when sending."
+        }
+      },
+      "marketing-campaign-history": {
+        "title": "View campaign history",
+        "summary": "Track the results and status of sent campaigns.",
+        "steps": {
+          "0": "Go to Admin → Marketing → Email Campaigns → History tab.",
+          "1": "The table shows: Campaign Name · Template · Recipient Count · Status · Sent Date.",
+          "2": "Status: SENDING (in progress) · COMPLETED (done) · FAILED (error).",
+          "3": "Click a campaign → view the list of sent emails and the result of each one.",
+          "4": "Use this to audit sent content and avoid duplicate sends."
+        }
+      },
+      "logs-overview": {
+        "title": "Understand the Server Logs interface",
+        "summary": "Grasp the 3 panels: Live Logs · Watchlist · Bookmarks.",
+        "steps": {
+          "0": "The Server Logs page has 3 areas: Live Logs (center) · Watchlist (top right) · Bookmarks (bottom right).",
+          "1": "Live Logs: real-time log stream from the backend via WebSocket.",
+          "2": "Watchlist: configure automatic alerts (keyword + threshold).",
+          "3": "Bookmarks: list of logs marked for later investigation."
+        }
+      },
+      "logs-monitor": {
+        "title": "Monitor logs in real time",
+        "summary": "View live JAVA/AI backend logs, filtered by level.",
+        "steps": {
+          "0": "Go to Admin → Server Logs → Live Logs panel.",
+          "1": "Top indicator: green = Connected · red = Offline (backend not running).",
+          "2": "Filter by Level: ALL / DEBUG / INFO / WARN / ERROR.",
+          "3": "Filter by Source: ALL / JAVA / AI (which backend is being displayed).",
+          "4": "Search text — results highlight in real time in the log stream.",
+          "5": "Click Pause to stop scrolling (new logs still buffer) · Click again to resume.",
+          "6": "Click Group to collapse logs with the same error into one group.",
+          "7": "Click a log line → Detail Panel on the right: Info · API · User · Note tabs."
+        }
+      },
+      "logs-read-error": {
+        "title": "Read and understand ERROR logs",
+        "summary": "Analyze ERROR logs to report accurate information to developers.",
+        "steps": {
+          "0": "Filter Level = ERROR to see only critical errors.",
+          "1": "Click an error line → Detail Panel → Info tab: time, service, message.",
+          "2": "API tab: the failing endpoint, HTTP method, response code.",
+          "3": "User tab: related userId (if any).",
+          "4": "Bookmark the error log → Note tab → record when it was found and the context.",
+          "5": "When reporting to developers, provide: Time · Error message · Endpoint · UserId (if any)."
+        }
+      },
+      "logs-watchlist": {
+        "title": "Set up automatic Watchlist alerts",
+        "summary": "Get browser alerts when a log matches a keyword or too many errors occur.",
+        "steps": {
+          "0": "Go to Admin → Server Logs → Watchlist panel.",
+          "1": "Set the Error Threshold: number of ERRORs/minute to trigger a browser notification.",
+          "2": "Add Keywords to watch: type the keyword → press Enter → appears as a chip.",
+          "3": "Logs matching a keyword auto-highlight in red in Live Logs.",
+          "4": "When the threshold is exceeded: a browser notification pops up (notifications must be allowed).",
+          "5": "Suggested keywords to watch: \"OutOfMemoryError\", \"SocketTimeout\", \"NullPointer\", \"401\"."
+        }
+      },
+      "logs-bookmark": {
+        "title": "Bookmark logs and add investigation notes",
+        "summary": "Mark important logs and add notes to revisit them later.",
+        "steps": {
+          "0": "Hover over the log line to mark → click the bookmark icon.",
+          "1": "The log appears in the Bookmarks panel (right sidebar).",
+          "2": "Detail Panel → Note tab → type investigation notes (no length limit).",
+          "3": "Click a bookmark in the list → returns to Logs with that log highlighted.",
+          "4": "Click the X icon on a bookmark to remove it when no longer needed.",
+          "5": "Bookmarks are stored in browser localStorage — clearing the cache removes them."
+        }
+      },
+      "logs-backend-down": {
+        "title": "Handle backend Offline status",
+        "summary": "Check and escalate when the indicator turns red.",
+        "steps": {
+          "0": "If the indicator shows red \"Offline\", the Java or AI backend is not running.",
+          "1": "Check health by visiting: http://localhost:5000/actuator/health (if you still have server access).",
+          "2": "If it cannot be restarted automatically, contact a developer or DevOps immediately.",
+          "3": "Record the time the outage was detected in internal logs.",
+          "4": "When the backend is offline: all AI, practice, and login features stop working.",
+          "5": "Wait 2-3 minutes before reporting — the backend may be restarting automatically."
+        }
       }
     }
   }

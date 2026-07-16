@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Plus, Trash2, BookOpen, Tag, X, Check, Mic, Image as ImageIcon, Edit } from "lucide-react";
 import { useApi } from "../../../hooks/useApi";
 import { fetchLessons } from "../../../controllers/voiceController";
@@ -7,6 +8,7 @@ import api from "../../../services/api";
 const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
 
 const LessonManagement = () => {
+  const { t } = useTranslation();
   const { data: lessons = [], refetch } = useApi(fetchLessons);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -46,19 +48,19 @@ const LessonManagement = () => {
       setThumbnail(null);
       setEditingLesson(null);
     } catch {
-      alert(editingLesson ? "Failed to update lesson" : "Failed to create lesson");
+      alert(editingLesson ? t('admin.lessonManagement.updateFailed') : t('admin.lessonManagement.createFailed'));
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Ẩn bài học này? Bài học sẽ không hiển thị với người dùng nhưng dữ liệu được giữ lại.")) return;
+    if (!window.confirm(t('admin.lessonManagement.confirmHide'))) return;
     try {
       await api.delete(`/voice/admin/lessons/${id}`);
       refetch();
     } catch {
-      alert("Ẩn bài học thất bại");
+      alert(t('admin.lessonManagement.hideFailed'));
     }
   };
 
@@ -73,12 +75,12 @@ const LessonManagement = () => {
     <div className="space-y-5 w-full">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-[15px] font-semibold text-white">Lesson Catalog</h2>
-          <p className="text-[12px] text-zinc-500 mt-0.5">Manage scripts, guidelines, difficulties, and practice assets for MC training.</p>
+          <h2 className="text-[15px] font-semibold text-white">{t('admin.lessonManagement.title')}</h2>
+          <p className="text-[12px] text-zinc-500 mt-0.5">{t('admin.lessonManagement.subtitle')}</p>
         </div>
         <button onClick={handleOpenAdd}
           className="flex items-center gap-2 px-3 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors">
-          <Plus size={13} /> Add Practice Script
+          <Plus size={13} /> {t('admin.lessonManagement.addScript')}
         </button>
       </div>
 
@@ -86,11 +88,11 @@ const LessonManagement = () => {
         {/* Table header */}
         <div className="grid grid-cols-[2fr_1fr_1fr_80px_80px] gap-4 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider"
           style={{ background: "var(--bg-surface)", color: "var(--text-muted)", borderBottom: "1px solid var(--border-subtle)" }}>
-          <span>Bài học</span>
-          <span>Danh mục</span>
-          <span>Độ khó</span>
-          <span className="text-right">Số từ</span>
-          <span className="text-center">Thao tác</span>
+          <span>{t('admin.lessonManagement.colLesson')}</span>
+          <span>{t('admin.lessonManagement.colCategory')}</span>
+          <span>{t('admin.lessonManagement.colDifficulty')}</span>
+          <span className="text-right">{t('admin.lessonManagement.colWordCount')}</span>
+          <span className="text-center">{t('admin.lessonManagement.colActions')}</span>
         </div>
 
         {/* Rows */}
@@ -133,14 +135,14 @@ const LessonManagement = () => {
 
             {/* Actions */}
             <div className="flex items-center justify-center gap-1">
-              <button onClick={() => handleOpenEdit(lesson)} title="Edit"
+              <button onClick={() => handleOpenEdit(lesson)} title={t('admin.lessonManagement.edit')}
                 className="p-1.5 border border-transparent hover:border-white/[0.07] transition-colors"
                 style={{ color: "var(--text-muted)" }}
                 onMouseEnter={e => e.currentTarget.style.color = "var(--text-primary)"}
                 onMouseLeave={e => e.currentTarget.style.color = "var(--text-muted)"}>
                 <Edit size={13} />
               </button>
-              <button onClick={() => handleDelete(lesson.id)} title="Delete"
+              <button onClick={() => handleDelete(lesson.id)} title={t('admin.lessonManagement.delete')}
                 className="p-1.5 border border-transparent hover:border-[--border-subtle] hover:text-[--text-primary] transition-colors"
                 style={{ color: "var(--text-muted)" }}>
                 <Trash2 size={13} />
@@ -151,7 +153,7 @@ const LessonManagement = () => {
 
         {lessons?.length === 0 && (
           <div className="py-12 text-center text-[13px]" style={{ color: "var(--text-muted)" }}>
-            Chưa có bài học nào
+            {t('admin.lessonManagement.empty')}
           </div>
         )}
       </div>
@@ -164,7 +166,7 @@ const LessonManagement = () => {
               <div className="flex justify-between items-center border-b border-white/[0.06] pb-4">
                 <h3 className="text-[14px] font-semibold text-white flex items-center gap-2">
                   <BookOpen size={15} className="text-zinc-500" />
-                  {editingLesson ? "Edit Practice Script" : "Create Practice Script"}
+                  {editingLesson ? t('admin.lessonManagement.editScript') : t('admin.lessonManagement.createScript')}
                 </h3>
                 <button type="button" onClick={() => setIsModalOpen(false)} className="text-zinc-500 hover:text-white transition-colors">
                   <X size={17} />
@@ -173,37 +175,37 @@ const LessonManagement = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Title</label>
+                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.lessonManagement.formTitle')}</label>
                   <input required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})}
-                    className={inputCls} placeholder="Wedding opening script..." />
+                    className={inputCls} placeholder={t('admin.lessonManagement.formTitlePlaceholder')} />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Category</label>
+                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.lessonManagement.formCategory')}</label>
                   <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}
                     className={inputCls + " cursor-pointer"}>
-                    <option value="Gala">Gala Dinner</option>
-                    <option value="Wedding">Wedding</option>
-                    <option value="Corporate">Corporate</option>
-                    <option value="Launch">Product Launch</option>
+                    <option value="Gala">{t('admin.lessonManagement.categoryGala')}</option>
+                    <option value="Wedding">{t('admin.lessonManagement.categoryWedding')}</option>
+                    <option value="Corporate">{t('admin.lessonManagement.categoryCorporate')}</option>
+                    <option value="Launch">{t('admin.lessonManagement.categoryLaunch')}</option>
                   </select>
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Short Description</label>
+                <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.lessonManagement.formDescription')}</label>
                 <textarea required value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})}
-                  className={inputCls + " min-h-[50px]"} placeholder="Overview of the script scenario..." />
+                  className={inputCls + " min-h-[50px]"} placeholder={t('admin.lessonManagement.formDescriptionPlaceholder')} />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Practice Content Script</label>
+                <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.lessonManagement.formContent')}</label>
                 <textarea required value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})}
-                  className={inputCls + " min-h-[100px] font-mono"} placeholder="Paste practice lines here..." />
+                  className={inputCls + " min-h-[100px] font-mono"} placeholder={t('admin.lessonManagement.formContentPlaceholder')} />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Difficulty</label>
+                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.lessonManagement.formDifficulty')}</label>
                   <div className="flex gap-1.5">
                     {["Easy", "Medium", "Hard"].map(lv => (
                       <button key={lv} type="button" onClick={() => setFormData({...formData, difficulty: lv})}
@@ -218,10 +220,10 @@ const LessonManagement = () => {
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Cover Image</label>
+                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.lessonManagement.formCoverImage')}</label>
                   <label className="w-full h-[34px] bg-[#09090b] border border-white/[0.07] px-3 flex items-center gap-2 text-zinc-500 cursor-pointer hover:border-white/[0.14] transition-colors overflow-hidden">
                     <ImageIcon size={13} />
-                    <span className="text-[11px] truncate">{thumbnail ? thumbnail.name : "Choose File"}</span>
+                    <span className="text-[11px] truncate">{thumbnail ? thumbnail.name : t('admin.lessonManagement.chooseFile')}</span>
                     <input type="file" hidden onChange={e => setThumbnail(e.target.files[0])} accept="image/*" />
                   </label>
                 </div>
@@ -230,12 +232,12 @@ const LessonManagement = () => {
               <div className="pt-3 border-t border-white/[0.06] flex gap-2">
                 <button type="button" onClick={() => setIsModalOpen(false)}
                   className="flex-1 py-2 bg-[#09090b] border border-white/[0.07] text-zinc-400 text-[12px] font-medium hover:border-white/[0.14] transition-colors">
-                  Cancel
+                  {t('admin.lessonManagement.cancel')}
                 </button>
                 <button disabled={loading} type="submit"
                   className="flex-1 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors flex items-center justify-center gap-1.5">
                   <Check size={13} />
-                  {loading ? "Saving..." : "Save Lesson"}
+                  {loading ? t('admin.lessonManagement.saving') : t('admin.lessonManagement.saveLesson')}
                 </button>
               </div>
             </form>

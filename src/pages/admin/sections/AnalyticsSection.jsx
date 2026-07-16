@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { useTranslation } from "react-i18next";
 import ga4ReportMd from "../../../../GA4_TRACKING_REPORT.md?raw";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
@@ -57,11 +58,14 @@ const Stat = ({ label, value, icon: Icon, color, sub }) => (
 );
 
 // ── empty placeholder ────────────────────────────────────────────────────────
-const Empty = ({ h = 200 }) => (
-  <div className={`flex items-center justify-center text-[--text-muted] text-[12px]`} style={{ height: h }}>
-    Chưa có dữ liệu
-  </div>
-);
+const Empty = ({ h = 200 }) => {
+  const { t } = useTranslation();
+  return (
+    <div className={`flex items-center justify-center text-[--text-muted] text-[12px]`} style={{ height: h }}>
+      {t("admin.analyticsSection.noData")}
+    </div>
+  );
+};
 
 // ── tab buttons ───────────────────────────────────────────────────────────────
 const Tabs = ({ value, onChange, options }) => (
@@ -81,7 +85,9 @@ const Tabs = ({ value, onChange, options }) => (
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ── GA4 Report tab ────────────────────────────────────────────────────────────
-const GA4ReportTab = () => (
+const GA4ReportTab = () => {
+  const { t } = useTranslation();
+  return (
   <div className="bg-[--bg-surface] border border-[--border-subtle] rounded-xl p-6 lg:p-8">
     <div className="flex items-center justify-between mb-6 pb-4 border-b border-[--border-subtle]">
       <div className="flex items-center gap-3">
@@ -89,8 +95,8 @@ const GA4ReportTab = () => (
           <FileText size={16} className="text-[gold]" />
         </div>
         <div>
-          <h2 className="text-[14px] font-semibold text-[--text-primary]">Báo cáo Hệ thống Tracking GA4</h2>
-          <p className="text-[11px] text-[--text-muted] mt-0.5">Measurement ID: G-S6MV5SK3E0 · MC Voice Training Web</p>
+          <h2 className="text-[14px] font-semibold text-[--text-primary]">{t("admin.analyticsSection.ga4ReportTitle")}</h2>
+          <p className="text-[11px] text-[--text-muted] mt-0.5">{t("admin.analyticsSection.ga4MeasurementId")}</p>
         </div>
       </div>
       <a
@@ -100,7 +106,7 @@ const GA4ReportTab = () => (
         className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[--bg-elevated] border border-[--border-subtle] text-[11px] text-[--text-muted] hover:text-[--text-primary] transition-colors"
       >
         <ExternalLink size={12} />
-        Mở GA4
+        {t("admin.analyticsSection.openGa4")}
       </a>
     </div>
     <div className="prose prose-invert prose-sm max-w-none
@@ -125,10 +131,12 @@ const GA4ReportTab = () => (
       </ReactMarkdown>
     </div>
   </div>
-);
+  );
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 const AnalyticsSection = ({ analytics }) => {
+  const { t } = useTranslation();
   const [loginRange, setLoginRange] = useState("day");
   const [sessionRange, setSessionRange] = useState("day");
   const [mainTab, setMainTab] = useState("data");
@@ -168,8 +176,8 @@ const AnalyticsSection = ({ analytics }) => {
 
   // Active vs inactive radial
   const activityData = [
-    { name: "Đang hoạt động", value: a.activeUsers     || 0, fill: "#10B981" },
-    { name: "Không hoạt động", value: a.inactiveUsers  || 0, fill: "#EF4444" },
+    { name: t("admin.analyticsSection.activeStatus"), value: a.activeUsers     || 0, fill: "#10B981" },
+    { name: t("admin.analyticsSection.inactiveStatus"), value: a.inactiveUsers  || 0, fill: "#EF4444" },
   ];
 
   return (
@@ -181,8 +189,8 @@ const AnalyticsSection = ({ analytics }) => {
           value={mainTab}
           onChange={setMainTab}
           options={[
-            { value: "data",   label: "Dữ liệu hệ thống" },
-            { value: "ga4",    label: "📊 GA4 Report" },
+            { value: "data",   label: t("admin.analyticsSection.tabData") },
+            { value: "ga4",    label: t("admin.analyticsSection.tabGa4") },
           ]}
         />
       </div>
@@ -192,27 +200,27 @@ const AnalyticsSection = ({ analytics }) => {
 
       {/* ── KPI row ──────────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Stat label="Người dùng hôm nay" value={a.registrationsToday} icon={Users}     color="text-[--text-primary]"   sub="Đăng ký mới" />
-        <Stat label="Đăng nhập hôm nay"  value={a.loginsToday}        icon={Activity}  color="text-emerald-400" sub="Phiên hoạt động" />
-        <Stat label="Luyện tập hôm nay"  value={a.sessionsToday}      icon={Mic}       color="text-[gold]"  sub="Sessions AI" />
-        <Stat label="Người dùng Premium" value={a.premiumUsers}       icon={Star}      color="text-purple-400" sub="Đang trả phí" />
+        <Stat label={t("admin.analyticsSection.usersToday")} value={a.registrationsToday} icon={Users}     color="text-[--text-primary]"   sub={t("admin.analyticsSection.newRegistrations")} />
+        <Stat label={t("admin.analyticsSection.loginsToday")}  value={a.loginsToday}        icon={Activity}  color="text-emerald-400" sub={t("admin.analyticsSection.activeSessions")} />
+        <Stat label={t("admin.analyticsSection.sessionsToday")}  value={a.sessionsToday}      icon={Mic}       color="text-[gold]"  sub={t("admin.analyticsSection.aiSessions")} />
+        <Stat label={t("admin.analyticsSection.premiumUsers")} value={a.premiumUsers}       icon={Star}      color="text-purple-400" sub={t("admin.analyticsSection.payingUsers")} />
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Stat label="Tổng người dùng"     value={a.totalUsers}          icon={Users}     color="text-[--text-primary]"   sub="Toàn thời gian" />
-        <Stat label="Active (7 ngày)"     value={a.activeUsersLast7d}   icon={UserCheck} color="text-emerald-400" sub="Có đăng nhập" />
-        <Stat label="Tổng đăng nhập 30n"  value={a.totalLogins30d}      icon={Zap}       color="text-amber-400"  sub="30 ngày qua" />
-        <Stat label="Luyện tập 30 ngày"   value={a.totalSessions30d}    icon={TrendingUp} color="text-indigo-400" sub="Sessions AI" />
+        <Stat label={t("admin.analyticsSection.totalUsers")}     value={a.totalUsers}          icon={Users}     color="text-[--text-primary]"   sub={t("admin.analyticsSection.allTime")} />
+        <Stat label={t("admin.analyticsSection.active7d")}     value={a.activeUsersLast7d}   icon={UserCheck} color="text-emerald-400" sub={t("admin.analyticsSection.hasLoggedIn")} />
+        <Stat label={t("admin.analyticsSection.totalLogins30d")}  value={a.totalLogins30d}      icon={Zap}       color="text-amber-400"  sub={t("admin.analyticsSection.last30Days")} />
+        <Stat label={t("admin.analyticsSection.sessions30d")}   value={a.totalSessions30d}    icon={TrendingUp} color="text-indigo-400" sub={t("admin.analyticsSection.aiSessions")} />
       </div>
 
       {/* ── Login trend ─────────────────────────────────────────────────── */}
-      <Card title="Lượt đăng nhập" subtitle="Số phiên đăng nhập theo thời gian" icon={Activity}>
+      <Card title={t("admin.analyticsSection.loginTrend")} subtitle={t("admin.analyticsSection.loginTrendSub")} icon={Activity}>
         <div className="flex items-center justify-between mb-4">
           <span className="text-[11px] text-[--text-muted]">
-            {loginRange === "hour" ? "Hôm nay theo giờ" : loginRange === "month" ? "12 tháng gần nhất" : "30 ngày gần nhất"}
+            {loginRange === "hour" ? t("admin.analyticsSection.todayByHour") : loginRange === "month" ? t("admin.analyticsSection.last12Months") : t("admin.analyticsSection.last30DaysShort")}
           </span>
           <Tabs value={loginRange} onChange={setLoginRange} options={[
-            { value: "hour", label: "Giờ" }, { value: "day", label: "Ngày" }, { value: "month", label: "Tháng" }
+            { value: "hour", label: t("admin.analyticsSection.hour") }, { value: "day", label: t("admin.analyticsSection.day") }, { value: "month", label: t("admin.analyticsSection.month") }
           ]} />
         </div>
         {empty(loginData) ? <Empty h={240} /> : (
@@ -230,7 +238,7 @@ const AnalyticsSection = ({ analytics }) => {
                   tickFormatter={v => loginRange === "day" ? v.slice(5) : v} />
                 <YAxis stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} width={28} />
                 <Tooltip contentStyle={TIP_STYLE} labelStyle={LABEL_STYLE} itemStyle={ITEM_STYLE}
-                  formatter={v => [fmt(v), "Đăng nhập"]} />
+                  formatter={v => [fmt(v), t("admin.analyticsSection.loginsTooltip")]} />
                 <Area type="monotone" dataKey="count" stroke="#10B981" fill="url(#gradLogin)" strokeWidth={1.5} dot={false} />
               </AreaChart>
             </ResponsiveContainer>
@@ -239,13 +247,13 @@ const AnalyticsSection = ({ analytics }) => {
       </Card>
 
       {/* ── Session trend ────────────────────────────────────────────────── */}
-      <Card title="Phiên luyện tập AI" subtitle="Số lần người dùng luyện giọng theo thời gian" icon={Mic}>
+      <Card title={t("admin.analyticsSection.aiSessionTrend")} subtitle={t("admin.analyticsSection.aiSessionTrendSub")} icon={Mic}>
         <div className="flex items-center justify-between mb-4">
           <span className="text-[11px] text-[--text-muted]">
-            {sessionRange === "hour" ? "Hôm nay theo giờ" : "30 ngày gần nhất"}
+            {sessionRange === "hour" ? t("admin.analyticsSection.todayByHour") : t("admin.analyticsSection.last30DaysShort")}
           </span>
           <Tabs value={sessionRange} onChange={setSessionRange} options={[
-            { value: "hour", label: "Giờ" }, { value: "day", label: "Ngày" },
+            { value: "hour", label: t("admin.analyticsSection.hour") }, { value: "day", label: t("admin.analyticsSection.day") },
           ]} />
         </div>
         {empty(sessionData) ? <Empty h={240} /> : (
@@ -257,7 +265,7 @@ const AnalyticsSection = ({ analytics }) => {
                   tickFormatter={v => sessionRange === "day" ? v.slice(5) : v} />
                 <YAxis stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} width={28} />
                 <Tooltip contentStyle={TIP_STYLE} labelStyle={LABEL_STYLE} itemStyle={ITEM_STYLE}
-                  formatter={v => [fmt(v), "Sessions"]} />
+                  formatter={v => [fmt(v), t("admin.analyticsSection.sessionsTooltip")]} />
                 <Bar dataKey="count" fill="gold" radius={[3, 3, 0, 0]} fillOpacity={0.85} />
               </BarChart>
             </ResponsiveContainer>
@@ -267,7 +275,7 @@ const AnalyticsSection = ({ analytics }) => {
 
       {/* ── New users trend ──────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <Card title="Người dùng mới theo ngày" subtitle="30 ngày gần nhất" icon={Users}>
+        <Card title={t("admin.analyticsSection.newUsersByDay")} subtitle={t("admin.analyticsSection.last30DaysShort")} icon={Users}>
           {empty(a.newUsersByDay) ? <Empty h={200} /> : (
             <div className="h-[200px]">
               <ResponsiveContainer width="100%" height="100%">
@@ -283,7 +291,7 @@ const AnalyticsSection = ({ analytics }) => {
                     tickFormatter={v => v.slice(5)} interval={4} />
                   <YAxis stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} width={24} />
                   <Tooltip contentStyle={TIP_STYLE} labelStyle={LABEL_STYLE} itemStyle={ITEM_STYLE}
-                    formatter={v => [fmt(v), "Người dùng mới"]} />
+                    formatter={v => [fmt(v), t("admin.analyticsSection.newUsersTooltip")]} />
                   <Area type="monotone" dataKey="count" stroke="#3B82F6" fill="url(#gradUsers)" strokeWidth={1.5} dot={false} />
                 </AreaChart>
               </ResponsiveContainer>
@@ -291,7 +299,7 @@ const AnalyticsSection = ({ analytics }) => {
           )}
         </Card>
 
-        <Card title="Người dùng mới theo tháng" subtitle="12 tháng gần nhất" icon={TrendingUp}>
+        <Card title={t("admin.analyticsSection.newUsersByMonth")} subtitle={t("admin.analyticsSection.last12Months")} icon={TrendingUp}>
           {empty(a.newUsersByMonth) ? <Empty h={200} /> : (
             <div className="h-[200px]">
               <ResponsiveContainer width="100%" height="100%">
@@ -301,7 +309,7 @@ const AnalyticsSection = ({ analytics }) => {
                     tickFormatter={v => v.slice(5)} />
                   <YAxis stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} width={24} />
                   <Tooltip contentStyle={TIP_STYLE} labelStyle={LABEL_STYLE} itemStyle={ITEM_STYLE}
-                    formatter={v => [fmt(v), "Người dùng mới"]} />
+                    formatter={v => [fmt(v), t("admin.analyticsSection.newUsersTooltip")]} />
                   <Bar dataKey="count" fill="#3B82F6" radius={[3,3,0,0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -315,7 +323,7 @@ const AnalyticsSection = ({ analytics }) => {
 
         {/* Peak hours heatmap-style bar */}
         <div className="lg:col-span-2">
-          <Card title="Giờ cao điểm truy cập" subtitle="Phân bổ lượt đăng nhập theo giờ trong ngày (30 ngày)" icon={Clock}>
+          <Card title={t("admin.analyticsSection.peakHoursTitle")} subtitle={t("admin.analyticsSection.peakHoursSub")} icon={Clock}>
             {empty(a.loginsByHour30d) ? <Empty h={220} /> : (
               <div className="h-[220px]">
                 <ResponsiveContainer width="100%" height="100%">
@@ -325,7 +333,7 @@ const AnalyticsSection = ({ analytics }) => {
                       tickFormatter={v => v.slice(0,2)} interval={1} />
                     <YAxis stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} width={28} />
                     <Tooltip contentStyle={TIP_STYLE} labelStyle={LABEL_STYLE} itemStyle={ITEM_STYLE}
-                      formatter={v => [fmt(v), "Đăng nhập"]} />
+                      formatter={v => [fmt(v), t("admin.analyticsSection.loginsTooltip")]} />
                     <Bar dataKey="count" radius={[3,3,0,0]}>
                       {(a.loginsByHour30d || []).map((entry, i) => {
                         const isTop = peakHours.some(p => p.hour === entry.hour);
@@ -338,10 +346,10 @@ const AnalyticsSection = ({ analytics }) => {
             )}
             {peakHours.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-2">
-                <span className="text-[10px] text-[--text-muted] uppercase tracking-wider self-center">Top giờ:</span>
+                <span className="text-[10px] text-[--text-muted] uppercase tracking-wider self-center">{t("admin.analyticsSection.topHour")}</span>
                 {peakHours.map((p, i) => (
                   <span key={i} className="px-2 py-0.5 rounded-md bg-[gold]/10 border border-[gold]/20 text-[gold] text-[11px] font-medium">
-                    {p.hour} · {fmt(p.count)} lượt
+                    {p.hour} · {fmt(p.count)} {t("admin.analyticsSection.usesUnit")}
                   </span>
                 ))}
               </div>
@@ -350,7 +358,7 @@ const AnalyticsSection = ({ analytics }) => {
         </div>
 
         {/* Active vs inactive */}
-        <Card title="Trạng thái tài khoản" subtitle="Active vs không hoạt động" icon={UserCheck}>
+        <Card title={t("admin.analyticsSection.accountStatus")} subtitle={t("admin.analyticsSection.accountStatusSub")} icon={UserCheck}>
           <div className="flex flex-col items-center">
             <div className="h-[160px] w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -375,7 +383,7 @@ const AnalyticsSection = ({ analytics }) => {
                 </div>
               ))}
               <div className="flex justify-between items-center px-3 py-1.5 rounded-lg bg-[gold]/[0.05] border border-[gold]/15">
-                <span className="text-[11px] text-[--text-muted]">Active 7 ngày</span>
+                <span className="text-[11px] text-[--text-muted]">{t("admin.analyticsSection.active7dLabel")}</span>
                 <span className="text-[13px] font-semibold text-[gold]">{fmt(a.activeUsersLast7d)}</span>
               </div>
             </div>
@@ -386,7 +394,7 @@ const AnalyticsSection = ({ analytics }) => {
       {/* ── Plan + Role distribution ─────────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
-        <Card title="Phân bổ gói dịch vụ" subtitle="Số người dùng theo từng gói" icon={CreditCard}>
+        <Card title={t("admin.analyticsSection.planDistribution")} subtitle={t("admin.analyticsSection.planDistributionSub")} icon={CreditCard}>
           {empty(planData) ? <Empty h={200} /> : (
             <div className="flex gap-4 items-center">
               <div className="h-[180px] w-[180px] shrink-0">
@@ -396,7 +404,7 @@ const AnalyticsSection = ({ analytics }) => {
                       paddingAngle={3} dataKey="value" stroke="none">
                       {planData.map((e, i) => <Cell key={i} fill={e.color} />)}
                     </Pie>
-                    <Tooltip contentStyle={TIP_STYLE} itemStyle={ITEM_STYLE} formatter={v => [fmt(v), "Người dùng"]} />
+                    <Tooltip contentStyle={TIP_STYLE} itemStyle={ITEM_STYLE} formatter={v => [fmt(v), t("admin.analyticsSection.usersTooltip")]} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -423,7 +431,7 @@ const AnalyticsSection = ({ analytics }) => {
           )}
         </Card>
 
-        <Card title="Phân bổ vai trò" subtitle="Số người dùng theo vai trò trong hệ thống" icon={Users}>
+        <Card title={t("admin.analyticsSection.roleDistribution")} subtitle={t("admin.analyticsSection.roleDistributionSub")} icon={Users}>
           {empty(roleData) ? <Empty h={200} /> : (
             <div className="flex gap-4 items-center">
               <div className="h-[180px] w-[180px] shrink-0">
@@ -433,7 +441,7 @@ const AnalyticsSection = ({ analytics }) => {
                       paddingAngle={3} dataKey="value" stroke="none">
                       {roleData.map((e, i) => <Cell key={i} fill={e.color} />)}
                     </Pie>
-                    <Tooltip contentStyle={TIP_STYLE} itemStyle={ITEM_STYLE} formatter={v => [fmt(v), "Người dùng"]} />
+                    <Tooltip contentStyle={TIP_STYLE} itemStyle={ITEM_STYLE} formatter={v => [fmt(v), t("admin.analyticsSection.usersTooltip")]} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -462,7 +470,7 @@ const AnalyticsSection = ({ analytics }) => {
       </div>
 
       {/* ── Logins per month line chart ──────────────────────────────────── */}
-      <Card title="Đăng nhập theo tháng" subtitle="12 tháng gần nhất" icon={TrendingUp}>
+      <Card title={t("admin.analyticsSection.loginsByMonth")} subtitle={t("admin.analyticsSection.last12Months")} icon={TrendingUp}>
         {empty(a.loginsByMonth) ? <Empty h={200} /> : (
           <div className="h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -472,7 +480,7 @@ const AnalyticsSection = ({ analytics }) => {
                   tickFormatter={v => v.slice(5)} />
                 <YAxis stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} width={32} />
                 <Tooltip contentStyle={TIP_STYLE} labelStyle={LABEL_STYLE} itemStyle={ITEM_STYLE}
-                  formatter={v => [fmt(v), "Đăng nhập"]} />
+                  formatter={v => [fmt(v), t("admin.analyticsSection.loginsTooltip")]} />
                 <Line type="monotone" dataKey="count" stroke="#10B981" strokeWidth={2}
                   dot={{ fill: "#10B981", strokeWidth: 0, r: 3 }}
                   activeDot={{ r: 5, fill: "#10B981" }} />

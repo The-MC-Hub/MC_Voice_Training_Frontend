@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Trophy, Plus, Edit2, Trash2, Calendar, ToggleLeft, ToggleRight, X, Check, BookOpen } from "lucide-react";
 import { fetchAdminCompetitions, addCompetition, updateCompetition, deleteCompetition } from "../../controllers/communityController";
 import { fetchLessons } from "../../controllers/voiceController";
@@ -6,6 +7,7 @@ import { fetchLessons } from "../../controllers/voiceController";
 const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
 
 const CompetitionManager = () => {
+  const { t } = useTranslation();
   const [competitions, setCompetitions] = useState([]);
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,29 +65,29 @@ const CompetitionManager = () => {
       else await addCompetition(payload);
       setIsModalOpen(false);
       loadData();
-    } catch { alert("Failed to save competition"); }
+    } catch { alert(t('admin.competitionManager.saveFailed')); }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Xóa cuộc thi này? Hành động này không thể hoàn tác.")) return;
+    if (!window.confirm(t('admin.competitionManager.confirmDelete'))) return;
     try { await deleteCompetition(id); loadData(); }
-    catch { alert("Failed to delete competition"); }
+    catch { alert(t('admin.competitionManager.deleteFailed')); }
   };
 
-  const getLessonTitle = (scriptId) => lessons.find(l => l.id === scriptId)?.title || "Unknown Script";
+  const getLessonTitle = (scriptId) => lessons.find(l => l.id === scriptId)?.title || t('admin.competitionManager.unknownScript');
 
-  if (loading) return <div className="text-center py-16 text-zinc-500 text-[12px]">Loading Arenas...</div>;
+  if (loading) return <div className="text-center py-16 text-zinc-500 text-[12px]">{t('admin.competitionManager.loadingArenas')}</div>;
 
   return (
     <div className="space-y-5 w-full">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-[15px] font-semibold text-white">Voice Duel Challenge Arenas</h2>
-          <p className="text-[12px] text-zinc-500 mt-0.5">Configure daily or weekly speech battle competitions and script references.</p>
+          <h2 className="text-[15px] font-semibold text-white">{t('admin.competitionManager.title')}</h2>
+          <p className="text-[12px] text-zinc-500 mt-0.5">{t('admin.competitionManager.subtitle')}</p>
         </div>
         <button onClick={handleOpenCreate}
           className="flex items-center gap-2 px-3 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors">
-          <Plus size={13} /> New Contest Arena
+          <Plus size={13} /> {t('admin.competitionManager.newArena')}
         </button>
       </div>
 
@@ -96,7 +98,7 @@ const CompetitionManager = () => {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className={`px-2 py-0.5 text-[10px] font-medium border ${comp.active ? "text-emerald-400 border-emerald-900/40 bg-emerald-950/20" : "text-zinc-500 border-white/[0.07] bg-[#09090b]"}`}>
-                    {comp.active ? "ACTIVE" : "INACTIVE"}
+                    {comp.active ? t('admin.competitionManager.active') : t('admin.competitionManager.inactive')}
                   </span>
                   <span className="text-[10px] text-zinc-500 font-mono bg-[#09090b] border border-white/[0.06] px-2 py-0.5">{comp.type}</span>
                 </div>
@@ -106,7 +108,7 @@ const CompetitionManager = () => {
                 </div>
                 <div className="bg-[#09090b] border border-white/[0.06] p-3">
                   <span className="text-[9px] text-zinc-600 uppercase tracking-wider flex items-center gap-1 mb-1">
-                    <BookOpen size={9} /> Script Reference
+                    <BookOpen size={9} /> {t('admin.competitionManager.scriptReference')}
                   </span>
                   <span className="text-[12px] text-zinc-300 font-medium block truncate">{getLessonTitle(comp.challengeScriptId)}</span>
                 </div>
@@ -116,11 +118,11 @@ const CompetitionManager = () => {
                   <Calendar size={10} /> {new Date(comp.endDate).toLocaleDateString("vi-VN")}
                 </span>
                 <div className="flex items-center gap-1.5">
-                  <button onClick={() => handleOpenEdit(comp)} title="Edit"
+                  <button onClick={() => handleOpenEdit(comp)} title={t('admin.competitionManager.edit')}
                     className="p-1.5 text-zinc-500 hover:text-white border border-white/[0.06] hover:border-white/[0.14] transition-colors">
                     <Edit2 size={12} />
                   </button>
-                  <button onClick={() => handleDelete(comp.id)} title="Delete"
+                  <button onClick={() => handleDelete(comp.id)} title={t('admin.competitionManager.delete')}
                     className="p-1.5 text-zinc-500 hover:text-[--text-primary] border border-white/[0.06] hover:border-[--border-subtle] transition-colors">
                     <Trash2 size={12} />
                   </button>
@@ -131,7 +133,7 @@ const CompetitionManager = () => {
         ) : (
           <div className="col-span-full text-center py-14 bg-[#111113] border border-white/[0.07]">
             <Trophy size={32} className="text-zinc-700 mx-auto mb-3" />
-            <p className="text-zinc-500 text-[12px]">No Arenas Registered. Click "New Contest Arena" to start.</p>
+            <p className="text-zinc-500 text-[12px]">{t('admin.competitionManager.noArenas')}</p>
           </div>
         )}
       </div>
@@ -145,23 +147,23 @@ const CompetitionManager = () => {
             </button>
             <form onSubmit={handleSave} className="p-6 space-y-4 relative">
               <h3 className="text-[14px] font-semibold text-white border-b border-white/[0.06] pb-4">
-                {editingComp ? "Edit Contest Arena" : "Create Contest Arena"}
+                {editingComp ? t('admin.competitionManager.editArena') : t('admin.competitionManager.createArena')}
               </h3>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Arena Title</label>
+                <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.competitionManager.arenaTitle')}</label>
                 <input type="text" required value={title} onChange={e => setTitle(e.target.value)}
-                  className={inputCls} placeholder="Weekly Wedding Voice Duel..." />
+                  className={inputCls} placeholder={t('admin.competitionManager.arenaTitlePlaceholder')} />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Description</label>
+                <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.competitionManager.description')}</label>
                 <textarea required value={description} onChange={e => setDescription(e.target.value)}
-                  rows={3} className={inputCls} placeholder="Contest scenario objectives, rewards..." />
+                  rows={3} className={inputCls} placeholder={t('admin.competitionManager.descriptionPlaceholder')} />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Challenge Script</label>
+                <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.competitionManager.challengeScript')}</label>
                 <select value={challengeScriptId} onChange={e => setChallengeScriptId(e.target.value)} required className={inputCls + " cursor-pointer"}>
                   {lessons.map(lesson => (
                     <option key={lesson.id} value={lesson.id}>[{lesson.category}] {lesson.title}</option>
@@ -171,14 +173,14 @@ const CompetitionManager = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Contest Interval</label>
+                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.competitionManager.contestInterval')}</label>
                   <select value={type} onChange={e => setType(e.target.value)} className={inputCls + " cursor-pointer"}>
-                    <option value="DAILY">Daily Contest</option>
-                    <option value="WEEKLY">Weekly Contest</option>
+                    <option value="DAILY">{t('admin.competitionManager.dailyContest')}</option>
+                    <option value="WEEKLY">{t('admin.competitionManager.weeklyContest')}</option>
                   </select>
                 </div>
                 <div className="flex items-end justify-between pb-0.5">
-                  <span className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Active</span>
+                  <span className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.competitionManager.active')}</span>
                   <button type="button" onClick={() => setActive(!active)}
                     className={`transition-colors ${active ? "text-[gold]" : "text-zinc-600"}`}>
                     {active ? <ToggleRight size={28} /> : <ToggleLeft size={28} />}
@@ -188,11 +190,11 @@ const CompetitionManager = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Start Date</label>
+                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.competitionManager.startDate')}</label>
                   <input type="date" required value={startDate} onChange={e => setStartDate(e.target.value)} className={inputCls} />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">End Date</label>
+                  <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.competitionManager.endDate')}</label>
                   <input type="date" required value={endDate} onChange={e => setEndDate(e.target.value)} className={inputCls} />
                 </div>
               </div>
@@ -200,11 +202,11 @@ const CompetitionManager = () => {
               <div className="pt-3 border-t border-white/[0.06] flex gap-2">
                 <button type="button" onClick={() => setIsModalOpen(false)}
                   className="flex-1 py-2 bg-[#09090b] border border-white/[0.07] text-zinc-400 text-[12px] font-medium hover:border-white/[0.14] transition-colors">
-                  Cancel
+                  {t('admin.competitionManager.cancel')}
                 </button>
                 <button type="submit"
                   className="flex-1 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors flex items-center justify-center gap-1.5">
-                  <Check size={13} /> Save Arena
+                  <Check size={13} /> {t('admin.competitionManager.saveArena')}
                 </button>
               </div>
             </form>

@@ -23,24 +23,24 @@ import AdminGuide from "./admin/sections/AdminGuide";
 import CoursePricingManager from "./admin/sections/CoursePricingManager";
 import SecurityLogs from "./admin/sections/SecurityLogs";
 
-const NAV_ITEMS = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutGrid },
-  { id: "users", label: "Người dùng", icon: Users },
-  { id: "lessons", label: "Bài học", icon: BookOpen },
-  { id: "transactions", label: "Giao dịch", icon: CreditCard },
-  { id: "academy", label: "Academy", icon: Award },
-  { id: "courses", label: "Khóa học", icon: GraduationCap },
-  { id: "competitions", label: "Thi đấu", icon: Trophy },
-  { id: "logs", label: "Server Logs", icon: Terminal },
-  { id: "marketing", label: "Marketing", icon: Megaphone },
-  { id: "plans", label: "Gói & Giảm giá", icon: Package },
-  { id: "notifications", label: "Thông báo", icon: Bell },
-  { id: "guide", label: "Hướng dẫn", icon: HelpCircle },
-  { id: "security-logs", label: "Security Logs", icon: Shield },
-];
-
 const AdminDashboard = () => {
   const { t } = useTranslation();
+
+  const NAV_ITEMS = [
+    { id: "dashboard", label: t('admin.dashboard.navDashboard'), icon: LayoutGrid },
+    { id: "users", label: t('admin.dashboard.navUsers'), icon: Users },
+    { id: "lessons", label: t('admin.dashboard.navLessons'), icon: BookOpen },
+    { id: "transactions", label: t('admin.dashboard.navTransactions'), icon: CreditCard },
+    { id: "academy", label: t('admin.dashboard.navAcademy'), icon: Award },
+    { id: "courses", label: t('admin.dashboard.navCourses'), icon: GraduationCap },
+    { id: "competitions", label: t('admin.dashboard.navCompetitions'), icon: Trophy },
+    { id: "logs", label: t('admin.dashboard.navServerLogs'), icon: Terminal },
+    { id: "marketing", label: t('admin.dashboard.navMarketing'), icon: Megaphone },
+    { id: "plans", label: t('admin.dashboard.navPlans'), icon: Package },
+    { id: "notifications", label: t('admin.dashboard.navNotifications'), icon: Bell },
+    { id: "guide", label: t('admin.dashboard.navGuide'), icon: HelpCircle },
+    { id: "security-logs", label: t('admin.dashboard.navSecurityLogs'), icon: Shield },
+  ];
   const { section = "dashboard" } = useParams();
   const navigate = useNavigate();
   const { logout, user } = useAuthStore();
@@ -54,13 +54,13 @@ const AdminDashboard = () => {
   const handleVerify = async (id, cur) => {
     const u = users?.find(x => (x._id || x.id) === id);
     try { await verifyMC(id, !cur, u?.isActive ?? true); refetchAll(); }
-    catch { alert("Verification failed"); }
+    catch { alert(t('admin.dashboard.verificationFailed')); }
   };
 
   const handleSuspend = async (id, cur) => {
     const u = users?.find(x => (x._id || x.id) === id);
     try { await suspendUser(id, !cur, u?.isVerified ?? false); refetchAll(); }
-    catch { alert("Suspend failed"); }
+    catch { alert(t('admin.dashboard.suspendFailed')); }
   };
 
   const revenueData = useMemo(() => {
@@ -87,10 +87,10 @@ const AdminDashboard = () => {
   }, [users]);
 
   const stats = [
-    { label: "Tổng người dùng", value: dashStats?.totalUsers ?? (users?.filter(u => (u.role || '').toLowerCase() !== 'admin').length ?? 0), icon: Users, color: "text-blue-500", trend: "Đã đăng ký" },
-    { label: "Giao dịch thành công", value: dashStats?.completedTransactions ?? 0, icon: ShieldCheck, color: "text-emerald-500", trend: `Chờ: ${dashStats?.pendingTransactions ?? 0} · Lỗi: ${dashStats?.failedTransactions ?? 0}` },
-    { label: "Tổng giao dịch", value: dashStats?.totalTransactions ?? transactions?.length ?? 0, icon: CreditCard, color: "text-amber-500", trend: "Toàn hệ thống" },
-    { label: "Doanh thu thực tế", value: dashStats?.totalRevenue ?? revenueStats?.totalRevenue ?? 0, icon: BarChart2, color: "text-purple-500", trend: "Giao dịch hoàn thành", isMoney: true },
+    { label: t('admin.dashboard.statTotalUsers'), value: dashStats?.totalUsers ?? (users?.filter(u => (u.role || '').toLowerCase() !== 'admin').length ?? 0), icon: Users, color: "text-blue-500", trend: t('admin.dashboard.statRegistered') },
+    { label: t('admin.dashboard.statSuccessfulTransactions'), value: dashStats?.completedTransactions ?? 0, icon: ShieldCheck, color: "text-emerald-500", trend: t('admin.dashboard.statPendingFailed', { pending: dashStats?.pendingTransactions ?? 0, failed: dashStats?.failedTransactions ?? 0 }) },
+    { label: t('admin.dashboard.statTotalTransactions'), value: dashStats?.totalTransactions ?? transactions?.length ?? 0, icon: CreditCard, color: "text-amber-500", trend: t('admin.dashboard.statSystemWide') },
+    { label: t('admin.dashboard.statActualRevenue'), value: dashStats?.totalRevenue ?? revenueStats?.totalRevenue ?? 0, icon: BarChart2, color: "text-purple-500", trend: t('admin.dashboard.statCompletedTransactions'), isMoney: true },
   ];
 
   const currentItem = NAV_ITEMS.find(n => n.id === section);
@@ -111,14 +111,14 @@ const AdminDashboard = () => {
             </div>
             <div>
               <p className="text-[13px] font-bold text-[--text-primary] leading-none">MCHub</p>
-              <p className="text-[10px] text-[--text-muted] mt-0.5">Admin Control</p>
+              <p className="text-[10px] text-[--text-muted] mt-0.5">{t('admin.dashboard.adminControl')}</p>
             </div>
           </div>
         </div>
 
         {/* Nav */}
         <nav className="flex-1 min-h-0 p-3 space-y-1 overflow-y-auto">
-          <p className="text-[9px] text-[--text-muted] uppercase tracking-widest font-semibold px-3 py-2">Menu</p>
+          <p className="text-[9px] text-[--text-muted] uppercase tracking-widest font-semibold px-3 py-2">{t('admin.dashboard.menu')}</p>
           {NAV_ITEMS.map(({ id, label, icon: Icon }) => {
             const isActive = resolvedSection === id;
             return (
@@ -159,7 +159,7 @@ const AdminDashboard = () => {
         <div className="p-4 border-t border-[--border-subtle] space-y-3">
           <div className="flex items-center gap-2 px-2">
             <div className="w-1.5 h-1.5 bg-emerald-400 animate-pulse" />
-            <span className="text-[11px] text-[--text-muted]">Hệ thống hoạt động</span>
+            <span className="text-[11px] text-[--text-muted]">{t('admin.dashboard.systemOnline')}</span>
           </div>
           {user && (
             <div className="px-2 pb-1">
@@ -169,7 +169,7 @@ const AdminDashboard = () => {
                 className="w-full flex items-center gap-2 px-3 py-2 text-[12px] font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all"
               >
                 <LogOut size={13} />
-                Đăng xuất
+                {t('admin.dashboard.logout')}
               </button>
             </div>
           )}
@@ -183,12 +183,12 @@ const AdminDashboard = () => {
         <header className=" mx-4 shrink-0 h-14 flex items-center justify-between px-7 border-b border-[--border-subtle] bg-[--bg-base]/95 backdrop-blur-sm">
           <div className="flex items-center gap-3">
             {currentItem && <currentItem.icon size={17} className="text-[--text-muted]" />}
-            <h1 className="text-[15px] font-semibold text-[--text-primary]">{currentItem?.label || "Dashboard"}</h1>
+            <h1 className="text-[15px] font-semibold text-[--text-primary]">{currentItem?.label || t('admin.dashboard.navDashboard')}</h1>
             <span className="h-4 w-px bg-[--border-subtle]" />
-            <span className="text-[12px] text-[--text-muted]">Dữ liệu thực tế từ MongoDB</span>
+            <span className="text-[12px] text-[--text-muted]">{t('admin.dashboard.realDataFromMongo')}</span>
           </div>
           <div className="px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-[11px] text-emerald-700 font-medium">
-            Live
+            {t('admin.dashboard.live')}
             </div>
         </header>
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Plus, Trash2, Edit2, Check, X, Tag, Package,
   ChevronDown, ChevronUp, Save, RefreshCw, AlertCircle,
@@ -19,6 +20,7 @@ function formatVnd(n) {
 // ── Plan Editor ──────────────────────────────────────────────────────────────
 
 function PlanEditor({ plan, onSave }) {
+  const { t } = useTranslation();
   const [form, setForm] = useState({ ...plan });
   const [saving, setSaving] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -42,7 +44,7 @@ function PlanEditor({ plan, onSave }) {
       await api.put(`/admin/plans/${plan.id}`, form);
       onSave();
     } catch (e) {
-      alert(e.response?.data?.message || "Lưu thất bại");
+      alert(e.response?.data?.message || t('admin.planManager.saveFailed'));
     } finally {
       setSaving(false);
     }
@@ -94,7 +96,7 @@ function PlanEditor({ plan, onSave }) {
         </div>
         <div className="flex items-center gap-3">
           <span className={`text-[10px] px-2 py-0.5 rounded ${form.active ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-red-500/10 text-red-400 border border-red-500/20"}`}>
-            {form.active ? "Hiện" : "Ẩn"}
+            {form.active ? t('admin.planManager.visible') : t('admin.planManager.hidden')}
           </span>
           {expanded ? <ChevronUp size={14} className="text-zinc-500" /> : <ChevronDown size={14} className="text-zinc-500" />}
         </div>
@@ -105,75 +107,75 @@ function PlanEditor({ plan, onSave }) {
 
           {/* Section 1 — Core info */}
           <div className={fieldGroupCls}>
-            <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold">Thông tin cơ bản</p>
+            <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold">{t('admin.planManager.basicInfo')}</p>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className={labelCls}>Tên hiển thị</label>
+                <label className={labelCls}>{t('admin.planManager.displayName')}</label>
                 <input className={inputCls} value={form.displayName || ""} onChange={e => set("displayName", e.target.value)} />
               </div>
               <div>
-                <label className={labelCls}>Giá (VNĐ)</label>
+                <label className={labelCls}>{t('admin.planManager.priceVnd')}</label>
                 <input className={inputCls} type="number" value={form.priceVnd || 0} onChange={e => set("priceVnd", Number(e.target.value))} />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className={labelCls}>
-                  Số ngày&nbsp;
+                  {t('admin.planManager.durationDays')}&nbsp;
                   <span className="text-zinc-600 normal-case font-normal">
-                    ({form.durationDays === 0 ? "Vĩnh viễn" : form.durationDays + " ngày"})
+                    ({form.durationDays === 0 ? t('admin.planManager.forever') : t('admin.planManager.daysCount', { count: form.durationDays })})
                   </span>
                 </label>
                 <input className={inputCls} type="number" value={form.durationDays || 0} onChange={e => set("durationDays", Number(e.target.value))} />
               </div>
               <div>
                 <label className={labelCls}>
-                  AI session/tháng&nbsp;
+                  {t('admin.planManager.aiSessionPerMonth')}&nbsp;
                   <span className="text-zinc-600 normal-case font-normal">
-                    ({form.aiSessionLimit >= 999 ? "Không giới hạn" : form.aiSessionLimit})
+                    ({form.aiSessionLimit >= 999 ? t('admin.planManager.unlimited') : form.aiSessionLimit})
                   </span>
                 </label>
                 <input className={inputCls} type="number" value={form.aiSessionLimit || 0} onChange={e => set("aiSessionLimit", Number(e.target.value))} />
               </div>
             </div>
             <div>
-              <label className={labelCls}>Tagline</label>
-              <input className={inputCls} value={form.tagline || ""} onChange={e => set("tagline", e.target.value)} placeholder="Mô tả ngắn hiển thị dưới tên gói..." />
+              <label className={labelCls}>{t('admin.planManager.tagline')}</label>
+              <input className={inputCls} value={form.tagline || ""} onChange={e => set("tagline", e.target.value)} placeholder={t('admin.planManager.taglinePlaceholder')} />
             </div>
             <div>
-              <label className={labelCls}>Mô tả chi tiết</label>
+              <label className={labelCls}>{t('admin.planManager.detailedDescription')}</label>
               <textarea
                 className={inputCls + " resize-none"}
                 rows={2}
                 value={form.description || ""}
                 onChange={e => set("description", e.target.value)}
-                placeholder="Nội dung mô tả đầy đủ (không bắt buộc)..."
+                placeholder={t('admin.planManager.detailedDescriptionPlaceholder')}
               />
             </div>
           </div>
 
           {/* Section 2 — Marketing copy */}
           <div className={fieldGroupCls}>
-            <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold">Marketing</p>
+            <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold">{t('admin.planManager.marketing')}</p>
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className={labelCls}>Badge</label>
-                <input className={inputCls} value={form.badge || ""} placeholder="Phổ biến nhất..." onChange={e => set("badge", e.target.value)} />
+                <label className={labelCls}>{t('admin.planManager.badge')}</label>
+                <input className={inputCls} value={form.badge || ""} placeholder={t('admin.planManager.badgePlaceholder')} onChange={e => set("badge", e.target.value)} />
               </div>
               <div>
-                <label className={labelCls}>Social proof</label>
-                <input className={inputCls} value={form.socialProof || ""} placeholder="92% MC chọn..." onChange={e => set("socialProof", e.target.value)} />
+                <label className={labelCls}>{t('admin.planManager.socialProof')}</label>
+                <input className={inputCls} value={form.socialProof || ""} placeholder={t('admin.planManager.socialProofPlaceholder')} onChange={e => set("socialProof", e.target.value)} />
               </div>
               <div>
-                <label className={labelCls}>Urgency text</label>
-                <input className={inputCls} value={form.urgencyText || ""} placeholder="Chỉ còn 8 chỗ..." onChange={e => set("urgencyText", e.target.value)} />
+                <label className={labelCls}>{t('admin.planManager.urgencyText')}</label>
+                <input className={inputCls} value={form.urgencyText || ""} placeholder={t('admin.planManager.urgencyTextPlaceholder')} onChange={e => set("urgencyText", e.target.value)} />
               </div>
             </div>
           </div>
 
           {/* Section 3 — Highlights */}
           <div className={fieldGroupCls}>
-            <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold">Quyền lợi nổi bật</p>
+            <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold">{t('admin.planManager.highlights')}</p>
             <div className="space-y-2">
               {(form.highlights || []).map((h, i) => (
                 <div key={i} className="flex items-center gap-2.5 bg-white/3 border border-white/6 px-3 py-2 rounded-lg">
@@ -191,7 +193,7 @@ function PlanEditor({ plan, onSave }) {
                 value={highlightDraft}
                 onChange={e => setHighlightDraft(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addHighlight())}
-                placeholder="Thêm quyền lợi rồi nhấn Enter..."
+                placeholder={t('admin.planManager.highlightPlaceholder')}
               />
               <button
                 onClick={addHighlight}
@@ -207,18 +209,18 @@ function PlanEditor({ plan, onSave }) {
             <div className="flex items-center justify-between px-4 py-3 bg-white/2 border-b border-white/5">
               <p className="text-[11px] font-semibold text-zinc-300 flex items-center gap-1.5">
                 <Percent size={12} className="text-red-400" />
-                Giảm giá trực tiếp trên gói
+                {t('admin.planManager.directDiscount')}
               </p>
               {discountActive && (
                 <button onClick={clearDiscount} className="text-[10px] text-zinc-500 hover:text-red-400 transition-colors flex items-center gap-1">
-                  <X size={10} /> Xoá giảm giá
+                  <X size={10} /> {t('admin.planManager.removeDiscount')}
                 </button>
               )}
             </div>
             <div className="p-4 space-y-3">
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className={labelCls}>Giảm (%)</label>
+                  <label className={labelCls}>{t('admin.planManager.discountPercent')}</label>
                   <input
                     className={inputCls}
                     type="number" min="0" max="100" step="1"
@@ -228,7 +230,7 @@ function PlanEditor({ plan, onSave }) {
                   />
                 </div>
                 <div>
-                  <label className={labelCls}>Giảm theo tiền (đ)</label>
+                  <label className={labelCls}>{t('admin.planManager.discountAmount')}</label>
                   <input
                     className={inputCls}
                     type="number" min="0"
@@ -238,7 +240,7 @@ function PlanEditor({ plan, onSave }) {
                   />
                 </div>
                 <div>
-                  <label className={labelCls}>Giá sau giảm</label>
+                  <label className={labelCls}>{t('admin.planManager.priceAfterDiscount')}</label>
                   <div className={inputCls + " flex items-center gap-2 cursor-default"}>
                     {discountActive ? (
                       <>
@@ -246,19 +248,19 @@ function PlanEditor({ plan, onSave }) {
                         <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/15 text-red-400 border border-red-500/20">-{form.discountPercent}%</span>
                       </>
                     ) : (
-                      <span className="text-zinc-600">Chưa có giảm giá</span>
+                      <span className="text-zinc-600">{t('admin.planManager.noDiscountYet')}</span>
                     )}
                   </div>
                 </div>
               </div>
               {discountActive && (
                 <p className="text-[11px] text-zinc-500 bg-red-500/5 border border-red-500/10 rounded-lg px-3 py-2">
-                  Hiển thị user:&nbsp;
+                  {t('admin.planManager.userPreview')}:&nbsp;
                   <span className="line-through text-zinc-600">{formatVnd(form.priceVnd)}</span>
                   {" → "}
                   <span className="text-red-400 font-semibold">{formatVnd(form.discountedPriceVnd)}</span>
                   {" · "}
-                  <span className="text-zinc-500">tiết kiệm {formatVnd(form.priceVnd - form.discountedPriceVnd)} ({form.discountPercent}%)</span>
+                  <span className="text-zinc-500">{t('admin.planManager.savingsAmount', { amount: formatVnd(form.priceVnd - form.discountedPriceVnd), percent: form.discountPercent })}</span>
                 </p>
               )}
             </div>
@@ -271,7 +273,7 @@ function PlanEditor({ plan, onSave }) {
               className={`flex items-center gap-2 text-[13px] font-medium transition-colors ${form.active ? "text-emerald-400" : "text-zinc-500"}`}
             >
               {form.active ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
-              {form.active ? "Đang hiển thị" : "Đang ẩn"}
+              {form.active ? t('admin.planManager.showing') : t('admin.planManager.hiding')}
             </button>
             <button
               onClick={handleSave}
@@ -279,7 +281,7 @@ function PlanEditor({ plan, onSave }) {
               className="flex items-center gap-2 px-5 py-2.5 bg-[#f5a623] text-black text-[13px] font-bold hover:bg-[#e09515] disabled:opacity-50 transition-colors rounded-xl"
             >
               {saving ? <RefreshCw size={13} className="animate-spin" /> : <Save size={13} />}
-              Lưu thay đổi
+              {t('admin.planManager.saveChanges')}
             </button>
           </div>
         </div>
@@ -298,6 +300,7 @@ const EMPTY_DISCOUNT = {
 const ALL_PLANS = ["BASIC", "FULL", "ANNUAL"];
 
 function DiscountRow({ discount, onUpdate, onDelete }) {
+  const { t } = useTranslation();
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({ ...discount });
   const [saving, setSaving] = useState(false);
@@ -318,19 +321,19 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
       onUpdate();
       setEditing(false);
     } catch (e) {
-      setErr(e.response?.data?.message || "Lưu thất bại");
+      setErr(e.response?.data?.message || t('admin.planManager.saveFailed'));
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async () => {
-    if (!window.confirm(`Xóa mã "${discount.code}"?`)) return;
+    if (!window.confirm(t('admin.planManager.confirmDeleteCode', { code: discount.code }))) return;
     try {
       await api.delete(`/admin/plans/discounts/${discount.id}`);
       onDelete();
     } catch {
-      setErr("Xóa thất bại");
+      setErr(t('admin.planManager.deleteFailed'));
     }
   };
 
@@ -338,7 +341,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
   const isExpired = discount.expiresAt && new Date(discount.expiresAt) < now;
   const isNotStarted = discount.startsAt && new Date(discount.startsAt) > now;
   const isMaxed = discount.maxUses > 0 && discount.usedCount >= discount.maxUses;
-  const statusLabel = !discount.active ? "Tắt" : isExpired ? "Hết hạn" : isMaxed ? "Hết lượt" : isNotStarted ? "Chưa bắt đầu" : "Hoạt động";
+  const statusLabel = !discount.active ? t('admin.planManager.statusOff') : isExpired ? t('admin.planManager.statusExpired') : isMaxed ? t('admin.planManager.statusUsedUp') : isNotStarted ? t('admin.planManager.statusNotStarted') : t('admin.planManager.statusActive');
   const statusOk = discount.active && !isExpired && !isMaxed && !isNotStarted;
 
   if (!editing) {
@@ -354,7 +357,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
             {discount.type === "PERCENT" ? `-${discount.discountValue}%` : `-${formatVnd(discount.discountValue)}`}
           </span>
           <span className="text-[11px] text-zinc-500 tabular-nums">
-            {discount.usedCount ?? 0}/{discount.maxUses || "∞"} lượt
+            {t('admin.planManager.usedCountOf', { used: discount.usedCount ?? 0, max: discount.maxUses || "∞" })}
           </span>
           {discount.maxUses > 0 && (() => {
             const remaining = discount.maxUses - (discount.usedCount ?? 0);
@@ -364,7 +367,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
               : "text-emerald-400 border-emerald-500/20 bg-emerald-500/10";
             return (
               <span className={`text-[11px] px-2 py-0.5 rounded-md font-semibold border tabular-nums ${color}`}>
-                còn {remaining}
+                {t('admin.planManager.remainingCount', { count: remaining })}
               </span>
             );
           })()}
@@ -376,8 +379,8 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
           {(discount.startsAt || discount.expiresAt) && (
             <span className={`text-[10px] tabular-nums flex items-center gap-1 ${isExpired ? "text-red-400" : isNotStarted ? "text-amber-400" : "text-zinc-600"}`}>
               <Calendar size={9} />
-              {discount.startsAt && !discount.expiresAt && `Từ ${new Date(discount.startsAt).toLocaleDateString("vi-VN")}`}
-              {!discount.startsAt && discount.expiresAt && (isExpired ? "Hết hạn" : `→ ${new Date(discount.expiresAt).toLocaleDateString("vi-VN")}`)}
+              {discount.startsAt && !discount.expiresAt && t('admin.planManager.fromDate', { date: new Date(discount.startsAt).toLocaleDateString("vi-VN") })}
+              {!discount.startsAt && discount.expiresAt && (isExpired ? t('admin.planManager.statusExpired') : `→ ${new Date(discount.expiresAt).toLocaleDateString("vi-VN")}`)}
               {discount.startsAt && discount.expiresAt && `${new Date(discount.startsAt).toLocaleDateString("vi-VN")} → ${new Date(discount.expiresAt).toLocaleDateString("vi-VN")}`}
             </span>
           )}
@@ -385,7 +388,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
         <div className="flex items-center gap-2 shrink-0">
           {discount.showInSidebar && (
             <span className="text-[10px] px-2 py-0.5 rounded-md font-medium bg-violet-500/10 text-violet-400 border border-violet-500/20 flex items-center gap-1">
-              <Tag size={8} /> Sidebar
+              <Tag size={8} /> {t('admin.planManager.sidebar')}
             </span>
           )}
           <span className={`text-[10px] px-2 py-0.5 rounded-md font-medium ${
@@ -412,7 +415,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
       <div className="flex items-center justify-between px-4 py-2.5 bg-amber-500/5 border-b border-amber-500/10">
         <div className="flex items-center gap-2">
           <Edit2 size={12} className="text-amber-400" />
-          <span className="text-[11px] font-semibold text-amber-400 tracking-wide">Chỉnh sửa — {discount.code}</span>
+          <span className="text-[11px] font-semibold text-amber-400 tracking-wide">{t('admin.planManager.editingCode', { code: discount.code })}</span>
         </div>
         <button onClick={() => setEditing(false)} className="p-1 text-zinc-500 hover:text-white transition-colors rounded">
           <X size={13} />
@@ -423,32 +426,32 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
         {/* Row 1: code + type + value */}
         <div className="grid grid-cols-3 gap-3">
           <div>
-            <label className={labelCls}>Mã giảm giá</label>
+            <label className={labelCls}>{t('admin.planManager.discountCode')}</label>
             <input className={inputCls + " font-mono uppercase tracking-widest"} value={form.code} onChange={e => set("code", e.target.value.toUpperCase())} />
           </div>
           <div>
-            <label className={labelCls}>Loại</label>
+            <label className={labelCls}>{t('admin.planManager.discountType')}</label>
             <select className={inputCls} value={form.type} onChange={e => set("type", e.target.value)}>
-              <option value="PERCENT">Phần trăm (%)</option>
-              <option value="FIXED">Số tiền cố định (đ)</option>
+              <option value="PERCENT">{t('admin.planManager.percentType')}</option>
+              <option value="FIXED">{t('admin.planManager.fixedType')}</option>
             </select>
           </div>
           <div>
-            <label className={labelCls}>{form.type === "PERCENT" ? "Giá trị (%)" : "Giá trị (đ)"}</label>
+            <label className={labelCls}>{form.type === "PERCENT" ? t('admin.planManager.valuePercent') : t('admin.planManager.valueVnd')}</label>
             <input className={inputCls} type="number" value={form.discountValue} onChange={e => set("discountValue", Number(e.target.value))} />
           </div>
         </div>
 
         {/* Row 2: time window + quota */}
         <div>
-          <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold mb-2">Thời gian hiệu lực</p>
+          <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold mb-2">{t('admin.planManager.effectiveTime')}</p>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls}>Bắt đầu <span className="text-zinc-600 font-normal">(trống = ngay lập tức)</span></label>
+              <label className={labelCls}>{t('admin.planManager.startsAt')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansNow')}</span></label>
               <input className={inputCls} type="datetime-local" value={form.startsAt ? form.startsAt.slice(0, 16) : ""} onChange={e => set("startsAt", e.target.value || null)} />
             </div>
             <div>
-              <label className={labelCls}>Kết thúc <span className="text-zinc-600 font-normal">(trống = không hết hạn)</span></label>
+              <label className={labelCls}>{t('admin.planManager.expiresAt')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansNoExpiry')}</span></label>
               <input className={inputCls} type="datetime-local" value={form.expiresAt ? form.expiresAt.slice(0, 16) : ""} onChange={e => set("expiresAt", e.target.value || null)} />
             </div>
           </div>
@@ -456,13 +459,13 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
 
         {/* Row 3: max uses */}
         <div>
-          <label className={labelCls}>Số lượt tối đa <span className="text-zinc-600 font-normal">(0 = không giới hạn)</span></label>
+          <label className={labelCls}>{t('admin.planManager.maxUses')} <span className="text-zinc-600 font-normal">{t('admin.planManager.zeroMeansUnlimited')}</span></label>
           <input className={inputCls + " max-w-[200px]"} type="number" min="0" value={form.maxUses} onChange={e => set("maxUses", Number(e.target.value))} />
         </div>
 
         {/* Row 4: applicable plans */}
         <div>
-          <label className={labelCls}>Áp dụng cho gói <span className="text-zinc-600 font-normal">(trống = tất cả)</span></label>
+          <label className={labelCls}>{t('admin.planManager.applicablePlans')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansAll')}</span></label>
           <div className="flex gap-2 mt-1.5">
             {ALL_PLANS.map(p => (
               <button
@@ -483,8 +486,8 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
 
         {/* Row 5: description */}
         <div>
-          <label className={labelCls}>Mô tả nội bộ</label>
-          <input className={inputCls} value={form.description || ""} onChange={e => set("description", e.target.value)} placeholder="Ghi chú cho admin..." />
+          <label className={labelCls}>{t('admin.planManager.internalNote')}</label>
+          <input className={inputCls} value={form.description || ""} onChange={e => set("description", e.target.value)} placeholder={t('admin.planManager.internalNotePlaceholder')} />
         </div>
 
         {/* Footer */}
@@ -496,7 +499,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
               className={`flex items-center gap-1.5 text-[12px] font-medium transition-colors ${form.active ? "text-emerald-400 hover:text-emerald-300" : "text-zinc-500 hover:text-zinc-300"}`}
             >
               {form.active ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
-              {form.active ? "Hoạt động" : "Tắt"}
+              {form.active ? t('admin.planManager.statusActive') : t('admin.planManager.statusOff')}
             </button>
             <span className="text-zinc-700">·</span>
             <button
@@ -505,17 +508,17 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
               className={`flex items-center gap-1.5 text-[12px] font-medium transition-colors ${form.showInSidebar ? "text-violet-400 hover:text-violet-300" : "text-zinc-500 hover:text-zinc-300"}`}
             >
               {form.showInSidebar ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
-              {form.showInSidebar ? "Hiển thị sidebar" : "Ẩn khỏi sidebar"}
+              {form.showInSidebar ? t('admin.planManager.showInSidebar') : t('admin.planManager.hideFromSidebar')}
             </button>
           </div>
           <div className="flex items-center gap-2">
             {err && <span className="text-[11px] text-red-400">{err}</span>}
             <button type="button" onClick={() => setEditing(false)} className="px-3 py-1.5 text-[11px] text-zinc-400 hover:text-white border border-white/8 hover:border-white/16 rounded-lg transition-colors">
-              Huỷ
+              {t('admin.planManager.cancel')}
             </button>
             <button type="button" onClick={handleSave} disabled={saving} className="flex items-center gap-1.5 px-4 py-1.5 bg-amber-500 text-black text-[11px] font-bold hover:bg-amber-400 disabled:opacity-50 rounded-lg transition-colors">
               {saving ? <RefreshCw size={11} className="animate-spin" /> : <Check size={11} />}
-              Lưu thay đổi
+              {t('admin.planManager.saveChanges')}
             </button>
           </div>
         </div>
@@ -527,6 +530,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
 // ── New Discount Form ────────────────────────────────────────────────────────
 
 function NewDiscountForm({ onCreated }) {
+  const { t } = useTranslation();
   const [form, setForm] = useState({ ...EMPTY_DISCOUNT });
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -542,7 +546,7 @@ const [err, setErr] = useState(null);
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    if (!form.code.trim()) { setErr("Nhập mã giảm giá"); return; }
+    if (!form.code.trim()) { setErr(t('admin.planManager.enterCode')); return; }
     setSaving(true);
     setErr(null);
     try {
@@ -551,7 +555,7 @@ const [err, setErr] = useState(null);
       setForm({ ...EMPTY_DISCOUNT });
       setOpen(false);
     } catch (e) {
-      setErr(e.response?.data?.message || "Tạo thất bại");
+      setErr(e.response?.data?.message || t('admin.planManager.createFailed'));
     } finally {
       setSaving(false);
     }
@@ -564,7 +568,7 @@ const [err, setErr] = useState(null);
         className="flex items-center gap-2 px-4 py-2 bg-amber-500/8 border border-amber-500/20 text-amber-400 hover:bg-amber-500/15 hover:border-amber-500/35 text-[12px] font-semibold transition-all rounded-lg"
       >
         <Plus size={13} />
-        Tạo mã giảm giá
+        {t('admin.planManager.createDiscountCode')}
       </button>
     );
   }
@@ -575,7 +579,7 @@ const [err, setErr] = useState(null);
       <div className="flex items-center justify-between px-4 py-2.5 bg-emerald-500/5 border-b border-emerald-500/10">
         <div className="flex items-center gap-2">
           <Plus size={12} className="text-emerald-400" />
-          <span className="text-[11px] font-semibold text-emerald-400 tracking-wide">Tạo mã giảm giá mới</span>
+          <span className="text-[11px] font-semibold text-emerald-400 tracking-wide">{t('admin.planManager.createNewDiscountCode')}</span>
         </div>
         <button type="button" onClick={() => setOpen(false)} className="p-1 text-zinc-500 hover:text-white transition-colors rounded">
           <X size={13} />
@@ -586,18 +590,18 @@ const [err, setErr] = useState(null);
         {/* Row 1: code + type + value */}
         <div className="grid grid-cols-3 gap-3">
           <div>
-            <label className={labelCls}>Mã giảm giá <span className="text-red-400">*</span></label>
+            <label className={labelCls}>{t('admin.planManager.discountCode')} <span className="text-red-400">*</span></label>
             <input className={inputCls + " font-mono uppercase tracking-widest"} value={form.code} onChange={e => set("code", e.target.value.toUpperCase())} placeholder="LUCKY8PM" required />
           </div>
           <div>
-            <label className={labelCls}>Loại <span className="text-red-400">*</span></label>
+            <label className={labelCls}>{t('admin.planManager.discountType')} <span className="text-red-400">*</span></label>
             <select className={inputCls} value={form.type} onChange={e => set("type", e.target.value)}>
-              <option value="PERCENT">Phần trăm (%)</option>
-              <option value="FIXED">Số tiền cố định (đ)</option>
+              <option value="PERCENT">{t('admin.planManager.percentType')}</option>
+              <option value="FIXED">{t('admin.planManager.fixedType')}</option>
             </select>
           </div>
           <div>
-            <label className={labelCls}>{form.type === "PERCENT" ? "Giá trị (%)" : "Giá trị (đ)"} <span className="text-red-400">*</span></label>
+            <label className={labelCls}>{form.type === "PERCENT" ? t('admin.planManager.valuePercent') : t('admin.planManager.valueVnd')} <span className="text-red-400">*</span></label>
             <input className={inputCls} type="number" min="1" value={form.discountValue} onChange={e => set("discountValue", Number(e.target.value))} required />
           </div>
         </div>
@@ -605,15 +609,15 @@ const [err, setErr] = useState(null);
         {/* Row 2: time window */}
         <div>
           <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold mb-2 flex items-center gap-1.5">
-            <Clock size={9} /> Thời gian hiệu lực (Flash Deal)
+            <Clock size={9} /> {t('admin.planManager.flashDealEffectiveTime')}
           </p>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls}>Bắt đầu <span className="text-zinc-600 font-normal">(trống = ngay lập tức)</span></label>
+              <label className={labelCls}>{t('admin.planManager.startsAt')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansNow')}</span></label>
               <input className={inputCls} type="datetime-local" value={form.startsAt} onChange={e => set("startsAt", e.target.value)} />
             </div>
             <div>
-              <label className={labelCls}>Kết thúc <span className="text-zinc-600 font-normal">(trống = không hết hạn)</span></label>
+              <label className={labelCls}>{t('admin.planManager.expiresAt')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansNoExpiry')}</span></label>
               <input className={inputCls} type="datetime-local" value={form.expiresAt} onChange={e => set("expiresAt", e.target.value)} />
             </div>
           </div>
@@ -621,13 +625,13 @@ const [err, setErr] = useState(null);
 
         {/* Row 3: quota */}
         <div>
-          <label className={labelCls}>Số lượt tối đa <span className="text-zinc-600 font-normal">(0 = không giới hạn)</span></label>
+          <label className={labelCls}>{t('admin.planManager.maxUses')} <span className="text-zinc-600 font-normal">{t('admin.planManager.zeroMeansUnlimited')}</span></label>
           <input className={inputCls + " max-w-[200px]"} type="number" min="0" value={form.maxUses} onChange={e => set("maxUses", Number(e.target.value))} />
         </div>
 
         {/* Row 4: applicable plans */}
         <div>
-          <label className={labelCls}>Áp dụng cho gói <span className="text-zinc-600 font-normal">(trống = tất cả)</span></label>
+          <label className={labelCls}>{t('admin.planManager.applicablePlans')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansAll')}</span></label>
           <div className="flex gap-2 mt-1.5">
             {ALL_PLANS.map(p => (
               <button
@@ -648,8 +652,8 @@ const [err, setErr] = useState(null);
 
         {/* Row 5: description */}
         <div>
-          <label className={labelCls}>Mô tả nội bộ</label>
-          <input className={inputCls} value={form.description} onChange={e => set("description", e.target.value)} placeholder="Flash deal Lucky Time 8h–9h tối..." />
+          <label className={labelCls}>{t('admin.planManager.internalNote')}</label>
+          <input className={inputCls} value={form.description} onChange={e => set("description", e.target.value)} placeholder={t('admin.planManager.flashDealPlaceholder')} />
         </div>
 
         {/* Footer */}
@@ -661,7 +665,7 @@ const [err, setErr] = useState(null);
               className={`flex items-center gap-1.5 text-[12px] font-medium transition-colors ${form.active ? "text-emerald-400 hover:text-emerald-300" : "text-zinc-500 hover:text-zinc-300"}`}
             >
               {form.active ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
-              {form.active ? "Kích hoạt" : "Nháp"}
+              {form.active ? t('admin.planManager.activate') : t('admin.planManager.draft')}
             </button>
             <span className="text-zinc-700">·</span>
             <button
@@ -670,17 +674,17 @@ const [err, setErr] = useState(null);
               className={`flex items-center gap-1.5 text-[12px] font-medium transition-colors ${form.showInSidebar ? "text-violet-400 hover:text-violet-300" : "text-zinc-500 hover:text-zinc-300"}`}
             >
               {form.showInSidebar ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
-              {form.showInSidebar ? "Hiển thị sidebar" : "Ẩn khỏi sidebar"}
+              {form.showInSidebar ? t('admin.planManager.showInSidebar') : t('admin.planManager.hideFromSidebar')}
             </button>
           </div>
           <div className="flex items-center gap-2">
             {err && <span className="text-[11px] text-red-400">{err}</span>}
             <button type="button" onClick={() => setOpen(false)} className="px-3 py-1.5 text-[11px] text-zinc-400 hover:text-white border border-white/8 hover:border-white/16 rounded-lg transition-colors">
-              Huỷ
+              {t('admin.planManager.cancel')}
             </button>
             <button type="submit" disabled={saving} className="flex items-center gap-1.5 px-4 py-1.5 bg-emerald-500 text-black text-[11px] font-bold hover:bg-emerald-400 disabled:opacity-50 rounded-lg transition-colors">
               {saving ? <RefreshCw size={11} className="animate-spin" /> : <Plus size={11} />}
-              Tạo mã
+              {t('admin.planManager.createCode')}
             </button>
           </div>
         </div>
@@ -692,6 +696,7 @@ const [err, setErr] = useState(null);
 // ── Main PlanManager ─────────────────────────────────────────────────────────
 
 const PlanManager = () => {
+  const { t } = useTranslation();
   const [plans, setPlans] = useState([]);
   const [discounts, setDiscounts] = useState([]);
   const [loadingPlans, setLoadingPlans] = useState(true);
@@ -715,15 +720,15 @@ const PlanManager = () => {
 
   const saveCooldown = async () => {
     const h = parseInt(cooldownInput, 10);
-    if (!h || h < 1 || h > 168) { setCooldownMsg({ type: "error", text: "Giá trị phải từ 1 đến 168 giờ." }); return; }
+    if (!h || h < 1 || h > 168) { setCooldownMsg({ type: "error", text: t('admin.planManager.cooldownRangeError') }); return; }
     setCooldownSaving(true);
     setCooldownMsg(null);
     try {
       await api.put(`/admin/settings/guest-cooldown?hours=${h}`);
       setCooldownHours(h);
-      setCooldownMsg({ type: "success", text: `Đã cập nhật: ${h} giờ.` });
+      setCooldownMsg({ type: "success", text: t('admin.planManager.cooldownUpdated', { hours: h }) });
     } catch (e) {
-      setCooldownMsg({ type: "error", text: e.response?.data?.message || "Lưu thất bại." });
+      setCooldownMsg({ type: "error", text: e.response?.data?.message || t('admin.planManager.saveFailedDot') });
     } finally {
       setCooldownSaving(false);
       setTimeout(() => setCooldownMsg(null), 3000);
@@ -758,9 +763,9 @@ const PlanManager = () => {
       {/* Tab switcher */}
       <div className="flex items-center gap-1 border-b border-white/6">
         {[
-          { id: "plans", label: "Gói đăng ký", icon: Package },
-          { id: "discounts", label: "Mã giảm giá", icon: Tag },
-          { id: "settings", label: "Cài đặt", icon: Settings },
+          { id: "plans", label: t('admin.planManager.tabPlans'), icon: Package },
+          { id: "discounts", label: t('admin.planManager.tabDiscounts'), icon: Tag },
+          { id: "settings", label: t('admin.planManager.tabSettings'), icon: Settings },
         ].map(({ id, label, icon: Icon }) => (
           <button
             key={id}
@@ -782,24 +787,24 @@ const PlanManager = () => {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <p className="text-[12px] text-zinc-500">
-              Chỉnh sửa thông tin hiển thị của từng gói. Thay đổi có hiệu lực ngay trên trang Payment.
+              {t('admin.planManager.plansTabDesc')}
             </p>
             <button onClick={fetchPlans} className="flex items-center gap-1.5 text-[11px] text-zinc-500 hover:text-white transition-colors">
               <RefreshCw size={12} />
-              Làm mới
+              {t('admin.planManager.refresh')}
             </button>
           </div>
 
           {loadingPlans ? (
             <div className="flex flex-col items-center justify-center py-16 text-zinc-600">
               <RefreshCw size={20} className="animate-spin mb-3" />
-              <p className="text-[12px]">Đang tải...</p>
+              <p className="text-[12px]">{t('admin.planManager.loading')}</p>
             </div>
           ) : sortedPlans.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-zinc-600">
               <AlertCircle size={20} className="mb-3" />
-              <p className="text-[12px]">Chưa có gói nào trong database.</p>
-              <p className="text-[11px] mt-1">Khởi động lại backend để seed dữ liệu mặc định.</p>
+              <p className="text-[12px]">{t('admin.planManager.noPlansInDb')}</p>
+              <p className="text-[11px] mt-1">{t('admin.planManager.restartBackendHint')}</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -818,12 +823,12 @@ const PlanManager = () => {
           <div className="border border-white/7 rounded-xl overflow-hidden">
             <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-white/2">
               <Clock size={13} className="text-amber-400" />
-              <span className="text-[12px] font-semibold text-white">Thời gian chờ luyện giọng (khách)</span>
+              <span className="text-[12px] font-semibold text-white">{t('admin.planManager.guestCooldownTitle')}</span>
             </div>
             <div className="p-4 space-y-3">
               <p className="text-[12px] text-zinc-400 leading-relaxed">
-                Người dùng chưa đăng ký phải chờ sau mỗi lần luyện giọng miễn phí.<br />
-                Hiện tại: <span className="text-amber-400 font-semibold">{cooldownHours} giờ</span>.
+                {t('admin.planManager.guestCooldownDesc')}<br />
+                {t('admin.planManager.currentLabel')}: <span className="text-amber-400 font-semibold">{t('admin.planManager.hoursCount', { count: cooldownHours })}</span>.
               </p>
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-1.5 bg-[#09090b] border border-white/7 rounded px-3 py-2 w-28">
@@ -835,7 +840,7 @@ const PlanManager = () => {
                     onChange={e => setCooldownInput(e.target.value)}
                     className="bg-transparent outline-none text-[13px] text-white w-full"
                   />
-                  <span className="text-[11px] text-zinc-500 shrink-0">giờ</span>
+                  <span className="text-[11px] text-zinc-500 shrink-0">{t('admin.planManager.hoursUnit')}</span>
                 </div>
                 <button
                   onClick={saveCooldown}
@@ -846,7 +851,7 @@ const PlanManager = () => {
                     ? <RefreshCw size={12} className="animate-spin" />
                     : <Save size={12} />
                   }
-                  Lưu
+                  {t('admin.planManager.save')}
                 </button>
               </div>
               {cooldownMsg && (
@@ -854,7 +859,7 @@ const PlanManager = () => {
                   {cooldownMsg.text}
                 </p>
               )}
-              <p className="text-[10px] text-zinc-600">Phạm vi: 1 – 168 giờ. Áp dụng ngay sau khi lưu.</p>
+              <p className="text-[10px] text-zinc-600">{t('admin.planManager.cooldownRangeHint')}</p>
             </div>
           </div>
         </div>
@@ -866,12 +871,12 @@ const PlanManager = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[12px] text-zinc-500">
-                {discounts.length} mã giảm giá · Người dùng nhập mã ở trang Payment trước khi thanh toán.
+                {t('admin.planManager.discountsTabDesc', { count: discounts.length })}
               </p>
             </div>
             <button onClick={fetchDiscounts} className="flex items-center gap-1.5 text-[11px] text-zinc-500 hover:text-white transition-colors">
               <RefreshCw size={12} />
-              Làm mới
+              {t('admin.planManager.refresh')}
             </button>
           </div>
 
@@ -884,9 +889,9 @@ const PlanManager = () => {
             return (
               <div className="grid grid-cols-3 gap-3">
                 {[
-                  { label: "Đang hoạt động", value: active.length, sub: `/ ${discounts.length} mã`, color: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/5" },
-                  { label: "Lượt còn lại", value: totalRemaining, sub: unlimited > 0 ? `+ ${unlimited} mã không giới hạn` : "tổng có giới hạn", color: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/5" },
-                  { label: "Đã sử dụng", value: discounts.reduce((s, d) => s + (d.usedCount ?? 0), 0), sub: "tổng lượt dùng", color: "text-zinc-400", border: "border-white/10", bg: "bg-white/[0.02]" },
+                  { label: t('admin.planManager.statActive'), value: active.length, sub: t('admin.planManager.statOfCodes', { count: discounts.length }), color: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/5" },
+                  { label: t('admin.planManager.statRemainingUses'), value: totalRemaining, sub: unlimited > 0 ? t('admin.planManager.statUnlimitedCodes', { count: unlimited }) : t('admin.planManager.statTotalLimited'), color: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/5" },
+                  { label: t('admin.planManager.statUsed'), value: discounts.reduce((s, d) => s + (d.usedCount ?? 0), 0), sub: t('admin.planManager.statTotalUses'), color: "text-zinc-400", border: "border-white/10", bg: "bg-white/[0.02]" },
                 ].map(({ label, value, sub, color, border, bg }) => (
                   <div key={label} className={`rounded-xl border ${border} ${bg} px-4 py-3`}>
                     <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1">{label}</p>
@@ -903,17 +908,17 @@ const PlanManager = () => {
           {loadingDiscounts ? (
             <div className="flex items-center justify-center py-12 text-zinc-600">
               <RefreshCw size={18} className="animate-spin mr-2" />
-              <span className="text-[12px]">Đang tải...</span>
+              <span className="text-[12px]">{t('admin.planManager.loading')}</span>
             </div>
           ) : discounts.length === 0 ? (
             <div className="text-center py-12 text-zinc-600">
               <Tag size={24} className="mx-auto mb-3 opacity-30" />
-              <p className="text-[12px]">Chưa có mã giảm giá nào.</p>
+              <p className="text-[12px]">{t('admin.planManager.noDiscountsYet')}</p>
             </div>
           ) : (
             <div className="border border-white/7 rounded overflow-hidden">
               <div className={sectionHead}>
-                <span>Mã · Giá trị · Lượt dùng · Gói áp dụng · Trạng thái</span>
+                <span>{t('admin.planManager.discountTableHeader')}</span>
               </div>
               {discounts.map(d => (
                 <DiscountRow key={d.id} discount={d} onUpdate={fetchDiscounts} onDelete={fetchDiscounts} />

@@ -1,31 +1,32 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Shield, RefreshCw, Trash2, Search, AlertTriangle,
   CheckCircle, XCircle, ChevronDown, ChevronUp, Filter
 } from 'lucide-react';
 import api from '../../../services/api';
 
-const ACTION_LABELS = {
-  AUTH_LOGIN: 'Đăng nhập',
-  AUTH_LOGOUT: 'Đăng xuất',
-  AUTH_REGISTER: 'Đăng ký',
-  AUTH_CHANGE_PASSWORD: 'Đổi mật khẩu',
-  AUTH_RESET_PASSWORD: 'Reset mật khẩu',
-  ADMIN_LOGIN_OTP_VERIFY: 'Admin OTP xác nhận',
-  ADMIN_DELETE_USER: 'Xóa người dùng',
-  ADMIN_UPDATE_USER_STATUS: 'Cập nhật trạng thái',
-  ADMIN_CHANGE_PASSWORD: 'Admin đổi mật khẩu',
-  ADMIN_CREATE_USER: 'Tạo người dùng',
-  ADMIN_SEND_RESET_EMAIL: 'Gửi email reset',
-  ADMIN_NOTIFY_EMAIL: 'Gửi thông báo email',
-  ADMIN_MIGRATE_DB: 'Migrate database',
-  ADMIN_PURGE_LOGS: 'Xóa logs cũ',
-  ADMIN_BAN_USER: 'Khóa tài khoản',
-  ADMIN_UNBAN_USER: 'Mở khóa tài khoản',
-  PAYMENT_INITIATE: 'Khởi tạo thanh toán',
-  PAYMENT_SUCCESS: 'Thanh toán thành công',
-  PAYMENT_FAILED: 'Thanh toán thất bại',
-  PROFILE_UPDATE: 'Cập nhật hồ sơ',
+const ACTION_LABEL_KEYS = {
+  AUTH_LOGIN: 'authLogin',
+  AUTH_LOGOUT: 'authLogout',
+  AUTH_REGISTER: 'authRegister',
+  AUTH_CHANGE_PASSWORD: 'authChangePassword',
+  AUTH_RESET_PASSWORD: 'authResetPassword',
+  ADMIN_LOGIN_OTP_VERIFY: 'adminLoginOtpVerify',
+  ADMIN_DELETE_USER: 'adminDeleteUser',
+  ADMIN_UPDATE_USER_STATUS: 'adminUpdateUserStatus',
+  ADMIN_CHANGE_PASSWORD: 'adminChangePassword',
+  ADMIN_CREATE_USER: 'adminCreateUser',
+  ADMIN_SEND_RESET_EMAIL: 'adminSendResetEmail',
+  ADMIN_NOTIFY_EMAIL: 'adminNotifyEmail',
+  ADMIN_MIGRATE_DB: 'adminMigrateDb',
+  ADMIN_PURGE_LOGS: 'adminPurgeLogs',
+  ADMIN_BAN_USER: 'adminBanUser',
+  ADMIN_UNBAN_USER: 'adminUnbanUser',
+  PAYMENT_INITIATE: 'paymentInitiate',
+  PAYMENT_SUCCESS: 'paymentSuccess',
+  PAYMENT_FAILED: 'paymentFailed',
+  PROFILE_UPDATE: 'profileUpdate',
 };
 
 const ACTION_COLORS = {
@@ -51,6 +52,7 @@ const truncateUA = (ua) => {
 };
 
 const LogRow = ({ log }) => {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [userLoading, setUserLoading] = useState(false);
@@ -79,7 +81,7 @@ const LogRow = ({ log }) => {
         </td>
         <td className="px-4 py-3">
           <span className={`inline-flex items-center gap-1 px-2 py-0.5 border text-[10px] font-semibold uppercase tracking-wide ${actionColor}`}>
-            {ACTION_LABELS[log.action] || log.action}
+            {ACTION_LABEL_KEYS[log.action] ? t(`admin.securityLogs.actions.${ACTION_LABEL_KEYS[log.action]}`) : log.action}
           </span>
         </td>
         <td className="px-4 py-3 text-[12px] text-[--text-secondary] font-mono">{log.ipAddress || '—'}</td>
@@ -88,8 +90,8 @@ const LogRow = ({ log }) => {
         </td>
         <td className="px-4 py-3">
           {isFailed
-            ? <span className="flex items-center gap-1 text-red-400 text-[11px]"><XCircle size={11} /> Thất bại</span>
-            : <span className="flex items-center gap-1 text-emerald-400 text-[11px]"><CheckCircle size={11} /> Thành công</span>
+            ? <span className="flex items-center gap-1 text-red-400 text-[11px]"><XCircle size={11} /> {t('admin.securityLogs.failed')}</span>
+            : <span className="flex items-center gap-1 text-emerald-400 text-[11px]"><CheckCircle size={11} /> {t('admin.securityLogs.success')}</span>
           }
         </td>
         <td className="px-4 py-3 text-[11px] text-[--text-muted] font-mono max-w-[120px] truncate">{log.userId || '—'}</td>
@@ -105,13 +107,13 @@ const LogRow = ({ log }) => {
               {/* User Info Panel */}
               {log.userId && (
                 <div className="p-3 bg-[--bg-base] border border-[--border-subtle] rounded-lg">
-                  <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-2">Thông tin người dùng</p>
+                  <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-2">{t('admin.securityLogs.userInfo')}</p>
                   {userLoading ? (
-                    <p className="text-[--text-muted] text-[11px]">Đang tải...</p>
+                    <p className="text-[--text-muted] text-[11px]">{t('admin.securityLogs.loading')}</p>
                   ) : userInfo ? (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                       <div>
-                        <p className="text-[10px] text-[--text-muted] mb-0.5">Họ tên</p>
+                        <p className="text-[10px] text-[--text-muted] mb-0.5">{t('admin.securityLogs.fullName')}</p>
                         <p className="text-[--text-primary] font-medium">{userInfo.name || '—'}</p>
                       </div>
                       <div>
@@ -119,25 +121,25 @@ const LogRow = ({ log }) => {
                         <p className="text-[--text-secondary] font-mono">{userInfo.email || '—'}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] text-[--text-muted] mb-0.5">Số điện thoại</p>
+                        <p className="text-[10px] text-[--text-muted] mb-0.5">{t('admin.securityLogs.phoneNumber')}</p>
                         <p className="text-[--text-secondary]">{userInfo.phoneNumber || '—'}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] text-[--text-muted] mb-0.5">Vai trò</p>
+                        <p className="text-[10px] text-[--text-muted] mb-0.5">{t('admin.securityLogs.role')}</p>
                         <p className="text-[--text-secondary]">{userInfo.role || '—'}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] text-[--text-muted] mb-0.5">Trạng thái</p>
+                        <p className="text-[10px] text-[--text-muted] mb-0.5">{t('admin.securityLogs.status')}</p>
                         <p className={userInfo.isActive ? 'text-emerald-400' : 'text-red-400'}>
-                          {userInfo.isActive ? 'Hoạt động' : 'Bị khóa'}
+                          {userInfo.isActive ? t('admin.securityLogs.active') : t('admin.securityLogs.locked')}
                         </p>
                       </div>
                       <div>
-                        <p className="text-[10px] text-[--text-muted] mb-0.5">Gói</p>
+                        <p className="text-[10px] text-[--text-muted] mb-0.5">{t('admin.securityLogs.plan')}</p>
                         <p className="text-[--text-secondary]">{userInfo.plan || 'FREE'}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] text-[--text-muted] mb-0.5">Đăng ký</p>
+                        <p className="text-[10px] text-[--text-muted] mb-0.5">{t('admin.securityLogs.registered')}</p>
                         <p className="text-[--text-secondary]">{userInfo.createdAt ? new Date(userInfo.createdAt).toLocaleDateString('vi-VN') : '—'}</p>
                       </div>
                       <div>
@@ -146,7 +148,7 @@ const LogRow = ({ log }) => {
                       </div>
                     </div>
                   ) : (
-                    <p className="text-[--text-muted] text-[11px]">Không tìm thấy thông tin người dùng (có thể đã bị xóa)</p>
+                    <p className="text-[--text-muted] text-[11px]">{t('admin.securityLogs.userNotFound')}</p>
                   )}
                 </div>
               )}
@@ -164,7 +166,7 @@ const LogRow = ({ log }) => {
                 )}
                 {log.details && (
                   <div className="md:col-span-2">
-                    <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-1">Details</p>
+                    <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-1">{t('admin.securityLogs.details')}</p>
                     <pre className="text-[--text-secondary] bg-[--bg-base] p-2 rounded-lg overflow-x-auto text-[11px]">
                       {(() => { try { return JSON.stringify(JSON.parse(log.details), null, 2); } catch { return log.details; } })()}
                     </pre>
@@ -172,7 +174,7 @@ const LogRow = ({ log }) => {
                 )}
                 {log.errorMessage && (
                   <div className="md:col-span-2">
-                    <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-1">Lỗi</p>
+                    <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-1">{t('admin.securityLogs.error')}</p>
                     <p className="text-red-400 font-mono text-[11px]">{log.errorMessage}</p>
                   </div>
                 )}
@@ -186,6 +188,7 @@ const LogRow = ({ log }) => {
 };
 
 const SecurityLogs = () => {
+  const { t } = useTranslation();
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -206,18 +209,16 @@ const SecurityLogs = () => {
   useEffect(() => { load(); }, [load]);
 
   const handlePurge = async () => {
-    if (purgeDays < 3) { alert('Không thể xóa log dưới 3 ngày gần nhất.'); return; }
-    if (!window.confirm(
-      `Xóa tất cả log cũ hơn ${purgeDays} ngày?\n\nLog 3 ngày gần nhất sẽ được giữ lại bất kể cài đặt.\nHành động này không thể hoàn tác.`
-    )) return;
+    if (purgeDays < 3) { alert(t('admin.securityLogs.cannotPurgeUnder3Days')); return; }
+    if (!window.confirm(t('admin.securityLogs.confirmPurge', { days: purgeDays }))) return;
     setPurging(true);
     try {
       const res = await api.delete(`/audit-logs/purge?days=${purgeDays}`);
       const data = res.data?.data;
-      setPurgeResult(`Đã xóa ${data?.deleted ?? 0} bản ghi (cũ hơn ${data?.olderThanDays ?? purgeDays} ngày).`);
+      setPurgeResult(t('admin.securityLogs.purgeResult', { count: data?.deleted ?? 0, days: data?.olderThanDays ?? purgeDays }));
       load();
     } catch (e) {
-      alert('Purge thất bại: ' + (e.response?.data?.message || e.message));
+      alert(t('admin.securityLogs.purgeFailed', { message: e.response?.data?.message || e.message }));
     } finally {
       setPurging(false);
     }
@@ -249,17 +250,17 @@ const SecurityLogs = () => {
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h2 className="text-[18px] font-bold text-[--text-primary] flex items-center gap-2">
-            <Shield size={18} className="text-amber-500" /> Security Logs
+            <Shield size={18} className="text-amber-500" /> {t('admin.securityLogs.title')}
           </h2>
           <p className="text-[12px] text-[--text-muted] mt-1">
-            {logs.length} bản ghi · {failedCount > 0 && (
-              <span className="text-red-400 font-medium">{failedCount} thất bại</span>
+            {t('admin.securityLogs.recordsCount', { count: logs.length })} · {failedCount > 0 && (
+              <span className="text-red-400 font-medium">{t('admin.securityLogs.failedCount', { count: failedCount })}</span>
             )}
           </p>
         </div>
         <button onClick={load}
           className="flex items-center gap-1.5 px-3 py-2 border border-[--border-subtle] text-[12px] text-[--text-secondary] hover:border-amber-500/40 transition-colors">
-          <RefreshCw size={13} /> Tải lại
+          <RefreshCw size={13} /> {t('admin.securityLogs.reload')}
         </button>
       </div>
 
@@ -276,7 +277,7 @@ const SecurityLogs = () => {
         <div className="flex items-center gap-2 flex-1 min-w-[200px] px-3 py-2 bg-[--bg-surface] border border-[--border-subtle] focus-within:border-amber-500/40">
           <Search size={13} className="text-[--text-muted] shrink-0" />
           <input
-            type="text" placeholder="Tìm IP, userId, action..."
+            type="text" placeholder={t('admin.securityLogs.searchPlaceholder')}
             value={search} onChange={e => setSearch(e.target.value)}
             className="bg-transparent outline-none flex-1 text-[13px] text-[--text-primary] placeholder:text-[--text-muted]"
           />
@@ -284,16 +285,16 @@ const SecurityLogs = () => {
 
         <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)}
           className="px-3 py-2 bg-[--bg-surface] border border-[--border-subtle] text-[12px] text-[--text-secondary] outline-none hover:border-amber-500/40 transition-colors">
-          <option value="ALL">Tất cả trạng thái</option>
-          <option value="SUCCESS">Thành công</option>
-          <option value="FAILED">Thất bại</option>
+          <option value="ALL">{t('admin.securityLogs.allStatuses')}</option>
+          <option value="SUCCESS">{t('admin.securityLogs.success')}</option>
+          <option value="FAILED">{t('admin.securityLogs.failed')}</option>
         </select>
 
         <select value={filterAction} onChange={e => setFilterAction(e.target.value)}
           className="px-3 py-2 bg-[--bg-surface] border border-[--border-subtle] text-[12px] text-[--text-secondary] outline-none hover:border-amber-500/40 transition-colors max-w-[200px]">
-          <option value="ALL">Tất cả hành động</option>
+          <option value="ALL">{t('admin.securityLogs.allActions')}</option>
           {uniqueActions.map(a => (
-            <option key={a} value={a}>{ACTION_LABELS[a] || a}</option>
+            <option key={a} value={a}>{ACTION_LABEL_KEYS[a] ? t(`admin.securityLogs.actions.${ACTION_LABEL_KEYS[a]}`) : a}</option>
           ))}
         </select>
 
@@ -301,13 +302,13 @@ const SecurityLogs = () => {
         <div className="flex items-center gap-2 ml-auto">
           <div className="flex items-center gap-1.5 text-[12px] text-[--text-muted]">
             <Trash2 size={12} className="text-rose-400" />
-            <span>Xóa log cũ hơn</span>
+            <span>{t('admin.securityLogs.purgeLogsOlderThan')}</span>
             <input
               type="number" min={3} max={365} value={purgeDays}
               onChange={e => setPurgeDays(Number(e.target.value))}
               className="w-14 px-2 py-1 bg-[--bg-surface] border border-[--border-subtle] text-[12px] text-[--text-primary] outline-none focus:border-rose-500/40 text-center"
             />
-            <span>ngày</span>
+            <span>{t('admin.securityLogs.daysUnit')}</span>
           </div>
           <button
             onClick={handlePurge} disabled={purging}
@@ -315,7 +316,7 @@ const SecurityLogs = () => {
             {purging
               ? <span className="w-3 h-3 border border-rose-400/30 border-t-rose-400 rounded-full animate-spin" />
               : <Trash2 size={12} />}
-            Purge
+            {t('admin.securityLogs.purge')}
           </button>
         </div>
       </div>
@@ -324,21 +325,21 @@ const SecurityLogs = () => {
       <div className="flex items-start gap-2 px-3 py-2.5 bg-amber-500/[0.06] border border-amber-500/20 text-[11px] text-amber-400/80">
         <AlertTriangle size={12} className="shrink-0 mt-0.5" />
         <span>
-          Log của <strong>3 ngày gần nhất</strong> không thể bị xóa dù cài đặt bất kỳ giá trị nào — nhằm đảm bảo có thể truy vết nếu có xâm nhập gần đây.
+          {t('admin.securityLogs.min3DaysWarningPrefix')} <strong>{t('admin.securityLogs.min3DaysWarningBold')}</strong> {t('admin.securityLogs.min3DaysWarningSuffix')}
         </span>
       </div>
 
       {/* Table */}
       {loading ? (
-        <div className="py-16 text-center text-[12px] text-[--text-muted]">Đang tải...</div>
+        <div className="py-16 text-center text-[12px] text-[--text-muted]">{t('admin.securityLogs.loading')}</div>
       ) : filtered.length === 0 ? (
-        <div className="py-16 text-center text-[12px] text-[--text-muted]">Không có bản ghi nào.</div>
+        <div className="py-16 text-center text-[12px] text-[--text-muted]">{t('admin.securityLogs.noRecords')}</div>
       ) : (
         <div className="overflow-x-auto border border-[--border-subtle]">
           <table className="w-full min-w-[700px]">
             <thead>
               <tr className="border-b border-[--border-subtle] bg-[--bg-surface]">
-                {['Thời gian', 'Hành động', 'IP', 'Thiết bị', 'Trạng thái', 'User ID', ''].map(h => (
+                {[t('admin.securityLogs.colTime'), t('admin.securityLogs.colAction'), t('admin.securityLogs.colIp'), t('admin.securityLogs.colDevice'), t('admin.securityLogs.colStatus'), 'User ID', ''].map(h => (
                   <th key={h} className="px-4 py-3 text-left text-[10px] text-[--text-muted] uppercase tracking-widest font-semibold">{h}</th>
                 ))}
               </tr>
@@ -348,7 +349,7 @@ const SecurityLogs = () => {
             </tbody>
           </table>
           <div className="px-4 py-2.5 border-t border-[--border-subtle] text-[11px] text-[--text-muted] bg-[--bg-surface]">
-            Hiển thị {filtered.length} / {logs.length} bản ghi
+            {t('admin.securityLogs.showingCount', { shown: filtered.length, total: logs.length })}
           </div>
         </div>
       )}

@@ -693,10 +693,22 @@
     "claiming": "Đang nhận...",
     "claimBtn": "Nhận voucher -50% ngay",
     "quests": {
-      "profile": { "label": "Hoàn thiện hồ sơ", "desc": "Điền đầy đủ tên và ảnh đại diện" },
-      "practice": { "label": "Luyện tập đầu tiên", "desc": "Hoàn thành 1 bài AI coaching" },
-      "courses": { "label": "Khám phá khóa học", "desc": "Ghé thăm trang Khóa học" },
-      "leaderboard": { "label": "Xem bảng xếp hạng", "desc": "Ghé thăm trang Xếp hạng" }
+      "profile": {
+        "label": "Hoàn thiện hồ sơ",
+        "desc": "Điền đầy đủ tên và ảnh đại diện"
+      },
+      "practice": {
+        "label": "Luyện tập đầu tiên",
+        "desc": "Hoàn thành 1 bài AI coaching"
+      },
+      "courses": {
+        "label": "Khám phá khóa học",
+        "desc": "Ghé thăm trang Khóa học"
+      },
+      "leaderboard": {
+        "label": "Xem bảng xếp hạng",
+        "desc": "Ghé thăm trang Xếp hạng"
+      }
     }
   },
   "sessionCard": {
@@ -725,29 +737,80 @@
     "useNow": "Dùng ngay",
     "ads": {
       "free": {
-        "0": { "tag": "Phổ biến nhất", "title": "Nâng cấp Basic", "body": "20 lượt AI/tháng · Mở toàn bộ bài học · Báo cáo chi tiết", "cta": "Nâng cấp ngay" },
-        "1": { "tag": "Học nhanh 3×", "title": "Mở 50+ bài học", "body": "Gói Free giới hạn nội dung. Basic unlock toàn bộ lộ trình MC chuyên nghiệp.", "cta": "Xem gói Basic" },
-        "2": { "tag": "Cao cấp nhất", "title": "Gói Full — AI vô hạn", "body": "Phân tích AI không giới hạn · Coaching cá nhân · Khóa học nâng cao", "cta": "Khám phá Full" }
+        "0": {
+          "tag": "Phổ biến nhất",
+          "title": "Nâng cấp Basic",
+          "body": "20 lượt AI/tháng · Mở toàn bộ bài học · Báo cáo chi tiết",
+          "cta": "Nâng cấp ngay"
+        },
+        "1": {
+          "tag": "Học nhanh 3×",
+          "title": "Mở 50+ bài học",
+          "body": "Gói Free giới hạn nội dung. Basic unlock toàn bộ lộ trình MC chuyên nghiệp.",
+          "cta": "Xem gói Basic"
+        },
+        "2": {
+          "tag": "Cao cấp nhất",
+          "title": "Gói Full — AI vô hạn",
+          "body": "Phân tích AI không giới hạn · Coaching cá nhân · Khóa học nâng cao",
+          "cta": "Khám phá Full"
+        }
       },
       "basic": {
-        "0": { "tag": "Nâng cấp", "title": "Gói Full — AI vô hạn", "body": "AI không giới hạn · Tất cả khóa học cao cấp · Coaching 1-1 với AI.", "cta": "Nâng lên Full" },
-        "1": { "tag": "Tiết kiệm 44%", "title": "Annual — 166k/tháng", "body": "Trả 1 năm tiết kiệm gần 1 triệu. Unlock toàn bộ tính năng vĩnh viễn.", "cta": "Xem Annual" }
+        "0": {
+          "tag": "Nâng cấp",
+          "title": "Gói Full — AI vô hạn",
+          "body": "AI không giới hạn · Tất cả khóa học cao cấp · Coaching 1-1 với AI.",
+          "cta": "Nâng lên Full"
+        },
+        "1": {
+          "tag": "Tiết kiệm 44%",
+          "title": "Annual — 166k/tháng",
+          "body": "Trả 1 năm tiết kiệm gần 1 triệu. Unlock toàn bộ tính năng vĩnh viễn.",
+          "cta": "Xem Annual"
+        }
       },
       "full": {
-        "0": { "tag": "Tiết kiệm 44%", "title": "Chuyển sang Annual", "body": "Chỉ 1.990.000đ/năm — tiết kiệm 980.000đ so với trả tháng.", "cta": "Nâng lên Annual" }
+        "0": {
+          "tag": "Tiết kiệm 44%",
+          "title": "Chuyển sang Annual",
+          "body": "Chỉ 1.990.000đ/năm — tiết kiệm 980.000đ so với trả tháng.",
+          "cta": "Nâng lên Annual"
+        }
       }
     }
   },
   "avatarFrame": {
     "unlockHint3Days": "Duy trì 3 ngày để mở khóa khung đầu tiên.",
     "frames": {
-      "none": { "label": "Chưa có khung", "description": "Duy trì 3 ngày để mở khóa khung đầu tiên." },
-      "spark": { "label": "Đốm lửa", "description": "Duy trì 7 ngày để đạt Ngọn lửa." },
-      "flame": { "label": "Ngọn lửa", "description": "Duy trì 14 ngày để đạt Bão lửa." },
-      "storm": { "label": "Bão lửa", "description": "Duy trì 30 ngày để đạt Huyền thoại." },
-      "legend": { "label": "Huyền thoại", "description": "Duy trì 60 ngày để đạt Elite." },
-      "elite": { "label": "Elite", "description": "Duy trì 100 ngày để đạt Bất tử." },
-      "immortal": { "label": "Bất tử", "description": "Đỉnh cao tuyệt đối. Bạn là huyền thoại MC Hub." }
+      "none": {
+        "label": "Chưa có khung",
+        "description": "Duy trì 3 ngày để mở khóa khung đầu tiên."
+      },
+      "spark": {
+        "label": "Đốm lửa",
+        "description": "Duy trì 7 ngày để đạt Ngọn lửa."
+      },
+      "flame": {
+        "label": "Ngọn lửa",
+        "description": "Duy trì 14 ngày để đạt Bão lửa."
+      },
+      "storm": {
+        "label": "Bão lửa",
+        "description": "Duy trì 30 ngày để đạt Huyền thoại."
+      },
+      "legend": {
+        "label": "Huyền thoại",
+        "description": "Duy trì 60 ngày để đạt Elite."
+      },
+      "elite": {
+        "label": "Elite",
+        "description": "Duy trì 100 ngày để đạt Bất tử."
+      },
+      "immortal": {
+        "label": "Bất tử",
+        "description": "Đỉnh cao tuyệt đối. Bạn là huyền thoại MC Hub."
+      }
     }
   },
   "floatingUpgradeCard": {
@@ -755,16 +818,46 @@
     "later": "Để sau",
     "cards": {
       "free": {
-        "0": { "tag": "Phổ biến nhất", "title": "Phân tích AI không giới hạn", "desc": "Gói FREE chỉ có 5 lượt tổng. Basic cho bạn 20 lượt/tháng + báo cáo chi tiết.", "cta": "Nâng lên Basic" },
-        "1": { "tag": "Học nhanh hơn 3×", "title": "Mở toàn bộ 50+ bài học", "desc": "Free lock nhiều bài nâng cao. Nâng cấp để học đầy đủ lộ trình MC chuyên nghiệp.", "cta": "Xem gói Basic" },
-        "2": { "tag": "Mới", "title": "Script AI cá nhân hoá", "desc": "AI viết kịch bản MC theo phong cách riêng của bạn. Chỉ có từ gói Basic trở lên.", "cta": "Thử ngay" }
+        "0": {
+          "tag": "Phổ biến nhất",
+          "title": "Phân tích AI không giới hạn",
+          "desc": "Gói FREE chỉ có 5 lượt tổng. Basic cho bạn 20 lượt/tháng + báo cáo chi tiết.",
+          "cta": "Nâng lên Basic"
+        },
+        "1": {
+          "tag": "Học nhanh hơn 3×",
+          "title": "Mở toàn bộ 50+ bài học",
+          "desc": "Free lock nhiều bài nâng cao. Nâng cấp để học đầy đủ lộ trình MC chuyên nghiệp.",
+          "cta": "Xem gói Basic"
+        },
+        "2": {
+          "tag": "Mới",
+          "title": "Script AI cá nhân hoá",
+          "desc": "AI viết kịch bản MC theo phong cách riêng của bạn. Chỉ có từ gói Basic trở lên.",
+          "cta": "Thử ngay"
+        }
       },
       "basic": {
-        "0": { "tag": "Nâng cấp cao nhất", "title": "AI không giới hạn + Coaching cá nhân", "desc": "Full plan: phân tích AI vô hạn, khóa học cao cấp, coaching 1-1 với AI.", "cta": "Nâng lên Full" },
-        "1": { "tag": "Tiết kiệm 44%", "title": "Annual — chỉ 166k/tháng", "desc": "Trả 1 năm, tiết kiệm gần 1 triệu so với trả tháng. Unlock toàn bộ tính năng.", "cta": "Xem Annual" }
+        "0": {
+          "tag": "Nâng cấp cao nhất",
+          "title": "AI không giới hạn + Coaching cá nhân",
+          "desc": "Full plan: phân tích AI vô hạn, khóa học cao cấp, coaching 1-1 với AI.",
+          "cta": "Nâng lên Full"
+        },
+        "1": {
+          "tag": "Tiết kiệm 44%",
+          "title": "Annual — chỉ 166k/tháng",
+          "desc": "Trả 1 năm, tiết kiệm gần 1 triệu so với trả tháng. Unlock toàn bộ tính năng.",
+          "cta": "Xem Annual"
+        }
       },
       "full": {
-        "0": { "tag": "Tiết kiệm 44%", "title": "Chuyển sang Annual", "desc": "Trả 1 năm chỉ 1.990.000đ — tiết kiệm 980.000đ so với trả tháng.", "cta": "Nâng lên Annual" }
+        "0": {
+          "tag": "Tiết kiệm 44%",
+          "title": "Chuyển sang Annual",
+          "desc": "Trả 1 năm chỉ 1.990.000đ — tiết kiệm 980.000đ so với trả tháng.",
+          "cta": "Nâng lên Annual"
+        }
       }
     }
   },
@@ -781,12 +874,30 @@
       "productLaunch": "Ra mắt SP"
     },
     "difficulty": {
-      "easy": { "label": "Dễ", "tag": "Người mới" },
-      "beginner": { "label": "Sơ cấp", "tag": "Người mới" },
-      "intermediate": { "label": "Trung cấp", "tag": "Có kinh nghiệm" },
-      "medium": { "label": "Trung cấp", "tag": "Có kinh nghiệm" },
-      "advanced": { "label": "Nâng cao", "tag": "MC chuyên nghiệp" },
-      "hard": { "label": "Khó", "tag": "MC chuyên nghiệp" }
+      "easy": {
+        "label": "Dễ",
+        "tag": "Người mới"
+      },
+      "beginner": {
+        "label": "Sơ cấp",
+        "tag": "Người mới"
+      },
+      "intermediate": {
+        "label": "Trung cấp",
+        "tag": "Có kinh nghiệm"
+      },
+      "medium": {
+        "label": "Trung cấp",
+        "tag": "Có kinh nghiệm"
+      },
+      "advanced": {
+        "label": "Nâng cao",
+        "tag": "MC chuyên nghiệp"
+      },
+      "hard": {
+        "label": "Khó",
+        "tag": "MC chuyên nghiệp"
+      }
     },
     "practiceBtn": "Luyện tập",
     "heading": "Bài luyện phổ biến",
@@ -841,8 +952,17 @@
     }
   },
   "upgradeBanner": {
-    "planLabels": { "free": "Miễn phí", "basic": "Basic", "full": "Full", "annual": "Annual" },
-    "nextPlanLabels": { "free": "Basic (199k/tháng)", "basic": "Full (299k/tháng)", "full": "Annual (1.99M/năm)" },
+    "planLabels": {
+      "free": "Miễn phí",
+      "basic": "Basic",
+      "full": "Full",
+      "annual": "Annual"
+    },
+    "nextPlanLabels": {
+      "free": "Basic (199k/tháng)",
+      "basic": "Full (299k/tháng)",
+      "full": "Annual (1.99M/năm)"
+    },
     "stripLimitReached": "Bạn đã dùng hết {{limit}} lượt AI của gói {{plan}}.",
     "stripRemaining": "Còn {{remaining}} lượt AI — gói {{plan}} giới hạn {{limit}} lượt.",
     "upgradeToLabel": "Nâng cấp {{label}}",
@@ -851,9 +971,21 @@
     "usedLabel": "{{count}} đã dùng",
     "totalLabel": "{{count}} tổng",
     "upgradeToLabelLong": "Nâng cấp lên {{label}}",
-    "benefitsBasic": ["20 lượt phân tích AI/tháng", "Tất cả danh mục bài học", "Báo cáo chi tiết"],
-    "benefitsFull": ["AI không giới hạn", "Tất cả khóa học cao cấp", "Coaching AI cá nhân"],
-    "benefitsAnnual": ["Tiết kiệm 44% so với tháng", "Ưu tiên hỗ trợ", "Tính năng beta sớm nhất"],
+    "benefitsBasic": [
+      "20 lượt phân tích AI/tháng",
+      "Tất cả danh mục bài học",
+      "Báo cáo chi tiết"
+    ],
+    "benefitsFull": [
+      "AI không giới hạn",
+      "Tất cả khóa học cao cấp",
+      "Coaching AI cá nhân"
+    ],
+    "benefitsAnnual": [
+      "Tiết kiệm 44% so với tháng",
+      "Ưu tiên hỗ trợ",
+      "Tính năng beta sớm nhất"
+    ],
     "limitReachedTitle": "Đã hết {{limit}} lượt AI của gói {{plan}}",
     "warningTitle": "Sắp hết lượt AI — còn {{remaining}}/{{limit}} lượt",
     "limitReachedDesc": "Nâng cấp để tiếp tục phân tích giọng nói với AI.",
@@ -875,7 +1007,64 @@
     "backToHome": "Quay lại trang chủ",
     "start": "Bắt đầu",
     "page": "Trang",
-    "level": "Cấp độ"
+    "level": "Cấp độ",
+    "cancel": "Hủy"
+  },
+  "certificateModal": {
+    "yourCertificate": "Chứng chỉ của bạn",
+    "previewCertificate": "Xem trước chứng chỉ",
+    "completedNote": "Chúc mừng! Bạn đã hoàn thành xuất sắc và nhận được chứng chỉ này.",
+    "previewNote": "Đây là bản xem trước — hoàn thành khóa học để mở khóa chứng chỉ chính thức.",
+    "downloadPng": "Tải về PNG"
+  },
+  "premiumModal": {
+    "initError": "Không thể khởi tạo đơn hàng nâng cấp. Vui lòng thử lại.",
+    "simulationError": "Mô phỏng thanh toán thất bại. Vui lòng thử lại.",
+    "upgradeSuccess": "Nâng cấp thành công!",
+    "welcomeTo": "Chào mừng bạn đến với",
+    "unlimitedUnlocked": "Bạn đã mở khóa toàn bộ tính năng không giới hạn.",
+    "premiumTier": "Gói Premium",
+    "upgradeTo": "Nâng cấp lên",
+    "tagline": "Luyện tập không giới hạn, phân tích AI chuyên sâu, không quảng cáo.",
+    "feature1Title": "AI Coaching không giới hạn",
+    "feature1Desc": "Luyện tập bao nhiêu tùy thích, không giới hạn số phiên mỗi ngày.",
+    "feature2Title": "Phân tích chuyên sâu",
+    "feature2Desc": "Mở khóa toàn bộ chỉ số nâng cao: chất lượng giọng, từ đệm, ngữ điệu.",
+    "feature3Title": "Trải nghiệm không quảng cáo",
+    "feature3Desc": "Tập trung luyện tập mà không bị gián đoạn bởi quảng cáo.",
+    "promoOffer": "Ưu đãi đặc biệt",
+    "generatingQr": "Đang tạo mã QR thanh toán...",
+    "tryAgain": "Thử lại",
+    "accountOwner": "Chủ tài khoản",
+    "bank": "Ngân hàng",
+    "accountNo": "Số tài khoản",
+    "transferMemo": "Nội dung chuyển khoản",
+    "doubleClickCopy": "Nhấp đúp để sao chép",
+    "upgrading": "Đang nâng cấp...",
+    "simulatePayment": "Mô phỏng thanh toán",
+    "waitingPayment": "Đang chờ thanh toán...",
+    "autoDetected": "Hệ thống sẽ tự động phát hiện khi thanh toán thành công."
+  },
+  "questGuide": {
+    "profile": "Hồ sơ",
+    "practice": "Luyện tập",
+    "courses": "Khóa học",
+    "reading": "Bài đọc",
+    "leaderboard": "Bảng xếp hạng",
+    "clickToContinue": "Nhấp để tiếp tục",
+    "skip": "Bỏ qua",
+    "finish": "Hoàn tất",
+    "next": "Tiếp theo"
+  },
+  "highlightTooltip": {
+    "highlight": "Đánh dấu"
+  },
+  "notesSidebar": {
+    "title": "Ghi chú",
+    "empty": "Chưa có ghi chú nào",
+    "emptyHint": "Bôi đen đoạn văn bản để thêm ghi chú.",
+    "notePlaceholder": "Nhập ghi chú của bạn...",
+    "noNote": "Chưa có nội dung ghi chú"
   },
   "learning": {
     "title": "Lộ trình Sự nghiệp",
@@ -1411,6 +1600,357 @@
         "footerNote": "Tài liệu nội bộ, trích xuất tự động từ Hệ thống Quản trị The MC Hub."
       }
     },
+    "analyticsSection": {
+      "noData": "Chưa có dữ liệu",
+      "ga4ReportTitle": "Báo cáo Hệ thống Tracking GA4",
+      "ga4MeasurementId": "Measurement ID: G-S6MV5SK3E0 · MC Voice Training Web",
+      "openGa4": "Mở GA4",
+      "tabData": "Dữ liệu hệ thống",
+      "tabGa4": "📊 GA4 Report",
+      "usersToday": "Người dùng hôm nay",
+      "newRegistrations": "Đăng ký mới",
+      "loginsToday": "Đăng nhập hôm nay",
+      "activeSessions": "Phiên hoạt động",
+      "sessionsToday": "Luyện tập hôm nay",
+      "aiSessions": "Sessions AI",
+      "premiumUsers": "Người dùng Premium",
+      "payingUsers": "Đang trả phí",
+      "totalUsers": "Tổng người dùng",
+      "allTime": "Toàn thời gian",
+      "active7d": "Active (7 ngày)",
+      "hasLoggedIn": "Có đăng nhập",
+      "totalLogins30d": "Tổng đăng nhập 30n",
+      "last30Days": "30 ngày qua",
+      "sessions30d": "Luyện tập 30 ngày",
+      "loginTrend": "Lượt đăng nhập",
+      "loginTrendSub": "Số phiên đăng nhập theo thời gian",
+      "todayByHour": "Hôm nay theo giờ",
+      "last12Months": "12 tháng gần nhất",
+      "last30DaysShort": "30 ngày gần nhất",
+      "hour": "Giờ",
+      "day": "Ngày",
+      "month": "Tháng",
+      "loginsTooltip": "Đăng nhập",
+      "aiSessionTrend": "Phiên luyện tập AI",
+      "aiSessionTrendSub": "Số lần người dùng luyện giọng theo thời gian",
+      "sessionsTooltip": "Sessions",
+      "newUsersByDay": "Người dùng mới theo ngày",
+      "newUsersByMonth": "Người dùng mới theo tháng",
+      "newUsersTooltip": "Người dùng mới",
+      "peakHoursTitle": "Giờ cao điểm truy cập",
+      "peakHoursSub": "Phân bổ lượt đăng nhập theo giờ trong ngày (30 ngày)",
+      "topHour": "Top giờ:",
+      "usesUnit": "lượt",
+      "accountStatus": "Trạng thái tài khoản",
+      "accountStatusSub": "Active vs không hoạt động",
+      "activeStatus": "Đang hoạt động",
+      "inactiveStatus": "Không hoạt động",
+      "active7dLabel": "Active 7 ngày",
+      "planDistribution": "Phân bổ gói dịch vụ",
+      "planDistributionSub": "Số người dùng theo từng gói",
+      "usersTooltip": "Người dùng",
+      "roleDistribution": "Phân bổ vai trò",
+      "roleDistributionSub": "Số người dùng theo vai trò trong hệ thống",
+      "loginsByMonth": "Đăng nhập theo tháng"
+    },
+    "marketingManager": {
+      "title": "Marketing",
+      "subtitle": "Quản lý social feed và gửi email marketing đến người dùng.",
+      "tabSocialFeed": "Social Feed",
+      "tabEmailCampaigns": "Email Campaigns",
+      "tabTemplates": "Templates",
+      "tabSendCampaign": "Gửi chiến dịch",
+      "tabHistory": "Lịch sử",
+      "socialFeedDesc": "Quản lý bài đăng Facebook hiển thị trên trang chủ.",
+      "preview": "Preview",
+      "addPost": "Thêm bài đăng",
+      "previewCarouselHint": "Preview carousel (dữ liệu live từ DB)",
+      "addNewPost": "Thêm bài đăng mới",
+      "editPost": "Sửa bài đăng",
+      "imageOptional": "Ảnh (tuỳ chọn)",
+      "uploadImage": "Tải ảnh lên",
+      "thumbnailHint": "Ảnh thumbnail 16:9. Hoặc nhập URL:",
+      "descriptionRequired": "Nội dung mô tả *",
+      "shortDescPlaceholder": "Mô tả ngắn...",
+      "fbLinkRequired": "Link bài đăng Facebook *",
+      "priority": "Ưu tiên",
+      "visibility": "Hiển thị",
+      "show": "Hiện",
+      "hide": "Ẩn",
+      "saving": "Đang lưu...",
+      "savePost": "Lưu bài đăng",
+      "cancel": "Huỷ",
+      "loading": "Đang tải...",
+      "noPosts": "Chưa có bài đăng nào.",
+      "clicksCount": "{{count}} click",
+      "visibleOfTotal": "{{visible}} hiển thị / {{total}} tổng",
+      "saveFailed": "Lưu thất bại.",
+      "confirmDeletePost": "Xoá bài đăng này?",
+      "deleteFailed": "Xoá thất bại.",
+      "toggleFailed": "Thay đổi trạng thái thất bại.",
+      "previewEmail": "Preview email",
+      "exactRenderHint": "Render chính xác trong hộp thư",
+      "fillContentHint": "Điền nội dung bên trái để xem preview email tại đây",
+      "templatesDesc": "Tạo và quản lý template HTML cho các chiến dịch email.",
+      "createTemplate": "Tạo template",
+      "editTemplateTitle": "Chỉnh sửa template",
+      "createTemplateTitle": "Tạo template",
+      "templateName": "Tên template",
+      "emailSubject": "Tiêu đề email",
+      "designBuilder": "Design Builder",
+      "rawHtml": "HTML thô",
+      "rawHtmlHint": "HTML trực tiếp, bỏ qua builder",
+      "generateFromFieldsHint": "Generate HTML từ các trường",
+      "rawHtmlRequired": "HTML thô *",
+      "personalizeHintPrefix": "Dùng",
+      "and": "và",
+      "personalizeHintSuffix": "để personalize.",
+      "contentTitle": "Tiêu đề nội dung",
+      "ctaButtonText": "Text nút CTA",
+      "ctaButtonLink": "Link nút CTA",
+      "logoUrl": "URL Logo",
+      "bannerUrl": "URL Banner",
+      "mainContent": "Nội dung chính",
+      "update": "Cập nhật",
+      "noTemplates": "Chưa có template nào.",
+      "subjectLabel": "Subject",
+      "test": "Test",
+      "edit": "Sửa",
+      "testEmailPlaceholder": "Email nhận test...",
+      "sendTest": "Gửi test",
+      "confirmDeleteTemplate": "Xoá template này?",
+      "testMailSent": "Đã gửi mail test!",
+      "sendFailed": "Gửi thất bại.",
+      "dedupHint": "Hệ thống tự dedup và gửi từng người với 2 giây delay.",
+      "chooseTemplate": "Chọn template",
+      "subjectPlaceholder": "Tiêu đề hiển thị trong hộp thư...",
+      "targetAudience": "Đối tượng nhận",
+      "targetAll": "Tất cả",
+      "targetByPlan": "Theo gói",
+      "targetByRole": "Theo role",
+      "targetPremium": "Premium",
+      "targetCustomEmail": "Email tùy chỉnh",
+      "choosePlanMulti": "Chọn gói (có thể chọn nhiều)",
+      "chooseRoleMulti": "Chọn role (có thể chọn nhiều)",
+      "customEmailListHint": "Danh sách email (mỗi dòng hoặc cách nhau bằng dấu phẩy)",
+      "loadList": "Tải danh sách",
+      "reloadList": "Tải lại danh sách",
+      "selectedPrefix": "Đã chọn",
+      "peopleUnit": "người",
+      "sendCampaign": "Gửi chiến dịch",
+      "noRecipientsSelected": "Chưa chọn người nhận nào.",
+      "confirmSendCampaign": "Gửi chiến dịch đến {{count}} người đã chọn?",
+      "campaignStarted": "Chiến dịch đã khởi động",
+      "totalRecipients": "Tổng người nhận",
+      "checkHistoryTabHint": "Kiểm tra tab \"Lịch sử\" để theo dõi tiến độ.",
+      "campaignHistoryDesc": "Lịch sử các chiến dịch đã chạy.",
+      "refresh": "Refresh",
+      "noCampaigns": "Chưa có chiến dịch nào.",
+      "noLogsYet": "Chưa có log.",
+      "selectAll": "Chọn tất cả",
+      "checkedOfTotalPeople": "{{checked}} / {{total}} người",
+      "loadingList": "Đang tải danh sách...",
+      "noRecipientsFound": "Không tìm thấy người nhận."
+    },
+    "userManagement": {
+      "title": "Quản lý người dùng",
+      "totalPrefix": "Tổng",
+      "accountsUnit": "tài khoản",
+      "searchPlaceholder": "Tìm theo tên, email...",
+      "refreshList": "Làm mới danh sách",
+      "add": "Thêm",
+      "all": "Tất cả",
+      "allPlans": "Tất cả gói",
+      "sortNewest": "Mới nhất",
+      "sortNameAZ": "Tên A→Z",
+      "sortSessions": "Sessions ↓",
+      "sortHighestPlan": "Gói cao nhất",
+      "colUser": "Người dùng",
+      "colRole": "Vai trò",
+      "colPlan": "Gói",
+      "colReferralCode": "Mã GT",
+      "colReferred": "Đã GT",
+      "colStatus": "Trạng thái",
+      "colActions": "Thao tác",
+      "noUsersFound": "Không tìm thấy người dùng",
+      "viewDetails": "Xem chi tiết",
+      "sendResetEmail": "Gửi email reset",
+      "changePassword": "Đổi mật khẩu",
+      "revoke": "Thu hồi",
+      "certify": "Chứng nhận",
+      "lock": "Khóa",
+      "unlock": "Mở khóa",
+      "disable": "Vô hiệu hóa",
+      "active": "Hoạt động",
+      "locked": "Bị khóa",
+      "addNewAccount": "Thêm tài khoản mới",
+      "displayName": "Tên hiển thị",
+      "displayNamePlaceholder": "Nguyễn Văn A",
+      "password": "Mật khẩu",
+      "passwordMinPlaceholder": "Tối thiểu 6 ký tự",
+      "phoneNumber": "Số điện thoại",
+      "role": "Vai trò",
+      "internalNote": "Ghi chú nội bộ",
+      "internalNotePlaceholder": "Ghi chú cho admin (không hiển thị cho người dùng)...",
+      "activatePlanNow": "Kích hoạt gói ngay (tuỳ chọn)",
+      "noPlanActivation": "— Không kích hoạt gói —",
+      "basic30Days": "BASIC (30 ngày)",
+      "full30Days": "FULL (30 ngày)",
+      "annual365Days": "ANNUAL (365 ngày)",
+      "bypassPayosHint": "Bypass PayOS — gói sẽ được kích hoạt ngay khi tạo tài khoản.",
+      "giftDiscountCode": "Tặng mã giảm giá (tuỳ chọn)",
+      "noCoupon": "— Không tặng coupon —",
+      "couponUseOnceHint": "Coupon sẽ được đánh dấu đã sử dụng 1 lần.",
+      "cancel": "Hủy",
+      "creating": "Đang tạo...",
+      "createAccount": "Tạo tài khoản",
+      "newPassword": "Mật khẩu mới",
+      "saving": "Đang lưu...",
+      "update": "Cập nhật",
+      "fillAllFields": "Vui lòng điền đầy đủ thông tin.",
+      "createAccountSuccess": "Đã tạo tài khoản thành công.",
+      "createAccountFailed": "Tạo tài khoản thất bại.",
+      "resetEmailSentFlash": "Đã gửi email đặt lại mật khẩu cho {{name}}.",
+      "errorPrefix": "Lỗi: {{message}}",
+      "sendEmailFailed": "Không thể gửi email.",
+      "passwordMinLength": "Mật khẩu tối thiểu 6 ký tự.",
+      "changePasswordSuccess": "Đã đổi mật khẩu thành công.",
+      "changePasswordFailed": "Đổi mật khẩu thất bại.",
+      "confirmDisableAccount": "Vô hiệu hóa tài khoản \"{{name}}\"? Tài khoản sẽ bị khóa nhưng dữ liệu được giữ lại.",
+      "disableAccountSuccess": "Đã vô hiệu hóa tài khoản {{name}}.",
+      "disableAccountFailed": "Không thể vô hiệu hóa tài khoản.",
+      "tabInfo": "Thông tin",
+      "tabStats": "Thống kê",
+      "tabNotify": "Thông báo",
+      "certified": "Certified",
+      "email": "Email",
+      "registeredAt": "Ngày đăng ký",
+      "aiSessionsUsed": "AI Sessions đã dùng",
+      "planExpiresAt": "Hết hạn gói",
+      "mcProfile": "Hồ sơ MC",
+      "noMcProfile": "Chưa có hồ sơ MC.",
+      "stageName": "Tên nghệ danh",
+      "location": "Địa điểm",
+      "experience": "Kinh nghiệm",
+      "yearsUnit": "{{count}} năm",
+      "rate": "Mức giá",
+      "specialties": "Chuyên môn",
+      "quickActions": "Thao tác nhanh",
+      "revokeCertification": "Thu hồi chứng nhận",
+      "grantCertification": "Cấp chứng nhận MC",
+      "lockAccount": "Khóa tài khoản",
+      "unlockAccount": "Mở khóa tài khoản",
+      "loadingStats": "Đang tải thống kê...",
+      "noStatsData": "Không có dữ liệu thống kê",
+      "reload": "Tải lại",
+      "totalXp": "XP tổng",
+      "totalSessions": "Tổng buổi luyện",
+      "avgScore": "Điểm trung bình",
+      "bestScore": "Điểm cao nhất",
+      "currentStreak": "Chuỗi hiện tại",
+      "recordDays": "Kỷ lục: {{count}} ngày",
+      "thisWeek": "Tuần này",
+      "lastPractice": "Lần luyện cuối",
+      "totalPracticeHours": "Tổng giờ luyện tập",
+      "hoursValue": "{{hours}} giờ",
+      "last5Sessions": "5 buổi gần nhất",
+      "loadStatsForSuggestions": "Tải thống kê để nhận gợi ý thông minh",
+      "smartSuggestions": "Gợi ý thông minh",
+      "analyzing": "Đang phân tích...",
+      "composeEmail": "Soạn email",
+      "subject": "Tiêu đề",
+      "emailSubjectPlaceholder": "Chủ đề email...",
+      "content": "Nội dung",
+      "emailContentPlaceholder": "Nội dung email...",
+      "draftHintPrefix": "Sẽ tạo bản nháp gửi đến",
+      "draftHintSuffix": "Vào Thông báo → Chờ duyệt để xem xét và gửi thật.",
+      "draftCreatedFlash": "✓ Đã tạo bản nháp — vào Thông báo → Chờ duyệt để gửi.",
+      "createFailed": "Tạo thất bại.",
+      "createDraft": "Tạo bản nháp",
+      "suggestions": {
+        "inactiveLabel": "Lâu rồi chưa đăng nhập ({{days}} ngày)",
+        "inactiveSubject": "Chúng tôi nhớ bạn! — MCHub Voice Training",
+        "inactiveContent": "Xin chào {{name}},\n\nChúng tôi nhận thấy bạn chưa đăng nhập MCHub Voice Training trong {{days}} ngày qua.\n\nHãy quay lại luyện tập hôm nay — mỗi ngày 15 phút sẽ giúp bạn cải thiện đáng kể giọng MC chuyên nghiệp!\n\nTruy cập: https://mchub.vn\n\nMCHub Team",
+        "activeLearnerLabel": "Học viên tích cực ({{count}} buổi)",
+        "activeLearnerSubject": "Bạn đang tiến bộ rất nhanh! — MCHub",
+        "activeLearnerContent": "Xin chào {{name}},\n\nBạn đã hoàn thành {{count}} buổi luyện tập — thật tuyệt vời!\n\nĐiểm trung bình của bạn là {{score}}/100. Hãy tiếp tục duy trì phong độ này.\n\nNếu bạn cần tư vấn thêm về lộ trình phát triển MC, đội ngũ MCHub luôn sẵn sàng hỗ trợ.\n\nMCHub Team",
+        "lowScoreLabel": "Điểm trung bình thấp ({{score}}/100)",
+        "lowScoreSubject": "Mẹo cải thiện giọng nói MC — MCHub",
+        "lowScoreContent": "Xin chào {{name}},\n\nChúng tôi nhận thấy bạn đang nỗ lực luyện tập. Điểm trung bình hiện tại: {{score}}/100.\n\nMột số mẹo để cải thiện:\n• Luyện tập đều đặn mỗi ngày, ít nhất 10 phút\n• Tập trung vào bài học nhịp điệu và ngữ điệu\n• Nghe lại bản ghi âm để tự đánh giá\n\nChúc bạn sớm đạt điểm cao!\n\nMCHub Team",
+        "highScoreLabel": "Điểm xuất sắc ({{score}}/100)",
+        "highScoreSubject": "Chúc mừng thành tích của bạn! — MCHub",
+        "highScoreContent": "Xin chào {{name}},\n\nBạn đang đạt điểm trung bình {{score}}/100 — thuộc nhóm top học viên trên nền tảng!\n\nMCHub trân trọng sự nỗ lực của bạn. Hãy chia sẻ hành trình của bạn với cộng đồng MC để truyền cảm hứng cho những người khác nhé.\n\nMCHub Team",
+        "streakLabel": "Chuỗi {{count}} ngày liên tiếp",
+        "streakSubject": "Chuỗi {{count}} ngày — Tiếp tục phá vỡ giới hạn!",
+        "streakContent": "Xin chào {{name}},\n\nBạn đang có chuỗi luyện tập {{count}} ngày liên tiếp — thật ấn tượng!\n\nKỷ lục cá nhân của bạn là {{longest}} ngày. Hãy tiếp tục duy trì để phá kỷ lục nhé!\n\nMCHub Team",
+        "upgradeLabel": "Đang dùng gói FREE — gợi ý nâng cấp",
+        "upgradeSubject": "Mở khóa toàn bộ tính năng MCHub",
+        "upgradeContent": "Xin chào {{name}},\n\nBạn đang sử dụng gói FREE của MCHub. Để tận dụng toàn bộ bài học, phân tích AI nâng cao và không giới hạn buổi luyện tập, hãy khám phá các gói Premium của chúng tôi.\n\nXem chi tiết tại: https://mchub.vn/pricing\n\nMCHub Team"
+      }
+    },
+    "securityLogs": {
+      "title": "Security Logs",
+      "reload": "Tải lại",
+      "recordsCount": "{{count}} bản ghi",
+      "failedCount": "{{count}} thất bại",
+      "searchPlaceholder": "Tìm IP, userId, action...",
+      "allStatuses": "Tất cả trạng thái",
+      "success": "Thành công",
+      "failed": "Thất bại",
+      "allActions": "Tất cả hành động",
+      "purgeLogsOlderThan": "Xóa log cũ hơn",
+      "daysUnit": "ngày",
+      "purge": "Purge",
+      "min3DaysWarningPrefix": "Log của",
+      "min3DaysWarningBold": "3 ngày gần nhất",
+      "min3DaysWarningSuffix": "không thể bị xóa dù cài đặt bất kỳ giá trị nào — nhằm đảm bảo có thể truy vết nếu có xâm nhập gần đây.",
+      "loading": "Đang tải...",
+      "noRecords": "Không có bản ghi nào.",
+      "colTime": "Thời gian",
+      "colAction": "Hành động",
+      "colIp": "IP",
+      "colDevice": "Thiết bị",
+      "colStatus": "Trạng thái",
+      "showingCount": "Hiển thị {{shown}} / {{total}} bản ghi",
+      "cannotPurgeUnder3Days": "Không thể xóa log dưới 3 ngày gần nhất.",
+      "confirmPurge": "Xóa tất cả log cũ hơn {{days}} ngày?\n\nLog 3 ngày gần nhất sẽ được giữ lại bất kể cài đặt.\nHành động này không thể hoàn tác.",
+      "purgeResult": "Đã xóa {{count}} bản ghi (cũ hơn {{days}} ngày).",
+      "purgeFailed": "Purge thất bại: {{message}}",
+      "userInfo": "Thông tin người dùng",
+      "fullName": "Họ tên",
+      "phoneNumber": "Số điện thoại",
+      "role": "Vai trò",
+      "status": "Trạng thái",
+      "active": "Hoạt động",
+      "locked": "Bị khóa",
+      "plan": "Gói",
+      "registered": "Đăng ký",
+      "userNotFound": "Không tìm thấy thông tin người dùng (có thể đã bị xóa)",
+      "details": "Details",
+      "error": "Lỗi",
+      "actions": {
+        "authLogin": "Đăng nhập",
+        "authLogout": "Đăng xuất",
+        "authRegister": "Đăng ký",
+        "authChangePassword": "Đổi mật khẩu",
+        "authResetPassword": "Reset mật khẩu",
+        "adminLoginOtpVerify": "Admin OTP xác nhận",
+        "adminDeleteUser": "Xóa người dùng",
+        "adminUpdateUserStatus": "Cập nhật trạng thái",
+        "adminChangePassword": "Admin đổi mật khẩu",
+        "adminCreateUser": "Tạo người dùng",
+        "adminSendResetEmail": "Gửi email reset",
+        "adminNotifyEmail": "Gửi thông báo email",
+        "adminMigrateDb": "Migrate database",
+        "adminPurgeLogs": "Xóa logs cũ",
+        "adminBanUser": "Khóa tài khoản",
+        "adminUnbanUser": "Mở khóa tài khoản",
+        "paymentInitiate": "Khởi tạo thanh toán",
+        "paymentSuccess": "Thanh toán thành công",
+        "paymentFailed": "Thanh toán thất bại",
+        "profileUpdate": "Cập nhật hồ sơ"
+      }
+    },
     "notificationManager": {
       "types": {
         "newLesson": "Bài học mới",
@@ -1491,33 +2031,66 @@
       "triggers": {
         "newLesson": {
           "label": "Bài học mới",
-          "fields": { "lessonTitle": "Tên bài học" },
-          "placeholders": { "lessonTitle": "Kỹ thuật ngắt giọng" }
+          "fields": {
+            "lessonTitle": "Tên bài học"
+          },
+          "placeholders": {
+            "lessonTitle": "Kỹ thuật ngắt giọng"
+          }
         },
         "discount": {
           "label": "Khuyến mãi",
-          "fields": { "planName": "Tên gói", "discountPercent": "% giảm", "discountCode": "Mã" },
-          "placeholders": { "planName": "Gói FULL" }
+          "fields": {
+            "planName": "Tên gói",
+            "discountPercent": "% giảm",
+            "discountCode": "Mã"
+          },
+          "placeholders": {
+            "planName": "Gói FULL"
+          }
         },
         "maintenance": {
           "label": "Bảo trì",
-          "fields": { "time": "Thời gian", "duration": "Thời lượng" },
-          "placeholders": { "time": "Chủ nhật 14/7 từ 2:00-4:00", "duration": "2 giờ" }
+          "fields": {
+            "time": "Thời gian",
+            "duration": "Thời lượng"
+          },
+          "placeholders": {
+            "time": "Chủ nhật 14/7 từ 2:00-4:00",
+            "duration": "2 giờ"
+          }
         },
         "socialPost": {
           "label": "Bài đăng FB",
-          "fields": { "postTitle": "Tiêu đề", "postUrl": "Link" },
-          "placeholders": { "postTitle": "10 lỗi MC hay gặp" }
+          "fields": {
+            "postTitle": "Tiêu đề",
+            "postUrl": "Link"
+          },
+          "placeholders": {
+            "postTitle": "10 lỗi MC hay gặp"
+          }
         },
         "featureUpdate": {
           "label": "Tính năng mới",
-          "fields": { "featureName": "Tên tính năng", "description": "Mô tả" },
-          "placeholders": { "featureName": "Phân tích giọng v2", "description": "Cải thiện 40%..." }
+          "fields": {
+            "featureName": "Tên tính năng",
+            "description": "Mô tả"
+          },
+          "placeholders": {
+            "featureName": "Phân tích giọng v2",
+            "description": "Cải thiện 40%..."
+          }
         },
         "competition": {
           "label": "Cuộc thi",
-          "fields": { "competitionName": "Tên cuộc thi", "description": "Mô tả" },
-          "placeholders": { "competitionName": "MC Tài Năng Tháng 7", "description": "Giải nhất 500k..." }
+          "fields": {
+            "competitionName": "Tên cuộc thi",
+            "description": "Mô tả"
+          },
+          "placeholders": {
+            "competitionName": "MC Tài Năng Tháng 7",
+            "description": "Giải nhất 500k..."
+          }
         }
       },
       "triggerPanel": {
@@ -1712,6 +2285,923 @@
         "message": "Thông điệp"
       },
       "searchPlaceholder": "Tìm kiếm…"
+    },
+    "coursePricingManager": {
+      "title": "Khóa học — Giá & Giảm giá",
+      "subtitle": "Gói Basic trở lên học mọi khóa. Người dùng Free có thể mua lẻ từng khóa theo giá bên dưới.",
+      "reload": "Tải lại",
+      "loading": "Đang tải...",
+      "statsLine": "{{lessons}} bài luyện · {{readings}} bài đọc · {{quiz}} quiz",
+      "enrollments": "{{count}} học viên",
+      "priceLabel": "Giá (VNĐ)",
+      "discountLabel": "Giảm (%)",
+      "finalPriceLabel": "Giá cuối",
+      "editPrice": "Chỉnh giá",
+      "empty": "Chưa có khóa học nào."
+    },
+    "lessonManagement": {
+      "title": "Danh mục bài học",
+      "subtitle": "Quản lý kịch bản, hướng dẫn, độ khó và tài nguyên luyện tập cho MC.",
+      "addScript": "Thêm kịch bản luyện tập",
+      "colLesson": "Bài học",
+      "colCategory": "Danh mục",
+      "colDifficulty": "Độ khó",
+      "colWordCount": "Số từ",
+      "colActions": "Thao tác",
+      "edit": "Sửa",
+      "delete": "Xóa",
+      "empty": "Chưa có bài học nào",
+      "updateFailed": "Cập nhật bài học thất bại",
+      "createFailed": "Tạo bài học thất bại",
+      "confirmHide": "Ẩn bài học này? Bài học sẽ không hiển thị với người dùng nhưng dữ liệu được giữ lại.",
+      "hideFailed": "Ẩn bài học thất bại",
+      "editScript": "Sửa kịch bản luyện tập",
+      "createScript": "Tạo kịch bản luyện tập",
+      "formTitle": "Tiêu đề",
+      "formTitlePlaceholder": "Kịch bản khai mạc tiệc cưới...",
+      "formCategory": "Danh mục",
+      "categoryGala": "Tiệc Gala",
+      "categoryWedding": "Đám cưới",
+      "categoryCorporate": "Doanh nghiệp",
+      "categoryLaunch": "Ra mắt sản phẩm",
+      "formDescription": "Mô tả ngắn",
+      "formDescriptionPlaceholder": "Tổng quan về tình huống kịch bản...",
+      "formContent": "Nội dung kịch bản luyện tập",
+      "formContentPlaceholder": "Dán nội dung luyện tập vào đây...",
+      "formDifficulty": "Độ khó",
+      "formCoverImage": "Ảnh bìa",
+      "chooseFile": "Chọn tệp",
+      "cancel": "Hủy",
+      "saving": "Đang lưu...",
+      "saveLesson": "Lưu bài học"
+    },
+    "planManager": {
+      "saveFailed": "Lưu thất bại",
+      "saveFailedDot": "Lưu thất bại.",
+      "visible": "Hiện",
+      "hidden": "Ẩn",
+      "basicInfo": "Thông tin cơ bản",
+      "displayName": "Tên hiển thị",
+      "priceVnd": "Giá (VNĐ)",
+      "durationDays": "Số ngày",
+      "forever": "Vĩnh viễn",
+      "daysCount": "{{count}} ngày",
+      "aiSessionPerMonth": "AI session/tháng",
+      "unlimited": "Không giới hạn",
+      "tagline": "Tagline",
+      "taglinePlaceholder": "Mô tả ngắn hiển thị dưới tên gói...",
+      "detailedDescription": "Mô tả chi tiết",
+      "detailedDescriptionPlaceholder": "Nội dung mô tả đầy đủ (không bắt buộc)...",
+      "marketing": "Marketing",
+      "badge": "Badge",
+      "badgePlaceholder": "Phổ biến nhất...",
+      "socialProof": "Social proof",
+      "socialProofPlaceholder": "92% MC chọn...",
+      "urgencyText": "Urgency text",
+      "urgencyTextPlaceholder": "Chỉ còn 8 chỗ...",
+      "highlights": "Quyền lợi nổi bật",
+      "highlightPlaceholder": "Thêm quyền lợi rồi nhấn Enter...",
+      "directDiscount": "Giảm giá trực tiếp trên gói",
+      "removeDiscount": "Xoá giảm giá",
+      "discountPercent": "Giảm (%)",
+      "discountAmount": "Giảm theo tiền (đ)",
+      "priceAfterDiscount": "Giá sau giảm",
+      "noDiscountYet": "Chưa có giảm giá",
+      "userPreview": "Hiển thị user",
+      "savingsAmount": "tiết kiệm {{amount}} ({{percent}}%)",
+      "showing": "Đang hiển thị",
+      "hiding": "Đang ẩn",
+      "saveChanges": "Lưu thay đổi",
+      "confirmDeleteCode": "Xóa mã \"{{code}}\"?",
+      "deleteFailed": "Xóa thất bại",
+      "statusOff": "Tắt",
+      "statusExpired": "Hết hạn",
+      "statusUsedUp": "Hết lượt",
+      "statusNotStarted": "Chưa bắt đầu",
+      "statusActive": "Hoạt động",
+      "usedCountOf": "{{used}}/{{max}} lượt",
+      "remainingCount": "còn {{count}}",
+      "fromDate": "Từ {{date}}",
+      "sidebar": "Sidebar",
+      "editingCode": "Chỉnh sửa — {{code}}",
+      "discountCode": "Mã giảm giá",
+      "discountType": "Loại",
+      "percentType": "Phần trăm (%)",
+      "fixedType": "Số tiền cố định (đ)",
+      "valuePercent": "Giá trị (%)",
+      "valueVnd": "Giá trị (đ)",
+      "effectiveTime": "Thời gian hiệu lực",
+      "startsAt": "Bắt đầu",
+      "expiresAt": "Kết thúc",
+      "emptyMeansNow": "(trống = ngay lập tức)",
+      "emptyMeansNoExpiry": "(trống = không hết hạn)",
+      "maxUses": "Số lượt tối đa",
+      "zeroMeansUnlimited": "(0 = không giới hạn)",
+      "applicablePlans": "Áp dụng cho gói",
+      "emptyMeansAll": "(trống = tất cả)",
+      "internalNote": "Mô tả nội bộ",
+      "internalNotePlaceholder": "Ghi chú cho admin...",
+      "cancel": "Huỷ",
+      "showInSidebar": "Hiển thị sidebar",
+      "hideFromSidebar": "Ẩn khỏi sidebar",
+      "enterCode": "Nhập mã giảm giá",
+      "createFailed": "Tạo thất bại",
+      "createDiscountCode": "Tạo mã giảm giá",
+      "createNewDiscountCode": "Tạo mã giảm giá mới",
+      "flashDealEffectiveTime": "Thời gian hiệu lực (Flash Deal)",
+      "flashDealPlaceholder": "Flash deal Lucky Time 8h–9h tối...",
+      "activate": "Kích hoạt",
+      "draft": "Nháp",
+      "createCode": "Tạo mã",
+      "tabPlans": "Gói đăng ký",
+      "tabDiscounts": "Mã giảm giá",
+      "tabSettings": "Cài đặt",
+      "plansTabDesc": "Chỉnh sửa thông tin hiển thị của từng gói. Thay đổi có hiệu lực ngay trên trang Payment.",
+      "refresh": "Làm mới",
+      "loading": "Đang tải...",
+      "noPlansInDb": "Chưa có gói nào trong database.",
+      "restartBackendHint": "Khởi động lại backend để seed dữ liệu mặc định.",
+      "guestCooldownTitle": "Thời gian chờ luyện giọng (khách)",
+      "guestCooldownDesc": "Người dùng chưa đăng ký phải chờ sau mỗi lần luyện giọng miễn phí.",
+      "currentLabel": "Hiện tại",
+      "hoursCount": "{{count}} giờ",
+      "hoursUnit": "giờ",
+      "save": "Lưu",
+      "cooldownRangeHint": "Phạm vi: 1 – 168 giờ. Áp dụng ngay sau khi lưu.",
+      "cooldownRangeError": "Giá trị phải từ 1 đến 168 giờ.",
+      "cooldownUpdated": "Đã cập nhật: {{hours}} giờ.",
+      "discountsTabDesc": "{{count}} mã giảm giá · Người dùng nhập mã ở trang Payment trước khi thanh toán.",
+      "statActive": "Đang hoạt động",
+      "statOfCodes": "/ {{count}} mã",
+      "statRemainingUses": "Lượt còn lại",
+      "statUnlimitedCodes": "+ {{count}} mã không giới hạn",
+      "statTotalLimited": "tổng có giới hạn",
+      "statUsed": "Đã sử dụng",
+      "statTotalUses": "tổng lượt dùng",
+      "noDiscountsYet": "Chưa có mã giảm giá nào.",
+      "discountTableHeader": "Mã · Giá trị · Lượt dùng · Gói áp dụng · Trạng thái"
+    },
+    "competitionManager": {
+      "title": "Đấu Trường Thử Thách Giọng Nói",
+      "subtitle": "Cấu hình cuộc thi đấu giọng hàng ngày hoặc hàng tuần và kịch bản tham chiếu.",
+      "newArena": "Đấu Trường Mới",
+      "saveFailed": "Lưu cuộc thi thất bại",
+      "confirmDelete": "Xóa cuộc thi này? Hành động này không thể hoàn tác.",
+      "deleteFailed": "Xóa cuộc thi thất bại",
+      "unknownScript": "Kịch bản không xác định",
+      "loadingArenas": "Đang tải đấu trường...",
+      "active": "Đang hoạt động",
+      "inactive": "Ngừng hoạt động",
+      "scriptReference": "Kịch bản tham chiếu",
+      "edit": "Sửa",
+      "delete": "Xóa",
+      "noArenas": "Chưa có đấu trường nào. Nhấn \"Đấu Trường Mới\" để bắt đầu.",
+      "editArena": "Sửa Đấu Trường",
+      "createArena": "Tạo Đấu Trường",
+      "arenaTitle": "Tên đấu trường",
+      "arenaTitlePlaceholder": "Đấu giọng đám cưới hàng tuần...",
+      "description": "Mô tả",
+      "descriptionPlaceholder": "Mục tiêu tình huống cuộc thi, phần thưởng...",
+      "challengeScript": "Kịch bản thử thách",
+      "contestInterval": "Chu kỳ cuộc thi",
+      "dailyContest": "Cuộc thi hàng ngày",
+      "weeklyContest": "Cuộc thi hàng tuần",
+      "startDate": "Ngày bắt đầu",
+      "endDate": "Ngày kết thúc",
+      "cancel": "Hủy",
+      "saveArena": "Lưu đấu trường"
+    },
+    "dashboard": {
+      "navDashboard": "Dashboard",
+      "navUsers": "Người dùng",
+      "navLessons": "Bài học",
+      "navTransactions": "Giao dịch",
+      "navAcademy": "Academy",
+      "navCourses": "Khóa học",
+      "navCompetitions": "Thi đấu",
+      "navServerLogs": "Server Logs",
+      "navMarketing": "Marketing",
+      "navPlans": "Gói & Giảm giá",
+      "navNotifications": "Thông báo",
+      "navGuide": "Hướng dẫn",
+      "navSecurityLogs": "Security Logs",
+      "adminControl": "Admin Control",
+      "menu": "Menu",
+      "systemOnline": "Hệ thống hoạt động",
+      "logout": "Đăng xuất",
+      "realDataFromMongo": "Dữ liệu thực tế từ MongoDB",
+      "live": "Live",
+      "verificationFailed": "Xác minh thất bại",
+      "suspendFailed": "Đình chỉ thất bại",
+      "statTotalUsers": "Tổng người dùng",
+      "statRegistered": "Đã đăng ký",
+      "statSuccessfulTransactions": "Giao dịch thành công",
+      "statPendingFailed": "Chờ: {{pending}} · Lỗi: {{failed}}",
+      "statTotalTransactions": "Tổng giao dịch",
+      "statSystemWide": "Toàn hệ thống",
+      "statActualRevenue": "Doanh thu thực tế",
+      "statCompletedTransactions": "Giao dịch hoàn thành"
+    },
+    "guide": {
+      "dashboard-overview": {
+        "title": "Đọc KPI tổng quan",
+        "summary": "Nắm nhanh 4 chỉ số chính: doanh thu, giao dịch, người dùng.",
+        "steps": {
+          "0": "Truy cập Admin → Dashboard (trang mặc định khi vào).",
+          "1": "4 thẻ KPI hàng trên: Tổng người dùng · Giao dịch thành công · Tổng giao dịch · Doanh thu thực tế.",
+          "2": "Thẻ \"Giao dịch thành công\" hiển thị thêm: số đang Chờ và số Lỗi bên dưới.",
+          "3": "Thẻ \"Doanh thu thực tế\" chỉ đếm giao dịch COMPLETED — không tính PENDING/FAILED.",
+          "4": "Dữ liệu live từ MongoDB — nhấn F5 để cập nhật mới nhất.",
+          "5": "Nếu các thẻ hiện 0 hết, kiểm tra backend đang chạy (Admin → Server Logs)."
+        }
+      },
+      "dashboard-revenue-chart": {
+        "title": "Đọc biểu đồ doanh thu theo tháng",
+        "summary": "Phân tích xu hướng doanh thu qua biểu đồ vùng.",
+        "steps": {
+          "0": "Biểu đồ vùng \"Doanh thu theo tháng\" nằm giữa Dashboard.",
+          "1": "Trục X = tháng (T1–T12) · Trục Y = doanh thu (đơn vị: VND).",
+          "2": "Hover lên điểm dữ liệu → tooltip hiện số tiền chính xác.",
+          "3": "Tháng không có giao dịch COMPLETED sẽ hiện 0 — bình thường.",
+          "4": "Biểu đồ chỉ hiện năm hiện tại. Dữ liệu năm trước không có ở đây."
+        }
+      },
+      "dashboard-user-donut": {
+        "title": "Đọc phân bổ người dùng theo role",
+        "summary": "Xem tỉ lệ MC / Client trong hệ thống.",
+        "steps": {
+          "0": "Biểu đồ donut \"Phân bổ người dùng\" hiện tỉ lệ MC (xanh) / Client (xanh lá).",
+          "1": "ADMIN không tính vào biểu đồ này.",
+          "2": "Hover lên slice → tooltip hiện số lượng và % tương ứng.",
+          "3": "Nếu chỉ thấy 1 màu, toàn bộ user hiện tại là cùng role."
+        }
+      },
+      "dashboard-plan-bar": {
+        "title": "Đọc doanh thu theo gói đăng ký",
+        "summary": "So sánh đóng góp của BASIC / FULL / ANNUAL.",
+        "steps": {
+          "0": "Biểu đồ cột phía dưới Dashboard hiện doanh thu từng gói.",
+          "1": "Click vào cột để lọc nhanh sang tab Giao dịch (nếu có liên kết).",
+          "2": "Gói FREE không đóng góp doanh thu — cột luôn = 0.",
+          "3": "Dùng chart này để quyết định gói nào cần khuyến mãi tăng chuyển đổi."
+        }
+      },
+      "user-view": {
+        "title": "Xem danh sách & tìm kiếm user",
+        "summary": "Tìm user theo tên/email, lọc theo role.",
+        "steps": {
+          "0": "Vào Admin → Người dùng.",
+          "1": "Dùng ô Search (góc trên) để tìm theo tên hoặc email (không phân biệt hoa/thường).",
+          "2": "Dùng bộ lọc Role chip (ALL / MC / CLIENT / ADMIN) để thu hẹp danh sách.",
+          "3": "Bảng hiển thị: Avatar · Tên · Email · Role · Trạng thái (Active/Suspended) · Verified.",
+          "4": "Click vào một hàng để mở Side Panel bên phải với 3 tab: Info · Stats · Notify.",
+          "5": "Nếu danh sách trống sau khi lọc, thử xoá bộ lọc và tìm lại."
+        }
+      },
+      "user-detail-info": {
+        "title": "Xem thông tin chi tiết 1 user",
+        "summary": "Đọc hồ sơ đầy đủ: avatar, gói, trạng thái, plan.",
+        "steps": {
+          "0": "Click user trong bảng → Side Panel mở bên phải.",
+          "1": "Tab Info hiện: Tên, Email, Role, Plan hiện tại, Ngày tạo, Trạng thái khoá/mở.",
+          "2": "Badge màu xanh lá = MC đã Verified · Màu vàng = chưa Verify.",
+          "3": "Badge đỏ = Suspended · Màu xanh = Active.",
+          "4": "Plan hiện tại cho biết user đang dùng gói Free/Basic/Full/Annual."
+        }
+      },
+      "user-detail-stats": {
+        "title": "Xem thống kê luyện tập của user",
+        "summary": "Kiểm tra mức độ hoạt động, điểm, streak của user.",
+        "steps": {
+          "0": "Click user → Side Panel → tab Stats.",
+          "1": "Chỉ số: Tổng buổi luyện · Điểm trung bình · Streak liên tiếp · Bài hoàn thành.",
+          "2": "Dùng để xác định user inactive (0 buổi trong 30 ngày) → cần re-engagement.",
+          "3": "User mới chưa luyện tập sẽ hiện tất cả = 0 — bình thường."
+        }
+      },
+      "user-add": {
+        "title": "Thêm user mới thủ công",
+        "summary": "Tạo tài khoản cho thành viên nội bộ hoặc test.",
+        "steps": {
+          "0": "Vào Admin → Người dùng → nhấn nút \"Thêm\" (góc trên phải).",
+          "1": "Điền: Tên hiển thị, Email (duy nhất trong hệ thống), Mật khẩu (≥6 ký tự).",
+          "2": "Chọn Role: ADMIN / MC / CLIENT.",
+          "3": "Nhấn \"Tạo\" — user xuất hiện ngay trong bảng.",
+          "4": "Email đã tồn tại sẽ báo lỗi — kiểm tra trùng trước khi tạo.",
+          "5": "Không cấp ADMIN cho người ngoài team — toàn quyền hệ thống.",
+          "6": "User được tạo thủ công mặc định dùng gói FREE."
+        }
+      },
+      "user-verify-mc": {
+        "title": "Duyệt / Huỷ duyệt MC",
+        "summary": "Xác minh hoặc thu hồi badge MC chuyên nghiệp.",
+        "steps": {
+          "0": "Tìm user có role MC trong bảng (lọc Role = MC).",
+          "1": "Click hàng → Side Panel → tab Info.",
+          "2": "Nhấn \"Verify MC\" để xác minh → badge xanh xuất hiện trên profile.",
+          "3": "Nhấn \"Unverify\" để thu hồi badge nếu MC vi phạm quy tắc.",
+          "4": "Badge Verified hiển thị cho người dùng khác khi xem profile MC.",
+          "5": "Chỉ duyệt MC sau khi đã xác thực thông tin thật của họ."
+        }
+      },
+      "user-suspend": {
+        "title": "Khoá / Mở khoá tài khoản",
+        "summary": "Tạm dừng quyền đăng nhập của user vi phạm.",
+        "steps": {
+          "0": "Click user → Side Panel → tab Info.",
+          "1": "Nhấn \"Suspend\" để khoá — user mất quyền đăng nhập ngay lập tức.",
+          "2": "Nhấn \"Unlock\" để mở khoá — user đăng nhập bình thường trở lại.",
+          "3": "Khoá tài khoản không xoá dữ liệu của user.",
+          "4": "Nếu user đang online khi bị khoá, token hiện tại vô hiệu ngay — họ bị đăng xuất.",
+          "5": "Dùng tính năng này cho vi phạm nội quy, spam, hoặc tài khoản nghi ngờ."
+        }
+      },
+      "user-password": {
+        "title": "Đặt lại mật khẩu user",
+        "summary": "Admin set mật khẩu mới khi user quên hoặc cần reset.",
+        "steps": {
+          "0": "Click user → Side Panel → tab Info.",
+          "1": "Nhấn \"Đổi mật khẩu\" → nhập mật khẩu mới (≥6 ký tự).",
+          "2": "Nhấn \"Cập nhật\" — mật khẩu đổi ngay lập tức.",
+          "3": "Mật khẩu không thể xem lại sau khi lưu — dùng mật khẩu tạm rồi yêu cầu user đổi.",
+          "4": "Thông báo mật khẩu tạm cho user qua email hoặc Zalo.",
+          "5": "Không cần biết mật khẩu cũ để thực hiện thao tác này."
+        }
+      },
+      "user-notify-single": {
+        "title": "Gửi email cá nhân cho 1 user",
+        "summary": "Gửi email trực tiếp đến một tài khoản cụ thể.",
+        "steps": {
+          "0": "Click user → Side Panel → tab Notify.",
+          "1": "Hệ thống gợi ý nội dung thông minh theo trạng thái user (inactive / high score / streak..) — click gợi ý để điền sẵn.",
+          "2": "Chỉnh Subject và Content theo ý muốn.",
+          "3": "Dùng {{name}} trong nội dung — hệ thống tự thay bằng tên user.",
+          "4": "Nhấn \"Gửi\" — email đến inbox user trong vài giây.",
+          "5": "Không gửi email không liên quan đến dịch vụ — có thể bị báo spam.",
+          "6": "Email gửi qua Brevo SMTP từ địa chỉ themchubtraining@gmail.com."
+        }
+      },
+      "user-delete": {
+        "title": "Xoá tài khoản user",
+        "summary": "Xoá vĩnh viễn user khỏi hệ thống.",
+        "steps": {
+          "0": "Click user → Side Panel → tab Info → tìm nút \"Xoá tài khoản\" (đỏ, cuối panel).",
+          "1": "Hệ thống yêu cầu xác nhận — nhập email user để xác nhận.",
+          "2": "Nhấn \"Xác nhận xoá\".",
+          "3": "KHÔNG THỂ HOÀN TÁC. Toàn bộ dữ liệu, lịch sử luyện tập, giao dịch của user bị xoá.",
+          "4": "Chỉ xoá khi user yêu cầu xoá tài khoản theo GDPR hoặc tài khoản giả mạo xác nhận.",
+          "5": "Cân nhắc Suspend thay vì xoá nếu chỉ muốn ngăn user truy cập tạm thời."
+        }
+      },
+      "lesson-view": {
+        "title": "Xem & tìm kiếm bài luyện tập",
+        "summary": "Tra cứu toàn bộ kịch bản MC trong hệ thống.",
+        "steps": {
+          "0": "Vào Admin → Bài học.",
+          "1": "Bảng hiển thị: Tiêu đề · Danh mục · Độ khó · Số lượt luyện tập · Điểm TB.",
+          "2": "Dùng Search (tên bài) và Filter danh mục để thu hẹp.",
+          "3": "Sort theo tên, ngày tạo, hoặc số lượt dùng.",
+          "4": "Bài có nhiều lượt dùng nhất là bài phổ biến — giữ chất lượng kịch bản này."
+        }
+      },
+      "lesson-add": {
+        "title": "Thêm bài luyện tập mới",
+        "summary": "Tạo kịch bản MC mới để học viên thực hành đọc giọng.",
+        "steps": {
+          "0": "Vào Admin → Bài học → nhấn \"Add Practice Script\".",
+          "1": "Điền Tiêu đề (ngắn gọn, mô tả sự kiện).",
+          "2": "Chọn Danh mục: Wedding MC / Corporate Event / Talkshow MC / General.",
+          "3": "Nhập nội dung Script vào textarea — viết như script MC thật (dùng [Tên MC], [Tên khách]).",
+          "4": "Chọn Độ khó: Easy (người mới) / Medium / Hard (chuyên nghiệp).",
+          "5": "Thêm Mô tả ngắn giúp học viên biết bài này luyện kỹ năng gì.",
+          "6": "Upload ảnh bìa (JPG/PNG, tối đa 2MB) hoặc để trống.",
+          "7": "Nhấn Save — bài xuất hiện ngay trong Voice Library.",
+          "8": "Script quá ngắn (<50 chữ) AI khó phân tích — nên viết ≥150 chữ.",
+          "9": "Tiêu chí đánh giá (EvaluationCriteria) gắn với danh mục — không cần cấu hình thêm."
+        }
+      },
+      "lesson-edit": {
+        "title": "Sửa nội dung bài luyện tập",
+        "summary": "Cập nhật script, độ khó, danh mục đã tạo.",
+        "steps": {
+          "0": "Vào Admin → Bài học → tìm bài cần sửa.",
+          "1": "Nhấn icon bút chì ở cuối hàng → form sửa mở ra.",
+          "2": "Chỉnh các trường cần thiết.",
+          "3": "Nhấn Save.",
+          "4": "Sửa script của bài đang được dùng trong Academy Milestone sẽ ảnh hưởng trải nghiệm học viên đang học — nên thêm bài mới thay vì sửa."
+        }
+      },
+      "lesson-delete": {
+        "title": "Xoá bài luyện tập",
+        "summary": "Gỡ bài không còn phù hợp khỏi hệ thống.",
+        "steps": {
+          "0": "Tìm bài cần xoá → nhấn icon thùng rác.",
+          "1": "Hệ thống cảnh báo nếu bài đang được gán trong Academy Milestone.",
+          "2": "Xác nhận → bài bị xoá khỏi Voice Library và danh sách admin.",
+          "3": "Học viên đã luyện bài này vẫn giữ lịch sử điểm — chỉ không thể luyện lại.",
+          "4": "Nên gỡ bài khỏi Academy Milestone trước khi xoá để tránh lỗi hiển thị."
+        }
+      },
+      "lesson-reading-guide": {
+        "title": "Quản lý Reading Guide (tài liệu đọc)",
+        "summary": "Xem và thêm tài liệu lý thuyết cho học viên.",
+        "steps": {
+          "0": "Vào Admin → Bài học → tab Reading Guides (nếu có).",
+          "1": "Reading Guide là tài liệu lý thuyết: kỹ thuật nói, điều phối sự kiện, phong cách MC...",
+          "2": "Thêm guide: điền Tiêu đề, Nội dung (Markdown hỗ trợ), Danh mục, Thời đọc ước tính.",
+          "3": "Gán guide vào Academy Milestone qua module Academy → Assign Content → READING_GUIDE.",
+          "4": "Reading Guide không yêu cầu mic — học viên đọc và tự học lý thuyết."
+        }
+      },
+      "academy-overview": {
+        "title": "Hiểu cấu trúc Academy",
+        "summary": "Nắm logic khóa học: Course → Milestone → Content Item.",
+        "steps": {
+          "0": "Academy gồm 3 cấp: Course (khóa học) → Milestone/Stage (giai đoạn) → Content Item (bài cụ thể).",
+          "1": "Ví dụ: Course \"MC Đám Cưới\" → Milestone \"Level Associate\" → Item \"Kịch bản lễ cưới truyền thống\".",
+          "2": "Học viên phải hoàn thành tất cả item trong milestone để unlock milestone tiếp theo.",
+          "3": "3 Level chuẩn: Associate (cơ bản) · Professional (trung cấp) · Elite (chuyên nghiệp)."
+        }
+      },
+      "academy-course-create": {
+        "title": "Tạo Course mới",
+        "summary": "Khởi tạo khóa học tổng thể chứa các milestone.",
+        "steps": {
+          "0": "Vào Admin → Academy → nhấn \"New Course\".",
+          "1": "Điền: Tên khóa học, Mô tả, Danh mục (Wedding/Corporate/Talkshow...).",
+          "2": "Upload ảnh bìa khóa học.",
+          "3": "Nhấn Save — khóa học tạo ra chưa có milestone, chưa visible với học viên.",
+          "4": "Thêm milestone vào khóa học (xem hướng dẫn \"Tạo Milestone\").",
+          "5": "Course chỉ hiển thị cho học viên khi có ít nhất 1 milestone đã active."
+        }
+      },
+      "academy-milestone": {
+        "title": "Tạo Milestone (giai đoạn học)",
+        "summary": "Thêm giai đoạn mới vào lộ trình học.",
+        "steps": {
+          "0": "Vào Admin → Academy → expand course muốn thêm → nhấn \"New Milestone Stage\".",
+          "1": "Điền: Tiêu đề giai đoạn, Level (Associate / Professional / Elite).",
+          "2": "Điền Mô tả — học viên thấy khi hover vào milestone trên lộ trình.",
+          "3": "Đặt Order number để sắp xếp thứ tự (1 = đầu tiên).",
+          "4": "Nhấn Save — milestone xuất hiện như accordion có thể expand để gán nội dung.",
+          "5": "Thứ tự milestone ảnh hưởng đến lộ trình học — đặt đúng từ đầu."
+        }
+      },
+      "academy-content": {
+        "title": "Gán nội dung vào Milestone",
+        "summary": "Thêm bài học hoặc tài liệu đọc vào một giai đoạn.",
+        "steps": {
+          "0": "Expand milestone cần thêm nội dung → nhấn \"Assign Content\".",
+          "1": "Chọn loại: VOICE_PRACTICE (kịch bản luyện giọng) hoặc READING_GUIDE (tài liệu lý thuyết).",
+          "2": "Search và chọn bài từ danh sách dropdown.",
+          "3": "Đặt Tiêu đề hiển thị trong milestone (khác với tên gốc của bài — tùy chọn).",
+          "4": "Chọn Thời lượng ước tính: 5m / 10m / 15m / 30m / 45m / 1h.",
+          "5": "Nhấn Save.",
+          "6": "Dùng nút ▲▼ bên phải mỗi item để sắp xếp thứ tự trong milestone.",
+          "7": "Panel bên phải preview nội dung đã chọn trước khi lưu."
+        }
+      },
+      "academy-content-reorder": {
+        "title": "Sắp xếp lại thứ tự nội dung",
+        "summary": "Thay đổi trình tự bài học trong milestone.",
+        "steps": {
+          "0": "Expand milestone cần sắp xếp.",
+          "1": "Nhấn ▲ để chuyển item lên trên · Nhấn ▼ để chuyển xuống dưới.",
+          "2": "Thứ tự lưu ngay — không cần nhấn Save thêm.",
+          "3": "Học viên thấy thứ tự này khi học trong lộ trình."
+        }
+      },
+      "academy-content-remove": {
+        "title": "Gỡ bài khỏi Milestone",
+        "summary": "Xoá item khỏi milestone (không xoá bài gốc).",
+        "steps": {
+          "0": "Expand milestone → tìm item cần gỡ → nhấn icon X hoặc Xoá.",
+          "1": "Xác nhận → item bị gỡ khỏi milestone.",
+          "2": "Bài học gốc vẫn còn trong Voice Library — chỉ link giữa milestone và bài bị xoá.",
+          "3": "Học viên đang học milestone này sẽ thấy bài bị gỡ biến mất — thông báo trước nếu cần."
+        }
+      },
+      "academy-quiz": {
+        "title": "Quản lý câu hỏi Quiz",
+        "summary": "Thêm/sửa câu hỏi trắc nghiệm trong Course.",
+        "steps": {
+          "0": "Vào Admin → Academy → expand course → tab Quiz Questions.",
+          "1": "Nhấn \"Add Question\" → điền câu hỏi, 4 đáp án, đáp án đúng, độ khó.",
+          "2": "Chọn loại: MULTIPLE_CHOICE (1 đáp án) hoặc TRUE_FALSE.",
+          "3": "Điền giải thích (explanation) để học viên hiểu đáp án đúng.",
+          "4": "Nhấn Save.",
+          "5": "Quiz hiện ở cuối course — học viên làm sau khi hoàn thành toàn bộ milestone."
+        }
+      },
+      "competition-overview": {
+        "title": "Hiểu cấu trúc hệ thống thi đấu",
+        "summary": "Nắm logic Arena → Submission → Leaderboard.",
+        "steps": {
+          "0": "Hệ thống thi đấu gồm: Arena (cuộc thi) → Submission (bài dự thi) → Leaderboard (bảng xếp hạng).",
+          "1": "Mỗi Arena có 1 kịch bản thách thức, chu kỳ reset (Daily/Weekly), và thời gian hoạt động.",
+          "2": "Học viên ghi âm bài và submit → AI chấm điểm → vào leaderboard.",
+          "3": "Leaderboard reset theo Interval: DAILY = reset 0h mỗi ngày · WEEKLY = reset 0h thứ Hai."
+        }
+      },
+      "competition-create": {
+        "title": "Tạo Arena thi đấu mới",
+        "summary": "Mở cuộc thi luyện giọng theo kịch bản cụ thể.",
+        "steps": {
+          "0": "Vào Admin → Thi đấu → nhấn \"New Contest Arena\".",
+          "1": "Điền: Tiêu đề Arena, Mô tả ngắn.",
+          "2": "Chọn Challenge Script: kịch bản từ danh sách bài học (voice practice).",
+          "3": "Chọn Contest Interval: DAILY (reset mỗi ngày) hoặc WEEKLY (reset mỗi tuần).",
+          "4": "Đặt Start Date và End Date.",
+          "5": "Bật toggle Active để kích hoạt — Arena xuất hiện ngay cho học viên.",
+          "6": "Nhấn Save.",
+          "7": "Khuyến nghị chỉ chạy 1 Arena ACTIVE cùng lúc để tập trung người thi.",
+          "8": "Kịch bản quá dài (>500 từ) làm khó người mới — chọn Medium/Easy cho Arena."
+        }
+      },
+      "competition-edit": {
+        "title": "Sửa / Tắt Arena",
+        "summary": "Cập nhật thời gian, deactivate cuộc thi sớm.",
+        "steps": {
+          "0": "Vào Admin → Thi đấu → tìm Arena cần sửa.",
+          "1": "Nhấn Edit → chỉnh ngày kết thúc, mô tả, hoặc tắt Active toggle.",
+          "2": "Nhấn Save.",
+          "3": "Đổi kịch bản Challenge của Arena đang active sẽ ảnh hưởng bài nộp đang chờ chấm — tránh đổi mid-contest.",
+          "4": "Tắt Active không xoá bảng xếp hạng — kết quả vẫn lưu."
+        }
+      },
+      "competition-leaderboard": {
+        "title": "Xem bảng xếp hạng & submissions",
+        "summary": "Kiểm tra ai đang dẫn đầu, quản lý bài dự thi.",
+        "steps": {
+          "0": "Click vào Arena → tab Leaderboard.",
+          "1": "Bảng xếp hạng hiển thị: Hạng · Tên · Avatar · Điểm · Ngày nộp.",
+          "2": "Click vào 1 submission để nghe lại bản ghi âm và xem điểm chi tiết từng tiêu chí.",
+          "3": "Nếu phát hiện submission gian lận (dùng voice AI) → nhấn \"Disqualify\".",
+          "4": "Điểm chấm bởi AI — nếu nghi ngờ sai, xem chi tiết phân tích rồi quyết định."
+        }
+      },
+      "plan-overview": {
+        "title": "Hiểu cấu trúc gói đăng ký",
+        "summary": "Nắm 4 gói và giới hạn tính năng của mỗi gói.",
+        "steps": {
+          "0": "4 gói: FREE (miễn phí) · BASIC · FULL · ANNUAL.",
+          "1": "FREE: luyện tập cơ bản, giới hạn số AI session/tháng.",
+          "2": "BASIC/FULL/ANNUAL: tăng dần giới hạn AI session, mở tính năng nâng cao.",
+          "3": "Vào Admin → Gói & Giảm giá để xem và chỉnh cấu hình từng gói."
+        }
+      },
+      "plan-edit": {
+        "title": "Cập nhật thông tin gói đăng ký",
+        "summary": "Thay đổi giá, mô tả, giới hạn tính năng.",
+        "steps": {
+          "0": "Vào Admin → Gói & Giảm giá → tab Gói đăng ký.",
+          "1": "Expand gói cần sửa (FREE / BASIC / FULL / ANNUAL).",
+          "2": "Sửa: Tên hiển thị, Giá (VND), Thời hạn (ngày), Giới hạn AI session/tháng.",
+          "3": "Cập nhật Tagline và danh sách Tính năng nổi bật (mỗi dòng 1 tính năng).",
+          "4": "Bật/tắt Active toggle để ẩn/hiện gói với người dùng.",
+          "5": "Nhấn \"Lưu thay đổi\".",
+          "6": "Thay đổi giá KHÔNG ảnh hưởng user đã đang dùng gói đó — chỉ user đăng ký mới.",
+          "7": "Không tắt Active của gói đang có nhiều user — họ không renew được."
+        }
+      },
+      "plan-discount": {
+        "title": "Cài giảm giá trực tiếp cho gói",
+        "summary": "Áp dụng % hoặc số tiền giảm ngay trên bảng giá.",
+        "steps": {
+          "0": "Expand gói cần giảm giá → tìm mục Discount.",
+          "1": "Chọn kiểu: Percent (%) hoặc Fixed (số tiền cố định).",
+          "2": "Nhập giá trị → hệ thống tự hiển thị giá sau giảm để xác nhận.",
+          "3": "Nhấn \"Lưu thay đổi\".",
+          "4": "Giảm giá này hiện trực tiếp trên trang Pricing — user thấy giá gốc và giá giảm.",
+          "5": "Để xoá giảm giá: nhập 0 vào trường Value rồi lưu."
+        }
+      },
+      "coupon-create": {
+        "title": "Tạo mã giảm giá (Coupon)",
+        "summary": "Tạo coupon cho chiến dịch khuyến mãi, sự kiện.",
+        "steps": {
+          "0": "Vào Admin → Gói & Giảm giá → tab Mã giảm giá → nhấn \"Tạo mã giảm giá\".",
+          "1": "Nhập Code (ví dụ: SUMMER30, WELCOME50) — viết hoa, không dấu cách.",
+          "2": "Chọn Type: PERCENT (%) hoặc FIXED (số tiền cố định VND).",
+          "3": "Nhập Value: ví dụ 30 (= 30%) hoặc 50000 (= 50.000 VND).",
+          "4": "Đặt Max Uses: số lượt tối đa được dùng (để trống = không giới hạn).",
+          "5": "Đặt Expiry Date: ngày hết hạn.",
+          "6": "Chọn Applicable Plans: gói nào được áp mã (có thể chọn nhiều).",
+          "7": "Nhấn Save.",
+          "8": "Mã tự hết hạn khi đến ngày hoặc đạt giới hạn lượt dùng.",
+          "9": "Code phân biệt hoa/thường — user nhập \"summer30\" sẽ không áp dụng được \"SUMMER30\"."
+        }
+      },
+      "coupon-manage": {
+        "title": "Quản lý mã giảm giá đã tạo",
+        "summary": "Xem, vô hiệu hoá, hoặc xoá coupon.",
+        "steps": {
+          "0": "Vào Admin → Gói & Giảm giá → tab Mã giảm giá.",
+          "1": "Bảng hiển thị: Code · Type · Value · Used/Max · Ngày hết hạn · Trạng thái.",
+          "2": "Nhấn toggle Active/Inactive để bật/tắt mã mà không xoá.",
+          "3": "Nhấn icon thùng rác → xác nhận → xoá mã vĩnh viễn.",
+          "4": "Mã đã được dùng vẫn xoá được — chỉ ảnh hưởng đến lượt dùng mới."
+        }
+      },
+      "transaction-view": {
+        "title": "Xem & tra cứu giao dịch",
+        "summary": "Tìm thanh toán theo trạng thái, user, gói, mã đơn.",
+        "steps": {
+          "0": "Vào Admin → Giao dịch.",
+          "1": "Lọc theo Status chip: ALL / COMPLETED / PENDING / FAILED.",
+          "2": "Search trong ô tìm kiếm: tên user, email, tên gói, memo thanh toán, hoặc mã đơn hàng.",
+          "3": "Sort: Mới nhất / Cũ nhất / Số tiền cao / Số tiền thấp.",
+          "4": "3 thẻ tổng quan trên cùng: Tổng doanh thu · Giao dịch COMPLETED · PENDING."
+        }
+      },
+      "transaction-detail": {
+        "title": "Xem chi tiết 1 giao dịch",
+        "summary": "Kiểm tra thông tin đầy đủ: user, gói, PayOS, thời gian.",
+        "steps": {
+          "0": "Click vào hàng giao dịch trong bảng.",
+          "1": "Chi tiết hiện: Mã đơn hàng, User, Gói đăng ký, Số tiền, Trạng thái, Thời gian tạo, Thời gian hoàn thành.",
+          "2": "Nếu có Coupon: hiển thị mã đã dùng và số tiền giảm.",
+          "3": "Mã đơn hàng PayOS dùng để đối chiếu với cổng thanh toán khi cần xác minh."
+        }
+      },
+      "transaction-pending": {
+        "title": "Xử lý giao dịch PENDING",
+        "summary": "Khi user báo đã thanh toán nhưng giao dịch vẫn PENDING.",
+        "steps": {
+          "0": "Lọc Status = PENDING để xem danh sách đang chờ xử lý.",
+          "1": "Kiểm tra mã đơn PayOS trên cổng PayOS admin (ngoài hệ thống MC Hub).",
+          "2": "Nếu PayOS đã nhận tiền nhưng webhook chưa gọi → liên hệ dev để trigger webhook thủ công.",
+          "3": "Không tự đổi trạng thái thành COMPLETED trong DB nếu chưa xác nhận tiền.",
+          "4": "PENDING quá 24h thường là webhook bị lỗi — escalate lên dev."
+        }
+      },
+      "transaction-refund": {
+        "title": "Xử lý yêu cầu hoàn tiền",
+        "summary": "Quy trình khi user yêu cầu refund gói đã thanh toán.",
+        "steps": {
+          "0": "Xác minh giao dịch COMPLETED tương ứng trong Giao dịch.",
+          "1": "Vào cổng PayOS để thực hiện hoàn tiền từ phía payment gateway.",
+          "2": "Sau khi hoàn tiền thành công trên PayOS, cập nhật ghi chú trong Admin (nếu có trường memo).",
+          "3": "Vào Người dùng → downgrade user về gói FREE hoặc gói phù hợp.",
+          "4": "MC Hub không tự hoàn tiền — phải thao tác trực tiếp trên cổng PayOS.",
+          "5": "Ghi lại mọi refund vào spreadsheet tracking nội bộ để đối soát."
+        }
+      },
+      "transaction-export": {
+        "title": "Xuất báo cáo CSV",
+        "summary": "Tải file CSV để làm báo cáo tài chính, đối soát.",
+        "steps": {
+          "0": "Lọc dữ liệu muốn xuất (chọn Status, tìm kiếm theo gói hoặc thời gian).",
+          "1": "Nhấn nút \"Export CSV\" góc trên phải.",
+          "2": "File tải về chứa: Mã đơn · User · Gói · Số tiền · Trạng thái · Ngày tạo · Ngày hoàn thành.",
+          "3": "CSV xuất toàn bộ kết quả đang lọc — không phân trang.",
+          "4": "Mở bằng Google Sheets hoặc Excel — dùng UTF-8 encoding để hiển thị đúng tiếng Việt."
+        }
+      },
+      "notif-overview": {
+        "title": "Hiểu luồng tạo và gửi thông báo",
+        "summary": "Nắm 3 bước: Soạn → Draft → Duyệt → Gửi.",
+        "steps": {
+          "0": "Luồng thông báo: Soạn thảo → Lưu DRAFT → Review → Gửi thật.",
+          "1": "DRAFT chưa gửi đến ai — chỉ lưu trong hệ thống để review.",
+          "2": "Sau khi Gửi: không thu hồi được. Luôn preview trước.",
+          "3": "Tab \"Lịch sử\" lưu tất cả thông báo đã gửi để tham khảo sau."
+        }
+      },
+      "notif-compose": {
+        "title": "Soạn thông báo mới",
+        "summary": "Tạo thông báo email và lưu Draft để duyệt.",
+        "steps": {
+          "0": "Vào Admin → Thông báo → tab \"+ Tạo mới\".",
+          "1": "Chọn Loại thông báo: Bài học mới / Khuyến mãi / Bảo trì / Thi đấu / Tính năng mới / Bài đăng xã hội.",
+          "2": "Điền Tiêu đề nội bộ (chỉ admin thấy, để phân biệt các thông báo).",
+          "3": "Điền Tiêu đề Email (subject mà user nhận trong inbox).",
+          "4": "Viết nội dung — dùng {{name}} để hệ thống tự điền tên người nhận.",
+          "5": "Chọn người nhận: ALL hoặc lọc theo gói (FREE/BASIC/FULL/ANNUAL).",
+          "6": "Nhấn \"Xem trước email\" để preview giao diện email trước khi gửi.",
+          "7": "Nhấn \"Tạo thông báo\" → lưu trạng thái DRAFT.",
+          "8": "Một khi gửi không thể thu hồi — luôn preview và review Draft trước."
+        }
+      },
+      "notif-send": {
+        "title": "Duyệt và gửi thông báo",
+        "summary": "Chuyển Draft sang trạng thái gửi thật.",
+        "steps": {
+          "0": "Vào Admin → Thông báo → tab \"Chờ duyệt\".",
+          "1": "Xem danh sách thông báo DRAFT đang chờ.",
+          "2": "Click vào thông báo để đọc lại nội dung và số người nhận ước tính.",
+          "3": "Nhấn \"Gửi\" → xác nhận → hệ thống gửi email async (từng email một).",
+          "4": "Tốc độ gửi: ~1-2 email/giây qua Brevo SMTP — 100 người ≈ 1-2 phút.",
+          "5": "Không gửi cùng 1 nội dung 2 lần trong 24h — có thể bị đánh dấu spam."
+        }
+      },
+      "notif-trigger": {
+        "title": "Dùng Trigger thông báo tự động",
+        "summary": "Tạo Draft nhanh từ template sự kiện hệ thống.",
+        "steps": {
+          "0": "Vào Admin → Thông báo → tab \"Gợi ý tự động\".",
+          "1": "Chọn trigger phù hợp với sự kiện cần thông báo.",
+          "2": "Điền các biến đặc thù của trigger (VD: lessonTitle, discountPercent, code, date...).",
+          "3": "Nhấn \"Tạo bản nháp\" — hệ thống generate nội dung và lưu DRAFT.",
+          "4": "Sang tab \"Chờ duyệt\" để review và gửi.",
+          "5": "Trigger có sẵn: Bài học mới · Khuyến mãi · Bảo trì · Tính năng mới · Thi đấu."
+        }
+      },
+      "notif-history": {
+        "title": "Xem lịch sử thông báo đã gửi",
+        "summary": "Tra cứu nội dung và thống kê thông báo cũ.",
+        "steps": {
+          "0": "Vào Admin → Thông báo → tab \"Lịch sử\".",
+          "1": "Bảng hiển thị: Tiêu đề · Loại · Người nhận · Ngày gửi · Trạng thái.",
+          "2": "Click vào hàng để xem lại nội dung đầy đủ đã gửi.",
+          "3": "Dùng để tham khảo khi soạn thông báo mới, tránh lặp nội dung."
+        }
+      },
+      "notif-delete-draft": {
+        "title": "Xoá Draft thông báo",
+        "summary": "Huỷ thông báo nháp không còn cần thiết.",
+        "steps": {
+          "0": "Vào tab \"Chờ duyệt\" → tìm Draft cần xoá.",
+          "1": "Nhấn icon thùng rác → xác nhận.",
+          "2": "Draft bị xoá vĩnh viễn — nếu cần gửi lại, tạo mới từ đầu.",
+          "3": "Thông báo đã gửi (status = SENT) không xoá được từ UI."
+        }
+      },
+      "marketing-social-add": {
+        "title": "Thêm bài đăng Social Feed",
+        "summary": "Đưa bài Facebook/Instagram lên carousel trang chủ.",
+        "steps": {
+          "0": "Vào Admin → Marketing → tab Social Feed.",
+          "1": "Nhấn \"Thêm bài đăng\".",
+          "2": "Điền Mô tả bài đăng (text hiển thị dưới ảnh).",
+          "3": "Nhập Link bài đăng Facebook (bắt buộc) — dạng https://facebook.com/...",
+          "4": "Upload ảnh thumbnail (JPG/PNG) hoặc nhập URL ảnh trực tiếp.",
+          "5": "Đặt Số thứ tự ưu tiên — số nhỏ hơn hiển thị trước trong carousel.",
+          "6": "Bật Active toggle để hiển thị ngay trên trang chủ.",
+          "7": "Nhấn Preview để xem trước carousel trước khi lưu.",
+          "8": "Nhấn Save.",
+          "9": "Trang chủ cập nhật ngay — không cần refresh backend."
+        }
+      },
+      "marketing-social-manage": {
+        "title": "Sửa / Ẩn / Xoá bài Social Feed",
+        "summary": "Cập nhật hoặc gỡ bài đã đăng.",
+        "steps": {
+          "0": "Vào Admin → Marketing → tab Social Feed.",
+          "1": "Tìm bài cần thao tác trong danh sách.",
+          "2": "Ẩn tạm: tắt toggle Active → bài không hiện trên trang chủ nhưng vẫn lưu.",
+          "3": "Sửa: nhấn Edit → chỉnh các trường → Save.",
+          "4": "Xoá: nhấn icon thùng rác → xác nhận → bài bị xoá vĩnh viễn."
+        }
+      },
+      "marketing-template-create": {
+        "title": "Tạo Email Template chiến dịch",
+        "summary": "Thiết kế mẫu email reusable cho nhiều campaign.",
+        "steps": {
+          "0": "Vào Admin → Marketing → tab Email Campaigns → tab Templates → nhấn \"Tạo template\".",
+          "1": "Chọn chế độ soạn: Design Builder (điền từng ô trực quan) hoặc HTML thô (paste HTML).",
+          "2": "Design Builder: điền Logo URL, Banner URL, Tiêu đề lớn, Nội dung chính, Nút CTA (text + link).",
+          "3": "Panel bên phải preview email realtime khi nhập nội dung.",
+          "4": "Nhấn \"Test\" → nhập email test → nhấn \"Gửi test\" để kiểm tra inbox thật.",
+          "5": "Nhấn \"Tạo template\" để lưu.",
+          "6": "Dùng {{tên}} trong HTML để personalize tên người nhận.",
+          "7": "Ảnh trong HTML phải là URL public (https://...) — không dùng localhost hay file cục bộ."
+        }
+      },
+      "marketing-template-edit": {
+        "title": "Sửa / Xoá Email Template",
+        "summary": "Cập nhật nội dung template hoặc dọn dẹp template cũ.",
+        "steps": {
+          "0": "Vào Admin → Marketing → Email Campaigns → tab Templates.",
+          "1": "Tìm template cần sửa → nhấn Edit.",
+          "2": "Chỉnh nội dung → nhấn \"Cập nhật\".",
+          "3": "Nhấn icon thùng rác → xác nhận → xoá template.",
+          "4": "Không xoá template đang được dùng trong chiến dịch chưa gửi xong."
+        }
+      },
+      "marketing-template-test": {
+        "title": "Gửi email test template",
+        "summary": "Kiểm tra template trước khi dùng cho campaign thật.",
+        "steps": {
+          "0": "Mở template cần test (Edit hoặc xem chi tiết).",
+          "1": "Nhấn nút \"Test\" → nhập địa chỉ email nhận test.",
+          "2": "Nhấn \"Gửi test\" → kiểm tra inbox trong vài giây.",
+          "3": "Kiểm tra: layout hiển thị đúng, ảnh load được, link CTA hoạt động.",
+          "4": "Nếu ảnh không hiển thị trong email test, URL ảnh có thể bị chặn hoặc không public.",
+          "5": "Gửi test đến nhiều email client khác nhau (Gmail, Outlook) để kiểm tra tương thích."
+        }
+      },
+      "marketing-campaign-send": {
+        "title": "Gửi chiến dịch email hàng loạt",
+        "summary": "Chọn template → chọn người nhận → gửi campaign.",
+        "steps": {
+          "0": "Vào Admin → Marketing → Email Campaigns → tab Gửi chiến dịch.",
+          "1": "Chọn template từ dropdown — panel phải hiện preview template.",
+          "2": "Chỉnh Subject (tiêu đề email) nếu cần.",
+          "3": "Chọn Đối tượng: Tất cả / Theo gói / Theo role / Premium / Email tùy chỉnh.",
+          "4": "Hệ thống tự tải danh sách người nhận — có thể tick/untick từng người.",
+          "5": "Nhấn \"Gửi chiến dịch\" → xác nhận số người nhận.",
+          "6": "Theo dõi tiến độ ở tab Lịch sử (SENDING → COMPLETED).",
+          "7": "Tối đa 1 campaign/ngày cho cùng nhóm người dùng — tránh spam.",
+          "8": "Khi gửi, hệ thống tự deduplicate email trùng — không lo gửi 2 lần cho 1 người."
+        }
+      },
+      "marketing-campaign-custom": {
+        "title": "Gửi campaign đến danh sách email tùy chỉnh",
+        "summary": "Nhập tay email cụ thể để gửi targeted campaign.",
+        "steps": {
+          "0": "Vào tab Gửi chiến dịch → chọn template.",
+          "1": "Chọn Đối tượng: \"Email tùy chỉnh\".",
+          "2": "Nhập từng email vào ô → Enter để thêm (hiện dạng chip).",
+          "3": "Nhấn \"Tải danh sách\" để xác nhận email có trong hệ thống và xem trước.",
+          "4": "Tick/untick từng người trong danh sách xác nhận.",
+          "5": "Nhấn \"Gửi chiến dịch\".",
+          "6": "Email không tồn tại trong hệ thống sẽ bị bỏ qua khi gửi."
+        }
+      },
+      "marketing-campaign-history": {
+        "title": "Xem lịch sử chiến dịch",
+        "summary": "Theo dõi kết quả, trạng thái campaign đã gửi.",
+        "steps": {
+          "0": "Vào Admin → Marketing → Email Campaigns → tab Lịch sử.",
+          "1": "Bảng hiển thị: Tên chiến dịch · Template · Số người gửi · Trạng thái · Ngày gửi.",
+          "2": "Trạng thái: SENDING (đang gửi) · COMPLETED (xong) · FAILED (lỗi).",
+          "3": "Click vào campaign → xem danh sách email đã gửi và kết quả từng email.",
+          "4": "Dùng để audit nội dung đã gửi và tránh gửi trùng."
+        }
+      },
+      "logs-overview": {
+        "title": "Hiểu giao diện Server Logs",
+        "summary": "Nắm 3 panel: Live Logs · Watchlist · Bookmarks.",
+        "steps": {
+          "0": "Trang Server Logs có 3 vùng: Live Logs (trung tâm) · Watchlist (trên phải) · Bookmarks (dưới phải).",
+          "1": "Live Logs: stream log thời gian thực qua WebSocket từ backend.",
+          "2": "Watchlist: cấu hình cảnh báo tự động (keyword + threshold).",
+          "3": "Bookmarks: danh sách log đã đánh dấu để điều tra sau."
+        }
+      },
+      "logs-monitor": {
+        "title": "Theo dõi log thời gian thực",
+        "summary": "Xem log JAVA/AI backend live, lọc theo mức độ.",
+        "steps": {
+          "0": "Vào Admin → Server Logs → panel Live Logs.",
+          "1": "Indicator trên cùng: xanh = Connected · đỏ = Offline (backend chưa chạy).",
+          "2": "Lọc Level: ALL / DEBUG / INFO / WARN / ERROR.",
+          "3": "Lọc Source: ALL / JAVA / AI (backend nào đang hiển thị).",
+          "4": "Search text — kết quả highlight realtime trong log stream.",
+          "5": "Nhấn Pause để dừng cuộn (log mới vẫn buffer) · Nhấn lại để resume.",
+          "6": "Nhấn Group để gom các log có lỗi giống nhau thành 1 nhóm.",
+          "7": "Click 1 dòng log → Detail Panel bên phải: Tab Info · API · User · Note."
+        }
+      },
+      "logs-read-error": {
+        "title": "Đọc và hiểu log lỗi ERROR",
+        "summary": "Phân tích log ERROR để báo cáo lên dev đúng thông tin.",
+        "steps": {
+          "0": "Lọc Level = ERROR để chỉ thấy lỗi nghiêm trọng.",
+          "1": "Click vào dòng lỗi → Detail Panel → tab Info: thời gian, service, message.",
+          "2": "Tab API: endpoint bị lỗi, HTTP method, response code.",
+          "3": "Tab User: userId liên quan (nếu có).",
+          "4": "Bookmark log lỗi → tab Note → ghi lại thời điểm phát hiện và bối cảnh.",
+          "5": "Khi báo lên dev, cung cấp: Thời gian · Error message · Endpoint · UserId (nếu có)."
+        }
+      },
+      "logs-watchlist": {
+        "title": "Cài Watchlist cảnh báo tự động",
+        "summary": "Nhận cảnh báo trình duyệt khi log khớp keyword hoặc quá nhiều lỗi.",
+        "steps": {
+          "0": "Vào Admin → Server Logs → panel Watchlist.",
+          "1": "Đặt Error Threshold: số ERROR/phút để trigger browser notification.",
+          "2": "Thêm Keywords cần theo dõi: nhập từ khoá → Enter → xuất hiện dạng chip.",
+          "3": "Log khớp keyword tự highlight đỏ trong Live Logs.",
+          "4": "Khi vượt threshold: browser notification pop up (cần cho phép notification).",
+          "5": "Keyword gợi ý theo dõi: \"OutOfMemoryError\", \"SocketTimeout\", \"NullPointer\", \"401\"."
+        }
+      },
+      "logs-bookmark": {
+        "title": "Bookmark log & ghi chú điều tra",
+        "summary": "Đánh dấu log quan trọng, thêm ghi chú để xem lại.",
+        "steps": {
+          "0": "Hover lên dòng log muốn đánh dấu → nhấn icon bookmark.",
+          "1": "Log xuất hiện trong panel Bookmarks (sidebar phải).",
+          "2": "Detail Panel → tab Note → gõ ghi chú điều tra (không giới hạn độ dài).",
+          "3": "Click bookmark trong danh sách → quay về Logs với log đó được highlight.",
+          "4": "Nhấn icon X trên bookmark để xoá khi không cần theo dõi nữa.",
+          "5": "Bookmark lưu trong browser localStorage — xoá cache thì mất."
+        }
+      },
+      "logs-backend-down": {
+        "title": "Xử lý khi backend Offline",
+        "summary": "Kiểm tra và escalate khi indicator chuyển đỏ.",
+        "steps": {
+          "0": "Nếu indicator đỏ \"Offline\", backend Java hoặc AI đang không chạy.",
+          "1": "Kiểm tra health bằng cách truy cập: http://localhost:5000/actuator/health (nếu còn truy cập server).",
+          "2": "Nếu không tự restart được, liên hệ ngay dev hoặc DevOps.",
+          "3": "Ghi lại thời điểm phát hiện offline vào log nội bộ.",
+          "4": "Khi backend offline: toàn bộ tính năng AI, luyện tập, đăng nhập đều ngừng.",
+          "5": "Chờ 2-3 phút trước khi báo — có thể backend đang restart tự động."
+        }
+      }
     }
   }
 }
