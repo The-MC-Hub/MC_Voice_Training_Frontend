@@ -4,6 +4,7 @@ import {
 } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const Success = () => {
   const { t } = useTranslation();
@@ -84,23 +85,23 @@ const Success = () => {
 
         {/* Actions */}
         <div className="flex flex-col md:flex-row gap-3 justify-center pt-4">
-          <button
+          <Button
             onClick={() => {
               const params = new URLSearchParams();
               if (mcId) params.set("mcId", mcId);
               if (bookingId) params.set("bookingId", bookingId);
               navigate(`/m/messaging${params.toString() ? `?${params.toString()}` : ""}`);
             }}
-            className="flex items-center justify-center gap-2 px-8 py-3 rounded-xl border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] text-[13px] font-medium transition-colors"
+            className="flex items-center justify-center gap-2 px-8 py-3 h-auto rounded-xl border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] text-[13px] font-medium transition-colors"
           >
             {t('payment.messageMc', { name: mc?.name || "MC" })} <MessageCircle size={16} className="text-[#f5a623]" />
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => navigate("/m/dashboard")}
-            className="flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors"
+            className="flex items-center justify-center gap-2 px-8 py-3 h-auto rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors"
           >
             {t('payment.goToDashboard')} <Zap size={16} fill="currentColor" />
-          </button>
+          </Button>
         </div>
 
         {/* Footer badges */}

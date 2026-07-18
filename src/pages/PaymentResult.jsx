@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { CheckCircle, XCircle, Loader2, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/animate-ui/components/buttons/button";
 import api from "../services/api";
 import { useAuth } from "../hooks/useAuth";
 import { trackPaymentSuccess, trackPaymentCancel } from '@/utils/analytics';
@@ -90,19 +91,19 @@ const PaymentResult = () => {
             <p className="text-[11px] text-zinc-600 uppercase tracking-widest">
               {t('payment.redirectingIn', { seconds: countdown })}
             </p>
-            <button
+            <Button
               onClick={() => navigate("/m/dashboard")}
-              className="flex items-center justify-center gap-2 mx-auto bg-[#09090b] border border-white/[0.07] text-white px-6 py-2.5 rounded-xl text-[13px] font-medium hover:border-white/[0.14] transition-colors"
+              className="flex items-center justify-center gap-2 mx-auto bg-[#09090b] border border-white/[0.07] text-white px-6 py-2.5 h-auto rounded-xl text-[13px] font-medium hover:border-white/[0.14] transition-colors"
             >
               <ArrowLeft size={15} /> {t('payment.goToDashboard')}
-            </button>
+            </Button>
             {!actualSuccess && (
-              <button
+              <Button
                 onClick={() => navigate("/m/payment")}
-                className="flex items-center justify-center gap-2 mx-auto text-[#f5a623] border border-[#f5a623]/20 bg-[#f5a623]/[0.05] px-6 py-2.5 rounded-xl text-[13px] font-medium hover:bg-[#f5a623]/[0.08] transition-colors"
+                className="flex items-center justify-center gap-2 mx-auto text-[#f5a623] border border-[#f5a623]/20 bg-[#f5a623]/[0.05] px-6 py-2.5 h-auto rounded-xl text-[13px] font-medium hover:bg-[#f5a623]/[0.08] transition-colors"
               >
                 {t('payment.tryPaymentAgain')}
-              </button>
+              </Button>
             )}
           </div>
         )}

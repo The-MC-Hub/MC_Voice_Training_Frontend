@@ -14,6 +14,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import PageLoader from "../components/ui/PageLoader";
 import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
+import { Button } from '@/components/animate-ui/components/buttons/button';
 
 const getTierBadge = (tier) => {
   const base = "flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-medium border";
@@ -112,12 +113,12 @@ const Community = () => {
 
             {allSlides.length > 1 && (
               <div className="flex items-center gap-2">
-                <button
+                <Button
                   onClick={() => { setDirection(-1); setCurrentSlideIndex((prev) => (prev - 1 + allSlides.length) % allSlides.length); }}
                   className="w-8 h-8 rounded-lg bg-[#111113] border border-white/[0.07] flex items-center justify-center text-zinc-500 hover:text-white hover:border-white/[0.14] transition-colors"
                 >
                   <ChevronLeft size={16} />
-                </button>
+                </Button>
                 <div className="flex items-center gap-1.5">
                   {allSlides.map((_, idx) => (
                     <button key={idx}
@@ -126,12 +127,12 @@ const Community = () => {
                     />
                   ))}
                 </div>
-                <button
+                <Button
                   onClick={() => { setDirection(1); setCurrentSlideIndex((prev) => (prev + 1) % allSlides.length); }}
                   className="w-8 h-8 rounded-lg bg-[#111113] border border-white/[0.07] flex items-center justify-center text-zinc-500 hover:text-white hover:border-white/[0.14] transition-colors"
                 >
                   <ChevronRight size={16} />
-                </button>
+                </Button>
               </div>
             )}
           </div>
@@ -195,7 +196,7 @@ const Community = () => {
                             {t('community.noAttemptText')}
                           </div>
                         )}
-                        <button
+                        <Button
                           onClick={() => {
                             if (slide.competition.id.startsWith("virtual-")) {
                               navigate("/m/voice/practice/664a382e2ddc9943efb38701");
@@ -203,10 +204,10 @@ const Community = () => {
                               navigate(`/m/voice/practice/${slide.competition.challengeScriptId}`);
                             }
                           }}
-                          className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] text-black text-[13px] font-semibold rounded-xl hover:bg-[#e09520] transition-colors"
+                          className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] text-black text-[13px] font-semibold rounded-xl hover:bg-[#e09520] transition-colors h-auto"
                         >
                           {t('community.competeNow')} <Play size={12} fill="currentColor" />
-                        </button>
+                        </Button>
                       </div>
                     </div>
 
@@ -285,10 +286,10 @@ const Community = () => {
               <h3 className="text-[15px] font-semibold text-zinc-400 mb-1">{t('community.noActiveArenaTitle') || "Đấu trường đang chuẩn bị"}</h3>
               <p className="text-[13px] text-zinc-600 max-w-sm">{t('community.noActiveArenaDesc') || "Không có giải đấu nào đang diễn ra. Tiếp tục luyện tập!"}</p>
             </div>
-            <button onClick={() => navigate("/m/voice/library")}
-              className="flex items-center gap-2 px-5 py-2 bg-[#111113] border border-white/[0.07] hover:border-[#f5a623]/30 text-zinc-400 hover:text-white text-[13px] rounded-xl transition-colors">
+            <Button onClick={() => navigate("/m/voice/library")}
+              className="flex items-center gap-2 px-5 py-2 bg-[#111113] border border-white/[0.07] hover:border-[#f5a623]/30 text-zinc-400 hover:text-white text-[13px] rounded-xl transition-colors h-auto">
               {t('community.goToPractice') || "Luyện Tập Ngay"} <Play size={11} fill="currentColor" />
-            </button>
+            </Button>
           </div>
         </div>
       )}

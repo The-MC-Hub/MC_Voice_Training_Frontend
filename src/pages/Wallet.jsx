@@ -8,6 +8,7 @@ import {
 import { useApi } from "../hooks/useApi";
 import { fetchWallet } from "../controllers/mcController";
 import { formatAmount } from "../controllers/paymentController";
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const statusStyle = (s) => {
   if (s === "Available") return "text-emerald-400 bg-emerald-500/[0.08] border-emerald-500/20";
@@ -37,12 +38,12 @@ const Wallet = () => {
           <p className="text-[13px] text-zinc-500">{t('wallet.headerDesc')}</p>
         </div>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 rounded-xl border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] text-[13px] font-medium transition-colors">
+          <Button className="flex items-center gap-2 px-4 py-2 h-auto rounded-xl border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] text-[13px] font-medium transition-colors">
             <History size={15} /> {t('wallet.statement')}
-          </button>
-          <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors">
+          </Button>
+          <Button className="flex items-center gap-2 px-4 py-2 h-auto rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors">
             <CreditCard size={15} /> {t('wallet.requestPayout')}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -93,13 +94,13 @@ const Wallet = () => {
                 <p className="text-[13px] font-medium text-white">Techcombank VN</p>
                 <p className="text-[11px] text-zinc-600">**** 8921</p>
               </div>
-              <button className="w-7 h-7 rounded-lg border border-white/[0.07] flex items-center justify-center text-zinc-600 hover:text-white hover:border-white/[0.14] transition-colors opacity-0 group-hover:opacity-100">
+              <Button className="w-7 h-7 rounded-lg border border-white/[0.07] flex items-center justify-center text-zinc-600 hover:text-white hover:border-white/[0.14] transition-colors opacity-0 group-hover:opacity-100">
                 <ArrowRight size={13} />
-              </button>
+              </Button>
             </div>
-            <button className="mt-4 w-full py-2 rounded-lg border border-white/[0.07] text-[12px] text-zinc-500 hover:text-white hover:border-[#f5a623]/30 transition-colors flex items-center justify-center gap-1.5">
+            <Button hoverScale={1} className="mt-4 w-full py-2 h-auto rounded-lg border border-white/[0.07] text-[12px] text-zinc-500 hover:text-white hover:border-[#f5a623]/30 transition-colors flex items-center justify-center gap-1.5">
               <Zap size={13} /> {t('wallet.manageMethods')}
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -122,9 +123,9 @@ const Wallet = () => {
                   <History size={13} className="text-zinc-600" />
                   <input type="text" placeholder={t('wallet.filterPlaceholder')} className="bg-transparent outline-none text-[12px] text-white w-28 placeholder:text-zinc-700" />
                 </div>
-                <button className="flex items-center gap-1.5 px-3 py-1.5 border border-white/[0.07] rounded-lg text-[12px] text-zinc-400 hover:text-white hover:border-white/[0.14] transition-colors">
+                <Button className="flex items-center gap-1.5 px-3 py-1.5 h-auto border border-white/[0.07] rounded-lg text-[12px] text-zinc-400 hover:text-white hover:border-white/[0.14] transition-colors">
                   <Calendar size={13} /> {t('wallet.thisMonth')}
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -173,9 +174,9 @@ const Wallet = () => {
 
             {transactions.length > 0 && (
               <div className="flex justify-center pt-6 mt-2 border-t border-white/[0.06]">
-                <button className="px-6 py-2 rounded-lg border border-white/[0.07] text-[12px] text-zinc-500 hover:text-white hover:border-[#f5a623]/30 transition-colors">
+                <Button className="px-6 py-2 h-auto rounded-lg border border-white/[0.07] text-[12px] text-zinc-500 hover:text-white hover:border-[#f5a623]/30 transition-colors">
                   {t('wallet.loadFullHistory')}
-                </button>
+                </Button>
               </div>
             )}
           </div>

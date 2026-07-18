@@ -11,6 +11,7 @@ import { trackCourseListView, trackCourseDetailView } from '@/utils/analytics';
 import { questService } from '../services/questService';
 import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const DIFFICULTY_MAP = {
   BEGINNER:     { color: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/[0.06]' },
@@ -198,14 +199,14 @@ const CoursesList = () => {
       {/* Filters */}
       <div className="flex items-center gap-2 flex-wrap">
         {filters.map(f => (
-          <button key={f.value ?? 'all'} onClick={() => setActiveFilter(f.value)}
-            className={`px-4 py-1.5 rounded-lg text-[12px] font-medium border transition-colors ${
+          <Button key={f.value ?? 'all'} onClick={() => setActiveFilter(f.value)}
+            className={`px-4 py-1.5 rounded-lg text-[12px] font-medium border transition-colors h-auto ${
               activeFilter === f.value
                 ? 'bg-[#f5a623] text-black border-[#f5a623]'
                 : 'text-zinc-500 border-white/[0.07] hover:text-white hover:border-white/[0.14]'
             }`}>
             {f.label}
-          </button>
+          </Button>
         ))}
         <span className="ml-auto text-[11px] text-zinc-600">{filtered.length} {t('courses.coursesCount').toLowerCase()}</span>
       </div>

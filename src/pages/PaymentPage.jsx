@@ -11,6 +11,7 @@ import api from "../services/api";
 import { useAuth } from "../hooks/useAuth";
 import { useToast } from "../components/ui/Toast";
 import Breadcrumb from '../components/ui/Breadcrumb';
+import { Button } from "@/components/animate-ui/components/buttons/button";
 import { voucherService } from '../services/voucherService';
 import { trackPaymentPageView, trackPlanSelect, trackPaymentSubmit, trackDiscountCodeApplied } from '@/utils/analytics';
 
@@ -271,13 +272,13 @@ const PaymentPage = () => {
 
         {/* Back + Header */}
         <div>
-          <button
+          <Button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-gray-400 hover:text-gray-900 transition-colors text-[13px] mb-6 group"
+            className="flex items-center gap-2 text-gray-400 hover:text-gray-900 transition-colors text-[13px] mb-6 group h-auto"
           >
             <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
             {t('common.back')}
-          </button>
+          </Button>
           <h1 className="text-[28px] font-bold text-gray-900 mb-1 tracking-tight">{t('payment.choosePlanTitle')}</h1>
           <p className="text-gray-400 text-[14px]">
             {currentPlanOrder === 0
@@ -548,14 +549,15 @@ const PaymentPage = () => {
             {/* My vouchers */}
             {selectedPlanData && myVouchers.length > 0 && (
               <div className="px-6 py-4 border-b border-gray-100">
-                <button
+                <Button
                   onClick={() => setShowVoucherList(v => !v)}
-                  className="flex items-center gap-2 text-[11px] text-amber-600 font-semibold uppercase tracking-wider mb-2 hover:text-amber-700 transition-colors"
+                  className="flex items-center gap-2 text-[11px] text-amber-600 font-semibold uppercase tracking-wider mb-2 hover:text-amber-700 transition-colors h-auto"
+                  hoverScale={1}
                 >
                   <Award size={13} />
                   {t('payment.yourVouchers', { count: myVouchers.length })}
                   <span className="ml-auto text-gray-400">{showVoucherList ? "▲" : "▼"}</span>
-                </button>
+                </Button>
                 <AnimatePresence>
                   {showVoucherList && (
                     <motion.div
@@ -620,13 +622,13 @@ const PaymentPage = () => {
                     placeholder={t('payment.enterCodePlaceholder')}
                     className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-[13px] font-mono uppercase placeholder:normal-case placeholder:text-gray-400 focus:outline-none focus:border-amber-400 transition-colors"
                   />
-                  <button
+                  <Button
                     onClick={handleApplyDiscount}
                     disabled={applyingDiscount || !discountCode.trim()}
-                    className="px-4 py-2 bg-amber-500 text-white text-[12px] font-semibold rounded-xl hover:bg-amber-600 disabled:opacity-40 transition-colors"
+                    className="px-4 py-2 bg-amber-500 text-white text-[12px] font-semibold rounded-xl hover:bg-amber-600 disabled:opacity-40 transition-colors h-auto"
                   >
                     {applyingDiscount ? "..." : t('payment.apply')}
-                  </button>
+                  </Button>
                 </div>
                 {discountInfo && (
                   <div className="mt-2 flex items-center justify-between text-[12px]">
@@ -648,12 +650,12 @@ const PaymentPage = () => {
                 <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
                   <AlertCircle className="text-red-400" size={28} />
                   <p className="text-[13px] text-gray-500">{error}</p>
-                  <button
+                  <Button
                     onClick={() => fetchOrder(selectedPlan)}
-                    className="px-5 py-2 bg-white border border-gray-200 rounded-xl text-[12px] font-medium text-gray-900 hover:border-gray-300 transition-colors"
+                    className="px-5 py-2 bg-white border border-gray-200 rounded-xl text-[12px] font-medium text-gray-900 hover:border-gray-300 transition-colors h-auto"
                   >
                     {t('payment.tryAgain')}
-                  </button>
+                  </Button>
                 </div>
               ) : orderData ? (
                 <div className="flex flex-col items-center gap-5 w-full">
@@ -767,12 +769,12 @@ const PaymentPage = () => {
               <p className="text-[14px] font-bold text-gray-900">{t('payment.bottomCtaTitle')}</p>
               <p className="text-[12px] text-gray-500 mt-0.5">{t('payment.bottomCtaDesc')}</p>
             </div>
-            <button
+            <Button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="shrink-0 px-5 py-2.5 bg-gold hover:bg-[#e09515] text-white text-[13px] font-semibold rounded-xl transition-colors"
+              className="shrink-0 px-5 py-2.5 bg-gold hover:bg-[#e09515] text-white text-[13px] font-semibold rounded-xl transition-colors h-auto"
             >
               {t('payment.choosePlanNow')}
-            </button>
+            </Button>
           </div>
         </div>
 
