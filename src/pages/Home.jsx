@@ -7,6 +7,7 @@ import {
   MessageSquare, Quote
 } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useMotionValue, useTransform } from 'framer-motion';
+import { Button } from '@/components/animate-ui/components/buttons/button';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ScrollReveal from '../components/animations/ScrollReveal';
@@ -231,7 +232,7 @@ const FaqItem = ({ icon: Icon, q, short, full, index }) => {
       spotlightSize={280}
       className={`border rounded-2xl overflow-hidden transition-all duration-200 ${open ? 'border-amber-200 bg-amber-50/50 shadow-sm' : 'border-gray-100 bg-white hover:border-amber-100 hover:shadow-sm'}`}
     >
-      <button onClick={() => { setOpen(!open); setExpanded(false); }} className="w-full flex items-center justify-between p-5 text-left gap-4 group">
+      <Button hoverScale={1} onClick={() => { setOpen(!open); setExpanded(false); }} className="w-full flex items-center justify-between p-5 text-left gap-4 group h-auto">
         <div className="flex items-center gap-3 min-w-0">
           <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${open ? 'bg-amber-100 text-amber-600' : 'bg-gray-100 text-gray-500 group-hover:bg-amber-50 group-hover:text-amber-500'}`}>
             <Icon size={14} />
@@ -241,7 +242,7 @@ const FaqItem = ({ icon: Icon, q, short, full, index }) => {
         <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }} className={`shrink-0 transition-colors ${open ? 'text-amber-500' : 'text-gray-400'}`}>
           <ChevronDown size={16} />
         </motion.div>
-      </button>
+      </Button>
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
@@ -257,12 +258,12 @@ const FaqItem = ({ icon: Icon, q, short, full, index }) => {
                 {expanded ? full : short}
               </p>
               {full !== short && (
-                <button
+                <Button
                   onClick={() => setExpanded(v => !v)}
-                  className="mt-2 text-[12px] text-amber-600 hover:text-amber-700 font-medium transition-colors"
+                  className="mt-2 text-[12px] text-amber-600 hover:text-amber-700 font-medium transition-colors h-auto"
                 >
                   {expanded ? 'Thu gọn ↑' : 'Xem thêm →'}
-                </button>
+                </Button>
               )}
             </div>
           </motion.div>
@@ -450,10 +451,11 @@ const SampleReportCard = () => {
           { id: 'bars',  label: 'Chi tiết' },
           { id: 'wave',  label: 'Sóng âm' },
         ].map(({ id, label }) => (
-          <button
+          <Button
             key={id}
+            hoverScale={1}
             onClick={() => setTab(id)}
-            className={`flex-1 py-2.5 text-[11px] font-medium transition-colors relative ${
+            className={`flex-1 py-2.5 text-[11px] font-medium transition-colors relative h-auto ${
               tab === id ? 'text-[#f5a623]' : 'text-zinc-600 hover:text-zinc-400'
             }`}
           >
@@ -465,7 +467,7 @@ const SampleReportCard = () => {
                 transition={{ duration: 0.2 }}
               />
             )}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -649,18 +651,18 @@ const LessonCarousel = ({ lessons, navigate }) => {
       onMouseEnter={() => { isPaused.current = true; }}
       onMouseLeave={() => { isPaused.current = false; }}
     >
-      <button
+      <Button
         onClick={() => scroll(-1)}
         className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-gray-500 hover:text-gray-900 hover:border-gray-300 transition-all"
       >
         <ChevronLeft size={16} />
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => scroll(1)}
         className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-gray-500 hover:text-gray-900 hover:border-gray-300 transition-all"
       >
         <ChevronRight size={16} />
-      </button>
+      </Button>
 
       <div
         ref={scrollRef}
@@ -1227,12 +1229,12 @@ const Home = () => {
               transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="relative w-full max-w-2xl bg-[#111113] border border-white/[0.08] rounded-2xl p-8 shadow-2xl"
             >
-              <button
+              <Button
                 onClick={() => { setShowCertModal(false); setCopiedCert(false); }}
                 className="absolute top-5 right-5 w-7 h-7 flex items-center justify-center rounded-lg bg-white/[0.06] hover:bg-white/[0.1] text-zinc-500 hover:text-white transition-colors"
               >
                 <X size={14} />
-              </button>
+              </Button>
 
               <div className="text-center mb-7">
                 <p className="text-[11px] font-semibold text-[#f5a623] uppercase tracking-widest mb-1">The MC Hub Academy</p>
@@ -1268,20 +1270,20 @@ const Home = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3">
-                <button
+                <Button
                   onClick={() => { navigate(`/m/messaging?mcId=${selectedMCForCert.mcId}`); setShowCertModal(false); }}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/[0.08] text-zinc-300 text-[13px] font-medium hover:bg-white/[0.04] transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/[0.08] text-zinc-300 text-[13px] font-medium hover:bg-white/[0.04] transition-colors h-auto"
                 >
                   <ExternalLink size={13} className="text-[#f5a623]" />
                   {i18n.language === 'vi' ? 'Đặt lịch MC' : 'Book MC'}
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => {
                     navigator.clipboard.writeText(`${window.location.origin}/m/mc/${selectedMCForCert.mcId}`);
                     setCopiedCert(true);
                     setTimeout(() => setCopiedCert(false), 2000);
                   }}
-                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-medium transition-colors ${
+                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-medium transition-colors h-auto ${
                     copiedCert
                       ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20'
                       : 'border border-white/[0.08] text-zinc-300 hover:bg-white/[0.04]'
@@ -1289,13 +1291,13 @@ const Home = () => {
                 >
                   <Copy size={13} />
                   {copiedCert ? (i18n.language === 'vi' ? 'Đã sao chép!' : 'Copied!') : (i18n.language === 'vi' ? 'Sao chép link' : 'Copy link')}
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => { setShowCertModal(false); setCopiedCert(false); }}
-                  className="px-6 py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors"
+                  className="px-6 py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors h-auto"
                 >
                   {i18n.language === 'vi' ? 'Đóng' : 'Close'}
-                </button>
+                </Button>
               </div>
             </motion.div>
           </div>

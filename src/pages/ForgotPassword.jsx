@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Mail, ArrowLeft, ArrowRight, Shield, Key, CheckCircle2 } from "lucide-react";
 import { forgotPassword, resetPassword } from "../services/authService";
 import { trackForgotPasswordSubmit } from '@/utils/analytics';
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const ForgotPassword = () => {
   const { t } = useTranslation();
@@ -80,10 +81,10 @@ const ForgotPassword = () => {
                   value={email} onChange={(e) => setEmail(e.target.value)} required />
               </div>
             </div>
-            <button type="submit" disabled={loading}
-              className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 transition-all mt-2">
+            <Button type="submit" disabled={loading}
+              className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 transition-all mt-2 h-auto">
               {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>{t('auth.sendCode')} <ArrowRight size={16} /></>}
-            </button>
+            </Button>
             <Link to="/login" className="flex items-center justify-center gap-2 text-[13px] text-gray-500 hover:text-gray-800 transition-colors pt-1">
               <ArrowLeft size={14} /> {t('auth.backToLogin')}
             </Link>
@@ -117,14 +118,14 @@ const ForgotPassword = () => {
                   value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
               </div>
             </div>
-            <button type="submit" disabled={loading || code.length < 6}
-              className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 transition-all mt-2">
+            <Button type="submit" disabled={loading || code.length < 6}
+              className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 transition-all mt-2 h-auto">
               {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : t('auth.resetPasswordBtn')}
-            </button>
-            <button type="button" onClick={() => setStep(1)}
-              className="w-full text-[13px] text-gray-400 hover:text-gray-600 transition-colors pt-1">
+            </Button>
+            <Button type="button" variant="ghost" onClick={() => setStep(1)}
+              className="w-full text-[13px] text-gray-400 hover:text-gray-600 transition-colors pt-1 h-auto">
               {t('auth.resendCode')}
-            </button>
+            </Button>
           </form>
         )}
 

@@ -13,6 +13,7 @@ import ScrollToTop from '../components/ui/ScrollToTop';
 import { useTranslation } from 'react-i18next';
 import ContactModal from '../components/modals/ContactModal';
 import { useTheme } from '../contexts/ThemeContext';
+import { Button } from '@/components/animate-ui/components/buttons/button';
 import SpotlightCard from '../components/ui/SpotlightCard';
 import mcImage from '../assets/mc.jpg';
 
@@ -347,12 +348,12 @@ const About = () => {
               <p className="text-gray-400 text-[14px] mb-8 max-w-md mx-auto">Cùng hàng nghìn MC chuyên nghiệp nâng cao kỹ năng với AI.</p>
 
               <div className="flex flex-wrap justify-center gap-4">
-                <button
+                <Button
                   onClick={() => setIsContactModalOpen(true)}
-                  className="px-8 py-3 bg-amber-500 text-white font-semibold text-[14px] rounded-xl hover:bg-amber-600 transition-colors shadow-md shadow-amber-500/25"
+                  className="px-8 py-3 bg-amber-500 text-white font-semibold text-[14px] rounded-xl hover:bg-amber-600 transition-colors shadow-md shadow-amber-500/25 h-auto"
                 >
                   {t('contact.sendMessage')}
-                </button>
+                </Button>
                 <Link
                   to="/"
                   className="px-8 py-3 rounded-xl border border-gray-200 text-gray-600 hover:text-gray-900 hover:border-gray-300 font-medium text-[14px] transition-colors"

@@ -5,6 +5,7 @@ import { Mail, Lock, Eye, EyeOff, ArrowRight, Mic, Star, ShieldCheck } from "luc
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "../store/useAuthStore";
 import { trackLoginSubmit, trackLoginSuccess, trackLoginOtpVerify } from "@/utils/analytics";
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const ROLE_REDIRECT = { admin: "/m/dashboard", mc: "/m/dashboard", client: "/m/dashboard" };
 
@@ -236,23 +237,24 @@ const AdminOtpModal = ({ adminEmail, rememberMe, onSuccess, onCancel }) => {
             ))}
           </motion.div>
 
-          <button
+          <Button
             onClick={() => submitOtp(digits.join(""))}
             disabled={loading || digits.some(d => !d)}
-            className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 disabled:opacity-50 flex items-center justify-center gap-2 transition-all"
+            className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 disabled:opacity-50 flex items-center justify-center gap-2 transition-all h-auto"
           >
             {loading
               ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               : <><ShieldCheck size={15} /> Xác nhận</>
             }
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="ghost"
             onClick={onCancel}
-            className="w-full mt-3 py-2.5 text-[13px] text-gray-400 hover:text-gray-600 transition-colors"
+            className="w-full mt-3 py-2.5 text-[13px] text-gray-400 hover:text-gray-600 transition-colors h-auto"
           >
             Huỷ đăng nhập
-          </button>
+          </Button>
         </div>
       </motion.div>
     </div>
