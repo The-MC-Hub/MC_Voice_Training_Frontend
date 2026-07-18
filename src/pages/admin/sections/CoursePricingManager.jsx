@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { GraduationCap, Pencil, Check, X, Users, Tag, RefreshCw } from 'lucide-react';
 import { academyService } from '../../../services/academyService';
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const fmt = (n) => (n ?? 0).toLocaleString('vi-VN');
 
@@ -51,10 +52,10 @@ const CoursePricingManager = () => {
             {t('admin.coursePricingManager.subtitle')}
           </p>
         </div>
-        <button onClick={load}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[--border-subtle] text-[12px] text-[--text-secondary] hover:border-amber-500/40 transition-colors">
+        <Button onClick={load}
+          className="h-auto flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[--border-subtle] text-[12px] text-[--text-secondary] hover:border-amber-500/40 transition-colors">
           <RefreshCw size={13} /> {t('admin.coursePricingManager.reload')}
-        </button>
+        </Button>
       </div>
 
       {loading ? (
@@ -96,14 +97,14 @@ const CoursePricingManager = () => {
                       <p className="text-[10px] text-[--text-muted] uppercase mb-1">{t('admin.coursePricingManager.finalPriceLabel')}</p>
                       <p className="text-[14px] font-bold text-amber-500">{fmt(finalPrice)}đ</p>
                     </div>
-                    <button onClick={() => save(c.id)} disabled={saving}
+                    <Button onClick={() => save(c.id)} disabled={saving}
                       className="w-9 h-9 rounded-lg bg-emerald-500 text-white flex items-center justify-center hover:bg-emerald-600 transition-colors disabled:opacity-50">
                       <Check size={15} />
-                    </button>
-                    <button onClick={() => setEditId(null)}
+                    </Button>
+                    <Button onClick={() => setEditId(null)}
                       className="w-9 h-9 rounded-lg border border-[--border-subtle] text-[--text-muted] flex items-center justify-center hover:text-[--text-primary] transition-colors">
                       <X size={15} />
-                    </button>
+                    </Button>
                   </div>
                 ) : (
                   <div className="flex items-center gap-4">
@@ -118,10 +119,10 @@ const CoursePricingManager = () => {
                         <Tag size={11} /> -{c.discountPercent}%
                       </span>
                     )}
-                    <button onClick={() => startEdit(c)}
-                      className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-[--border-subtle] text-[12px] text-[--text-secondary] hover:border-amber-500/40 hover:text-amber-500 transition-colors">
+                    <Button onClick={() => startEdit(c)}
+                      className="h-auto flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-[--border-subtle] text-[12px] text-[--text-secondary] hover:border-amber-500/40 hover:text-amber-500 transition-colors">
                       <Pencil size={12} /> {t('admin.coursePricingManager.editPrice')}
-                    </button>
+                    </Button>
                   </div>
                 )}
               </div>

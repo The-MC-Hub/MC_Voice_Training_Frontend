@@ -11,6 +11,7 @@ import {
   TrendingUp, Activity, BarChart3, ArrowUpRight,
   Zap, UserCheck, UserX, Mic, Star, Download,
 } from "lucide-react";
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 const fmt  = (v) => (v ?? 0).toLocaleString("vi-VN");
@@ -95,14 +96,14 @@ const Card = ({ title, subtitle, icon: Icon, children, className = "" }) => (
 const Tabs = ({ value, onChange, options }) => (
   <div className="flex gap-1 bg-[--bg-elevated] border border-[--border-subtle] p-1 w-fit">
     {options.map(o => (
-      <button key={o.value} onClick={() => onChange(o.value)}
-        className={`px-3 py-1 text-[11px] font-medium transition-all ${
+      <Button key={o.value} onClick={() => onChange(o.value)} hoverScale={1}
+        className={`px-3 py-1 h-auto text-[11px] font-medium transition-all ${
           value === o.value
             ? "bg-[gold] text-black"
             : "text-[--text-muted] hover:text-[--text-primary]"
         }`}>
         {o.label}
-      </button>
+      </Button>
     ))}
   </div>
 );
@@ -997,9 +998,9 @@ const DashboardSection = ({ stats, revenueData, revenueStats, userData, totalUse
         <section id="tong-quan" className="pb-8">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-[13px] font-bold text-gray-400 uppercase tracking-widest">{t("admin.dashboardSection.nav.overview")}</h2>
-            <button onClick={handleDownloadPdf} disabled={isDownloading} className="flex items-center gap-2 px-4 py-2 bg-gold/10 hover:bg-gold/20 text-gold border border-gold/30 text-[12px] font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <Button onClick={handleDownloadPdf} disabled={isDownloading} className="flex items-center gap-2 px-4 py-2 h-auto bg-gold/10 hover:bg-gold/20 text-gold border border-gold/30 text-[12px] font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
               <Download size={14} className={isDownloading ? "animate-bounce" : ""} /> {isDownloading ? t("admin.dashboardSection.generatingPdf") : t("admin.dashboardSection.downloadPdfReport")}
-            </button>
+            </Button>
           </div>
           <KpiCardsSection stats={stats} />
         </section>

@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Download, CheckCircle2, Clock, XCircle, TrendingUp, Filter, ArrowUpDown, CheckCheck } from "lucide-react";
 import api from "../../../services/api";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const fmt = (v) => (v ?? 0).toLocaleString("vi-VN");
 
@@ -108,12 +109,12 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
           <h2 className="text-[15px] font-semibold text-[--text-primary]">{t("admin.transactionManagement.title")}</h2>
           <p className="text-[12px] text-[--text-muted] mt-0.5">{t("admin.transactionManagement.subtitle")}</p>
         </div>
-        <button
+        <Button
           onClick={exportCSV}
-          className="flex items-center gap-2 px-3 py-2 bg-[--bg-surface] border border-[--border-subtle] hover:border-[--border-subtle] text-[--text-primary] text-[12px] font-medium transition-colors"
+          className="h-auto flex items-center gap-2 px-3 py-2 bg-[--bg-surface] border border-[--border-subtle] hover:border-[--border-subtle] text-[--text-primary] text-[12px] font-medium transition-colors"
         >
           <Download size={13} /> {t("admin.transactionManagement.exportCsv")}
-        </button>
+        </Button>
       </div>
 
       {/* Revenue summary cards */}
@@ -173,17 +174,17 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
           <div className="flex items-center gap-2 border-r border-[--border-subtle] pr-3 shrink-0">
             <Filter size={13} className="text-[--text-muted]" />
             {["ALL", "COMPLETED", "PENDING", "FAILED"].map(s => (
-              <button
+              <Button
                 key={s}
                 onClick={() => setFilterStatus(s)}
-                className={`px-3 py-1.5 text-[11px] font-medium transition-colors border whitespace-nowrap ${
+                className={`h-auto px-3 py-1.5 text-[11px] font-medium transition-colors border whitespace-nowrap ${
                   filterStatus === s
                     ? "bg-gold/10 text-gold border-gold/30"
                     : "text-[--text-muted] border-[--border-subtle] hover:text-[--text-primary]"
                 }`}
               >
                 {s === "ALL" ? t("admin.transactionManagement.filters.all") : STATUS_CONFIG[s]?.label}
-              </button>
+              </Button>
             ))}
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -276,15 +277,15 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
                   </td>
                   <td className="px-4 py-3 text-right">
                     {tx.status === "PENDING" && (
-                      <button
+                      <Button
                         onClick={() => handleComplete(tx.id)}
                         disabled={completing === tx.id}
                         title={t("admin.transactionManagement.confirmManual")}
-                        className="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-semibold bg-emerald-950/60 text-emerald-400 border border-emerald-800/50 hover:bg-emerald-900/60 transition-colors disabled:opacity-50"
+                        className="h-auto inline-flex items-center gap-1 px-2 py-1 text-[10px] font-semibold bg-emerald-950/60 text-emerald-400 border border-emerald-800/50 hover:bg-emerald-900/60 transition-colors disabled:opacity-50"
                       >
                         <CheckCheck size={11} className={completing === tx.id ? "animate-spin" : ""} />
                         {completing === tx.id ? "..." : t("admin.transactionManagement.confirm")}
-                      </button>
+                      </Button>
                     )}
                   </td>
                 </tr>

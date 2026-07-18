@@ -6,6 +6,7 @@ import {
   BellOff, User, BarChart2, Upload, Eye, Copy, Clock,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
 const API_ROOT = BASE_URL.replace(/\/api\/v1$/, "");
@@ -214,11 +215,11 @@ function ApiInspector({ log }) {
                 method === "DELETE" ? "bg-red-100 text-red-600" : "bg-amber-100 text-amber-600"
               }`}>{method}</span>
               <span className="flex-1 text-[11px] font-mono text-gray-600 truncate" title={url}>{display}</span>
-              <button onClick={() => callApi(url)} disabled={!!isLoad}
-                className="flex items-center gap-1 px-2 py-1 bg-amber-400 hover:bg-amber-500 text-black text-[10px] font-semibold rounded transition-colors disabled:opacity-50">
+              <Button onClick={() => callApi(url)} disabled={!!isLoad}
+                className="h-auto flex items-center gap-1 px-2 py-1 bg-amber-400 hover:bg-amber-500 text-black text-[10px] font-semibold rounded transition-colors disabled:opacity-50">
                 {isLoad ? <Loader2 size={10} className="animate-spin" /> : <Zap size={10} />}
                 {isLoad ? t("admin.serverLogs.apiInspector.calling") : t("admin.serverLogs.apiInspector.call")}
-              </button>
+              </Button>
               <a href={url.startsWith("/") ? API_ROOT + url : url} target="_blank" rel="noopener noreferrer"
                 className="text-gray-400 hover:text-gray-600"><ExternalLink size={11} /></a>
             </div>
@@ -339,11 +340,11 @@ function UserLookup({ log }) {
                 <div key={id} className="border border-gray-200 rounded-lg overflow-hidden">
                   <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-gray-100">
                     <span className="flex-1 text-[11px] font-mono text-purple-600 truncate">{id}</span>
-                    <button onClick={() => fetchUser(id)} disabled={!!isLoad}
-                      className="flex items-center gap-1 px-2 py-1 bg-amber-400 hover:bg-amber-500 text-black text-[10px] font-semibold rounded disabled:opacity-50">
+                    <Button onClick={() => fetchUser(id)} disabled={!!isLoad}
+                      className="h-auto flex items-center gap-1 px-2 py-1 bg-amber-400 hover:bg-amber-500 text-black text-[10px] font-semibold rounded disabled:opacity-50">
                       {isLoad ? <Loader2 size={10} className="animate-spin" /> : <User size={10} />}
                       {isLoad ? t("admin.serverLogs.userLookup.loading") : t("admin.serverLogs.userLookup.lookup")}
-                    </button>
+                    </Button>
                   </div>
                   {r && (
                     <div className="p-3">
@@ -388,15 +389,15 @@ function NoteEditor({ logKey, notes, onSave }) {
         className="w-full text-[11px] font-mono border border-gray-200 rounded p-2 focus:outline-none focus:border-amber-400 resize-none"
       />
       <div className="flex items-center gap-2">
-        <button onClick={() => onSave(logKey, text)}
-          className="px-3 py-1 bg-amber-400 hover:bg-amber-500 text-black text-[11px] font-semibold rounded transition-colors">
+        <Button onClick={() => onSave(logKey, text)}
+          className="h-auto px-3 py-1 bg-amber-400 hover:bg-amber-500 text-black text-[11px] font-semibold rounded transition-colors">
           {t("admin.serverLogs.noteEditor.saveNote")}
-        </button>
+        </Button>
         {saved && (
-          <button onClick={() => { setText(""); onSave(logKey, ""); }}
-            className="px-3 py-1 border border-gray-200 text-[11px] text-gray-500 rounded hover:bg-gray-50">
+          <Button onClick={() => { setText(""); onSave(logKey, ""); }}
+            className="h-auto px-3 py-1 border border-gray-200 text-[11px] text-gray-500 rounded hover:bg-gray-50">
             {t("admin.serverLogs.noteEditor.clear")}
-          </button>
+          </Button>
         )}
         {saved && <span className="text-[10px] text-emerald-600">✓ {t("admin.serverLogs.noteEditor.saved")}</span>}
       </div>
@@ -533,18 +534,18 @@ function WatchlistEditor({ watchlist, onUpdate }) {
           placeholder={t("admin.serverLogs.watchlistEditor.placeholder")}
           className="flex-1 text-[11px] border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-amber-400"
         />
-        <button onClick={add}
-          className="px-3 py-1 bg-amber-400 hover:bg-amber-500 text-black text-[11px] font-semibold rounded">
+        <Button onClick={add}
+          className="h-auto px-3 py-1 bg-amber-400 hover:bg-amber-500 text-black text-[11px] font-semibold rounded">
           {t("admin.serverLogs.watchlistEditor.add")}
-        </button>
+        </Button>
       </div>
       <div className="flex flex-wrap gap-1.5">
         {watchlist.map(kw => (
           <span key={kw} className="flex items-center gap-1 px-2 py-0.5 bg-red-50 border border-red-200 text-red-600 text-[11px] rounded-full">
             {kw}
-            <button onClick={() => onUpdate(watchlist.filter(k => k !== kw))} className="text-red-400 hover:text-red-700">
+            <Button onClick={() => onUpdate(watchlist.filter(k => k !== kw))} className="h-auto text-red-400 hover:text-red-700">
               <X size={9} />
-            </button>
+            </Button>
           </span>
         ))}
         {watchlist.length === 0 && <span className="text-[11px] text-gray-400 italic">{t("admin.serverLogs.empty.noKeywordsYet")}</span>}
@@ -586,30 +587,30 @@ function DetailPanel({ log, bookmarks, notes, onToggleBookmark, onSaveNote, onCl
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => onToggleBookmark(logKey)} title={isBookmarked ? t("admin.serverLogs.detailPanel.tooltips.removeBookmark") : t("admin.serverLogs.detailPanel.tooltips.bookmark")}>
+          <Button onClick={() => onToggleBookmark(logKey)} title={isBookmarked ? t("admin.serverLogs.detailPanel.tooltips.removeBookmark") : t("admin.serverLogs.detailPanel.tooltips.bookmark")}>
             {isBookmarked
               ? <BookmarkCheck size={14} className="text-amber-500" />
               : <Bookmark size={14} className="text-gray-400 hover:text-amber-500" />
             }
-          </button>
-          <button onClick={copyLog} title={t("admin.serverLogs.detailPanel.tooltips.copyLogText")}>
+          </Button>
+          <Button onClick={copyLog} title={t("admin.serverLogs.detailPanel.tooltips.copyLogText")}>
             <Copy size={13} className="text-gray-400 hover:text-gray-600" />
-          </button>
-          <button onClick={onClose}>
+          </Button>
+          <Button onClick={onClose}>
             <X size={14} className="text-gray-400 hover:text-gray-700" />
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Tabs */}
       <div className="flex border-b border-gray-200 bg-gray-50 overflow-x-auto">
         {TABS.map(tb => (
-          <button key={tb.key} onClick={() => setTab(tb.key)}
-            className={`px-3 py-2 text-[11px] font-medium whitespace-nowrap transition-colors ${
+          <Button key={tb.key} onClick={() => setTab(tb.key)}
+            className={`h-auto px-3 py-2 text-[11px] font-medium whitespace-nowrap transition-colors ${
               tab === tb.key ? "border-b-2 border-amber-400 text-gray-900 bg-white" : "text-gray-500 hover:text-gray-700"
             }`}>
             {tb.label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -789,9 +790,9 @@ function BookmarksView({ bookmarks, notes, onSelect, onRemove }) {
                 <p className="text-[11px] text-amber-700 mt-1 italic">📌 {notes[key].slice(0, 80)}</p>
               )}
             </div>
-            <button onClick={() => onRemove(key)} className="text-gray-300 hover:text-red-400 shrink-0 mt-0.5">
+            <Button onClick={() => onRemove(key)} className="h-auto text-gray-300 hover:text-red-400 shrink-0 mt-0.5">
               <X size={12} />
-            </button>
+            </Button>
           </div>
         </div>
       ))}
@@ -1023,12 +1024,12 @@ const ServerLogs = () => {
           { key: "analytics", icon: BarChart2,   title: t("admin.serverLogs.sidebar.analytics") },
           { key: "watchlist", icon: Eye,         title: t("admin.serverLogs.sidebar.watchlist") },
         ].map(({ key, icon: Icon, title }) => (
-          <button key={key} onClick={() => setView(key)} title={title}
+          <Button key={key} onClick={() => setView(key)} title={title}
             className={`w-8 h-8 flex items-center justify-center rounded transition-all ${
               view === key ? "bg-amber-400 text-black" : "text-gray-400 hover:bg-gray-200"
             }`}>
             <Icon size={15} />
-          </button>
+          </Button>
         ))}
 
         <div className="mt-auto flex flex-col items-center gap-1 pb-1">
@@ -1036,12 +1037,12 @@ const ServerLogs = () => {
             <Upload size={14} />
             <input type="file" accept=".txt,.log" onChange={loadFile} className="hidden" />
           </label>
-          <button onClick={enableNotif} title={notifOn ? t("admin.serverLogs.sidebar.disableNotifications") : t("admin.serverLogs.sidebar.enableNotifications")}
+          <Button onClick={enableNotif} title={notifOn ? t("admin.serverLogs.sidebar.disableNotifications") : t("admin.serverLogs.sidebar.enableNotifications")}
             className={`w-8 h-8 flex items-center justify-center rounded transition-all ${
               notifOn ? "bg-red-100 text-red-500" : "text-gray-400 hover:bg-gray-200"
             }`}>
             {notifOn ? <Bell size={14} /> : <BellOff size={14} />}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -1070,19 +1071,19 @@ const ServerLogs = () => {
               <div className="flex items-center gap-1">
                 <Filter size={11} className="text-gray-400" />
                 {LEVELS.map(l => (
-                  <button key={l} onClick={() => setLevel(l)}
-                    className={`px-2 py-0.5 text-[10px] font-medium rounded transition-all ${
+                  <Button key={l} onClick={() => setLevel(l)}
+                    className={`h-auto px-2 py-0.5 text-[10px] font-medium rounded transition-all ${
                       filterLevel === l ? "bg-amber-400 text-black" : "text-gray-500 hover:text-gray-800"
-                    }`}>{l}</button>
+                    }`}>{l}</Button>
                 ))}
               </div>
 
               <div className="flex gap-0.5 border-l border-gray-200 pl-2">
                 {SOURCES.map(s => (
-                  <button key={s} onClick={() => setSrc(s)}
-                    className={`px-2 py-0.5 text-[10px] font-medium rounded transition-all ${
+                  <Button key={s} onClick={() => setSrc(s)}
+                    className={`h-auto px-2 py-0.5 text-[10px] font-medium rounded transition-all ${
                       filterSrc === s ? "bg-amber-400 text-black" : "text-gray-500 hover:text-gray-800"
-                    }`}>{s}</button>
+                    }`}>{s}</Button>
                 ))}
               </div>
 
@@ -1092,46 +1093,46 @@ const ServerLogs = () => {
                   placeholder={t("admin.serverLogs.searchPlaceholder")}
                   className="w-full pl-6 pr-6 py-1 text-[11px] border border-gray-200 rounded bg-white focus:outline-none focus:border-amber-400" />
                 {search && (
-                  <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                  <Button onClick={() => setSearch("")} className="h-auto absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                     <X size={10} />
-                  </button>
+                  </Button>
                 )}
               </div>
 
               <div className="ml-auto flex items-center gap-1.5">
-                <button onClick={() => setGroupMode(g => !g)}
-                  className={`flex items-center gap-1 px-2 py-1 border text-[10px] font-medium rounded transition-all ${
+                <Button onClick={() => setGroupMode(g => !g)}
+                  className={`h-auto flex items-center gap-1 px-2 py-1 border text-[10px] font-medium rounded transition-all ${
                     groupMode ? "border-amber-400 bg-amber-50 text-amber-600" : "border-gray-200 text-gray-500 hover:bg-gray-100"
                   }`}>
                   <Layers size={11} /> {t("admin.serverLogs.toolbar.group")}
-                </button>
+                </Button>
                 <span className="h-4 w-px bg-gray-200" />
-                <button onClick={togglePause}
-                  className={`flex items-center gap-1 px-2 py-1 border border-gray-200 text-[11px] rounded transition-all hover:bg-gray-100 ${paused ? "text-amber-500" : "text-gray-500"}`}>
+                <Button onClick={togglePause}
+                  className={`h-auto flex items-center gap-1 px-2 py-1 border border-gray-200 text-[11px] rounded transition-all hover:bg-gray-100 ${paused ? "text-amber-500" : "text-gray-500"}`}>
                   {paused ? <Play size={11} /> : <Pause size={11} />}
                   {paused ? `+${bufRef.current.length}` : t("admin.serverLogs.toolbar.pause")}
-                </button>
-                <button onClick={download} className="p-1.5 border border-gray-200 text-gray-500 rounded hover:bg-gray-100">
+                </Button>
+                <Button onClick={download} className="h-auto p-1.5 border border-gray-200 text-gray-500 rounded hover:bg-gray-100">
                   <Download size={12} />
-                </button>
-                <button onClick={clear} className="p-1.5 border border-gray-200 text-gray-500 rounded hover:bg-gray-100">
+                </Button>
+                <Button onClick={clear} className="h-auto p-1.5 border border-gray-200 text-gray-500 rounded hover:bg-gray-100">
                   <Trash2 size={12} />
-                </button>
+                </Button>
               </div>
             </div>
 
             {/* Stats bar */}
             <div className="shrink-0 flex items-center gap-2 px-4 py-1.5 bg-white border-b border-gray-100">
               {Object.entries(stats).map(([level, count]) => (
-                <button key={level} onClick={() => setLevel(prev => prev === level ? "ALL" : level)}
-                  className={`flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-medium border transition-all ${
+                <Button key={level} onClick={() => setLevel(prev => prev === level ? "ALL" : level)}
+                  className={`h-auto flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-medium border transition-all ${
                     filterLevel === level ? LEVEL_BADGE[level] : "border-gray-100 text-gray-400 hover:border-gray-200"
                   }`}>
                   <span>{level}</span>
                   <span className={`font-bold tabular-nums ${count > 0 && level === "ERROR" && filterLevel !== level ? "text-red-500" : ""}`}>
                     {count}
                   </span>
-                </button>
+                </Button>
               ))}
               <span className="ml-auto text-[10px] text-gray-400 font-mono tabular-nums">
                 {t("admin.serverLogs.sectionHeader.total")} <span className="text-gray-600 font-semibold">{logs.length}</span>
@@ -1155,13 +1156,13 @@ const ServerLogs = () => {
                     onChange={e => setThresh(Number(e.target.value))}
                     className="w-12 text-[11px] border border-gray-200 rounded px-1.5 py-0.5 text-center focus:outline-none focus:border-amber-400"
                   />
-                  <button onClick={enableNotif}
-                    className={`flex items-center gap-1 px-2 py-1 border text-[10px] font-medium rounded transition-all ${
+                  <Button onClick={enableNotif}
+                    className={`h-auto flex items-center gap-1 px-2 py-1 border text-[10px] font-medium rounded transition-all ${
                       notifOn ? "border-red-300 bg-red-50 text-red-600" : "border-gray-200 text-gray-500 hover:bg-gray-100"
                     }`}>
                     {notifOn ? <Bell size={11} /> : <BellOff size={11} />}
                     {notifOn ? t("admin.serverLogs.sectionHeader.notifOn") : t("admin.serverLogs.sectionHeader.notifOff")}
-                  </button>
+                  </Button>
                 </div>
               </>
             )}

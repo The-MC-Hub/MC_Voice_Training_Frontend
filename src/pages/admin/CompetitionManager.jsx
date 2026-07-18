@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Trophy, Plus, Edit2, Trash2, Calendar, ToggleLeft, ToggleRight, X, Check, BookOpen } from "lucide-react";
 import { fetchAdminCompetitions, addCompetition, updateCompetition, deleteCompetition } from "../../controllers/communityController";
 import { fetchLessons } from "../../controllers/voiceController";
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
 
@@ -85,10 +86,10 @@ const CompetitionManager = () => {
           <h2 className="text-[15px] font-semibold text-white">{t('admin.competitionManager.title')}</h2>
           <p className="text-[12px] text-zinc-500 mt-0.5">{t('admin.competitionManager.subtitle')}</p>
         </div>
-        <button onClick={handleOpenCreate}
-          className="flex items-center gap-2 px-3 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors">
+        <Button onClick={handleOpenCreate}
+          className="flex items-center gap-2 px-3 py-2 h-auto bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors">
           <Plus size={13} /> {t('admin.competitionManager.newArena')}
-        </button>
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -118,14 +119,14 @@ const CompetitionManager = () => {
                   <Calendar size={10} /> {new Date(comp.endDate).toLocaleDateString("vi-VN")}
                 </span>
                 <div className="flex items-center gap-1.5">
-                  <button onClick={() => handleOpenEdit(comp)} title={t('admin.competitionManager.edit')}
-                    className="p-1.5 text-zinc-500 hover:text-white border border-white/[0.06] hover:border-white/[0.14] transition-colors">
+                  <Button onClick={() => handleOpenEdit(comp)} title={t('admin.competitionManager.edit')}
+                    className="p-1.5 h-auto text-zinc-500 hover:text-white border border-white/[0.06] hover:border-white/[0.14] transition-colors">
                     <Edit2 size={12} />
-                  </button>
-                  <button onClick={() => handleDelete(comp.id)} title={t('admin.competitionManager.delete')}
-                    className="p-1.5 text-zinc-500 hover:text-[--text-primary] border border-white/[0.06] hover:border-[--border-subtle] transition-colors">
+                  </Button>
+                  <Button onClick={() => handleDelete(comp.id)} title={t('admin.competitionManager.delete')}
+                    className="p-1.5 h-auto text-zinc-500 hover:text-[--text-primary] border border-white/[0.06] hover:border-[--border-subtle] transition-colors">
                     <Trash2 size={12} />
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -142,9 +143,9 @@ const CompetitionManager = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70">
           <div className="w-full max-w-lg bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden">
-            <button onClick={() => setIsModalOpen(false)} className="absolute right-4 top-4 text-zinc-500 hover:text-white transition-colors">
+            <Button onClick={() => setIsModalOpen(false)} className="absolute right-4 top-4 h-auto p-0 bg-transparent text-zinc-500 hover:text-white transition-colors">
               <X size={17} />
-            </button>
+            </Button>
             <form onSubmit={handleSave} className="p-6 space-y-4 relative">
               <h3 className="text-[14px] font-semibold text-white border-b border-white/[0.06] pb-4">
                 {editingComp ? t('admin.competitionManager.editArena') : t('admin.competitionManager.createArena')}
@@ -181,10 +182,10 @@ const CompetitionManager = () => {
                 </div>
                 <div className="flex items-end justify-between pb-0.5">
                   <span className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.competitionManager.active')}</span>
-                  <button type="button" onClick={() => setActive(!active)}
-                    className={`transition-colors ${active ? "text-[gold]" : "text-zinc-600"}`}>
+                  <Button type="button" onClick={() => setActive(!active)}
+                    className={`transition-colors h-auto p-0 bg-transparent ${active ? "text-[gold]" : "text-zinc-600"}`}>
                     {active ? <ToggleRight size={28} /> : <ToggleLeft size={28} />}
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -200,14 +201,14 @@ const CompetitionManager = () => {
               </div>
 
               <div className="pt-3 border-t border-white/[0.06] flex gap-2">
-                <button type="button" onClick={() => setIsModalOpen(false)}
-                  className="flex-1 py-2 bg-[#09090b] border border-white/[0.07] text-zinc-400 text-[12px] font-medium hover:border-white/[0.14] transition-colors">
+                <Button type="button" onClick={() => setIsModalOpen(false)} hoverScale={1}
+                  className="flex-1 py-2 h-auto bg-[#09090b] border border-white/[0.07] text-zinc-400 text-[12px] font-medium hover:border-white/[0.14] transition-colors">
                   {t('admin.competitionManager.cancel')}
-                </button>
-                <button type="submit"
-                  className="flex-1 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors flex items-center justify-center gap-1.5">
+                </Button>
+                <Button type="submit" hoverScale={1}
+                  className="flex-1 py-2 h-auto bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors flex items-center justify-center gap-1.5">
                   <Check size={13} /> {t('admin.competitionManager.saveArena')}
-                </button>
+                </Button>
               </div>
             </form>
           </div>

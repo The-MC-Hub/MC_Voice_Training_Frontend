@@ -12,6 +12,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useTranslation } from "react-i18next";
 import ga4ReportMd from "../../../../GA4_TRACKING_REPORT.md?raw";
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 const fmt   = (v) => (v ?? 0).toLocaleString("vi-VN");
@@ -71,14 +72,14 @@ const Empty = ({ h = 200 }) => {
 const Tabs = ({ value, onChange, options }) => (
   <div className="flex gap-1 bg-[--bg-elevated] border border-[--border-subtle] rounded-lg p-1 w-fit">
     {options.map(o => (
-      <button key={o.value} onClick={() => onChange(o.value)}
-        className={`px-3 py-1 rounded-md text-[11px] font-medium transition-all ${
+      <Button key={o.value} onClick={() => onChange(o.value)}
+        className={`h-auto px-3 py-1 rounded-md text-[11px] font-medium transition-all ${
           value === o.value
             ? "bg-[gold] text-black"
             : "text-[--text-muted] hover:text-[--text-primary]"
         }`}>
         {o.label}
-      </button>
+      </Button>
     ))}
   </div>
 );

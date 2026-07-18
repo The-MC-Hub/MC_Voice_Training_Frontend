@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { getMCProfile } from "../../../services/publicService";
 import api from "../../../services/api";
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const fmtDate = (v) => {
   if (!v) return "—";
@@ -239,9 +240,9 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
             <p className="text-[11px] text-gray-400 font-mono">{user.email}</p>
           </div>
         </div>
-        <button onClick={onClose} className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+        <Button onClick={onClose} className="h-auto p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
           <X size={16} />
-        </button>
+        </Button>
       </div>
 
       {/* Tab bar */}
@@ -251,10 +252,11 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
           { id: "stats", icon: BarChart2, label: t("admin.userManagement.tabStats") },
           { id: "notify", icon: Bell, label: t("admin.userManagement.tabNotify") },
         ].map(({ id, icon: Icon, label }) => (
-          <button
+          <Button
             key={id}
             onClick={() => setTab(id)}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-[12px] font-medium transition-all border-b-2 ${
+            hoverScale={1}
+            className={`h-auto flex-1 flex items-center justify-center gap-1.5 py-3 text-[12px] font-medium transition-all border-b-2 ${
               tab === id
                 ? "border-amber-500 text-amber-600"
                 : "border-transparent text-gray-400 hover:text-gray-600"
@@ -262,7 +264,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
           >
             <Icon size={13} />
             {label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -338,17 +340,17 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
             <div className="border-t border-gray-100 pt-4 space-y-2">
               <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-2">{t("admin.userManagement.quickActions")}</p>
               {user.role?.toLowerCase() === "mc" && (
-                <button onClick={() => handleVerify(user._id, user.isVerified)}
-                  className="w-full flex items-center justify-between px-3 py-2.5 text-[12px] font-medium border border-gray-200 hover:border-amber-300 hover:bg-amber-50 rounded-lg transition-colors text-gray-700">
+                <Button onClick={() => handleVerify(user._id, user.isVerified)} hoverScale={1}
+                  className="h-auto w-full flex items-center justify-between px-3 py-2.5 text-[12px] font-medium border border-gray-200 hover:border-amber-300 hover:bg-amber-50 rounded-lg transition-colors text-gray-700">
                   <span className="flex items-center gap-2"><ShieldAlert size={13} />{user.isVerified ? t("admin.userManagement.revokeCertification") : t("admin.userManagement.grantCertification")}</span>
                   <ChevronRight size={12} className="text-gray-400" />
-                </button>
+                </Button>
               )}
-              <button onClick={() => handleSuspend(user._id, user.isActive)}
-                className="w-full flex items-center justify-between px-3 py-2.5 text-[12px] font-medium border border-gray-200 hover:border-gray-400 rounded-lg transition-colors text-gray-700">
+              <Button onClick={() => handleSuspend(user._id, user.isActive)} hoverScale={1}
+                className="h-auto w-full flex items-center justify-between px-3 py-2.5 text-[12px] font-medium border border-gray-200 hover:border-gray-400 rounded-lg transition-colors text-gray-700">
                 <span className="flex items-center gap-2">{user.isActive ? <XCircle size={13} /> : <CheckCircle size={13} />}{user.isActive ? t("admin.userManagement.lockAccount") : t("admin.userManagement.unlockAccount")}</span>
                 <ChevronRight size={12} className="text-gray-400" />
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -365,7 +367,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
               <div className="flex flex-col items-center justify-center py-16 gap-3">
                 <BarChart2 size={32} className="text-gray-200" />
                 <p className="text-[12px] text-gray-400">{t("admin.userManagement.noStatsData")}</p>
-                <button onClick={loadStats} className="px-4 py-2 bg-amber-500 text-white text-[11px] font-semibold rounded-lg hover:bg-amber-600">{t("admin.userManagement.reload")}</button>
+                <Button onClick={loadStats} className="h-auto px-4 py-2 bg-amber-500 text-white text-[11px] font-semibold rounded-lg hover:bg-amber-600">{t("admin.userManagement.reload")}</Button>
               </div>
             ) : (
               <div className="space-y-5">
@@ -439,9 +441,9 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
           <div className="p-5 space-y-4">
             {/* Load stats if needed for suggestions */}
             {!stats && !statsLoading && (
-              <button onClick={loadStats} className="w-full py-2 text-[11px] text-amber-600 border border-dashed border-amber-200 rounded-lg hover:bg-amber-50 transition-colors flex items-center justify-center gap-1.5">
+              <Button onClick={loadStats} hoverScale={1} className="h-auto w-full py-2 text-[11px] text-amber-600 border border-dashed border-amber-200 rounded-lg hover:bg-amber-50 transition-colors flex items-center justify-center gap-1.5">
                 <Sparkles size={11} /> {t("admin.userManagement.loadStatsForSuggestions")}
-              </button>
+              </Button>
             )}
 
             {/* Smart suggestions */}
@@ -450,15 +452,16 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                 <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-2">{t("admin.userManagement.smartSuggestions")}</p>
                 <div className="space-y-1.5">
                   {suggestions.map(s => (
-                    <button
+                    <Button
                       key={s.id}
                       onClick={() => applySuggestion(s)}
-                      className="w-full flex items-center gap-2.5 px-3 py-2.5 bg-white border border-gray-100 hover:border-amber-300 hover:bg-amber-50 rounded-lg transition-all text-left group"
+                      hoverScale={1}
+                      className="h-auto w-full flex items-center gap-2.5 px-3 py-2.5 bg-white border border-gray-100 hover:border-amber-300 hover:bg-amber-50 rounded-lg transition-all text-left group"
                     >
                       <span className="text-base shrink-0">{s.icon}</span>
                       <span className="text-[11px] text-gray-600 group-hover:text-amber-700 flex-1 leading-snug">{s.label}</span>
                       <ChevronRight size={11} className="text-gray-300 group-hover:text-amber-400 shrink-0" />
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
@@ -508,13 +511,14 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                   </p>
                 </div>
 
-                <button
+                <Button
                   type="submit" disabled={notifyLoading || !notifySubject.trim() || !notifyContent.trim()}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg disabled:opacity-50 transition-colors"
+                  hoverScale={1}
+                  className="h-auto w-full flex items-center justify-center gap-2 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg disabled:opacity-50 transition-colors"
                 >
                   {notifyLoading ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
                   {notifyLoading ? t("admin.userManagement.creating") : t("admin.userManagement.createDraft")}
-                </button>
+                </Button>
               </form>
             </div>
           </div>
@@ -739,15 +743,15 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                 className="w-full bg-white border border-gray-200 rounded-xl py-2.5 pl-9 pr-4 text-[13px] focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 placeholder:text-gray-400 shadow-sm"
               />
             </div>
-            <button onClick={handleRefresh} disabled={refreshing}
-              className="flex items-center gap-1.5 px-3 py-2.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-500 text-[12px] font-medium rounded-lg transition-colors shrink-0 disabled:opacity-50"
+            <Button onClick={handleRefresh} disabled={refreshing}
+              className="h-auto flex items-center gap-1.5 px-3 py-2.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-500 text-[12px] font-medium rounded-lg transition-colors shrink-0 disabled:opacity-50"
               title={t("admin.userManagement.refreshList")}>
               <RefreshCw size={13} className={refreshing ? 'animate-spin' : ''} />
-            </button>
-            <button onClick={openAddModal}
-              className="flex items-center gap-1.5 px-3.5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg transition-colors shrink-0">
+            </Button>
+            <Button onClick={openAddModal}
+              className="h-auto flex items-center gap-1.5 px-3.5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg transition-colors shrink-0">
               <UserPlus size={13} /> {t("admin.userManagement.add")}
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -759,12 +763,12 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
             { key: "MC", label: "MC", count: counts.mc ?? 0 },
             { key: "CLIENT", label: "Client", count: counts.client ?? 0 },
           ].map(({ key, label, count }) => (
-            <button key={key} onClick={() => setFilterRole(key)}
-              className={`px-3.5 py-1.5 text-[12px] font-semibold border transition-all rounded-lg ${
+            <Button key={key} onClick={() => setFilterRole(key)}
+              className={`h-auto px-3.5 py-1.5 text-[12px] font-semibold border transition-all rounded-lg ${
                 filterRole === key ? "bg-amber-500 text-white border-amber-500" : "bg-white text-gray-500 border-gray-200 hover:border-amber-300"
               }`}>
               {label} <span className={`ml-1 text-[11px] ${filterRole === key ? "opacity-80" : "text-gray-400"}`}>({count})</span>
-            </button>
+            </Button>
           ))}
         </div>
 
@@ -778,14 +782,14 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
               { key: "FULL", label: "Full" },
               { key: "ANNUAL", label: "Annual" },
             ].map(({ key, label }) => (
-              <button key={key} onClick={() => setFilterPlan(key)}
-                className={`px-3 py-1 text-[11px] font-semibold border transition-all rounded-full ${
+              <Button key={key} onClick={() => setFilterPlan(key)}
+                className={`h-auto px-3 py-1 text-[11px] font-semibold border transition-all rounded-full ${
                   filterPlan === key
                     ? "bg-sky-500 text-white border-sky-500"
                     : "bg-white text-gray-500 border-gray-200 hover:border-sky-300"
                 }`}>
                 {label}{key !== "ALL" && planCounts[key] != null ? ` (${planCounts[key]})` : ""}
-              </button>
+              </Button>
             ))}
           </div>
           <select value={sortBy} onChange={e => setSortBy(e.target.value)}
@@ -860,32 +864,32 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                     {/* Actions */}
                     <td className="px-4 py-3 text-right" onClick={e => e.stopPropagation()}>
                       <div className="flex justify-end gap-1 flex-wrap">
-                        <button onClick={() => setSelectedUser(isSelected ? null : u)} title={t("admin.userManagement.viewDetails")}
+                        <Button onClick={() => setSelectedUser(isSelected ? null : u)} title={t("admin.userManagement.viewDetails")}
                           className={`p-1.5 border transition-colors rounded ${isSelected ? "bg-amber-100 text-amber-600 border-amber-200" : "bg-white text-gray-400 hover:text-gray-700 border-gray-200"}`}>
                           <Eye size={12} />
-                        </button>
-                        <button onClick={() => handleSendResetEmail(u._id, u.name)} title={t("admin.userManagement.sendResetEmail")}
+                        </Button>
+                        <Button onClick={() => handleSendResetEmail(u._id, u.name)} title={t("admin.userManagement.sendResetEmail")}
                           className="p-1.5 bg-white text-gray-400 hover:text-blue-600 border border-gray-200 hover:border-blue-300 transition-colors rounded">
                           <Mail size={12} />
-                        </button>
-                        <button onClick={() => { setPwdModal(u._id); setNewPwd(""); setPwdError(""); }} title={t("admin.userManagement.changePassword")}
+                        </Button>
+                        <Button onClick={() => { setPwdModal(u._id); setNewPwd(""); setPwdError(""); }} title={t("admin.userManagement.changePassword")}
                           className="p-1.5 bg-white text-gray-400 hover:text-amber-600 border border-gray-200 hover:border-amber-300 transition-colors rounded">
                           <Key size={12} />
-                        </button>
+                        </Button>
                         {u.role?.toLowerCase() === "mc" && (
-                          <button onClick={() => handleVerify(u._id, u.isVerified)} title={u.isVerified ? t("admin.userManagement.revoke") : t("admin.userManagement.certify")}
+                          <Button onClick={() => handleVerify(u._id, u.isVerified)} title={u.isVerified ? t("admin.userManagement.revoke") : t("admin.userManagement.certify")}
                             className={`p-1.5 border transition-colors rounded ${u.isVerified ? "bg-white text-gray-400 border-gray-200" : "bg-gray-800 text-white border-gray-800"}`}>
                             <ShieldAlert size={12} />
-                          </button>
+                          </Button>
                         )}
-                        <button onClick={() => handleSuspend(u._id, u.isActive)} title={u.isActive ? t("admin.userManagement.lock") : t("admin.userManagement.unlock")}
+                        <Button onClick={() => handleSuspend(u._id, u.isActive)} title={u.isActive ? t("admin.userManagement.lock") : t("admin.userManagement.unlock")}
                           className="p-1.5 bg-white text-gray-400 hover:text-gray-700 border border-gray-200 hover:border-gray-400 transition-colors rounded">
                           {u.isActive ? <XCircle size={12} /> : <CheckCircle size={12} />}
-                        </button>
-                        <button onClick={() => handleDeleteUser(u._id, u.name)} title={t("admin.userManagement.disable")}
+                        </Button>
+                        <Button onClick={() => handleDeleteUser(u._id, u.name)} title={t("admin.userManagement.disable")}
                           className="p-1.5 bg-white text-gray-400 hover:text-orange-600 border border-gray-200 hover:border-orange-300 transition-colors rounded">
                           <Trash2 size={12} />
-                        </button>
+                        </Button>
                       </div>
                     </td>
                   </tr>
@@ -926,7 +930,7 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
           <div className="bg-white border border-gray-200 w-full max-w-md shadow-xl rounded-xl overflow-hidden">
             <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
               <h2 className="text-[15px] font-semibold text-gray-900">{t("admin.userManagement.addNewAccount")}</h2>
-              <button onClick={() => setShowAddModal(false)} className="text-gray-400 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100"><X size={16} /></button>
+              <Button onClick={() => setShowAddModal(false)} className="h-auto text-gray-400 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100"><X size={16} /></Button>
             </div>
             <form onSubmit={handleAddUser} className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto">
               {addError && <div className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-lg p-3">{addError}</div>}
@@ -979,10 +983,10 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                 <p className="text-[11px] text-sky-600">{t("admin.userManagement.couponUseOnceHint")}</p>
               </div>
               <div className="flex justify-end gap-3 pt-2 border-t border-gray-100 sticky bottom-0 bg-white pb-1">
-                <button type="button" onClick={() => setShowAddModal(false)} className="px-4 py-2 text-[12px] text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">{t("admin.userManagement.cancel")}</button>
-                <button type="submit" disabled={addLoading} className="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg disabled:opacity-50">
+                <Button type="button" onClick={() => setShowAddModal(false)} className="h-auto px-4 py-2 text-[12px] text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">{t("admin.userManagement.cancel")}</Button>
+                <Button type="submit" disabled={addLoading} className="h-auto px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg disabled:opacity-50">
                   {addLoading ? t("admin.userManagement.creating") : t("admin.userManagement.createAccount")}
-                </button>
+                </Button>
               </div>
             </form>
           </div>
@@ -995,7 +999,7 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
           <div className="bg-white border border-gray-200 w-full max-w-sm shadow-xl rounded-xl overflow-hidden">
             <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
               <h2 className="text-[15px] font-semibold text-gray-900">{t("admin.userManagement.changePassword")}</h2>
-              <button onClick={() => setPwdModal(null)} className="text-gray-400 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100"><X size={16} /></button>
+              <Button onClick={() => setPwdModal(null)} className="h-auto text-gray-400 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100"><X size={16} /></Button>
             </div>
             <form onSubmit={handleChangePassword} className="px-6 py-5 space-y-4">
               {pwdError && <div className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-lg p-3">{pwdError}</div>}
@@ -1005,10 +1009,10 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                   className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400" placeholder={t("admin.userManagement.passwordMinPlaceholder")} required />
               </div>
               <div className="flex justify-end gap-3 pt-2 border-t border-gray-100">
-                <button type="button" onClick={() => setPwdModal(null)} className="px-4 py-2 text-[12px] text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">{t("admin.userManagement.cancel")}</button>
-                <button type="submit" disabled={pwdLoading} className="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg disabled:opacity-50">
+                <Button type="button" onClick={() => setPwdModal(null)} className="h-auto px-4 py-2 text-[12px] text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">{t("admin.userManagement.cancel")}</Button>
+                <Button type="submit" disabled={pwdLoading} className="h-auto px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg disabled:opacity-50">
                   {pwdLoading ? t("admin.userManagement.saving") : t("admin.userManagement.update")}
-                </button>
+                </Button>
               </div>
             </form>
           </div>

@@ -4,6 +4,7 @@ import { Plus, Trash2, BookOpen, Tag, X, Check, Mic, Image as ImageIcon, Edit } 
 import { useApi } from "../../../hooks/useApi";
 import { fetchLessons } from "../../../controllers/voiceController";
 import api from "../../../services/api";
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
 
@@ -78,10 +79,10 @@ const LessonManagement = () => {
           <h2 className="text-[15px] font-semibold text-white">{t('admin.lessonManagement.title')}</h2>
           <p className="text-[12px] text-zinc-500 mt-0.5">{t('admin.lessonManagement.subtitle')}</p>
         </div>
-        <button onClick={handleOpenAdd}
-          className="flex items-center gap-2 px-3 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors">
+        <Button onClick={handleOpenAdd}
+          className="h-auto flex items-center gap-2 px-3 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors">
           <Plus size={13} /> {t('admin.lessonManagement.addScript')}
-        </button>
+        </Button>
       </div>
 
       <div className="border overflow-hidden" style={{ borderColor: "var(--border-subtle)" }}>
@@ -135,18 +136,18 @@ const LessonManagement = () => {
 
             {/* Actions */}
             <div className="flex items-center justify-center gap-1">
-              <button onClick={() => handleOpenEdit(lesson)} title={t('admin.lessonManagement.edit')}
+              <Button onClick={() => handleOpenEdit(lesson)} title={t('admin.lessonManagement.edit')}
                 className="p-1.5 border border-transparent hover:border-white/[0.07] transition-colors"
                 style={{ color: "var(--text-muted)" }}
                 onMouseEnter={e => e.currentTarget.style.color = "var(--text-primary)"}
                 onMouseLeave={e => e.currentTarget.style.color = "var(--text-muted)"}>
                 <Edit size={13} />
-              </button>
-              <button onClick={() => handleDelete(lesson.id)} title={t('admin.lessonManagement.delete')}
+              </Button>
+              <Button onClick={() => handleDelete(lesson.id)} title={t('admin.lessonManagement.delete')}
                 className="p-1.5 border border-transparent hover:border-[--border-subtle] hover:text-[--text-primary] transition-colors"
                 style={{ color: "var(--text-muted)" }}>
                 <Trash2 size={13} />
-              </button>
+              </Button>
             </div>
           </div>
         ))}
@@ -168,9 +169,9 @@ const LessonManagement = () => {
                   <BookOpen size={15} className="text-zinc-500" />
                   {editingLesson ? t('admin.lessonManagement.editScript') : t('admin.lessonManagement.createScript')}
                 </h3>
-                <button type="button" onClick={() => setIsModalOpen(false)} className="text-zinc-500 hover:text-white transition-colors">
+                <Button type="button" onClick={() => setIsModalOpen(false)} className="text-zinc-500 hover:text-white transition-colors">
                   <X size={17} />
-                </button>
+                </Button>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -208,14 +209,15 @@ const LessonManagement = () => {
                   <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.lessonManagement.formDifficulty')}</label>
                   <div className="flex gap-1.5">
                     {["Easy", "Medium", "Hard"].map(lv => (
-                      <button key={lv} type="button" onClick={() => setFormData({...formData, difficulty: lv})}
-                        className={`flex-1 py-1.5 text-[10px] font-medium border transition-colors ${
+                      <Button key={lv} type="button" onClick={() => setFormData({...formData, difficulty: lv})}
+                        hoverScale={1}
+                        className={`h-auto flex-1 py-1.5 text-[10px] font-medium border transition-colors ${
                           formData.difficulty === lv
                             ? 'bg-[gold] text-black border-[gold]'
                             : 'bg-[#09090b] border-white/[0.07] text-zinc-500 hover:border-white/[0.14]'
                         }`}>
                         {lv}
-                      </button>
+                      </Button>
                     ))}
                   </div>
                 </div>
@@ -230,15 +232,17 @@ const LessonManagement = () => {
               </div>
 
               <div className="pt-3 border-t border-white/[0.06] flex gap-2">
-                <button type="button" onClick={() => setIsModalOpen(false)}
-                  className="flex-1 py-2 bg-[#09090b] border border-white/[0.07] text-zinc-400 text-[12px] font-medium hover:border-white/[0.14] transition-colors">
+                <Button type="button" onClick={() => setIsModalOpen(false)}
+                  hoverScale={1}
+                  className="h-auto flex-1 py-2 bg-[#09090b] border border-white/[0.07] text-zinc-400 text-[12px] font-medium hover:border-white/[0.14] transition-colors">
                   {t('admin.lessonManagement.cancel')}
-                </button>
-                <button disabled={loading} type="submit"
-                  className="flex-1 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors flex items-center justify-center gap-1.5">
+                </Button>
+                <Button disabled={loading} type="submit"
+                  hoverScale={1}
+                  className="h-auto flex-1 py-2 bg-[gold] hover:bg-[#e09520] text-black text-[12px] font-semibold transition-colors flex items-center justify-center gap-1.5">
                   <Check size={13} />
                   {loading ? t('admin.lessonManagement.saving') : t('admin.lessonManagement.saveLesson')}
-                </button>
+                </Button>
               </div>
             </form>
           </div>

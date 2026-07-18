@@ -5,6 +5,7 @@ import {
   Terminal, Megaphone, Package, Bell, ChevronDown, ChevronRight,
   CheckCircle2, AlertTriangle, Info, Zap, Filter, Tag,
 } from 'lucide-react';
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 // ── Data ─────────────────────────────────────────────────────────────────────
 
@@ -1120,9 +1121,10 @@ export default function AdminGuide() {
     const SectionIcon = guide.sectionIcon;
     return (
       <div key={guide.id} className="bg-[--bg-surface] border border-[--border-subtle] overflow-hidden">
-        <button
+        <Button
           onClick={() => toggle(guide.id)}
-          className="w-full flex items-start gap-3 px-5 py-4 text-left hover:bg-[--bg-elevated] transition-colors"
+          hoverScale={1}
+          className="w-full flex items-start gap-3 px-5 py-4 h-auto text-left hover:bg-[--bg-elevated] transition-colors"
         >
           <div className={`mt-0.5 shrink-0 ${guide.sectionColor}`}>
             <SectionIcon size={15} />
@@ -1139,7 +1141,7 @@ export default function AdminGuide() {
           <span className="text-[--text-muted] shrink-0 mt-0.5">
             {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
           </span>
-        </button>
+        </Button>
 
         {isOpen && (
           <div className="border-t border-[--border-subtle] px-5 py-4 space-y-2.5 bg-[--bg-elevated]">
@@ -1197,9 +1199,9 @@ export default function AdminGuide() {
           <Filter size={12} className="text-[--text-muted] ml-2" />
           <span className="text-[11px] text-[--text-muted]">Sắp xếp:</span>
           {[['section', 'Theo module'], ['alpha', 'A–Z'], ['category', 'Danh mục']].map(([val, label]) => (
-            <button key={val} onClick={() => setSort(val)} className={chipCls(sort === val)}>
+            <Button key={val} onClick={() => setSort(val)} hoverScale={1} className={chipCls(sort === val) + " h-auto"}>
               {label}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -1211,9 +1213,9 @@ export default function AdminGuide() {
         </p>
         <div className="flex flex-wrap gap-2">
           {CATEGORIES.map(c => (
-            <button key={c} onClick={() => setActiveCategory(c)} className={chipCls(activeCategory === c)}>
+            <Button key={c} onClick={() => setActiveCategory(c)} hoverScale={1} className={chipCls(activeCategory === c) + " h-auto"}>
               {c}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -1225,9 +1227,9 @@ export default function AdminGuide() {
         </p>
         <div className="flex flex-wrap gap-2">
           {sections.map(s => (
-            <button key={s} onClick={() => setActiveSection(s)} className={chipCls(activeSection === s)}>
+            <Button key={s} onClick={() => setActiveSection(s)} hoverScale={1} className={chipCls(activeSection === s) + " h-auto"}>
               {s}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -1238,12 +1240,12 @@ export default function AdminGuide() {
           Hiển thị <span className="font-semibold text-[--text-primary]">{filtered.length}</span> / {GUIDES.length} quy trình
         </span>
         {(search || activeCategory !== 'Tất cả' || activeSection !== 'Tất cả') && (
-          <button
+          <Button
             onClick={() => { setSearch(''); setActiveCategory('Tất cả'); setActiveSection('Tất cả'); }}
-            className="text-[11px] text-gold hover:text-amber-400 transition-colors"
+            className="text-[11px] h-auto p-0 bg-transparent text-gold hover:text-amber-400 transition-colors"
           >
             Xoá bộ lọc
-          </button>
+          </Button>
         )}
       </div>
 

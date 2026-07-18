@@ -5,6 +5,7 @@ import {
   CheckCircle, XCircle, ChevronDown, ChevronUp, Filter
 } from 'lucide-react';
 import api from '../../../services/api';
+import { Button } from '@/components/animate-ui/components/buttons/button';
 
 const ACTION_LABEL_KEYS = {
   AUTH_LOGIN: 'authLogin',
@@ -258,17 +259,17 @@ const SecurityLogs = () => {
             )}
           </p>
         </div>
-        <button onClick={load}
-          className="flex items-center gap-1.5 px-3 py-2 border border-[--border-subtle] text-[12px] text-[--text-secondary] hover:border-amber-500/40 transition-colors">
+        <Button onClick={load}
+          className="h-auto flex items-center gap-1.5 px-3 py-2 border border-[--border-subtle] text-[12px] text-[--text-secondary] hover:border-amber-500/40 transition-colors">
           <RefreshCw size={13} /> {t('admin.securityLogs.reload')}
-        </button>
+        </Button>
       </div>
 
       {/* Purge banner */}
       {purgeResult && (
         <div className="flex items-center gap-2 px-4 py-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[12px]">
           <CheckCircle size={13} /> {purgeResult}
-          <button onClick={() => setPurgeResult(null)} className="ml-auto text-emerald-400/60 hover:text-emerald-400"><XCircle size={13} /></button>
+          <Button onClick={() => setPurgeResult(null)} className="h-auto ml-auto text-emerald-400/60 hover:text-emerald-400"><XCircle size={13} /></Button>
         </div>
       )}
 
@@ -310,14 +311,14 @@ const SecurityLogs = () => {
             />
             <span>{t('admin.securityLogs.daysUnit')}</span>
           </div>
-          <button
+          <Button
             onClick={handlePurge} disabled={purging}
-            className="flex items-center gap-1.5 px-3 py-2 bg-rose-500/10 border border-rose-500/30 text-rose-400 text-[12px] font-medium hover:bg-rose-500/20 hover:border-rose-500/50 transition-colors disabled:opacity-50">
+            className="h-auto flex items-center gap-1.5 px-3 py-2 bg-rose-500/10 border border-rose-500/30 text-rose-400 text-[12px] font-medium hover:bg-rose-500/20 hover:border-rose-500/50 transition-colors disabled:opacity-50">
             {purging
               ? <span className="w-3 h-3 border border-rose-400/30 border-t-rose-400 rounded-full animate-spin" />
               : <Trash2 size={12} />}
             {t('admin.securityLogs.purge')}
-          </button>
+          </Button>
         </div>
       </div>
 

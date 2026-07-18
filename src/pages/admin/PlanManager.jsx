@@ -7,6 +7,7 @@ import {
   Settings, Clock
 } from "lucide-react";
 import api from "../../services/api";
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const inputCls = "w-full bg-[#0d0d0f] border border-white/8 px-3 py-2.5 text-[13px] text-white focus:outline-none focus:border-white/[0.2] focus:bg-[#111114] placeholder:text-zinc-600 rounded-lg transition-colors";
 const labelCls = "block text-[11px] font-medium text-zinc-400 mb-1.5 tracking-wide";
@@ -71,9 +72,10 @@ function PlanEditor({ plan, onSave }) {
   return (
     <div className="border border-white/7 bg-[#111113] rounded overflow-hidden">
       {/* Header row */}
-      <button
+      <Button
         onClick={() => setExpanded(e => !e)}
-        className="w-full flex items-center justify-between px-5 py-4 hover:bg-white/2 transition-colors"
+        hoverScale={1}
+        className="w-full flex items-center justify-between px-5 py-4 h-auto hover:bg-white/2 transition-colors"
       >
         <div className="flex items-center gap-3">
           <div className="w-2 h-2 rounded-full" style={{ background: accent }} />
@@ -100,7 +102,7 @@ function PlanEditor({ plan, onSave }) {
           </span>
           {expanded ? <ChevronUp size={14} className="text-zinc-500" /> : <ChevronDown size={14} className="text-zinc-500" />}
         </div>
-      </button>
+      </Button>
 
       {expanded && (
         <div className="border-t border-white/5 px-5 py-6 space-y-4">
@@ -181,9 +183,9 @@ function PlanEditor({ plan, onSave }) {
                 <div key={i} className="flex items-center gap-2.5 bg-white/3 border border-white/6 px-3 py-2 rounded-lg">
                   <Check size={12} className="text-emerald-500 shrink-0" />
                   <span className="flex-1 text-[13px] text-zinc-300">{h}</span>
-                  <button onClick={() => removeHighlight(i)} className="text-zinc-600 hover:text-red-400 transition-colors p-0.5">
+                  <Button onClick={() => removeHighlight(i)} className="text-zinc-600 hover:text-red-400 transition-colors p-0.5 h-auto bg-transparent">
                     <X size={13} />
-                  </button>
+                  </Button>
                 </div>
               ))}
             </div>
@@ -195,12 +197,12 @@ function PlanEditor({ plan, onSave }) {
                 onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addHighlight())}
                 placeholder={t('admin.planManager.highlightPlaceholder')}
               />
-              <button
+              <Button
                 onClick={addHighlight}
-                className="shrink-0 px-3.5 py-2 bg-white/5 border border-white/8 text-zinc-300 hover:text-white hover:border-white/18 transition-colors rounded-lg"
+                className="shrink-0 px-3.5 py-2 h-auto bg-white/5 border border-white/8 text-zinc-300 hover:text-white hover:border-white/18 transition-colors rounded-lg"
               >
                 <Plus size={14} />
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -212,9 +214,9 @@ function PlanEditor({ plan, onSave }) {
                 {t('admin.planManager.directDiscount')}
               </p>
               {discountActive && (
-                <button onClick={clearDiscount} className="text-[10px] text-zinc-500 hover:text-red-400 transition-colors flex items-center gap-1">
+                <Button onClick={clearDiscount} className="text-[10px] h-auto p-0 bg-transparent text-zinc-500 hover:text-red-400 transition-colors flex items-center gap-1">
                   <X size={10} /> {t('admin.planManager.removeDiscount')}
-                </button>
+                </Button>
               )}
             </div>
             <div className="p-4 space-y-3">
@@ -268,21 +270,21 @@ function PlanEditor({ plan, onSave }) {
 
           {/* Footer — Active toggle + Save */}
           <div className="flex items-center justify-between pt-1">
-            <button
+            <Button
               onClick={() => set("active", !form.active)}
-              className={`flex items-center gap-2 text-[13px] font-medium transition-colors ${form.active ? "text-emerald-400" : "text-zinc-500"}`}
+              className={`flex items-center gap-2 text-[13px] font-medium h-auto p-0 bg-transparent transition-colors ${form.active ? "text-emerald-400" : "text-zinc-500"}`}
             >
               {form.active ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
               {form.active ? t('admin.planManager.showing') : t('admin.planManager.hiding')}
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-2 px-5 py-2.5 bg-[#f5a623] text-black text-[13px] font-bold hover:bg-[#e09515] disabled:opacity-50 transition-colors rounded-xl"
+              className="flex items-center gap-2 px-5 py-2.5 h-auto bg-[#f5a623] text-black text-[13px] font-bold hover:bg-[#e09515] disabled:opacity-50 transition-colors rounded-xl"
             >
               {saving ? <RefreshCw size={13} className="animate-spin" /> : <Save size={13} />}
               {t('admin.planManager.saveChanges')}
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -398,12 +400,12 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
           }`}>
             {statusLabel}
           </span>
-          <button onClick={() => setEditing(true)} className="p-1.5 text-zinc-600 hover:text-white transition-colors opacity-0 group-hover:opacity-100">
+          <Button onClick={() => setEditing(true)} className="p-1.5 h-auto text-zinc-600 hover:text-white transition-colors opacity-0 group-hover:opacity-100">
             <Edit2 size={13} />
-          </button>
-          <button onClick={handleDelete} className="p-1.5 text-zinc-600 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100">
+          </Button>
+          <Button onClick={handleDelete} className="p-1.5 h-auto text-zinc-600 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100">
             <Trash2 size={13} />
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -417,9 +419,9 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
           <Edit2 size={12} className="text-amber-400" />
           <span className="text-[11px] font-semibold text-amber-400 tracking-wide">{t('admin.planManager.editingCode', { code: discount.code })}</span>
         </div>
-        <button onClick={() => setEditing(false)} className="p-1 text-zinc-500 hover:text-white transition-colors rounded">
+        <Button onClick={() => setEditing(false)} className="p-1 h-auto bg-transparent text-zinc-500 hover:text-white transition-colors rounded">
           <X size={13} />
-        </button>
+        </Button>
       </div>
 
       <div className="p-4 space-y-4">
@@ -468,18 +470,18 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
           <label className={labelCls}>{t('admin.planManager.applicablePlans')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansAll')}</span></label>
           <div className="flex gap-2 mt-1.5">
             {ALL_PLANS.map(p => (
-              <button
+              <Button
                 key={p}
                 type="button"
                 onClick={() => togglePlan(p)}
-                className={`px-3 py-1.5 text-[11px] font-semibold rounded-lg border transition-all ${
+                className={`px-3 py-1.5 h-auto text-[11px] font-semibold rounded-lg border transition-all ${
                   (form.applicablePlans || []).includes(p)
                     ? "bg-amber-500/15 text-amber-400 border-amber-500/30 shadow-sm"
                     : "bg-white/2 text-zinc-500 border-white/6 hover:border-white/12 hover:text-zinc-300"
                 }`}
               >
                 {p}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
@@ -493,33 +495,33 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
         {/* Footer */}
         <div className="flex items-center justify-between pt-1 border-t border-white/5">
           <div className="flex items-center gap-3">
-            <button
+            <Button
               type="button"
               onClick={() => set("active", !form.active)}
-              className={`flex items-center gap-1.5 text-[12px] font-medium transition-colors ${form.active ? "text-emerald-400 hover:text-emerald-300" : "text-zinc-500 hover:text-zinc-300"}`}
+              className={`flex items-center gap-1.5 text-[12px] font-medium h-auto p-0 bg-transparent transition-colors ${form.active ? "text-emerald-400 hover:text-emerald-300" : "text-zinc-500 hover:text-zinc-300"}`}
             >
               {form.active ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
               {form.active ? t('admin.planManager.statusActive') : t('admin.planManager.statusOff')}
-            </button>
+            </Button>
             <span className="text-zinc-700">·</span>
-            <button
+            <Button
               type="button"
               onClick={() => set("showInSidebar", !form.showInSidebar)}
-              className={`flex items-center gap-1.5 text-[12px] font-medium transition-colors ${form.showInSidebar ? "text-violet-400 hover:text-violet-300" : "text-zinc-500 hover:text-zinc-300"}`}
+              className={`flex items-center gap-1.5 text-[12px] font-medium h-auto p-0 bg-transparent transition-colors ${form.showInSidebar ? "text-violet-400 hover:text-violet-300" : "text-zinc-500 hover:text-zinc-300"}`}
             >
               {form.showInSidebar ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
               {form.showInSidebar ? t('admin.planManager.showInSidebar') : t('admin.planManager.hideFromSidebar')}
-            </button>
+            </Button>
           </div>
           <div className="flex items-center gap-2">
             {err && <span className="text-[11px] text-red-400">{err}</span>}
-            <button type="button" onClick={() => setEditing(false)} className="px-3 py-1.5 text-[11px] text-zinc-400 hover:text-white border border-white/8 hover:border-white/16 rounded-lg transition-colors">
+            <Button type="button" onClick={() => setEditing(false)} className="px-3 py-1.5 h-auto text-[11px] text-zinc-400 hover:text-white border border-white/8 hover:border-white/16 rounded-lg transition-colors">
               {t('admin.planManager.cancel')}
-            </button>
-            <button type="button" onClick={handleSave} disabled={saving} className="flex items-center gap-1.5 px-4 py-1.5 bg-amber-500 text-black text-[11px] font-bold hover:bg-amber-400 disabled:opacity-50 rounded-lg transition-colors">
+            </Button>
+            <Button type="button" onClick={handleSave} disabled={saving} className="flex items-center gap-1.5 px-4 py-1.5 h-auto bg-amber-500 text-black text-[11px] font-bold hover:bg-amber-400 disabled:opacity-50 rounded-lg transition-colors">
               {saving ? <RefreshCw size={11} className="animate-spin" /> : <Check size={11} />}
               {t('admin.planManager.saveChanges')}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -563,13 +565,13 @@ const [err, setErr] = useState(null);
 
   if (!open) {
     return (
-      <button
+      <Button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 px-4 py-2 bg-amber-500/8 border border-amber-500/20 text-amber-400 hover:bg-amber-500/15 hover:border-amber-500/35 text-[12px] font-semibold transition-all rounded-lg"
+        className="flex items-center gap-2 px-4 py-2 h-auto bg-amber-500/8 border border-amber-500/20 text-amber-400 hover:bg-amber-500/15 hover:border-amber-500/35 text-[12px] font-semibold transition-all rounded-lg"
       >
         <Plus size={13} />
         {t('admin.planManager.createDiscountCode')}
-      </button>
+      </Button>
     );
   }
 
@@ -581,9 +583,9 @@ const [err, setErr] = useState(null);
           <Plus size={12} className="text-emerald-400" />
           <span className="text-[11px] font-semibold text-emerald-400 tracking-wide">{t('admin.planManager.createNewDiscountCode')}</span>
         </div>
-        <button type="button" onClick={() => setOpen(false)} className="p-1 text-zinc-500 hover:text-white transition-colors rounded">
+        <Button type="button" onClick={() => setOpen(false)} className="p-1 h-auto bg-transparent text-zinc-500 hover:text-white transition-colors rounded">
           <X size={13} />
-        </button>
+        </Button>
       </div>
 
       <div className="p-4 space-y-4">
@@ -634,18 +636,18 @@ const [err, setErr] = useState(null);
           <label className={labelCls}>{t('admin.planManager.applicablePlans')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansAll')}</span></label>
           <div className="flex gap-2 mt-1.5">
             {ALL_PLANS.map(p => (
-              <button
+              <Button
                 type="button"
                 key={p}
                 onClick={() => togglePlan(p)}
-                className={`px-3 py-1.5 text-[11px] font-semibold rounded-lg border transition-all ${
+                className={`px-3 py-1.5 h-auto text-[11px] font-semibold rounded-lg border transition-all ${
                   (form.applicablePlans || []).includes(p)
                     ? "bg-amber-500/15 text-amber-400 border-amber-500/30"
                     : "bg-white/2 text-zinc-500 border-white/6 hover:border-white/12 hover:text-zinc-300"
                 }`}
               >
                 {p}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
@@ -659,33 +661,33 @@ const [err, setErr] = useState(null);
         {/* Footer */}
         <div className="flex items-center justify-between pt-1 border-t border-white/5">
           <div className="flex items-center gap-3">
-            <button
+            <Button
               type="button"
               onClick={() => set("active", !form.active)}
-              className={`flex items-center gap-1.5 text-[12px] font-medium transition-colors ${form.active ? "text-emerald-400 hover:text-emerald-300" : "text-zinc-500 hover:text-zinc-300"}`}
+              className={`flex items-center gap-1.5 text-[12px] font-medium h-auto p-0 bg-transparent transition-colors ${form.active ? "text-emerald-400 hover:text-emerald-300" : "text-zinc-500 hover:text-zinc-300"}`}
             >
               {form.active ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
               {form.active ? t('admin.planManager.activate') : t('admin.planManager.draft')}
-            </button>
+            </Button>
             <span className="text-zinc-700">·</span>
-            <button
+            <Button
               type="button"
               onClick={() => set("showInSidebar", !form.showInSidebar)}
-              className={`flex items-center gap-1.5 text-[12px] font-medium transition-colors ${form.showInSidebar ? "text-violet-400 hover:text-violet-300" : "text-zinc-500 hover:text-zinc-300"}`}
+              className={`flex items-center gap-1.5 text-[12px] font-medium h-auto p-0 bg-transparent transition-colors ${form.showInSidebar ? "text-violet-400 hover:text-violet-300" : "text-zinc-500 hover:text-zinc-300"}`}
             >
               {form.showInSidebar ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
               {form.showInSidebar ? t('admin.planManager.showInSidebar') : t('admin.planManager.hideFromSidebar')}
-            </button>
+            </Button>
           </div>
           <div className="flex items-center gap-2">
             {err && <span className="text-[11px] text-red-400">{err}</span>}
-            <button type="button" onClick={() => setOpen(false)} className="px-3 py-1.5 text-[11px] text-zinc-400 hover:text-white border border-white/8 hover:border-white/16 rounded-lg transition-colors">
+            <Button type="button" onClick={() => setOpen(false)} className="px-3 py-1.5 h-auto text-[11px] text-zinc-400 hover:text-white border border-white/8 hover:border-white/16 rounded-lg transition-colors">
               {t('admin.planManager.cancel')}
-            </button>
-            <button type="submit" disabled={saving} className="flex items-center gap-1.5 px-4 py-1.5 bg-emerald-500 text-black text-[11px] font-bold hover:bg-emerald-400 disabled:opacity-50 rounded-lg transition-colors">
+            </Button>
+            <Button type="submit" disabled={saving} className="flex items-center gap-1.5 px-4 py-1.5 h-auto bg-emerald-500 text-black text-[11px] font-bold hover:bg-emerald-400 disabled:opacity-50 rounded-lg transition-colors">
               {saving ? <RefreshCw size={11} className="animate-spin" /> : <Plus size={11} />}
               {t('admin.planManager.createCode')}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -767,10 +769,11 @@ const PlanManager = () => {
           { id: "discounts", label: t('admin.planManager.tabDiscounts'), icon: Tag },
           { id: "settings", label: t('admin.planManager.tabSettings'), icon: Settings },
         ].map(({ id, label, icon: Icon }) => (
-          <button
+          <Button
             key={id}
             onClick={() => setTab(id)}
-            className={`flex items-center gap-2 px-4 py-3 text-[13px] font-medium border-b-2 -mb-px transition-colors ${
+            hoverScale={1}
+            className={`flex items-center gap-2 px-4 py-3 h-auto rounded-none border-b-2 -mb-px text-[13px] font-medium transition-colors ${
               tab === id
                 ? "border-[#f5a623] text-[#f5a623]"
                 : "border-transparent text-zinc-500 hover:text-zinc-300"
@@ -778,7 +781,7 @@ const PlanManager = () => {
           >
             <Icon size={14} />
             {label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -789,10 +792,10 @@ const PlanManager = () => {
             <p className="text-[12px] text-zinc-500">
               {t('admin.planManager.plansTabDesc')}
             </p>
-            <button onClick={fetchPlans} className="flex items-center gap-1.5 text-[11px] text-zinc-500 hover:text-white transition-colors">
+            <Button onClick={fetchPlans} className="flex items-center gap-1.5 h-auto p-0 bg-transparent text-[11px] text-zinc-500 hover:text-white transition-colors">
               <RefreshCw size={12} />
               {t('admin.planManager.refresh')}
-            </button>
+            </Button>
           </div>
 
           {loadingPlans ? (
@@ -842,17 +845,17 @@ const PlanManager = () => {
                   />
                   <span className="text-[11px] text-zinc-500 shrink-0">{t('admin.planManager.hoursUnit')}</span>
                 </div>
-                <button
+                <Button
                   onClick={saveCooldown}
                   disabled={cooldownSaving}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded bg-amber-500 text-black text-[12px] font-semibold hover:bg-amber-400 disabled:opacity-50 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-2 h-auto rounded bg-amber-500 text-black text-[12px] font-semibold hover:bg-amber-400 disabled:opacity-50 transition-colors"
                 >
                   {cooldownSaving
                     ? <RefreshCw size={12} className="animate-spin" />
                     : <Save size={12} />
                   }
                   {t('admin.planManager.save')}
-                </button>
+                </Button>
               </div>
               {cooldownMsg && (
                 <p className={`text-[11px] font-medium ${cooldownMsg.type === "success" ? "text-emerald-400" : "text-red-400"}`}>
@@ -874,10 +877,10 @@ const PlanManager = () => {
                 {t('admin.planManager.discountsTabDesc', { count: discounts.length })}
               </p>
             </div>
-            <button onClick={fetchDiscounts} className="flex items-center gap-1.5 text-[11px] text-zinc-500 hover:text-white transition-colors">
+            <Button onClick={fetchDiscounts} className="flex items-center gap-1.5 h-auto p-0 bg-transparent text-[11px] text-zinc-500 hover:text-white transition-colors">
               <RefreshCw size={12} />
               {t('admin.planManager.refresh')}
-            </button>
+            </Button>
           </div>
 
           {/* Voucher stats summary */}

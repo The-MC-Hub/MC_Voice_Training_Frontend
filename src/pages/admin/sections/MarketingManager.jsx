@@ -15,23 +15,24 @@ import {
   fetchTemplates, createTemplate, updateTemplate, deleteTemplate,
   sendCampaign, countRecipients, previewRecipients, fetchCampaigns, fetchCampaignLogs, sendTestMail,
 } from '../../../services/emailCampaignService';
+import { Button } from '@/components/animate-ui/components/buttons/button';
 
-// ── Shared ────────────────────────────────────────────────────────────────────
+// ── Shared────────────────────────────────────────────────────────────────────
   
 const TabBar = ({ tabs, active, onChange }) => (
   <div className="flex gap-0 border-b border-[--border-subtle] mb-6">
     {tabs.map((t, i) => (
-      <button
+      <Button
         key={t}
         onClick={() => onChange(i)}
-        className={`px-5 py-2.5 text-[12px] font-semibold transition-all border-b-2 -mb-px ${
+        className={`h-auto px-5 py-2.5 text-[12px] font-semibold transition-all border-b-2 -mb-px ${
           active === i
             ? 'border-gold text-[--text-primary]'
             : 'border-transparent text-[--text-muted] hover:text-[--text-secondary]'
         }`}
       >
         {t}
-      </button>
+      </Button>
     ))}
   </div>
 );
@@ -123,12 +124,12 @@ function SocialFeedTab() {
       <div className="flex items-center justify-between">
         <p className="text-[12px] text-[--text-muted]">{t('admin.marketingManager.socialFeedDesc')}</p>
         <div className="flex items-center gap-2">
-          <button onClick={() => setPreviewMode(p => !p)} className={`flex items-center gap-2 px-3 py-2 text-[12px] font-medium border transition-all ${previewMode ? 'bg-gold/10 border-gold/30 text-gold' : 'bg-[--bg-surface] border-[--border-subtle] text-[--text-secondary] hover:text-[--text-primary]'}`}>
+          <Button onClick={() => setPreviewMode(p => !p)} className={`h-auto flex items-center gap-2 px-3 py-2 text-[12px] font-medium border transition-all ${previewMode ? 'bg-gold/10 border-gold/30 text-gold' : 'bg-[--bg-surface] border-[--border-subtle] text-[--text-secondary] hover:text-[--text-primary]'}`}>
             <Eye size={13} /> {t('admin.marketingManager.preview')}
-          </button>
-          <button onClick={openNew} className="flex items-center gap-2 px-3 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors">
+          </Button>
+          <Button onClick={openNew} className="h-auto flex items-center gap-2 px-3 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors">
             <Plus size={13} /> {t('admin.marketingManager.addPost')}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -143,7 +144,7 @@ function SocialFeedTab() {
         <div className="bg-[--bg-surface] border border-[--border-subtle] p-5 space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-[13px] font-semibold text-[--text-primary]">{editing === 'new' ? t('admin.marketingManager.addNewPost') : t('admin.marketingManager.editPost')}</span>
-            <button onClick={cancelEdit} className="text-[--text-muted] hover:text-[--text-primary]"><X size={15} /></button>
+            <Button onClick={cancelEdit} className="h-auto text-[--text-muted] hover:text-[--text-primary]"><X size={15} /></Button>
           </div>
           <div>
             <p className="text-[11px] text-[--text-muted] mb-2 uppercase tracking-wider">{t('admin.marketingManager.imageOptional')}</p>
@@ -151,12 +152,12 @@ function SocialFeedTab() {
               {form.image ? (
                 <div className="relative w-32 h-20 overflow-hidden shrink-0">
                   <img src={form.image} alt="" className="w-full h-full object-cover" />
-                  <button onClick={() => setForm(f => ({ ...f, image: '' }))} className="absolute top-1 right-1 w-5 h-5 bg-black/70 text-white flex items-center justify-center"><X size={10} /></button>
+                  <Button onClick={() => setForm(f => ({ ...f, image: '' }))} className="w-5 h-5 absolute top-1 right-1 bg-black/70 text-white flex items-center justify-center"><X size={10} /></Button>
                 </div>
               ) : (
-                <button onClick={() => fileRef.current?.click()} className="w-32 h-20 bg-[--bg-elevated] border border-dashed border-[--border-subtle] flex flex-col items-center justify-center gap-1 text-[--text-muted] hover:text-[--text-primary] hover:border-[--text-muted] transition-colors shrink-0">
+                <Button onClick={() => fileRef.current?.click()} className="w-32 h-20 bg-[--bg-elevated] border border-dashed border-[--border-subtle] flex flex-col items-center justify-center gap-1 text-[--text-muted] hover:text-[--text-primary] hover:border-[--text-muted] transition-colors shrink-0">
                   <Image size={16} /><span className="text-[10px]">{t('admin.marketingManager.uploadImage')}</span>
-                </button>
+                </Button>
               )}
               <div className="flex-1 text-[11px] text-[--text-muted] leading-relaxed">
                 {t('admin.marketingManager.thumbnailHint')}
@@ -183,17 +184,17 @@ function SocialFeedTab() {
             </div>
             <div>
               <p className="text-[11px] text-[--text-muted] mb-1.5 uppercase tracking-wider">{t('admin.marketingManager.visibility')}</p>
-              <button onClick={() => setForm(f => ({ ...f, active: !f.active }))} className={`flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium border transition-all ${form.active ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-[--bg-elevated] border-[--border-subtle] text-[--text-muted]'}`}>
+              <Button onClick={() => setForm(f => ({ ...f, active: !f.active }))} className={`h-auto flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium border transition-all ${form.active ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-[--bg-elevated] border-[--border-subtle] text-[--text-muted]'}`}>
                 {form.active ? <ToggleRight size={13} /> : <ToggleLeft size={13} />}
                 {form.active ? t('admin.marketingManager.show') : t('admin.marketingManager.hide')}
-              </button>
+              </Button>
             </div>
           </div>
           <div className="flex items-center gap-2 pt-1">
-            <button onClick={save} disabled={!isValid || saving} className="flex items-center gap-2 px-4 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+            <Button onClick={save} disabled={!isValid || saving} className="h-auto flex items-center gap-2 px-4 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
               <Save size={13} /> {saving ? t('admin.marketingManager.saving') : t('admin.marketingManager.savePost')}
-            </button>
-            <button onClick={cancelEdit} className="px-4 py-2 text-[--text-muted] text-[12px] hover:text-[--text-primary]">{t('admin.marketingManager.cancel')}</button>
+            </Button>
+            <Button onClick={cancelEdit} className="h-auto px-4 py-2 text-[--text-muted] text-[12px] hover:text-[--text-primary]">{t('admin.marketingManager.cancel')}</Button>
           </div>
         </div>
       )}
@@ -221,15 +222,15 @@ function SocialFeedTab() {
               </span>
             </div>
             <div className="flex items-center gap-1 shrink-0">
-              <button onClick={() => toggle(post.id)} className="w-7 h-7 flex items-center justify-center text-[--text-muted] hover:text-emerald-400 border border-transparent hover:border-emerald-500/20 transition-all">
+              <Button onClick={() => toggle(post.id)} className="w-7 h-7 flex items-center justify-center text-[--text-muted] hover:text-emerald-400 border border-transparent hover:border-emerald-500/20 transition-all">
                 {post.active ? <ToggleRight size={14} /> : <ToggleLeft size={14} />}
-              </button>
-              <button onClick={() => openEdit(post)} className="w-7 h-7 flex items-center justify-center text-[--text-muted] hover:text-[--text-primary] border border-transparent hover:border-[--border-subtle] transition-all">
+              </Button>
+              <Button onClick={() => openEdit(post)} className="w-7 h-7 flex items-center justify-center text-[--text-muted] hover:text-[--text-primary] border border-transparent hover:border-[--border-subtle] transition-all">
                 <Edit3 size={13} />
-              </button>
-              <button onClick={() => remove(post.id)} className="w-7 h-7 flex items-center justify-center text-[--text-muted] hover:text-red-400 border border-transparent hover:border-red-500/20 transition-all">
+              </Button>
+              <Button onClick={() => remove(post.id)} className="w-7 h-7 flex items-center justify-center text-[--text-muted] hover:text-red-400 border border-transparent hover:border-red-500/20 transition-all">
                 <Trash2 size={13} />
-              </button>
+              </Button>
             </div>
           </div>
         ))}
@@ -377,9 +378,9 @@ function EmailTemplatesTab() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <p className="text-[12px] text-[--text-muted]">{t('admin.marketingManager.templatesDesc')}</p>
-        <button onClick={openCreate} className="flex items-center gap-2 px-3 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors">
+        <Button onClick={openCreate} className="h-auto flex items-center gap-2 px-3 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors">
           <Plus size={13} /> {t('admin.marketingManager.createTemplate')}
-        </button>
+        </Button>
       </div>
 
       {showForm && (
@@ -387,7 +388,7 @@ function EmailTemplatesTab() {
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-3 border-b border-[--border-subtle]">
             <span className="text-[13px] font-semibold text-[--text-primary]">{editing ? t('admin.marketingManager.editTemplateTitle') : t('admin.marketingManager.createTemplateTitle')}</span>
-            <button onClick={() => setShowForm(false)} className="text-[--text-muted] hover:text-[--text-primary]"><X size={15} /></button>
+            <Button onClick={() => setShowForm(false)} className="h-auto text-[--text-muted] hover:text-[--text-primary]"><X size={15} /></Button>
           </div>
 
           {/* 2-col: form left, preview right */}
@@ -406,12 +407,12 @@ function EmailTemplatesTab() {
 
               {/* Mode toggle */}
               <div className="flex items-center gap-2">
-                <button onClick={() => setUseRawHtml(false)} className={`px-3 py-1.5 text-[11px] font-semibold border transition-all ${!useRawHtml ? 'bg-gold text-black border-gold' : 'bg-[--bg-elevated] border-[--border-subtle] text-[--text-muted] hover:text-[--text-primary]'}`}>
+                <Button onClick={() => setUseRawHtml(false)} className={`h-auto px-3 py-1.5 text-[11px] font-semibold border transition-all ${!useRawHtml ? 'bg-gold text-black border-gold' : 'bg-[--bg-elevated] border-[--border-subtle] text-[--text-muted] hover:text-[--text-primary]'}`}>
                   {t('admin.marketingManager.designBuilder')}
-                </button>
-                <button onClick={() => setUseRawHtml(true)} className={`px-3 py-1.5 text-[11px] font-semibold border transition-all ${useRawHtml ? 'bg-gold text-black border-gold' : 'bg-[--bg-elevated] border-[--border-subtle] text-[--text-muted] hover:text-[--text-primary]'}`}>
+                </Button>
+                <Button onClick={() => setUseRawHtml(true)} className={`h-auto px-3 py-1.5 text-[11px] font-semibold border transition-all ${useRawHtml ? 'bg-gold text-black border-gold' : 'bg-[--bg-elevated] border-[--border-subtle] text-[--text-muted] hover:text-[--text-primary]'}`}>
                   {t('admin.marketingManager.rawHtml')}
-                </button>
+                </Button>
                 <span className="text-[11px] text-[--text-muted]">
                   {useRawHtml ? t('admin.marketingManager.rawHtmlHint') : t('admin.marketingManager.generateFromFieldsHint')}
                 </span>
@@ -449,11 +450,11 @@ function EmailTemplatesTab() {
               )}
 
               <div className="flex gap-3 pt-1">
-                <button onClick={handleSave} disabled={saving || !form.name || !form.subject} className="flex items-center gap-2 px-4 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                <Button onClick={handleSave} disabled={saving || !form.name || !form.subject} className="h-auto flex items-center gap-2 px-4 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
                   {saving ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
                   {editing ? t('admin.marketingManager.update') : t('admin.marketingManager.createTemplate')}
-                </button>
-                <button onClick={() => setShowForm(false)} className="px-4 py-2 text-[--text-muted] text-[12px] hover:text-[--text-primary]">{t('admin.marketingManager.cancel')}</button>
+                </Button>
+                <Button onClick={() => setShowForm(false)} className="h-auto px-4 py-2 text-[--text-muted] text-[12px] hover:text-[--text-primary]">{t('admin.marketingManager.cancel')}</Button>
               </div>
             </div>
 
@@ -485,23 +486,23 @@ function EmailTemplatesTab() {
                   {tpl.designData?.title && <p className="text-[11px] text-[--text-muted]">{t('admin.marketingManager.contentTitle')}: {tpl.designData.title}</p>}
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
-                  <button onClick={() => setTestingId(testingId === tpl.id ? null : tpl.id)} className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium border border-blue-500/20 text-blue-400 hover:bg-blue-500/10 transition-all">
+                  <Button onClick={() => setTestingId(testingId === tpl.id ? null : tpl.id)} className="h-auto flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium border border-blue-500/20 text-blue-400 hover:bg-blue-500/10 transition-all">
                     <Mail size={11} /> {t('admin.marketingManager.test')}
-                  </button>
-                  <button onClick={() => openEdit(tpl)} className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium border border-[--border-subtle] text-[--text-secondary] hover:text-[--text-primary] transition-all">
+                  </Button>
+                  <Button onClick={() => openEdit(tpl)} className="h-auto flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium border border-[--border-subtle] text-[--text-secondary] hover:text-[--text-primary] transition-all">
                     <Edit3 size={11} /> {t('admin.marketingManager.edit')}
-                  </button>
-                  <button onClick={() => handleDelete(tpl.id)} className="w-7 h-7 flex items-center justify-center text-[--text-muted] hover:text-red-400 border border-transparent hover:border-red-500/20 transition-all">
+                  </Button>
+                  <Button onClick={() => handleDelete(tpl.id)} className="w-7 h-7 flex items-center justify-center text-[--text-muted] hover:text-red-400 border border-transparent hover:border-red-500/20 transition-all">
                     <Trash2 size={13} />
-                  </button>
+                  </Button>
                 </div>
               </div>
               {testingId === tpl.id && (
                 <div className="flex gap-2 mt-3 pt-3 border-t border-[--border-subtle]">
                   <input value={testEmail} onChange={e => setTestEmail(e.target.value)} placeholder={t('admin.marketingManager.testEmailPlaceholder')} className="flex-1 bg-[--bg-elevated] border border-[--border-subtle] px-3 py-2 text-[12px] text-[--text-primary] outline-none focus:border-[--text-muted]" />
-                  <button onClick={() => handleTestSend(tpl.id)} disabled={testSending || !testEmail} className="flex items-center gap-2 px-4 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors disabled:opacity-40">
+                  <Button onClick={() => handleTestSend(tpl.id)} disabled={testSending || !testEmail} className="h-auto flex items-center gap-2 px-4 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors disabled:opacity-40">
                     {testSending ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />} {t('admin.marketingManager.sendTest')}
-                  </button>
+                  </Button>
                 </div>
               )}
             </div>
@@ -726,14 +727,14 @@ function SendCampaignTab() {
           <p className="text-[11px] text-[--text-muted] mb-2 uppercase tracking-wider">{t('admin.marketingManager.targetAudience')}</p>
           <div className="flex flex-wrap gap-2">
             {[['ALL',t('admin.marketingManager.targetAll')],['PLAN',t('admin.marketingManager.targetByPlan')],['ROLE',t('admin.marketingManager.targetByRole')],['PREMIUM',t('admin.marketingManager.targetPremium')],['CUSTOM',t('admin.marketingManager.targetCustomEmail')]].map(([val, label]) => (
-              <button key={val} onClick={() => {
+              <Button key={val} onClick={() => {
                 setTargetType(val);
                 setTargetPlans([]);
                 setTargetRoles([]);
                 setRecipients([]);
                 setCheckedEmails(new Set());
                 setRecipientsPreviewed(false);
-              }} className={chipCls(targetType === val)}>{label}</button>
+              }} className={`h-auto ${chipCls(targetType === val)}`}>{label}</Button>
             ))}
           </div>
         </div>
@@ -744,7 +745,7 @@ function SendCampaignTab() {
             <p className="text-[11px] text-[--text-muted] mb-2 uppercase tracking-wider">{t('admin.marketingManager.choosePlanMulti')}</p>
             <div className="flex gap-2 flex-wrap">
               {PLANS.map(p => (
-                <button key={p} onClick={() => toggleItem(targetPlans, setTargetPlans, p)} className={chipCls(targetPlans.includes(p))}>{p}</button>
+                <Button key={p} onClick={() => toggleItem(targetPlans, setTargetPlans, p)} className={`h-auto ${chipCls(targetPlans.includes(p))}`}>{p}</Button>
               ))}
             </div>
           </div>
@@ -756,7 +757,7 @@ function SendCampaignTab() {
             <p className="text-[11px] text-[--text-muted] mb-2 uppercase tracking-wider">{t('admin.marketingManager.chooseRoleMulti')}</p>
             <div className="flex gap-2">
               {ROLES.map(r => (
-                <button key={r} onClick={() => toggleItem(targetRoles, setTargetRoles, r)} className={chipCls(targetRoles.includes(r))}>{r}</button>
+                <Button key={r} onClick={() => toggleItem(targetRoles, setTargetRoles, r)} className={`h-auto ${chipCls(targetRoles.includes(r))}`}>{r}</Button>
               ))}
             </div>
           </div>
@@ -774,14 +775,14 @@ function SendCampaignTab() {
         <div className="flex items-center gap-3 pt-1 border-t border-[--border-subtle]">
           {/* CUSTOM: manual load button; others: refresh icon only */}
           {targetType === 'CUSTOM' ? (
-            <button onClick={handlePreview} disabled={loadingRecipients} className="flex items-center gap-2 px-4 py-2 border border-[--border-subtle] text-[12px] text-[--text-secondary] hover:border-[--text-muted] transition-colors disabled:opacity-40">
+            <Button onClick={handlePreview} disabled={loadingRecipients} className="h-auto flex items-center gap-2 px-4 py-2 border border-[--border-subtle] text-[12px] text-[--text-secondary] hover:border-[--text-muted] transition-colors disabled:opacity-40">
               {loadingRecipients ? <Loader2 size={13} className="animate-spin" /> : <RefreshCw size={13} />}
               {t('admin.marketingManager.loadList')}
-            </button>
+            </Button>
           ) : (
-            <button onClick={handlePreview} disabled={loadingRecipients} title={t('admin.marketingManager.reloadList')} className="w-8 h-8 flex items-center justify-center border border-[--border-subtle] text-[--text-muted] hover:text-[--text-primary] hover:border-[--text-muted] transition-colors disabled:opacity-40">
+            <Button onClick={handlePreview} disabled={loadingRecipients} title={t('admin.marketingManager.reloadList')} className="w-8 h-8 flex items-center justify-center border border-[--border-subtle] text-[--text-muted] hover:text-[--text-primary] hover:border-[--text-muted] transition-colors disabled:opacity-40">
               {loadingRecipients ? <Loader2 size={13} className="animate-spin" /> : <RefreshCw size={13} />}
-            </button>
+            </Button>
           )}
           {recipientsPreviewed && (
             <span className="text-[12px] text-[--text-muted]">
@@ -790,14 +791,14 @@ function SendCampaignTab() {
               )}
             </span>
           )}
-          <button
+          <Button
             onClick={handleSend}
             disabled={sending || !selectedTemplate || !subject || !recipientsPreviewed || checkedEmails.size === 0}
-            className="ml-auto flex items-center gap-2 px-5 py-2.5 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="h-auto ml-auto flex items-center gap-2 px-5 py-2.5 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
             {t('admin.marketingManager.sendCampaign')}
-          </button>
+          </Button>
         </div>
 
         {/* Recipient picker panel */}
@@ -864,9 +865,9 @@ function CampaignHistoryTab() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <p className="text-[12px] text-[--text-muted]">{t('admin.marketingManager.campaignHistoryDesc')}</p>
-        <button onClick={load} className="flex items-center gap-2 px-3 py-2 text-[12px] font-medium border border-[--border-subtle] text-[--text-secondary] hover:text-[--text-primary] bg-[--bg-surface] transition-all">
+        <Button onClick={load} className="h-auto flex items-center gap-2 px-3 py-2 text-[12px] font-medium border border-[--border-subtle] text-[--text-secondary] hover:text-[--text-primary] bg-[--bg-surface] transition-all">
           <RefreshCw size={12} /> {t('admin.marketingManager.refresh')}
-        </button>
+        </Button>
       </div>
       {loading ? (
         <div className="text-center py-8 text-[--text-muted] text-[12px]">{t('admin.marketingManager.loading')}</div>

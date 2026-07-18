@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import api from "../../../services/api";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 // ── Shared style tokens ───────────────────────────────────────────────────────
 
@@ -204,17 +205,17 @@ function RecipientPicker({ selectedIds, onChange }) {
         {selectedIds.length > 0 && (
           <div className="flex items-center gap-2">
             <span className="text-[11px] text-gold font-semibold">{t("admin.notificationManager.recipientPicker.selectedCount", { count: selectedIds.length })}</span>
-            <button onClick={() => onChange([])} className="text-[10px] text-[--text-muted] hover:text-red-400 transition-colors">{t("admin.notificationManager.recipientPicker.clearAll")}</button>
+            <Button onClick={() => onChange([])} className="h-auto text-[10px] text-[--text-muted] hover:text-red-400 transition-colors">{t("admin.notificationManager.recipientPicker.clearAll")}</Button>
           </div>
         )}
       </div>
 
       <div className="flex flex-wrap gap-1.5">
-        <button onClick={handleShowAll} className={chipCls(activePlan === "ALL") + " flex items-center gap-1.5"}>
+        <Button onClick={handleShowAll} className={"h-auto " + chipCls(activePlan === "ALL") + " flex items-center gap-1.5"}>
           <Users size={10} /> {t("admin.notificationManager.recipientPicker.all")}
-        </button>
+        </Button>
         {ALL_PLANS.map(p => (
-          <button key={p} onClick={() => handlePlanClick(p)} className={chipCls(activePlan === p)}>{p}</button>
+          <Button key={p} onClick={() => handlePlanClick(p)} className={"h-auto " + chipCls(activePlan === p)}>{p}</Button>
         ))}
       </div>
 
@@ -230,14 +231,14 @@ function RecipientPicker({ selectedIds, onChange }) {
                 onChange={e => setSearch(e.target.value)}
               />
             </div>
-            <button
+            <Button
               onClick={toggleAll}
-              className={chipCls(allSelected) + " flex items-center gap-1.5 whitespace-nowrap text-[10px]"}
+              className={"h-auto " + chipCls(allSelected) + " flex items-center gap-1.5 whitespace-nowrap text-[10px]"}
             >
               {allSelected ? <UserX size={10} /> : <UserCheck size={10} />}
               {allSelected ? t("admin.notificationManager.recipientPicker.deselectAll") : t("admin.notificationManager.recipientPicker.selectAll")}
               {filtered.length > 0 && <span className="text-[--text-muted]">({filtered.length})</span>}
-            </button>
+            </Button>
           </div>
 
           <div className="max-h-55 overflow-y-auto divide-y divide-[--border-subtle]">
@@ -328,7 +329,7 @@ function ComposeForm({ initial, onSave, onCancel }) {
           {initial ? t("admin.notificationManager.composeForm.editTitle") : t("admin.notificationManager.composeForm.createTitle")}
         </span>
         {onCancel && (
-          <button onClick={onCancel} className="text-[--text-muted] hover:text-[--text-primary]"><X size={15} /></button>
+          <Button onClick={onCancel} className="h-auto text-[--text-muted] hover:text-[--text-primary]"><X size={15} /></Button>
         )}
       </div>
 
@@ -379,15 +380,15 @@ function ComposeForm({ initial, onSave, onCancel }) {
 
           <div className="flex items-center justify-end gap-3 pt-1 border-t border-[--border-subtle]">
             {onCancel && (
-              <button onClick={onCancel} className="px-4 py-2 text-[11px] text-[--text-muted] hover:text-[--text-primary] border border-[--border-subtle] hover:border-[--text-muted] transition-colors">{t("admin.notificationManager.composeForm.cancel")}</button>
+              <Button onClick={onCancel} className="h-auto px-4 py-2 text-[11px] text-[--text-muted] hover:text-[--text-primary] border border-[--border-subtle] hover:border-[--text-muted] transition-colors">{t("admin.notificationManager.composeForm.cancel")}</Button>
             )}
-            <button
+            <Button
               onClick={handleSave} disabled={saving}
-              className="flex items-center gap-2 px-5 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 disabled:opacity-50 transition-colors"
+              className="h-auto flex items-center gap-2 px-5 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 disabled:opacity-50 transition-colors"
             >
               {saving ? <Loader2 size={12} className="animate-spin" /> : <Check size={12} />}
               {initial ? t("admin.notificationManager.composeForm.saveChanges") : t("admin.notificationManager.composeForm.createNotification")}
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -456,7 +457,7 @@ function AnnouncementRow({ ann, onRefresh }) {
 
   return (
     <div className="border-b border-[--border-subtle] hover:bg-[--bg-elevated]/40 transition-colors">
-      <button onClick={handleExpand} className="w-full flex items-center gap-3 px-4 py-3.5 text-left">
+      <Button onClick={handleExpand} hoverScale={1} className="h-auto w-full flex items-center gap-3 px-4 py-3.5 text-left">
         <div className="flex-1 min-w-0 flex items-center gap-3">
           <TypeBadge type={ann.type} />
           <span className="text-[13px] font-medium text-[--text-primary] truncate">{ann.title}</span>
@@ -473,7 +474,7 @@ function AnnouncementRow({ ann, onRefresh }) {
           </span>
           {expanded ? <ChevronUp size={13} className="text-[--text-muted]" /> : <ChevronDown size={13} className="text-[--text-muted]" />}
         </div>
-      </button>
+      </Button>
 
       {expanded && (
         <div className="px-4 pb-4 space-y-3">
@@ -499,20 +500,20 @@ function AnnouncementRow({ ann, onRefresh }) {
           <div className="flex items-center gap-2 flex-wrap">
             {ann.status === "DRAFT" && (
               <>
-                <button
+                <Button
                   onClick={() => setShowSendPicker(s => !s)}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors"
+                  className="h-auto flex items-center gap-1.5 px-4 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors"
                 >
                   <Send size={12} />
                   {showSendPicker ? t("admin.notificationManager.announcementRow.collapse") : t("admin.notificationManager.announcementRow.reviewAndSend")}
                   {sendIds.length > 0 && <span className="bg-black/20 px-1.5 py-0.5 text-[9px]">{sendIds.length}</span>}
-                </button>
-                <button onClick={() => setEditing(true)} className="flex items-center gap-1.5 px-3 py-2 text-[12px] text-[--text-secondary] border border-[--border-subtle] hover:text-[--text-primary] hover:border-[--text-muted] transition-colors">
+                </Button>
+                <Button onClick={() => setEditing(true)} className="h-auto flex items-center gap-1.5 px-3 py-2 text-[12px] text-[--text-secondary] border border-[--border-subtle] hover:text-[--text-primary] hover:border-[--text-muted] transition-colors">
                   <Edit2 size={11} /> {t("admin.notificationManager.announcementRow.edit")}
-                </button>
-                <button onClick={handleDelete} disabled={deleting} className="flex items-center gap-1.5 px-3 py-2 text-[12px] text-[--text-muted] hover:text-red-400 border border-transparent hover:border-red-500/20 transition-colors">
+                </Button>
+                <Button onClick={handleDelete} disabled={deleting} className="h-auto flex items-center gap-1.5 px-3 py-2 text-[12px] text-[--text-muted] hover:text-red-400 border border-transparent hover:border-red-500/20 transition-colors">
                   {deleting ? <Loader2 size={11} className="animate-spin" /> : <Trash2 size={11} />} {t("admin.notificationManager.announcementRow.delete")}
-                </button>
+                </Button>
               </>
             )}
           </div>
@@ -526,14 +527,14 @@ function AnnouncementRow({ ann, onRefresh }) {
               </p>
               <RecipientPicker selectedIds={sendIds} onChange={setSendIds} />
               <div className="flex justify-end gap-2 pt-1 border-t border-[--border-subtle]">
-                <button onClick={() => { setShowSendPicker(false); setSendIds([]); }} className="px-3 py-2 text-[11px] text-[--text-muted] hover:text-[--text-primary] border border-[--border-subtle] transition-colors">{t("admin.notificationManager.announcementRow.cancel")}</button>
-                <button
+                <Button onClick={() => { setShowSendPicker(false); setSendIds([]); }} className="h-auto px-3 py-2 text-[11px] text-[--text-muted] hover:text-[--text-primary] border border-[--border-subtle] transition-colors">{t("admin.notificationManager.announcementRow.cancel")}</Button>
+                <Button
                   onClick={handleSend} disabled={sending}
-                  className="flex items-center gap-1.5 px-5 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 disabled:opacity-50 transition-colors"
+                  className="h-auto flex items-center gap-1.5 px-5 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 disabled:opacity-50 transition-colors"
                 >
                   {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                   {sendIds.length > 0 ? t("admin.notificationManager.announcementRow.confirmSendWithCount", { count: sendIds.length }) : t("admin.notificationManager.announcementRow.confirmSendAll")}
-                </button>
+                </Button>
               </div>
             </div>
           )}
@@ -584,15 +585,15 @@ function TriggerPanel({ onRefresh }) {
           const Icon = tr.icon;
           const isActive = active === tr.key;
           return (
-            <button
+            <Button
               key={tr.key}
               onClick={() => { setActive(isActive ? null : tr.key); setFields({}); }}
-              className={`flex items-center gap-2 px-3 py-2.5 text-[12px] font-medium border transition-all text-left ${
+              className={`h-auto flex items-center gap-2 px-3 py-2.5 text-[12px] font-medium border transition-all text-left ${
                 isActive ? `${tr.border} ${tr.bg} ${tr.color} bg-[--bg-elevated]` : `border-[--border-subtle] text-[--text-muted] hover:text-[--text-primary] ${tr.border} ${tr.bg}`
               }`}
             >
               <Icon size={13} className={isActive ? tr.color : ""} /> {tr.label}
-            </button>
+            </Button>
           );
         })}
       </div>
@@ -611,11 +612,11 @@ function TriggerPanel({ onRefresh }) {
             ))}
           </div>
           <div className="flex justify-end gap-2 pt-1">
-            <button onClick={() => { setActive(null); setFields({}); }} className="px-3 py-2 text-[11px] text-[--text-muted] hover:text-[--text-primary] border border-[--border-subtle] transition-colors">{t("admin.notificationManager.triggerPanel.cancel")}</button>
-            <button onClick={() => handleFire(trigger.key)} disabled={loading}
-              className="flex items-center gap-2 px-4 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 disabled:opacity-50 transition-colors">
+            <Button onClick={() => { setActive(null); setFields({}); }} className="h-auto px-3 py-2 text-[11px] text-[--text-muted] hover:text-[--text-primary] border border-[--border-subtle] transition-colors">{t("admin.notificationManager.triggerPanel.cancel")}</Button>
+            <Button onClick={() => handleFire(trigger.key)} disabled={loading}
+              className="h-auto flex items-center gap-2 px-4 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 disabled:opacity-50 transition-colors">
               {loading ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />} {t("admin.notificationManager.triggerPanel.createDraft")}
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -694,10 +695,10 @@ const NotificationManager = () => {
       {/* Tab bar */}
       <div className="flex items-center gap-0 border-b border-[--border-subtle]">
         {TABS.map(tb => (
-          <button
+          <Button
             key={tb.id}
             onClick={() => setTab(tb.id)}
-            className={`relative px-5 py-2.5 text-[12px] font-semibold border-b-2 -mb-px transition-colors ${
+            className={`h-auto relative px-5 py-2.5 text-[12px] font-semibold border-b-2 -mb-px transition-colors ${
               tab === tb.id ? "border-gold text-[--text-primary]" : "border-transparent text-[--text-muted] hover:text-[--text-secondary]"
             }`}
           >
@@ -707,12 +708,12 @@ const NotificationManager = () => {
                 {draftCount}
               </span>
             )}
-          </button>
+          </Button>
         ))}
         <div className="ml-auto">
-          <button onClick={fetchAll} className="flex items-center gap-1.5 text-[11px] text-[--text-muted] hover:text-[--text-primary] px-2 py-1 transition-colors">
+          <Button onClick={fetchAll} className="h-auto flex items-center gap-1.5 text-[11px] text-[--text-muted] hover:text-[--text-primary] px-2 py-1 transition-colors">
             <RefreshCw size={12} />
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -739,12 +740,12 @@ const NotificationManager = () => {
             </p>
             {tab !== "sent" && (
               <div className="flex gap-2 mt-4">
-                <button onClick={() => setTab("compose")} className="flex items-center gap-1.5 px-3 py-2 text-[12px] text-[--text-secondary] border border-[--border-subtle] hover:text-[--text-primary] hover:border-[--text-muted] transition-colors">
+                <Button onClick={() => setTab("compose")} className="h-auto flex items-center gap-1.5 px-3 py-2 text-[12px] text-[--text-secondary] border border-[--border-subtle] hover:text-[--text-primary] hover:border-[--text-muted] transition-colors">
                   <Plus size={11} /> {t("admin.notificationManager.list.createManually")}
-                </button>
-                <button onClick={() => setTab("triggers")} className="flex items-center gap-1.5 px-3 py-2 text-[12px] text-[--text-secondary] border border-[--border-subtle] hover:text-[--text-primary] hover:border-[--text-muted] transition-colors">
+                </Button>
+                <Button onClick={() => setTab("triggers")} className="h-auto flex items-center gap-1.5 px-3 py-2 text-[12px] text-[--text-secondary] border border-[--border-subtle] hover:text-[--text-primary] hover:border-[--text-muted] transition-colors">
                   <Zap size={11} /> {t("admin.notificationManager.list.useTrigger")}
-                </button>
+                </Button>
               </div>
             )}
           </div>

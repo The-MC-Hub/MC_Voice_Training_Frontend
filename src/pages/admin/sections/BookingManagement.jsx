@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const BookingManagement = ({ bookings }) => {
   const { t } = useTranslation();
@@ -10,9 +11,9 @@ const BookingManagement = ({ bookings }) => {
           <h2 className="text-lg font-bold text-white">{t("admin.booking.title")}</h2>
           <p className="text-xs text-slate-400">{t("admin.booking.subtitle")}</p>
         </div>
-        <button className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded border border-slate-700 text-xs font-semibold tracking-wider transition-all">
+        <Button className="h-auto px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded border border-slate-700 text-xs font-semibold tracking-wider transition-all">
           {t("admin.booking.generateAuditReport")}
-        </button>
+        </Button>
       </div>
 
       <div className="bg-[#0f172a] rounded-lg border border-slate-800 shadow-sm overflow-x-auto">
