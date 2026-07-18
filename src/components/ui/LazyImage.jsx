@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { User } from 'lucide-react';
-import Skeleton from './Skeleton';
+import { Skeleton } from './skeleton';
 
 const LazyImage = ({ src, alt, className = '', placeholder = null }) => {
   const [loaded, setLoaded] = useState(false);

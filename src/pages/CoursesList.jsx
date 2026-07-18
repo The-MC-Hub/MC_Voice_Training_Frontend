@@ -12,6 +12,7 @@ import { questService } from '../services/questService';
 import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const DIFFICULTY_MAP = {
   BEGINNER:     { color: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/[0.06]' },
@@ -27,13 +28,13 @@ const TYPE_THUMB_BG = {
 };
 
 const SkeletonCard = () => (
-  <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-5 animate-pulse space-y-4">
-    <div className="h-36 rounded-xl bg-white/[0.04]" />
-    <div className="h-4 rounded bg-white/[0.04] w-3/4" />
-    <div className="h-3 rounded bg-white/[0.04] w-full" />
+  <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-5 space-y-4">
+    <Skeleton className="h-36 rounded-xl bg-white/[0.04]" />
+    <Skeleton className="h-4 rounded bg-white/[0.04] w-3/4" />
+    <Skeleton className="h-3 rounded bg-white/[0.04] w-full" />
     <div className="flex gap-2 pt-1">
-      <div className="h-5 w-14 rounded-md bg-white/[0.04]" />
-      <div className="h-5 w-16 rounded-md bg-white/[0.04]" />
+      <Skeleton className="h-5 w-14 rounded-md bg-white/[0.04]" />
+      <Skeleton className="h-5 w-16 rounded-md bg-white/[0.04]" />
     </div>
   </div>
 );

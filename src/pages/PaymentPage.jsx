@@ -12,6 +12,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useToast } from "../components/ui/Toast";
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { voucherService } from '../services/voucherService';
 import { trackPaymentPageView, trackPlanSelect, trackPaymentSubmit, trackDiscountCodeApplied } from '@/utils/analytics';
 
@@ -324,13 +325,13 @@ const PaymentPage = () => {
 
             {plansLoading ? (
               [1,2,3].map(i => (
-                <div key={i} className="w-full p-5 rounded-2xl border border-gray-200 bg-white animate-pulse">
+                <div key={i} className="w-full p-5 rounded-2xl border border-gray-200 bg-white">
                   <div className="flex items-center justify-between">
                     <div className="space-y-2">
-                      <div className="h-4 w-32 bg-gray-200 rounded" />
-                      <div className="h-3 w-48 bg-gray-100 rounded" />
+                      <Skeleton className="h-4 w-32 rounded" />
+                      <Skeleton className="h-3 w-48 rounded" />
                     </div>
-                    <div className="h-6 w-20 bg-gray-200 rounded" />
+                    <Skeleton className="h-6 w-20 rounded" />
                   </div>
                 </div>
               ))

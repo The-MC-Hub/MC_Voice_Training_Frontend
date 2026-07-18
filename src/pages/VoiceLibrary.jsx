@@ -10,6 +10,7 @@ import UpgradeBanner from '../components/ui/UpgradeBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { trackLessonClick, trackVoiceLibrarySearch, trackVoiceLibraryFilter } from '@/utils/analytics';
 import { Button } from '@/components/animate-ui/components/buttons/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const VoiceLibrary = () => {
   const { t } = useTranslation();
@@ -332,7 +333,7 @@ const VoiceLibrary = () => {
           {loading ? (
             <div className={viewMode === 'grid' ? 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3' : 'flex flex-col gap-2'}>
               {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className={`rounded-xl bg-white/3 animate-pulse ${viewMode === 'grid' ? 'aspect-[3/4]' : 'h-20'}`} />
+                <Skeleton key={i} className={`rounded-xl bg-white/3 ${viewMode === 'grid' ? 'aspect-[3/4]' : 'h-20'}`} />
               ))}
             </div>
           ) : currentItems.length > 0 ? (

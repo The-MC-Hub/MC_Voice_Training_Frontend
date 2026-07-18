@@ -16,6 +16,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 // Note: `label` fields below are now resolved via i18n at render time using LABEL_KEYS maps,
@@ -176,13 +177,13 @@ const SkeletonRow = ({ delay = 0 }) => (
     transition={{ delay }}
     className="flex items-center gap-3 px-4 py-3 border-b border-gray-100"
   >
-    <div className="w-6 h-3 bg-gray-200 rounded animate-pulse" />
-    <div className="w-9 h-9 rounded-full bg-gray-200 shrink-0 animate-pulse" />
+    <Skeleton className="w-6 h-3 rounded" />
+    <Skeleton className="w-9 h-9 rounded-full shrink-0" />
     <div className="flex-1 space-y-1.5">
-      <div className="h-3 bg-gray-200 rounded w-32 animate-pulse" />
-      <div className="h-2 bg-gray-100 rounded w-16 animate-pulse" />
+      <Skeleton className="h-3 rounded w-32" />
+      <Skeleton className="h-2 rounded w-16" />
     </div>
-    <div className="h-3 bg-gray-200 rounded w-16 animate-pulse" />
+    <Skeleton className="h-3 rounded w-16" />
   </motion.div>
 );
 
@@ -1018,10 +1019,10 @@ const LeaderboardPage = () => {
                   <div className="h-56 flex items-center justify-center">
                     <div className="flex items-end gap-6">
                       {[16, 24, 12].map((h, i) => (
-                        <div key={i} className="flex flex-col items-center gap-2 animate-pulse">
-                          <div className="w-14 h-14 rounded-full bg-gray-200" />
-                          <div className="h-2 w-16 bg-gray-200 rounded" />
-                          <div className="w-20 bg-gray-100 rounded-t-lg" style={{ height: `${h * 4}px` }} />
+                        <div key={i} className="flex flex-col items-center gap-2">
+                          <Skeleton className="w-14 h-14 rounded-full" />
+                          <Skeleton className="h-2 w-16 rounded" />
+                          <Skeleton className="w-20 rounded-t-lg" style={{ height: `${h * 4}px` }} />
                         </div>
                       ))}
                     </div>
