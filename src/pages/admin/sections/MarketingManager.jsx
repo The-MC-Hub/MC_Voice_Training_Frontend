@@ -16,6 +16,7 @@ import {
   sendCampaign, countRecipients, previewRecipients, fetchCampaigns, fetchCampaignLogs, sendTestMail,
 } from '../../../services/emailCampaignService';
 import { Button } from '@/components/animate-ui/components/buttons/button';
+import { Input } from '@/components/ui/input';
 
 // ── Shared────────────────────────────────────────────────────────────────────
   
@@ -161,7 +162,7 @@ function SocialFeedTab() {
               )}
               <div className="flex-1 text-[11px] text-[--text-muted] leading-relaxed">
                 {t('admin.marketingManager.thumbnailHint')}
-                <input type="text" placeholder="https://..." value={form.image} onChange={e => setForm(f => ({ ...f, image: e.target.value }))} className="mt-1 w-full bg-[--bg-elevated] border border-[--border-subtle] px-2 py-1.5 text-[11px] text-[--text-primary] outline-none focus:border-[--text-muted]" />
+                <Input type="text" placeholder="https://..." value={form.image} onChange={e => setForm(f => ({ ...f, image: e.target.value }))} className="mt-1 w-full bg-[--bg-elevated] border border-[--border-subtle] px-2 py-1.5 text-[11px] text-[--text-primary] outline-none focus:border-[--text-muted] h-auto rounded-none focus-visible:ring-0" />
               </div>
               <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleImageFile} />
             </div>
@@ -174,13 +175,13 @@ function SocialFeedTab() {
             <p className="text-[11px] text-[--text-muted] mb-1.5 uppercase tracking-wider">{t('admin.marketingManager.fbLinkRequired')}</p>
             <div className="flex items-center gap-2">
               <Facebook size={14} className="text-blue-400 shrink-0" />
-              <input type="url" placeholder="https://www.facebook.com/..." value={form.fbLink} onChange={e => setForm(f => ({ ...f, fbLink: e.target.value }))} className="flex-1 bg-[--bg-elevated] border border-[--border-subtle] px-3 py-2 text-[12px] text-[--text-primary] placeholder:text-zinc-600 outline-none focus:border-[--text-muted]" />
+              <Input type="url" placeholder="https://www.facebook.com/..." value={form.fbLink} onChange={e => setForm(f => ({ ...f, fbLink: e.target.value }))} className="flex-1 bg-[--bg-elevated] border border-[--border-subtle] px-3 py-2 text-[12px] text-[--text-primary] placeholder:text-zinc-600 outline-none focus:border-[--text-muted] h-auto rounded-none focus-visible:ring-0" />
             </div>
           </div>
           <div className="flex items-center gap-4">
             <div>
               <p className="text-[11px] text-[--text-muted] mb-1.5 uppercase tracking-wider">{t('admin.marketingManager.priority')}</p>
-              <input type="number" min={0} value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} className="w-20 bg-[--bg-elevated] border border-[--border-subtle] px-2 py-1.5 text-[12px] text-[--text-primary] outline-none focus:border-[--text-muted]" />
+              <Input type="number" min={0} value={form.sortOrder} onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))} className="w-20 bg-[--bg-elevated] border border-[--border-subtle] px-2 py-1.5 text-[12px] text-[--text-primary] outline-none focus:border-[--text-muted] h-auto rounded-none focus-visible:ring-0" />
             </div>
             <div>
               <p className="text-[11px] text-[--text-muted] mb-1.5 uppercase tracking-wider">{t('admin.marketingManager.visibility')}</p>
@@ -400,7 +401,7 @@ function EmailTemplatesTab() {
                 {[['name', t('admin.marketingManager.templateName')], ['subject', t('admin.marketingManager.emailSubject')]].map(([k, label]) => (
                   <div key={k}>
                     <p className="text-[11px] text-[--text-muted] mb-1.5 uppercase tracking-wider">{label} *</p>
-                    <input value={form[k]} onChange={e => setForm(f => ({ ...f, [k]: e.target.value }))} className="w-full bg-[--bg-elevated] border border-[--border-subtle] px-3 py-2 text-[12px] text-[--text-primary] outline-none focus:border-[--text-muted]" />
+                    <Input value={form[k]} onChange={e => setForm(f => ({ ...f, [k]: e.target.value }))} className="w-full bg-[--bg-elevated] border border-[--border-subtle] px-3 py-2 text-[12px] text-[--text-primary] outline-none focus:border-[--text-muted] h-auto rounded-none focus-visible:ring-0" />
                   </div>
                 ))}
               </div>
@@ -438,7 +439,7 @@ function EmailTemplatesTab() {
                     {[['title', t('admin.marketingManager.contentTitle')], ['buttonText', t('admin.marketingManager.ctaButtonText')], ['buttonLink', t('admin.marketingManager.ctaButtonLink')], ['logoUrl', t('admin.marketingManager.logoUrl')], ['bannerUrl', t('admin.marketingManager.bannerUrl')]].map(([k, label]) => (
                       <div key={k}>
                         <p className="text-[11px] text-[--text-muted] mb-1.5 uppercase tracking-wider">{label}</p>
-                        <input value={form.designData[k]} onChange={e => setDesign(k, e.target.value)} className="w-full bg-[--bg-elevated] border border-[--border-subtle] px-3 py-2 text-[12px] text-[--text-primary] outline-none focus:border-[--text-muted]" />
+                        <Input value={form.designData[k]} onChange={e => setDesign(k, e.target.value)} className="w-full bg-[--bg-elevated] border border-[--border-subtle] px-3 py-2 text-[12px] text-[--text-primary] outline-none focus:border-[--text-muted] h-auto rounded-none focus-visible:ring-0" />
                       </div>
                     ))}
                   </div>
@@ -499,7 +500,7 @@ function EmailTemplatesTab() {
               </div>
               {testingId === tpl.id && (
                 <div className="flex gap-2 mt-3 pt-3 border-t border-[--border-subtle]">
-                  <input value={testEmail} onChange={e => setTestEmail(e.target.value)} placeholder={t('admin.marketingManager.testEmailPlaceholder')} className="flex-1 bg-[--bg-elevated] border border-[--border-subtle] px-3 py-2 text-[12px] text-[--text-primary] outline-none focus:border-[--text-muted]" />
+                  <Input value={testEmail} onChange={e => setTestEmail(e.target.value)} placeholder={t('admin.marketingManager.testEmailPlaceholder')} className="flex-1 bg-[--bg-elevated] border border-[--border-subtle] px-3 py-2 text-[12px] text-[--text-primary] outline-none focus:border-[--text-muted] h-auto rounded-none focus-visible:ring-0" />
                   <Button onClick={() => handleTestSend(tpl.id)} disabled={testSending || !testEmail} className="h-auto flex items-center gap-2 px-4 py-2 bg-gold text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors disabled:opacity-40">
                     {testSending ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />} {t('admin.marketingManager.sendTest')}
                   </Button>
@@ -694,6 +695,7 @@ function SendCampaignTab() {
 
   const selected = templates.find(t => t.id === selectedTemplate);
   const inputCls = 'w-full bg-[--bg-elevated] border border-[--border-subtle] px-3 py-2 text-[12px] text-[--text-primary] outline-none focus:border-[--text-muted]';
+  const inputClsShadcn = `${inputCls} h-auto rounded-none focus-visible:ring-0`;
   const chipCls = (active) => `px-3 py-1 text-[11px] font-semibold border cursor-pointer transition-colors ${active ? 'bg-gold/20 border-gold text-gold' : 'bg-[--bg-elevated] border-[--border-subtle] text-[--text-muted] hover:border-[--text-muted]'}`;
 
   return (
@@ -719,7 +721,7 @@ function SendCampaignTab() {
         {/* Subject */}
         <div>
           <p className="text-[11px] text-[--text-muted] mb-1.5 uppercase tracking-wider">{t('admin.marketingManager.emailSubject')}</p>
-          <input value={subject} onChange={e => setSubject(e.target.value)} placeholder={t('admin.marketingManager.subjectPlaceholder')} className={inputCls} />
+          <Input value={subject} onChange={e => setSubject(e.target.value)} placeholder={t('admin.marketingManager.subjectPlaceholder')} className={inputClsShadcn} />
         </div>
 
         {/* Target type */}

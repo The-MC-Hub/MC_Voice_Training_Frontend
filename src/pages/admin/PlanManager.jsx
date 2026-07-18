@@ -8,8 +8,10 @@ import {
 } from "lucide-react";
 import api from "../../services/api";
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Input } from "@/components/ui/input";
 
 const inputCls = "w-full bg-[#0d0d0f] border border-white/8 px-3 py-2.5 text-[13px] text-white focus:outline-none focus:border-white/[0.2] focus:bg-[#111114] placeholder:text-zinc-600 rounded-lg transition-colors";
+const inputClsShadcn = `${inputCls} h-auto rounded-none focus-visible:ring-0`;
 const labelCls = "block text-[11px] font-medium text-zinc-400 mb-1.5 tracking-wide";
 const sectionHead = "text-[11px] text-zinc-400 uppercase tracking-widest font-semibold px-4 py-2 border-b border-white/5";
 const fieldGroupCls = "bg-white/2 border border-white/5 rounded-xl p-4 space-y-4";
@@ -113,11 +115,11 @@ function PlanEditor({ plan, onSave }) {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className={labelCls}>{t('admin.planManager.displayName')}</label>
-                <input className={inputCls} value={form.displayName || ""} onChange={e => set("displayName", e.target.value)} />
+                <Input className={inputClsShadcn} value={form.displayName || ""} onChange={e => set("displayName", e.target.value)} />
               </div>
               <div>
                 <label className={labelCls}>{t('admin.planManager.priceVnd')}</label>
-                <input className={inputCls} type="number" value={form.priceVnd || 0} onChange={e => set("priceVnd", Number(e.target.value))} />
+                <Input className={inputClsShadcn} type="number" value={form.priceVnd || 0} onChange={e => set("priceVnd", Number(e.target.value))} />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -128,7 +130,7 @@ function PlanEditor({ plan, onSave }) {
                     ({form.durationDays === 0 ? t('admin.planManager.forever') : t('admin.planManager.daysCount', { count: form.durationDays })})
                   </span>
                 </label>
-                <input className={inputCls} type="number" value={form.durationDays || 0} onChange={e => set("durationDays", Number(e.target.value))} />
+                <Input className={inputClsShadcn} type="number" value={form.durationDays || 0} onChange={e => set("durationDays", Number(e.target.value))} />
               </div>
               <div>
                 <label className={labelCls}>
@@ -137,12 +139,12 @@ function PlanEditor({ plan, onSave }) {
                     ({form.aiSessionLimit >= 999 ? t('admin.planManager.unlimited') : form.aiSessionLimit})
                   </span>
                 </label>
-                <input className={inputCls} type="number" value={form.aiSessionLimit || 0} onChange={e => set("aiSessionLimit", Number(e.target.value))} />
+                <Input className={inputClsShadcn} type="number" value={form.aiSessionLimit || 0} onChange={e => set("aiSessionLimit", Number(e.target.value))} />
               </div>
             </div>
             <div>
               <label className={labelCls}>{t('admin.planManager.tagline')}</label>
-              <input className={inputCls} value={form.tagline || ""} onChange={e => set("tagline", e.target.value)} placeholder={t('admin.planManager.taglinePlaceholder')} />
+              <Input className={inputClsShadcn} value={form.tagline || ""} onChange={e => set("tagline", e.target.value)} placeholder={t('admin.planManager.taglinePlaceholder')} />
             </div>
             <div>
               <label className={labelCls}>{t('admin.planManager.detailedDescription')}</label>
@@ -162,15 +164,15 @@ function PlanEditor({ plan, onSave }) {
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <label className={labelCls}>{t('admin.planManager.badge')}</label>
-                <input className={inputCls} value={form.badge || ""} placeholder={t('admin.planManager.badgePlaceholder')} onChange={e => set("badge", e.target.value)} />
+                <Input className={inputClsShadcn} value={form.badge || ""} placeholder={t('admin.planManager.badgePlaceholder')} onChange={e => set("badge", e.target.value)} />
               </div>
               <div>
                 <label className={labelCls}>{t('admin.planManager.socialProof')}</label>
-                <input className={inputCls} value={form.socialProof || ""} placeholder={t('admin.planManager.socialProofPlaceholder')} onChange={e => set("socialProof", e.target.value)} />
+                <Input className={inputClsShadcn} value={form.socialProof || ""} placeholder={t('admin.planManager.socialProofPlaceholder')} onChange={e => set("socialProof", e.target.value)} />
               </div>
               <div>
                 <label className={labelCls}>{t('admin.planManager.urgencyText')}</label>
-                <input className={inputCls} value={form.urgencyText || ""} placeholder={t('admin.planManager.urgencyTextPlaceholder')} onChange={e => set("urgencyText", e.target.value)} />
+                <Input className={inputClsShadcn} value={form.urgencyText || ""} placeholder={t('admin.planManager.urgencyTextPlaceholder')} onChange={e => set("urgencyText", e.target.value)} />
               </div>
             </div>
           </div>
@@ -190,8 +192,8 @@ function PlanEditor({ plan, onSave }) {
               ))}
             </div>
             <div className="flex gap-2 pt-1">
-              <input
-                className={inputCls}
+              <Input
+                className={inputClsShadcn}
                 value={highlightDraft}
                 onChange={e => setHighlightDraft(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addHighlight())}
@@ -223,8 +225,8 @@ function PlanEditor({ plan, onSave }) {
               <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className={labelCls}>{t('admin.planManager.discountPercent')}</label>
-                  <input
-                    className={inputCls}
+                  <Input
+                    className={inputClsShadcn}
                     type="number" min="0" max="100" step="1"
                     value={form.discountPercent || ""}
                     placeholder="0"
@@ -233,8 +235,8 @@ function PlanEditor({ plan, onSave }) {
                 </div>
                 <div>
                   <label className={labelCls}>{t('admin.planManager.discountAmount')}</label>
-                  <input
-                    className={inputCls}
+                  <Input
+                    className={inputClsShadcn}
                     type="number" min="0"
                     value={form.discountedPriceVnd && form.discountPercent ? form.priceVnd - form.discountedPriceVnd : ""}
                     placeholder="0"
@@ -429,7 +431,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
         <div className="grid grid-cols-3 gap-3">
           <div>
             <label className={labelCls}>{t('admin.planManager.discountCode')}</label>
-            <input className={inputCls + " font-mono uppercase tracking-widest"} value={form.code} onChange={e => set("code", e.target.value.toUpperCase())} />
+            <Input className={inputClsShadcn + " font-mono uppercase tracking-widest"} value={form.code} onChange={e => set("code", e.target.value.toUpperCase())} />
           </div>
           <div>
             <label className={labelCls}>{t('admin.planManager.discountType')}</label>
@@ -440,7 +442,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
           </div>
           <div>
             <label className={labelCls}>{form.type === "PERCENT" ? t('admin.planManager.valuePercent') : t('admin.planManager.valueVnd')}</label>
-            <input className={inputCls} type="number" value={form.discountValue} onChange={e => set("discountValue", Number(e.target.value))} />
+            <Input className={inputClsShadcn} type="number" value={form.discountValue} onChange={e => set("discountValue", Number(e.target.value))} />
           </div>
         </div>
 
@@ -450,11 +452,11 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className={labelCls}>{t('admin.planManager.startsAt')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansNow')}</span></label>
-              <input className={inputCls} type="datetime-local" value={form.startsAt ? form.startsAt.slice(0, 16) : ""} onChange={e => set("startsAt", e.target.value || null)} />
+              <Input className={inputClsShadcn} type="datetime-local" value={form.startsAt ? form.startsAt.slice(0, 16) : ""} onChange={e => set("startsAt", e.target.value || null)} />
             </div>
             <div>
               <label className={labelCls}>{t('admin.planManager.expiresAt')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansNoExpiry')}</span></label>
-              <input className={inputCls} type="datetime-local" value={form.expiresAt ? form.expiresAt.slice(0, 16) : ""} onChange={e => set("expiresAt", e.target.value || null)} />
+              <Input className={inputClsShadcn} type="datetime-local" value={form.expiresAt ? form.expiresAt.slice(0, 16) : ""} onChange={e => set("expiresAt", e.target.value || null)} />
             </div>
           </div>
         </div>
@@ -462,7 +464,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
         {/* Row 3: max uses */}
         <div>
           <label className={labelCls}>{t('admin.planManager.maxUses')} <span className="text-zinc-600 font-normal">{t('admin.planManager.zeroMeansUnlimited')}</span></label>
-          <input className={inputCls + " max-w-[200px]"} type="number" min="0" value={form.maxUses} onChange={e => set("maxUses", Number(e.target.value))} />
+          <Input className={inputClsShadcn + " max-w-[200px]"} type="number" min="0" value={form.maxUses} onChange={e => set("maxUses", Number(e.target.value))} />
         </div>
 
         {/* Row 4: applicable plans */}
@@ -489,7 +491,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
         {/* Row 5: description */}
         <div>
           <label className={labelCls}>{t('admin.planManager.internalNote')}</label>
-          <input className={inputCls} value={form.description || ""} onChange={e => set("description", e.target.value)} placeholder={t('admin.planManager.internalNotePlaceholder')} />
+          <Input className={inputClsShadcn} value={form.description || ""} onChange={e => set("description", e.target.value)} placeholder={t('admin.planManager.internalNotePlaceholder')} />
         </div>
 
         {/* Footer */}
@@ -593,7 +595,7 @@ const [err, setErr] = useState(null);
         <div className="grid grid-cols-3 gap-3">
           <div>
             <label className={labelCls}>{t('admin.planManager.discountCode')} <span className="text-red-400">*</span></label>
-            <input className={inputCls + " font-mono uppercase tracking-widest"} value={form.code} onChange={e => set("code", e.target.value.toUpperCase())} placeholder="LUCKY8PM" required />
+            <Input className={inputClsShadcn + " font-mono uppercase tracking-widest"} value={form.code} onChange={e => set("code", e.target.value.toUpperCase())} placeholder="LUCKY8PM" required />
           </div>
           <div>
             <label className={labelCls}>{t('admin.planManager.discountType')} <span className="text-red-400">*</span></label>
@@ -604,7 +606,7 @@ const [err, setErr] = useState(null);
           </div>
           <div>
             <label className={labelCls}>{form.type === "PERCENT" ? t('admin.planManager.valuePercent') : t('admin.planManager.valueVnd')} <span className="text-red-400">*</span></label>
-            <input className={inputCls} type="number" min="1" value={form.discountValue} onChange={e => set("discountValue", Number(e.target.value))} required />
+            <Input className={inputClsShadcn} type="number" min="1" value={form.discountValue} onChange={e => set("discountValue", Number(e.target.value))} required />
           </div>
         </div>
 
@@ -616,11 +618,11 @@ const [err, setErr] = useState(null);
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className={labelCls}>{t('admin.planManager.startsAt')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansNow')}</span></label>
-              <input className={inputCls} type="datetime-local" value={form.startsAt} onChange={e => set("startsAt", e.target.value)} />
+              <Input className={inputClsShadcn} type="datetime-local" value={form.startsAt} onChange={e => set("startsAt", e.target.value)} />
             </div>
             <div>
               <label className={labelCls}>{t('admin.planManager.expiresAt')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansNoExpiry')}</span></label>
-              <input className={inputCls} type="datetime-local" value={form.expiresAt} onChange={e => set("expiresAt", e.target.value)} />
+              <Input className={inputClsShadcn} type="datetime-local" value={form.expiresAt} onChange={e => set("expiresAt", e.target.value)} />
             </div>
           </div>
         </div>
@@ -628,7 +630,7 @@ const [err, setErr] = useState(null);
         {/* Row 3: quota */}
         <div>
           <label className={labelCls}>{t('admin.planManager.maxUses')} <span className="text-zinc-600 font-normal">{t('admin.planManager.zeroMeansUnlimited')}</span></label>
-          <input className={inputCls + " max-w-[200px]"} type="number" min="0" value={form.maxUses} onChange={e => set("maxUses", Number(e.target.value))} />
+          <Input className={inputClsShadcn + " max-w-[200px]"} type="number" min="0" value={form.maxUses} onChange={e => set("maxUses", Number(e.target.value))} />
         </div>
 
         {/* Row 4: applicable plans */}
@@ -655,7 +657,7 @@ const [err, setErr] = useState(null);
         {/* Row 5: description */}
         <div>
           <label className={labelCls}>{t('admin.planManager.internalNote')}</label>
-          <input className={inputCls} value={form.description} onChange={e => set("description", e.target.value)} placeholder={t('admin.planManager.flashDealPlaceholder')} />
+          <Input className={inputClsShadcn} value={form.description} onChange={e => set("description", e.target.value)} placeholder={t('admin.planManager.flashDealPlaceholder')} />
         </div>
 
         {/* Footer */}

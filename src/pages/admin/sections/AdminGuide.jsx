@@ -6,6 +6,7 @@ import {
   CheckCircle2, AlertTriangle, Info, Zap, Filter, Tag,
 } from 'lucide-react';
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Input } from "@/components/ui/input";
 
 // ── Data ─────────────────────────────────────────────────────────────────────
 
@@ -1187,12 +1188,12 @@ export default function AdminGuide() {
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
           <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[--text-muted]" />
-          <input
+          <Input
             type="text"
             placeholder="Tìm quy trình, từ khoá..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full bg-[--bg-surface] border border-[--border-subtle] pl-9 pr-4 py-2 text-[12px] text-[--text-primary] placeholder:text-zinc-600 outline-none focus:border-[--text-muted]"
+            className="w-full h-auto bg-[--bg-surface] border border-[--border-subtle] rounded-none pl-9 pr-4 py-2 text-[12px] text-[--text-primary] placeholder:text-zinc-600 focus-visible:ring-0 focus:border-[--text-muted]"
           />
         </div>
         <div className="flex items-center gap-2.5 shrink-0">

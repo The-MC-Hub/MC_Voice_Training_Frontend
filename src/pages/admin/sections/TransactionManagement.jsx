@@ -3,6 +3,7 @@ import { Download, CheckCircle2, Clock, XCircle, TrendingUp, Filter, ArrowUpDown
 import api from "../../../services/api";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Input } from "@/components/ui/input";
 
 const fmt = (v) => (v ?? 0).toLocaleString("vi-VN");
 
@@ -162,12 +163,12 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
       {/* Filters & Sort */}
       <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
         <div className="flex items-center gap-3 w-full sm:w-auto flex-1">
-          <input
+          <Input
             type="text"
             placeholder={t("admin.transactionManagement.searchPlaceholder")}
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="flex-1 min-w-[250px] bg-[--bg-surface] border border-[--border-subtle] focus:border-[--border-subtle] px-3 py-2 text-[13px] text-[--text-primary] placeholder:text-zinc-400 outline-none transition-colors"
+            className="flex-1 min-w-[250px] bg-[--bg-surface] border border-[--border-subtle] focus:border-[--border-subtle] px-3 py-2 text-[13px] text-[--text-primary] placeholder:text-zinc-400 outline-none transition-colors h-auto rounded-none focus-visible:ring-0"
           />
         </div>
         <div className="flex items-center gap-3 overflow-x-auto pb-1 sm:pb-0 w-full sm:w-auto">

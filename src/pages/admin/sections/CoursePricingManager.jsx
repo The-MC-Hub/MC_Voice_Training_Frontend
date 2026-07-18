@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { GraduationCap, Pencil, Check, X, Users, Tag, RefreshCw } from 'lucide-react';
 import { academyService } from '../../../services/academyService';
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Input } from "@/components/ui/input";
 
 const fmt = (n) => (n ?? 0).toLocaleString('vi-VN');
 
@@ -83,15 +84,15 @@ const CoursePricingManager = () => {
                   <div className="flex items-center gap-2.5 flex-wrap">
                     <div>
                       <label className="block text-[10px] text-[--text-muted] uppercase mb-1">{t('admin.coursePricingManager.priceLabel')}</label>
-                      <input type="number" min="0" step="1000" value={form.priceVnd}
+                      <Input type="number" min="0" step="1000" value={form.priceVnd}
                         onChange={e => setForm(f => ({ ...f, priceVnd: e.target.value }))}
-                        className="w-32 px-3 py-2 rounded-lg bg-[--bg-base] border border-[--border-subtle] text-[13px] text-[--text-primary] focus:border-amber-500 outline-none" />
+                        className="w-32 px-3 py-2 rounded-lg bg-[--bg-base] border border-[--border-subtle] text-[13px] text-[--text-primary] focus:border-amber-500 outline-none h-auto focus-visible:ring-0" />
                     </div>
                     <div>
                       <label className="block text-[10px] text-[--text-muted] uppercase mb-1">{t('admin.coursePricingManager.discountLabel')}</label>
-                      <input type="number" min="0" max="100" value={form.discountPercent}
+                      <Input type="number" min="0" max="100" value={form.discountPercent}
                         onChange={e => setForm(f => ({ ...f, discountPercent: e.target.value }))}
-                        className="w-20 px-3 py-2 rounded-lg bg-[--bg-base] border border-[--border-subtle] text-[13px] text-[--text-primary] focus:border-amber-500 outline-none" />
+                        className="w-20 px-3 py-2 rounded-lg bg-[--bg-base] border border-[--border-subtle] text-[13px] text-[--text-primary] focus:border-amber-500 outline-none h-auto focus-visible:ring-0" />
                     </div>
                     <div className="text-right mr-1">
                       <p className="text-[10px] text-[--text-muted] uppercase mb-1">{t('admin.coursePricingManager.finalPriceLabel')}</p>

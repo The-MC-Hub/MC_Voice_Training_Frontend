@@ -4,8 +4,10 @@ import { Trophy, Plus, Edit2, Trash2, Calendar, ToggleLeft, ToggleRight, X, Chec
 import { fetchAdminCompetitions, addCompetition, updateCompetition, deleteCompetition } from "../../controllers/communityController";
 import { fetchLessons } from "../../controllers/voiceController";
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Input } from "@/components/ui/input";
 
 const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
+const inputClsShadcn = `${inputCls} h-auto rounded-none focus-visible:ring-0`;
 
 const CompetitionManager = () => {
   const { t } = useTranslation();
@@ -153,8 +155,8 @@ const CompetitionManager = () => {
 
               <div className="space-y-1">
                 <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.competitionManager.arenaTitle')}</label>
-                <input type="text" required value={title} onChange={e => setTitle(e.target.value)}
-                  className={inputCls} placeholder={t('admin.competitionManager.arenaTitlePlaceholder')} />
+                <Input type="text" required value={title} onChange={e => setTitle(e.target.value)}
+                  className={inputClsShadcn} placeholder={t('admin.competitionManager.arenaTitlePlaceholder')} />
               </div>
 
               <div className="space-y-1">
@@ -192,11 +194,11 @@ const CompetitionManager = () => {
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.competitionManager.startDate')}</label>
-                  <input type="date" required value={startDate} onChange={e => setStartDate(e.target.value)} className={inputCls} />
+                  <Input type="date" required value={startDate} onChange={e => setStartDate(e.target.value)} className={inputClsShadcn} />
                 </div>
                 <div className="space-y-1">
                   <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.competitionManager.endDate')}</label>
-                  <input type="date" required value={endDate} onChange={e => setEndDate(e.target.value)} className={inputCls} />
+                  <Input type="date" required value={endDate} onChange={e => setEndDate(e.target.value)} className={inputClsShadcn} />
                 </div>
               </div>
 

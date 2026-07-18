@@ -8,6 +8,7 @@ import {
 import { getMCProfile } from "../../../services/publicService";
 import api from "../../../services/api";
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Input } from "@/components/ui/input";
 
 const fmtDate = (v) => {
   if (!v) return "—";
@@ -480,10 +481,10 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
               <form onSubmit={sendNotification} className="space-y-3">
                 <div className="space-y-1">
                   <label className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">{t("admin.userManagement.subject")}</label>
-                  <input
+                  <Input
                     type="text" value={notifySubject} onChange={e => setNotifySubject(e.target.value)}
                     placeholder={t("admin.userManagement.emailSubjectPlaceholder")}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[12px] focus:outline-none focus:border-amber-400 text-gray-900 placeholder:text-gray-400"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[12px] focus:outline-none focus:border-amber-400 text-gray-900 placeholder:text-gray-400 h-auto focus-visible:ring-0"
                     required
                   />
                 </div>
@@ -737,10 +738,10 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <div className="relative flex-1 sm:w-60">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-              <input
+              <Input
                 type="text" placeholder={t("admin.userManagement.searchPlaceholder")}
                 value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-white border border-gray-200 rounded-xl py-2.5 pl-9 pr-4 text-[13px] focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 placeholder:text-gray-400 shadow-sm"
+                className="w-full bg-white border border-gray-200 rounded-xl py-2.5 pl-9 pr-4 text-[13px] focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 placeholder:text-gray-400 shadow-sm h-auto focus-visible:ring-0"
               />
             </div>
             <Button onClick={handleRefresh} disabled={refreshing}
@@ -937,8 +938,8 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
               {[[t("admin.userManagement.displayName"), "name", "text", t("admin.userManagement.displayNamePlaceholder"), true], ["Email", "email", "email", "user@example.com", true], [t("admin.userManagement.password"), "password", "password", t("admin.userManagement.passwordMinPlaceholder"), true], [t("admin.userManagement.phoneNumber"), "phoneNumber", "tel", "0901234567", false]].map(([label, key, type, ph, req]) => (
                 <div key={key} className="space-y-1">
                   <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{label}</label>
-                  <input type={type} value={addForm[key]} onChange={e => setAddForm(p => ({ ...p, [key]: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400" placeholder={ph} required={req} />
+                  <Input type={type} value={addForm[key]} onChange={e => setAddForm(p => ({ ...p, [key]: e.target.value }))}
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 h-auto focus-visible:ring-0" placeholder={ph} required={req} />
                 </div>
               ))}
               <div className="space-y-1">
@@ -1005,8 +1006,8 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
               {pwdError && <div className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-lg p-3">{pwdError}</div>}
               <div className="space-y-1">
                 <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t("admin.userManagement.newPassword")}</label>
-                <input type="password" value={newPwd} onChange={e => setNewPwd(e.target.value)}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400" placeholder={t("admin.userManagement.passwordMinPlaceholder")} required />
+                <Input type="password" value={newPwd} onChange={e => setNewPwd(e.target.value)}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 h-auto focus-visible:ring-0" placeholder={t("admin.userManagement.passwordMinPlaceholder")} required />
               </div>
               <div className="flex justify-end gap-3 pt-2 border-t border-gray-100">
                 <Button type="button" onClick={() => setPwdModal(null)} className="h-auto px-4 py-2 text-[12px] text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">{t("admin.userManagement.cancel")}</Button>

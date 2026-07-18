@@ -1,7 +1,7 @@
 # Animate UI — Kế hoạch thay thế component toàn hệ thống
 
-Ngày lập: 2026-07-19 · Cập nhật: 2026-07-18 (Giai đoạn 7 — Skeleton đã code xong, build+E2E+screenshot pass, xem mục 10)
-Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (giai đoạn 7) đã xong. Còn lại: Input(8), Table(9), Badge(10), Avatar(11), Card(12), Select(13, chờ xác nhận), Toast(14), Dialog(1), Dropdown Menu(2), Sheet(3), Accordion(4), Checkbox(5), Avatar Group(6) — theo thứ tự ưu tiên trong mục "Khảo sát hoàn tất".
+Ngày lập: 2026-07-19 · Cập nhật: 2026-07-18 (Giai đoạn 7 — Skeleton + Giai đoạn 8 — Input đã code xong, build+E2E+screenshot pass, xem mục 10-11)
+Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (giai đoạn 7) + Input (giai đoạn 8) đã xong. Còn lại: Table(9), Badge(10), Avatar(11), Card(12), Select(13, chờ xác nhận), Toast(14), Dialog(1), Dropdown Menu(2), Sheet(3), Accordion(4), Checkbox(5), Avatar Group(6) — theo thứ tự ưu tiên trong mục "Khảo sát hoàn tất".
 
 ## Mục tiêu
 
@@ -306,13 +306,21 @@ Lệnh cài: `npx shadcn@latest add skeleton --yes`
 
 **Không nằm trong phạm vi giai đoạn này:** input trong `Login.jsx`/`Register.jsx`/`ForgotPassword.jsx`/`Settings.jsx` — các form auth/settings này có styling riêng phức tạp (icon-inline, focus-glow shadow riêng theo brand amber) đã audit kỹ ở phiên trước, đổi sang shadcn Input mặc định sẽ mất style đó. Chỉ đổi input "trần" (không icon-inline, không custom focus style) trong admin.
 
+**Đã xác nhận khi vào việc — điều chỉnh phạm vi:** `SecurityLogs.jsx` thực ra có **0** input (chỉ là log-detail viewer read-only), không phải 2 như khảo sát ban đầu — bỏ qua hoàn toàn. `PlanManager.jsx` có 22 input thật (không phải 24) + 1 input **cố tình bỏ qua** (guest-cooldown number field, dòng ~838 — nằm trong custom bordered "stepper" wrapper, input gốc chỉ có `bg-transparent`, style nằm ở div cha, đổi sang Input sẽ gây double-chrome). Ngoài ra bỏ qua: mọi `type="checkbox"` (2 chỗ trong `MarketingManager.jsx` — "select all" dùng ref indeterminate + per-row select) và mọi `type="file"` (`MarketingManager.jsx`, `LessonManagement.jsx`, `ServerLogs.jsx` — hidden/ref-driven/label-wrapped upload trigger) — không thuộc phạm vi Input component (dành cho text-like field).
+
+**Icon-inline search input (5 file: `AdminGuide.jsx`, `AcademyManager.jsx`, `NotificationManager.jsx`, `ServerLogs.jsx`, `UserManagement.jsx`):** giữ nguyên wrapper `<div className="relative">` + icon Lucide tuyệt đối định vị, chỉ đổi thẻ `<input>` bên trong → `<Input>`, giữ `pl-N`/`pr-N`. `ServerLogs.jsx` có thêm nút "x" xoá tuyệt đối định vị bên phải (dual-overlay) — giữ nguyên cả 2.
+
+**Bug đã gặp và tự sửa (giống bài học Button pill cam):** khi thêm `h-auto rounded-none focus-visible:ring-0` hàng loạt để tránh xung đột base style của shadcn Input, đã vô tình áp `rounded-none` đè lên các input vốn có `rounded-lg`/`rounded-xl` (CoursePricingManager, UserManagement — 5 chỗ), làm mất bo góc có chủ đích. Phát hiện qua screenshot review, sửa lại: chỉ thêm `rounded-none` cho input **vốn không có class bo góc nào** (giữ đúng góc vuông gốc), input đã có `rounded-*` thì bỏ hẳn phần đè này.
+
 ### Checklist
-- [ ] Cài `input` (`npx shadcn@latest add input --yes`)
-- [ ] Làm mẫu 1 file nhỏ trước (`AdminGuide.jsx`, chỉ 1 input)
-- [ ] Áp dụng hàng loạt cho các file còn lại — có thể giao agent theo nhóm 3-4 file
-- [ ] Build sau mỗi nhóm
-- [ ] Chạy E2E full suite (đặc biệt `reading-and-admin.spec.js` — các section admin đều phải vẫn render "Đăng xuất" button, không lỗi)
-- [ ] Commit + push
+- [x] Cài `input` (`npx shadcn@latest add input --yes`)
+- [x] Làm mẫu 1 file nhỏ trước (`AdminGuide.jsx`, chỉ 1 input) — xác lập pattern `inputClsShadcn` sibling constant khi file có `inputCls` dùng chung với `<select>`
+- [x] Áp dụng hàng loạt cho các file còn lại — giao 2 agent song song theo nhóm (PlanManager+MarketingManager / 7 file còn lại)
+- [x] Build sau mỗi nhóm
+- [x] Phát hiện + sửa bug `rounded-none` đè `rounded-lg/xl` ở 5 vị trí (CoursePricingManager×2, UserManagement×3) qua screenshot review
+- [x] Chạy E2E full suite — 49/49 pass
+- [x] Screenshot xác nhận: AdminGuide, UserManagement (search + rounded-xl giữ nguyên), PlanManager, Marketing — không vỡ layout
+- [ ] Commit + push — **CHƯA push, chỉ mới commit local**
 
 ---
 

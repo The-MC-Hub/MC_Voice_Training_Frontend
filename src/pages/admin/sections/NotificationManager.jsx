@@ -8,6 +8,7 @@ import {
 import api from "../../../services/api";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Input } from "@/components/ui/input";
 
 // ── Shared style tokens ───────────────────────────────────────────────────────
 
@@ -224,8 +225,8 @@ function RecipientPicker({ selectedIds, onChange }) {
           <div className="flex items-center gap-2 px-3 py-2.5 border-b border-[--border-subtle] bg-[--bg-elevated]">
             <div className="relative flex-1">
               <Search size={11} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[--text-muted]" />
-              <input
-                className="w-full bg-[--bg-elevated] border border-[--border-subtle] pl-7 pr-3 py-1.5 text-[11px] text-[--text-primary] outline-none focus:border-[--text-muted] placeholder:text-zinc-600"
+              <Input
+                className="w-full bg-[--bg-elevated] border border-[--border-subtle] pl-7 pr-3 py-1.5 text-[11px] text-[--text-primary] outline-none focus:border-[--text-muted] placeholder:text-zinc-600 h-auto rounded-none focus-visible:ring-0"
                 placeholder={t("admin.notificationManager.recipientPicker.searchPlaceholder")}
                 value={search}
                 onChange={e => setSearch(e.target.value)}
@@ -350,13 +351,13 @@ function ComposeForm({ initial, onSave, onCancel }) {
             </div>
             <div>
               <p className={labelCls}>{t("admin.notificationManager.composeForm.internalTitle")}</p>
-              <input className={inputCls} value={form.title} onChange={e => set("title", e.target.value)} placeholder={t("admin.notificationManager.composeForm.internalTitlePlaceholder")} />
+              <Input className={inputCls + " h-auto rounded-none focus-visible:ring-0"} value={form.title} onChange={e => set("title", e.target.value)} placeholder={t("admin.notificationManager.composeForm.internalTitlePlaceholder")} />
             </div>
           </div>
 
           <div>
             <p className={labelCls}>{t("admin.notificationManager.composeForm.emailSubject")}</p>
-            <input className={inputCls} value={form.emailSubject || ""} onChange={e => set("emailSubject", e.target.value)} placeholder={t("admin.notificationManager.composeForm.emailSubjectPlaceholder")} />
+            <Input className={inputCls + " h-auto rounded-none focus-visible:ring-0"} value={form.emailSubject || ""} onChange={e => set("emailSubject", e.target.value)} placeholder={t("admin.notificationManager.composeForm.emailSubjectPlaceholder")} />
           </div>
 
           <div>
@@ -607,7 +608,7 @@ function TriggerPanel({ onRefresh }) {
             {trigger.fields.map(f => (
               <div key={f.key}>
                 <p className={labelCls}>{f.label}</p>
-                <input className={inputCls} value={fields[f.key] || ""} onChange={e => setFields(p => ({ ...p, [f.key]: e.target.value }))} placeholder={f.placeholder} />
+                <Input className={inputCls + " h-auto rounded-none focus-visible:ring-0"} value={fields[f.key] || ""} onChange={e => setFields(p => ({ ...p, [f.key]: e.target.value }))} placeholder={f.placeholder} />
               </div>
             ))}
           </div>

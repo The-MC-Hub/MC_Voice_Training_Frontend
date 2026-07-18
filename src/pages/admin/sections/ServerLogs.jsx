@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Input } from "@/components/ui/input";
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
 const API_ROOT = BASE_URL.replace(/\/api\/v1$/, "");
@@ -529,10 +530,10 @@ function WatchlistEditor({ watchlist, onUpdate }) {
         {t("admin.serverLogs.watchlistEditor.description")}
       </p>
       <div className="flex gap-2">
-        <input value={input} onChange={e => setInput(e.target.value)}
+        <Input value={input} onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === "Enter" && add()}
           placeholder={t("admin.serverLogs.watchlistEditor.placeholder")}
-          className="flex-1 text-[11px] border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-amber-400"
+          className="flex-1 text-[11px] border border-gray-200 rounded px-2 py-1 focus:outline-none focus:border-amber-400 h-auto focus-visible:ring-0"
         />
         <Button onClick={add}
           className="h-auto px-3 py-1 bg-amber-400 hover:bg-amber-500 text-black text-[11px] font-semibold rounded">
@@ -1089,9 +1090,9 @@ const ServerLogs = () => {
 
               <div className="relative flex-1 min-w-[120px] max-w-[200px]">
                 <Search size={10} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input type="text" value={search} onChange={e => setSearch(e.target.value)}
+                <Input type="text" value={search} onChange={e => setSearch(e.target.value)}
                   placeholder={t("admin.serverLogs.searchPlaceholder")}
-                  className="w-full pl-6 pr-6 py-1 text-[11px] border border-gray-200 rounded bg-white focus:outline-none focus:border-amber-400" />
+                  className="w-full pl-6 pr-6 py-1 text-[11px] border border-gray-200 rounded bg-white focus:outline-none focus:border-amber-400 h-auto focus-visible:ring-0" />
                 {search && (
                   <Button onClick={() => setSearch("")} className="h-auto absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                     <X size={10} />
@@ -1152,9 +1153,9 @@ const ServerLogs = () => {
                 <span className="text-[12px] font-semibold text-gray-700">{t("admin.serverLogs.sidebar.watchlist")}</span>
                 <div className="ml-auto flex items-center gap-2">
                   <span className="text-[11px] text-gray-500">{t("admin.serverLogs.sectionHeader.errorThresholdPerMin")}</span>
-                  <input type="number" min={1} max={100} value={errorThresh}
+                  <Input type="number" min={1} max={100} value={errorThresh}
                     onChange={e => setThresh(Number(e.target.value))}
-                    className="w-12 text-[11px] border border-gray-200 rounded px-1.5 py-0.5 text-center focus:outline-none focus:border-amber-400"
+                    className="w-12 text-[11px] border border-gray-200 rounded px-1.5 py-0.5 text-center focus:outline-none focus:border-amber-400 h-auto focus-visible:ring-0"
                   />
                   <Button onClick={enableNotif}
                     className={`h-auto flex items-center gap-1 px-2 py-1 border text-[10px] font-medium rounded transition-all ${

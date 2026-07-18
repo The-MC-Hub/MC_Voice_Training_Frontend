@@ -8,8 +8,10 @@ import { academyService } from '../../services/academyService';
 import { fetchLessons } from '../../controllers/voiceController';
 import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Input } from "@/components/ui/input";
 
 const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
+const inputClsShadcn = `${inputCls} h-auto rounded-none focus-visible:ring-0`;
 
 const AcademyManager = () => {
   const { t } = useTranslation();
@@ -294,8 +296,8 @@ const AcademyManager = () => {
               <h3 className="text-[14px] font-semibold text-white border-b border-white/[0.06] pb-4">{t("admin.academyManager.modal.newStageMilestone")}</h3>
               <div className="space-y-1">
                 <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t("admin.academyManager.modal.milestoneTitle")}</label>
-                <input type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})}
-                  className={inputCls} placeholder={t("admin.academyManager.modal.milestoneTitlePlaceholder")} />
+                <Input type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})}
+                  className={inputClsShadcn} placeholder={t("admin.academyManager.modal.milestoneTitlePlaceholder")} />
               </div>
               <div className="space-y-1">
                 <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t("admin.academyManager.modal.skillLevel")}</label>
@@ -369,8 +371,8 @@ const AcademyManager = () => {
                   </label>
                   <div className="relative">
                     <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
-                    <input type="text" value={itemSearchQuery} onChange={e => setItemSearchQuery(e.target.value)}
-                      placeholder={t("admin.academyManager.modal.filterTitles")} className={inputCls + " pl-9"} />
+                    <Input type="text" value={itemSearchQuery} onChange={e => setItemSearchQuery(e.target.value)}
+                      placeholder={t("admin.academyManager.modal.filterTitles")} className={inputClsShadcn + " pl-9"} />
                   </div>
                   {contentFormData.type === 'VOICE_PRACTICE' ? (
                     <select value={contentFormData.voiceScriptId} onChange={e => setContentFormData({...contentFormData, voiceScriptId: e.target.value})}
@@ -387,15 +389,15 @@ const AcademyManager = () => {
 
                 <div className="space-y-1">
                   <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t("admin.academyManager.modal.displayOverrideTitle")}</label>
-                  <input type="text" value={contentFormData.title} onChange={e => setContentFormData({...contentFormData, title: e.target.value})}
-                    className={inputCls} placeholder={t("admin.academyManager.modal.displayOverrideTitlePlaceholder")} />
+                  <Input type="text" value={contentFormData.title} onChange={e => setContentFormData({...contentFormData, title: e.target.value})}
+                    className={inputClsShadcn} placeholder={t("admin.academyManager.modal.displayOverrideTitlePlaceholder")} />
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t("admin.academyManager.modal.estimatedDuration")}</label>
                   <div className="flex gap-2 items-center flex-wrap">
-                    <input type="text" required value={contentFormData.duration} onChange={e => setContentFormData({...contentFormData, duration: e.target.value})}
-                      placeholder="15m" className={inputCls + " w-20 text-center"} />
+                    <Input type="text" required value={contentFormData.duration} onChange={e => setContentFormData({...contentFormData, duration: e.target.value})}
+                      placeholder="15m" className={inputClsShadcn + " w-20 text-center"} />
                     {durationPresets.map(preset => (
                       <Button key={preset} type="button" onClick={() => setContentFormData({...contentFormData, duration: preset})}
                         className={`px-2 py-1 h-auto text-[10px] border transition-colors ${contentFormData.duration === preset ? 'bg-[gold]/[0.08] text-[gold] border-[gold]/20' : 'bg-[#09090b] border-white/[0.07] text-zinc-500 hover:border-white/[0.14]'}`}>
