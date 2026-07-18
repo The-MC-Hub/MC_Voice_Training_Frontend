@@ -33,7 +33,14 @@ const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: 'default',
+      // Default to "ghost" (no default background) rather than shadcn's usual
+      // "default" (solid --primary/gold background). Most usages in this project
+      // are icon/nav/tab/toggle buttons that supply their own background (or none)
+      // via className — a solid-gold default silently overrides those whenever the
+      // className doesn't happen to redeclare bg-*. Buttons that DO want the solid
+      // gold CTA look already set bg-* explicitly in their className, which wins via
+      // tailwind-merge regardless of this default, so this is safe either way.
+      variant: 'ghost',
       size: 'default',
     },
   }

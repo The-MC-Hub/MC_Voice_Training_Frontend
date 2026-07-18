@@ -453,9 +453,10 @@ const SampleReportCard = () => {
         ].map(({ id, label }) => (
           <Button
             key={id}
+            variant="ghost"
             hoverScale={1}
             onClick={() => setTab(id)}
-            className={`flex-1 py-2.5 text-[11px] font-medium transition-colors relative h-auto ${
+            className={`flex-1 py-2.5 text-[11px] font-medium transition-colors relative h-auto rounded-none bg-transparent hover:bg-transparent ${
               tab === id ? 'text-[#f5a623]' : 'text-zinc-600 hover:text-zinc-400'
             }`}
           >
