@@ -19,6 +19,7 @@ import NewbieQuest from '../components/dashboard/NewbieQuest';
 import StreakWidget from '../components/ui/StreakWidget';
 import StreakCardModal from '../components/ui/StreakCardModal';
 import StreakMilestoneToast from '../components/ui/StreakMilestoneToast';
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const Dashboard = () => {
   const { user } = useAuthStore();
@@ -351,17 +352,17 @@ const Dashboard = () => {
       <div className="border-b border-white/[0.06]">
         <div className="flex gap-1">
           {["Overview", "Training History"].map((tab) => (
-            <button
+            <Button
               key={tab}
               onClick={() => { setActiveTab(tab); trackDashboardTabSwitch(tab); if (tab === "Training History") setCurrentPage(1); }}
-              className={`px-4 py-2.5 text-[13px] font-medium border-b-2 transition-colors -mb-px ${
+              className={`h-auto px-4 py-2.5 text-[13px] font-medium border-b-2 transition-colors -mb-px ${
                 activeTab === tab
                   ? 'border-[#f5a623] text-white'
                   : 'border-transparent text-zinc-500 hover:text-zinc-300'
               }`}
             >
               {tab === "Overview" ? t('dashboard.overview') : t('dashboard.trainingHistory')}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -427,21 +428,21 @@ const Dashboard = () => {
 
                 {totalPages > 1 && (
                   <div className="flex justify-center items-center gap-3 mt-6">
-                    <button
+                    <Button
                       disabled={currentPage === 1}
                       onClick={() => setCurrentPage(p => p - 1)}
-                      className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.06] text-zinc-500 disabled:opacity-30 hover:bg-white/[0.08] hover:text-white transition-colors"
+                      className="h-auto w-8 h-8 flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.06] text-zinc-500 disabled:opacity-30 hover:bg-white/[0.08] hover:text-white transition-colors"
                     >
                       <ChevronLeft size={15} />
-                    </button>
+                    </Button>
                     <span className="text-[12px] text-zinc-500 tabular-nums">{currentPage} / {totalPages}</span>
-                    <button
+                    <Button
                       disabled={currentPage === totalPages}
                       onClick={() => setCurrentPage(p => p + 1)}
-                      className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.06] text-zinc-500 disabled:opacity-30 hover:bg-white/[0.08] hover:text-white transition-colors"
+                      className="h-auto w-8 h-8 flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.06] text-zinc-500 disabled:opacity-30 hover:bg-white/[0.08] hover:text-white transition-colors"
                     >
                       <ChevronRight size={15} />
-                    </button>
+                    </Button>
                   </div>
                 )}
               </>

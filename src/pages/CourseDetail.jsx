@@ -14,6 +14,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import PageLoader from '../components/ui/PageLoader';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import CertificateModal from '../components/CertificateModal';
+import { Button } from '@/components/animate-ui/components/buttons/button';
 
 const DIFFICULTY_MAP = {
   BEGINNER:     { labelKey: 'courses.difficultyBeginner',     color: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/[0.06]' },
@@ -471,11 +472,11 @@ const CourseDetail = () => {
   return (
     <div className="max-w-6xl mx-auto pb-16 space-y-6">
       <Breadcrumb items={[{ label: t('courses.pageTitle'), href: '/m/courses' }, { label: course?.title || t('courses.courseDetailBreadcrumb') }]} />
-      <button onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-[13px] group">
+      <Button onClick={() => navigate(-1)}
+        className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-[13px] group h-auto">
         <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform" />
         {t('courses.backToList')}
-      </button>
+      </Button>
 
       {/* ── Hero ── */}
       <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 relative overflow-hidden">
@@ -518,10 +519,10 @@ const CourseDetail = () => {
                   {t('courses.completionCertDesc')}
                 </p>
               </div>
-              <button onClick={() => setShowCert(true)}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#f5a623]/40 text-[#f5a623] text-[12px] font-semibold hover:bg-[#f5a623] hover:text-black transition-colors shrink-0">
+              <Button onClick={() => setShowCert(true)}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#f5a623]/40 text-[#f5a623] text-[12px] font-semibold hover:bg-[#f5a623] hover:text-black transition-colors shrink-0 h-auto">
                 <Award size={13} /> {isCompleted ? t('courses.viewCertificate') : t('courses.previewCertificate')}
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -562,10 +563,10 @@ const CourseDetail = () => {
                 <CheckCircle2 size={14} /> {t('courses.enrolled')}
               </div>
             ) : hasAccess ? (
-              <button onClick={handleEnroll} disabled={enrolling}
-                className="w-full py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-60">
+              <Button hoverScale={1} onClick={handleEnroll} disabled={enrolling}
+                className="w-full py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-all flex items-center justify-center gap-2 disabled:opacity-60 h-auto">
                 {enrolling ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : <>{t('courses.enroll')} <ChevronRight size={14} /></>}
-              </button>
+              </Button>
             ) : (
               <div className="space-y-2.5">
                 {/* price */}
@@ -584,16 +585,16 @@ const CourseDetail = () => {
                     </span>
                   )}
                 </div>
-                <button onClick={handleBuyCourse} disabled={buying}
-                  className="w-full py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-60">
+                <Button hoverScale={1} onClick={handleBuyCourse} disabled={buying}
+                  className="w-full py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-all flex items-center justify-center gap-2 disabled:opacity-60 h-auto">
                   {buying
                     ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
                     : <>{t('courses.buySingleCourse')} <ChevronRight size={14} /></>}
-                </button>
-                <button onClick={() => navigate('/m/payment')}
-                  className="w-full py-2.5 rounded-xl border border-[#f5a623]/30 text-[#f5a623] text-[12px] font-semibold hover:bg-[#f5a623]/[0.08] transition-colors">
+                </Button>
+                <Button hoverScale={1} onClick={() => navigate('/m/payment')}
+                  className="w-full py-2.5 rounded-xl border border-[#f5a623]/30 text-[#f5a623] text-[12px] font-semibold hover:bg-[#f5a623]/[0.08] transition-colors h-auto">
                   {t('courses.upgradeBasicPlan')}
-                </button>
+                </Button>
                 <p className="text-[10px] text-zinc-600 text-center leading-relaxed">
                   {t('courses.basicPlanDesc')}
                 </p>
@@ -611,10 +612,10 @@ const CourseDetail = () => {
             <span>{activeTab === 'quiz' ? t('courses.finalQuiz') : t('courses.learningPath')}</span>
           </div>
           {activeTab === 'quiz' && (
-            <button onClick={() => setActiveTab('path')}
-              className="flex items-center gap-1.5 text-[12px] text-zinc-500 hover:text-[#f5a623] transition-colors">
+            <Button onClick={() => setActiveTab('path')}
+              className="flex items-center gap-1.5 text-[12px] text-zinc-500 hover:text-[#f5a623] transition-colors h-auto">
               <ArrowLeft size={13} /> {t('courses.backToPath')}
-            </button>
+            </Button>
           )}
         </div>
         <div className={activeTab === 'path' ? 'pb-0' : 'p-5 sm:p-8'}>

@@ -50,6 +50,7 @@ import Breadcrumb from '../components/ui/Breadcrumb';
 import { useTour } from '../contexts/TourContext';
 import { trackSettingsProfileUpdate, trackSettingsAvatarUpload, trackLogoutClick, trackPasswordChangeSubmit } from '@/utils/analytics';
 import { questService } from '../services/questService';
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const inputCls = "flex-1 bg-transparent text-[13px] text-gray-800 placeholder:text-gray-400 focus:outline-none min-w-0";
 const inputWrapCls = "flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5 focus-within:border-amber-400 transition-colors";
@@ -114,18 +115,18 @@ const EmojiAvatarPicker = ({ selected, onSelect, compact = false }) => {
       {!search.trim() && (
         <div className="flex gap-1.5 flex-wrap py-0.5">
           {EMOJI_CATEGORIES.map((cat, idx) => (
-            <button
+            <Button
               key={cat.label}
               type="button"
               onClick={() => setActiveCategory(idx)}
-              className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${
+              className={`h-auto px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${
                 activeCategory === idx
                   ? 'bg-[#f5a623]/10 text-[#f5a623] border border-[#f5a623]/25'
                   : 'text-gray-500 hover:text-gray-700 border border-gray-200 bg-white'
               }`}
             >
               {cat.label}
-            </button>
+            </Button>
           ))}
         </div>
       )}
@@ -212,28 +213,28 @@ const ReferralCard = ({ user, updateUser }) => {
           <div className="space-y-3">
             <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5">
               <span className="flex-1 text-[12px] text-gray-600 font-mono truncate">{referralLink}</span>
-              <button
+              <Button
                 type="button"
                 onClick={handleCopy}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all shrink-0 ${copied ? "bg-emerald-500 text-white" : "bg-amber-500 hover:bg-amber-600 text-white"}`}
+                className={`h-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all shrink-0 ${copied ? "bg-emerald-500 text-white" : "bg-amber-500 hover:bg-amber-600 text-white"}`}
               >
                 {copied ? <><CheckCircle2 size={12} /> {t('settings.referralCopied')}</> : <><Copy size={12} /> {t('settings.referralCopyLink')}</>}
-              </button>
+              </Button>
             </div>
             <p className="text-[11px] text-gray-400">{t('settings.referralShareHint')}</p>
           </div>
         ) : (
           <div className="space-y-3">
             <p className="text-[12px] text-gray-500">{t('settings.referralNoCode')}</p>
-            <button
+            <Button
               type="button"
               onClick={handleGenerate}
               disabled={generating}
-              className="flex items-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[13px] font-semibold transition-colors disabled:opacity-50"
+              className="h-auto flex items-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[13px] font-semibold transition-colors disabled:opacity-50"
             >
               {generating ? <Loader2 size={14} className="animate-spin" /> : <Gift size={14} />}
               {generating ? t('settings.referralGenerating') : t('settings.referralGenerateBtn')}
-            </button>
+            </Button>
           </div>
         )}
       </div>
@@ -529,10 +530,11 @@ const Settings = () => {
         {/* Sidebar */}
         <aside className=" space-y-1 lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto">
           {navItems.map((item) => (
-            <button
+            <Button
               key={item.id}
+              hoverScale={1}
               onClick={() => sectionRefs[item.id]?.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
-              className={`mt-4 w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left ${
+              className={`h-auto mt-4 w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left justify-start ${
                 activeSection === item.id
                   ? 'bg-amber-50 text-amber-700 border border-amber-200'
                   : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100 border border-transparent'
@@ -540,7 +542,7 @@ const Settings = () => {
             >
               <item.icon size={15} className={activeSection === item.id ? 'text-amber-500' : 'text-gray-400'} />
               <span className="text-[13px] font-medium">{item.label}</span>
-            </button>
+            </Button>
           ))}
         </aside>
 
@@ -915,14 +917,14 @@ const Settings = () => {
                 )}
 
                 <div className="flex justify-end pt-2">
-                  <button
+                  <Button
                     type="submit"
                     disabled={loading}
                     data-quest="quest-save-profile"
-                    className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[13px] font-semibold transition-colors disabled:opacity-50"
+                    className="h-auto flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[13px] font-semibold transition-colors disabled:opacity-50"
                   >
                     <Save size={15} /> {loading ? t('settings.saving') : t('settings.saveAllChanges')}
-                  </button>
+                  </Button>
                 </div>
             </form>
           </div>
@@ -943,17 +945,17 @@ const Settings = () => {
                     <p className="text-[13px] font-medium text-gray-800">{t('settings.userGuideTitle')}</p>
                     <p className="text-[11px] text-gray-500 mt-0.5">{t('settings.userGuideDesc')}</p>
                   </div>
-                  <button
+                  <Button
                     type="button"
                     onClick={() => {
                       localStorage.removeItem("mcvt_tour_done");
                       startTour();
                     }}
-                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 text-[12px] font-semibold hover:bg-amber-100 transition-colors"
+                    className="h-auto flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 text-[12px] font-semibold hover:bg-amber-100 transition-colors"
                   >
                     <History size={13} />
                     {t('settings.reviewGuideBtn')}
-                  </button>
+                  </Button>
                 </div>
                 <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 border border-gray-100">
                   <div>
@@ -962,28 +964,28 @@ const Settings = () => {
                   </div>
                   <div className="flex flex-col items-end gap-1.5">
                     <div className="bg-gray-100 border border-gray-200 rounded-xl p-1 flex items-center gap-1">
-                      <button
+                      <Button
                         type="button"
                         onClick={() => i18nInstance.changeLanguage('vi')}
-                        className={`px-4 py-1.5 rounded-lg text-[12px] font-medium transition-colors ${
+                        className={`h-auto px-4 py-1.5 rounded-lg text-[12px] font-medium transition-colors ${
                           i18nInstance.language === 'vi'
                             ? 'bg-white text-gray-900 shadow-sm'
                             : 'text-gray-500 hover:text-gray-700'
                         }`}
                       >
                         VI
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         type="button"
                         onClick={() => i18nInstance.changeLanguage('en')}
-                        className={`px-4 py-1.5 rounded-lg text-[12px] font-medium transition-colors ${
+                        className={`h-auto px-4 py-1.5 rounded-lg text-[12px] font-medium transition-colors ${
                           i18nInstance.language === 'en'
                             ? 'bg-white text-gray-900 shadow-sm'
                             : 'text-gray-500 hover:text-gray-700'
                         }`}
                       >
                         EN
-                      </button>
+                      </Button>
                     </div>
                     {i18nInstance.language === 'en' && (
                       <span className="text-[10px] font-medium text-amber-400/80">⚠ {t('settings.inDevelopment')}</span>
@@ -1016,9 +1018,9 @@ const Settings = () => {
                       onChange={handleSecurityChange}
                       placeholder="••••••••"
                     />
-                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-gray-400 hover:text-gray-600 transition-colors">
+                    <Button type="button" onClick={() => setShowPassword(!showPassword)} className="h-auto p-0 bg-transparent text-gray-400 hover:text-gray-600 transition-colors">
                       {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                    </button>
+                    </Button>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1038,9 +1040,9 @@ const Settings = () => {
                   </div>
                 </div>
                 <div className="flex justify-end pt-1 border-t border-gray-100">
-                  <button type="submit" disabled={loading} className="flex items-center gap-2 px-5 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[13px] font-semibold transition-colors disabled:opacity-50">
+                  <Button type="submit" disabled={loading} className="h-auto flex items-center gap-2 px-5 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[13px] font-semibold transition-colors disabled:opacity-50">
                     <Save size={14} /> {loading ? t('settings.saving') : t('settings.updatePassword')}
-                  </button>
+                  </Button>
                 </div>
               </form>
 
@@ -1057,13 +1059,13 @@ const Settings = () => {
                     <p className="text-[13px] font-semibold text-gray-800">{t('settings.logoutFromAccount')}</p>
                     <p className="text-[11px] text-gray-500 mt-1">{t('settings.logoutDesc')}</p>
                   </div>
-                  <button
+                  <Button
                     type="button"
                     onClick={() => { trackLogoutClick(); logout(); navigate('/'); }}
-                    className="mt-4 shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 active:scale-95 text-white text-[12px] font-semibold transition-all duration-150"
+                    className="h-auto mt-4 shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-[12px] font-semibold transition-all duration-150"
                   >
                     <LogOut size={13} /> {t('navbar.logout')}
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -1143,12 +1145,12 @@ const Settings = () => {
                         <p className="text-[13px] font-semibold text-gray-900 mb-0.5">{t('settings.upgradeToUnlockTitle')}</p>
                         <p className="text-[11px] text-gray-500">{t('settings.upgradeToUnlockDesc')}</p>
                       </div>
-                      <button
+                      <Button
                         onClick={() => navigate('/m/payment')}
-                        className="shrink-0 px-5 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black text-[13px] font-semibold rounded-xl transition-colors"
+                        className="h-auto shrink-0 px-5 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black text-[13px] font-semibold rounded-xl transition-colors"
                       >
                         {t('settings.viewPlans')}
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 )}

@@ -15,6 +15,7 @@ import { questService } from '../services/questService';
 import { useAuthStore } from '../store/useAuthStore';
 import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 // Note: `label` fields below are now resolved via i18n at render time using LABEL_KEYS maps,
@@ -267,19 +268,20 @@ const ShareModal = ({ myEntry, typeMeta, onClose }) => {
 
           {/* Action bar */}
           <div className="bg-[#111114] border-t border-white/6 p-3 flex items-center gap-2">
-            <button
+            <Button
               onClick={handleCopy}
-              className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-white/6 hover:bg-white/10 text-[12px] font-medium text-zinc-300 transition-colors"
+              hoverScale={1}
+              className="h-auto flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-white/6 hover:bg-white/10 text-[12px] font-medium text-zinc-300 transition-colors"
             >
               {copied ? <Check size={13} className="text-emerald-400" /> : <Copy size={13} />}
               {copied ? t('leaderboard.copied') : t('leaderboard.copyText')}
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={onClose}
-              className="w-9 h-9 flex items-center justify-center rounded-lg bg-white/4 hover:bg-white/8 text-zinc-500 transition-colors"
+              className="h-auto w-9 h-9 flex items-center justify-center rounded-lg bg-white/4 hover:bg-white/8 text-zinc-500 transition-colors"
             >
               <X size={14} />
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -405,9 +407,9 @@ const FilterBar = ({ myTier, filterSameTier, setFilterSameTier, totalShown, tota
   const { t } = useTranslation();
   return (
   <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-100 bg-gray-50">
-    <button
+    <Button
       onClick={() => setFilterSameTier(v => !v)}
-      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all border ${
+      className={`h-auto flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all border ${
         filterSameTier
           ? 'bg-indigo-50 border-indigo-200 text-indigo-600'
           : 'bg-white border-gray-200 text-gray-500 hover:text-gray-700'
@@ -415,7 +417,7 @@ const FilterBar = ({ myTier, filterSameTier, setFilterSameTier, totalShown, tota
     >
       <Filter size={10} />
       {t('leaderboard.sameTier')} {myTier && filterSameTier ? `(${myTier})` : ''}
-    </button>
+    </Button>
     {filterSameTier && (
       <span className="text-[10px] text-gray-400">
         {t('leaderboard.shownOfTotalPeople', { shown: totalShown, total: totalAll })}
@@ -943,10 +945,11 @@ const LeaderboardPage = () => {
         {/* Period tabs */}
         <div className="flex gap-1 p-1 border border-gray-200 rounded-xl w-fit mb-4 bg-white shadow-sm">
           {PERIODS.map(p => (
-            <button
+            <Button
               key={p.key}
               onClick={() => { setPeriod(p); trackLeaderboardFilter(type.key, p.key); }}
-              className={`px-4 py-1.5 rounded-md text-[12px] font-medium transition-all relative ${
+              hoverScale={1}
+              className={`h-auto px-4 py-1.5 rounded-md text-[12px] font-medium transition-all relative ${
                 period.key === p.key ? 'text-gray-900' : 'text-gray-400 hover:text-gray-600'
               }`}
             >
@@ -959,7 +962,7 @@ const LeaderboardPage = () => {
                 />
               )}
               <span className="relative z-10">{t(p.labelKey)}</span>
-            </button>
+            </Button>
           ))}
         </div>
 

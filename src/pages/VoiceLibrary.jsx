@@ -9,6 +9,7 @@ import PageBanner from '../components/ui/PageBanner';
 import UpgradeBanner from '../components/ui/UpgradeBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { trackLessonClick, trackVoiceLibrarySearch, trackVoiceLibraryFilter } from '@/utils/analytics';
+import { Button } from '@/components/animate-ui/components/buttons/button';
 
 const VoiceLibrary = () => {
   const { t } = useTranslation();
@@ -180,25 +181,26 @@ const VoiceLibrary = () => {
             ].map(({ cat, label, count }) => {
               const active = activeCategory === cat;
               return (
-                <button
+                <Button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium whitespace-nowrap transition-colors ${
+                  className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium whitespace-nowrap transition-colors h-auto ${
                     active ? 'bg-gold/10 text-gold border border-gold/20' : 'text-zinc-400 bg-white/5 border border-white/8 hover:text-white'
                   }`}
                 >
                   {label}
                   <span className={`text-[10px] px-1 rounded ${active ? 'text-gold' : 'text-zinc-600'}`}>{count}</span>
-                </button>
+                </Button>
               );
             })}
           </div>
 
           {/* Desktop: vertical list */}
           <div className="hidden md:flex flex-col gap-1">
-            <button
+            <Button
+              hoverScale={1}
               onClick={() => setActiveCategory("All")}
-              className={`flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium transition-colors ${
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium transition-colors h-auto ${
                 activeCategory === "All"
                   ? 'bg-gold/10 text-gold border border-gold/20'
                   : 'text-zinc-400 hover:text-white hover:bg-white/5'
@@ -208,15 +210,16 @@ const VoiceLibrary = () => {
               <span className={`text-[11px] px-1.5 py-0.5 rounded ${activeCategory === "All" ? 'bg-gold/20 text-gold' : 'bg-white/6 text-zinc-600'}`}>
                 {lessons.length}
               </span>
-            </button>
+            </Button>
             {categories.map(cat => {
               const count = lessons.filter(l => l.category === cat).length;
               const active = activeCategory === cat;
               return (
-                <button
+                <Button
                   key={cat}
+                  hoverScale={1}
                   onClick={() => setActiveCategory(cat)}
-                  className={`flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium transition-colors ${
+                  className={`flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium transition-colors h-auto ${
                     active
                       ? 'bg-gold/10 text-gold border border-gold/20'
                       : 'text-zinc-400 hover:text-white hover:bg-white/5'
@@ -226,7 +229,7 @@ const VoiceLibrary = () => {
                   <span className={`text-[11px] px-1.5 py-0.5 rounded ${active ? 'bg-gold/20 text-gold' : 'bg-white/6 text-zinc-600'}`}>
                     {count}
                   </span>
-                </button>
+                </Button>
               );
             })}
           </div>
@@ -310,18 +313,18 @@ const VoiceLibrary = () => {
             </p>
             {/* View toggle */}
             <div className="flex items-center gap-1 bg-[#111113] border border-white/[0.07] rounded-xl p-1 shrink-0">
-              <button
+              <Button
                 onClick={() => setViewMode('list')}
-                className={`p-1.5 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-gold/10 text-gold' : 'text-zinc-600 hover:text-zinc-300'}`}
+                className={`p-1.5 rounded-lg transition-colors h-auto ${viewMode === 'list' ? 'bg-gold/10 text-gold' : 'text-zinc-600 hover:text-zinc-300'}`}
               >
                 <LayoutList size={15} />
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => setViewMode('grid')}
-                className={`p-1.5 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-gold/10 text-gold' : 'text-zinc-600 hover:text-zinc-300'}`}
+                className={`p-1.5 rounded-lg transition-colors h-auto ${viewMode === 'grid' ? 'bg-gold/10 text-gold' : 'text-zinc-600 hover:text-zinc-300'}`}
               >
                 <LayoutGrid size={15} />
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -502,15 +505,15 @@ const VoiceLibrary = () => {
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex justify-center gap-1.5 mt-8">
-              <button
+              <Button
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                className="px-3 py-1.5 rounded-lg bg-[#111113] border border-white/[0.07] text-zinc-400 text-[12px] disabled:opacity-30 hover:bg-[#1a1a1e] transition-colors"
+                className="px-3 py-1.5 rounded-lg bg-[#111113] border border-white/[0.07] text-zinc-400 text-[12px] disabled:opacity-30 hover:bg-[#1a1a1e] transition-colors h-auto"
               >
                 {t('common.prev')}
-              </button>
+              </Button>
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                <button
+                <Button
                   key={p}
                   onClick={() => setCurrentPage(p)}
                   className={`w-8 h-8 rounded-lg text-[12px] font-medium transition-colors ${
@@ -520,15 +523,15 @@ const VoiceLibrary = () => {
                   }`}
                 >
                   {p}
-                </button>
+                </Button>
               ))}
-              <button
+              <Button
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                className="px-3 py-1.5 rounded-lg bg-[#111113] border border-white/[0.07] text-zinc-400 text-[12px] disabled:opacity-30 hover:bg-[#1a1a1e] transition-colors"
+                className="px-3 py-1.5 rounded-lg bg-[#111113] border border-white/[0.07] text-zinc-400 text-[12px] disabled:opacity-30 hover:bg-[#1a1a1e] transition-colors h-auto"
               >
                 {t('common.next')}
-              </button>
+              </Button>
             </div>
           )}
         </div>
