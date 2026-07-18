@@ -12,6 +12,7 @@ import { fetchPracticeById, fetchLessonById } from '../controllers/voiceControll
 import { academyService } from '../services/academyService';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import Navbar from '../components/Navbar';
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const clamp = (v) => Math.max(0, Math.min(100, Number(v || 0)));
 
@@ -233,10 +234,10 @@ const VoiceReport = () => {
 
             {/* Header */}
             <motion.div {...fadeUp(0)} className="flex items-center gap-3 mb-8 pb-6 border-b border-white/[0.06]">
-                <button onClick={() => navigate(-1)}
+                <Button onClick={() => navigate(-1)}
                     className="w-9 h-9 flex items-center justify-center rounded-xl bg-[#111113] border border-white/[0.07] text-zinc-500 hover:text-white hover:border-white/[0.14] transition-colors shrink-0">
                     <ChevronLeft size={18} />
-                </button>
+                </Button>
                 <div className="flex-1 min-w-0">
                     <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider mb-0.5">Báo cáo luyện tập</p>
                     <h1 className="text-[18px] font-bold text-white truncate">{lesson?.title || t('voiceReport.practiceReportDetail')}</h1>

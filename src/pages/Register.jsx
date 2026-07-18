@@ -12,6 +12,7 @@ import { useApi } from "../hooks/useApi";
 import { fetchUserRoles } from "../controllers/publicController";
 import { academyService } from "../services/academyService";
 import { trackRegisterSubmit, trackRegisterSuccess, trackRegisterEmailVerify, trackRegisterQuizComplete } from '@/utils/analytics';
+import { Button } from "@/components/animate-ui/components/buttons/button";
 const ROLE_REDIRECT = { admin: "/m/dashboard", mc: "/m/dashboard", client: "/m/dashboard" };
 
 const SLIDE_FEATURES = [
@@ -389,26 +390,27 @@ const OtpScreen = ({ email, onSuccess }) => {
         ))}
       </div>
 
-      <button
+      <Button
         onClick={() => handleVerify(digits.join(""))}
         disabled={loading || digits.some(d => !d)}
-        className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-40 flex items-center justify-center gap-2 transition-all mb-4"
+        hoverScale={1}
+        className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-40 flex items-center justify-center gap-2 transition-all mb-4 h-auto"
       >
         {loading
           ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
           : <>Xác nhận mã <CheckCircle2 size={16} /></>
         }
-      </button>
+      </Button>
 
       <div className="flex items-center justify-between w-full">
-        <button
+        <Button
           onClick={handleResend}
           disabled={resendCooldown > 0}
-          className="flex items-center gap-1.5 text-[13px] text-gray-500 hover:text-amber-600 disabled:opacity-40 transition-colors"
+          className="flex items-center gap-1.5 text-[13px] text-gray-500 hover:text-amber-600 disabled:opacity-40 transition-colors h-auto"
         >
           <RefreshCw size={13} />
           {resendCooldown > 0 ? `Gửi lại sau ${resendCooldown}s` : "Gửi lại email"}
-        </button>
+        </Button>
         <span className="text-[12px] text-gray-400">Hiệu lực 10 phút</span>
       </div>
     </motion.div>
@@ -522,9 +524,9 @@ const CoursePickScreen = ({ onPick, onSkip, submitting }) => {
           }
         </motion.button>
         {selectedKey && (
-          <button onClick={onSkip} disabled={submitting} className="text-[12px] text-gray-400 hover:text-gray-600 transition-colors text-center">
+          <Button onClick={onSkip} disabled={submitting} className="text-[12px] text-gray-400 hover:text-gray-600 transition-colors text-center h-auto">
             Bỏ qua, không nhận quà
-          </button>
+          </Button>
         )}
       </div>
     </div>
@@ -769,9 +771,9 @@ const Register = () => {
                       onChange={set('password')}
                       required
                       suffix={
-                        <button type="button" onClick={() => setShowPass(v => !v)} className="text-gray-400 hover:text-gray-600 transition-colors shrink-0">
+                        <Button type="button" onClick={() => setShowPass(v => !v)} className="text-gray-400 hover:text-gray-600 transition-colors shrink-0 h-auto">
                           {showPass ? <EyeOff size={14} /> : <Eye size={14} />}
-                        </button>
+                        </Button>
                       }
                     />
                     <PasswordStrength password={form.password} />
@@ -790,9 +792,9 @@ const Register = () => {
                     suffix={
                       form.confirmPassword && form.password === form.confirmPassword
                         ? <CheckCircle2 size={14} className="text-emerald-500 shrink-0" />
-                        : <button type="button" onClick={() => setShowConfirm(v => !v)} className="text-gray-400 hover:text-gray-600 transition-colors shrink-0">
+                        : <Button type="button" onClick={() => setShowConfirm(v => !v)} className="text-gray-400 hover:text-gray-600 transition-colors shrink-0 h-auto">
                             {showConfirm ? <EyeOff size={14} /> : <Eye size={14} />}
-                          </button>
+                          </Button>
                     }
                   />
 
@@ -813,11 +815,11 @@ const Register = () => {
                     <label className="text-[13px] font-semibold text-gray-700">Chọn avatar của bạn</label>
                     <div className="grid grid-cols-5 gap-2">
                       {AVATARS.map((av) => (
-                        <button
+                        <Button
                           key={av.id}
                           type="button"
                           onClick={() => setSelectedAvatar(av.id)}
-                          className={`flex flex-col items-center justify-center py-2.5 rounded-xl border-2 transition-all text-[22px] ${
+                          className={`flex flex-col items-center justify-center py-2.5 rounded-xl border-2 transition-all text-[22px] h-auto ${
                             selectedAvatar === av.id
                               ? 'border-amber-400 bg-amber-50 shadow-[0_0_0_3px_rgba(245,166,35,0.15)]'
                               : 'border-gray-200 bg-gray-50 hover:border-amber-300 hover:bg-amber-50/50'
@@ -825,7 +827,7 @@ const Register = () => {
                           title={av.label}
                         >
                           {av.emoji}
-                        </button>
+                        </Button>
                       ))}
                     </div>
                     <p className="text-[11px] text-gray-400">Vào website sẽ có thêm nhiều lựa chọn hơn.</p>

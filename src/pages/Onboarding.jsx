@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { updateProfile } from "../controllers/mcController";
 import { uploadMedia } from "../services/mediaService";
 import { trackOnboardingStepComplete, trackOnboardingSubmit } from '@/utils/analytics';
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const inputCls = "w-full bg-[#09090b] border border-white/[0.07] rounded-xl py-3 px-4 text-[14px] text-white placeholder:text-zinc-600 outline-none focus:border-white/[0.14] transition-colors";
 
@@ -294,10 +295,10 @@ const Onboarding = () => {
                           </div>
                         )}
                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                          <button onClick={(e) => { e.stopPropagation(); setProfileData(prev => ({ ...prev, showreelFiles: prev.showreelFiles.filter((_, i) => i !== idx) })); }}
-                            className="p-2 bg-red-500 rounded-lg text-white hover:bg-red-600 transition-colors">
+                          <Button onClick={(e) => { e.stopPropagation(); setProfileData(prev => ({ ...prev, showreelFiles: prev.showreelFiles.filter((_, i) => i !== idx) })); }}
+                            className="p-2 bg-red-500 rounded-lg text-white hover:bg-red-600 transition-colors h-auto">
                             <Zap size={14} fill="currentColor" />
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     );
@@ -361,9 +362,9 @@ const Onboarding = () => {
                       <span className="text-[#f5a623]">{card.icon}</span> {card.title}
                     </h3>
                     <p className="text-[13px] text-zinc-500 leading-relaxed">{card.desc}</p>
-                    <button className="w-full py-2.5 rounded-xl border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] text-[13px] font-medium flex items-center justify-center gap-2 transition-colors">
+                    <Button hoverScale={1} className="w-full py-2.5 rounded-xl border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] text-[13px] font-medium flex items-center justify-center gap-2 transition-colors h-auto">
                       {card.btnIcon} {card.btnLabel}
-                    </button>
+                    </Button>
                     <div className={`flex items-center gap-1.5 text-[11px] font-medium px-3 py-1.5 rounded-lg border w-max ${card.badgeCls}`}>
                       {card.badge}
                     </div>
@@ -378,27 +379,27 @@ const Onboarding = () => {
         <div className="flex justify-between items-center mt-8 pt-6 border-t border-white/[0.07]">
           <div className="flex items-center gap-3">
             {step > 1 && (
-              <button onClick={() => setStep(step - 1)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] text-[13px] font-medium transition-colors">
+              <Button onClick={() => setStep(step - 1)}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] text-[13px] font-medium transition-colors h-auto">
                 <ArrowLeft size={15} /> {t('common.back')}
-              </button>
+              </Button>
             )}
-            <button onClick={() => { if (step < 3) { setStep(step + 1); trackOnboardingStepComplete(step); } else handleComplete(); }}
-              className="text-zinc-600 hover:text-zinc-400 text-[13px] transition-colors px-2">
+            <Button onClick={() => { if (step < 3) { setStep(step + 1); trackOnboardingStepComplete(step); } else handleComplete(); }}
+              className="text-zinc-600 hover:text-zinc-400 text-[13px] transition-colors px-2 h-auto">
               {t('onboarding.skip')}
-            </button>
+            </Button>
           </div>
 
           {step < 3 ? (
-            <button onClick={() => { setStep(step + 1); trackOnboardingStepComplete(step); }}
-              className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] text-black text-[13px] font-semibold rounded-xl hover:bg-[#e09520] transition-colors">
+            <Button onClick={() => { setStep(step + 1); trackOnboardingStepComplete(step); }}
+              className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] text-black text-[13px] font-semibold rounded-xl hover:bg-[#e09520] transition-colors h-auto">
               {t('onboarding.continueStep')} {step} <ArrowRight size={15} />
-            </button>
+            </Button>
           ) : (
-            <button onClick={handleComplete}
-              className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] text-black text-[13px] font-semibold rounded-xl hover:bg-[#e09520] transition-colors">
+            <Button onClick={handleComplete}
+              className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] text-black text-[13px] font-semibold rounded-xl hover:bg-[#e09520] transition-colors h-auto">
               {t('onboarding.finishDashboard')} <Zap size={15} />
-            </button>
+            </Button>
           )}
         </div>
       </div>

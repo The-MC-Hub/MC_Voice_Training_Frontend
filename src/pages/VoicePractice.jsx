@@ -14,6 +14,7 @@ import ScriptPanel from "../components/voice/ScriptPanel";
 import RecordingCard from "../components/voice/RecordingCard";
 import AnalysisPanel from "../components/voice/AnalysisPanel";
 import PracticeHistory from "../components/voice/PracticeHistory";
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const formatTime = (seconds) => {
   const m = Math.floor(seconds / 60), s = seconds % 60;
@@ -158,9 +159,9 @@ const VoicePractice = () => {
           {mId && (
             <aside className="hidden xl:flex w-72 border-r border-white/[0.07] bg-[#111113] flex-col sticky top-14 h-[calc(100vh-3.5rem)] shrink-0 overflow-hidden">
               <div className="p-5 border-b border-white/[0.07]">
-                <button onClick={() => navigate(`/m/learning/milestone/${mId}`)} className="flex items-center gap-1.5 text-zinc-500 hover:text-white transition-colors text-[12px] mb-4">
+                <Button onClick={() => navigate(`/m/learning/milestone/${mId}`)} className="flex items-center gap-1.5 text-zinc-500 hover:text-white transition-colors text-[12px] mb-4 h-auto">
                   <ArrowLeft size={13} /> {t_vp("roadmap")}
-                </button>
+                </Button>
                 <h2 className="text-[14px] font-semibold text-white line-clamp-2">{t("learning.progress")}</h2>
               </div>
               <div className="flex-1 overflow-y-auto p-3 space-y-1" />
@@ -192,9 +193,9 @@ const VoicePractice = () => {
                 {/* Language toggle */}
                 <div className="flex items-center rounded-lg bg-[#111113] border border-white/[0.07] p-0.5">
                   {["vi", "en"].map((lang) => (
-                    <button key={lang} onClick={() => i18nInstance.changeLanguage(lang)}
-                      className={`px-3 py-1.5 text-[12px] font-medium rounded-md transition-colors ${evalLanguage === lang ? "bg-[#f5a623] text-black" : "text-zinc-400 hover:text-white"}`}
-                    >{lang.toUpperCase()}</button>
+                    <Button key={lang} onClick={() => i18nInstance.changeLanguage(lang)}
+                      className={`px-3 py-1.5 text-[12px] font-medium rounded-md transition-colors h-auto ${evalLanguage === lang ? "bg-[#f5a623] text-black" : "text-zinc-400 hover:text-white"}`}
+                    >{lang.toUpperCase()}</Button>
                   ))}
                 </div>
 
@@ -205,25 +206,25 @@ const VoicePractice = () => {
                       <span>{t_vp("guestTryAgainAfter")} <span className="font-semibold text-amber-400">{fmtCooldown(cooldownLeft)}</span></span>
                     </div>
                   ) : (
-                    <button onClick={handleAnalyze} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors">
+                    <Button onClick={handleAnalyze} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors h-auto">
                       <Zap size={14} /> {t_vp("analyzeNow")}
-                    </button>
+                    </Button>
                   )
                 )}
                 {audioBlob && (
-                  <button onClick={handleResetPractice} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-white/[0.1] text-zinc-300 text-[13px] font-medium hover:bg-white/[0.05] transition-colors">
+                  <Button onClick={handleResetPractice} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-white/[0.1] text-zinc-300 text-[13px] font-medium hover:bg-white/[0.05] transition-colors h-auto">
                     <RefreshCw size={13} /> {t_vp("reRecord")}
-                  </button>
+                  </Button>
                 )}
                 <span data-quest="quest-record-btn">
                   {recording ? (
-                    <button onClick={handleStopRecording} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-500 text-white text-[13px] font-semibold hover:bg-red-600 transition-colors">
+                    <Button onClick={handleStopRecording} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-500 text-white text-[13px] font-semibold hover:bg-red-600 transition-colors h-auto">
                       <Square size={13} /> {t_vp("stop")}
-                    </button>
+                    </Button>
                   ) : !audioBlob ? (
-                    <button onClick={handleStartRecording} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors">
+                    <Button onClick={handleStartRecording} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors h-auto">
                       <Play size={13} /> {t_vp("startRecording")}
-                    </button>
+                    </Button>
                   ) : null}
                 </span>
               </div>

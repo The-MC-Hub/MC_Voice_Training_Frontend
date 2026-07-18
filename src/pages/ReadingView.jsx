@@ -17,6 +17,7 @@ import { MessageSquare } from 'lucide-react';
 import '../markdown.css';
 import { trackLessonStart, trackLessonComplete, trackLessonAbandon } from '@/utils/analytics';
 import { questService } from '../services/questService';
+import { Button } from "@/components/animate-ui/components/buttons/button";
 
 const ReadingView = () => {
   const { t } = useTranslation();
@@ -170,12 +171,12 @@ const ReadingView = () => {
         {mId && (
           <aside className="w-72 border-r border-white/[0.06] bg-[#09090b] flex flex-col sticky top-24 h-[calc(100vh-6rem)] shrink-0 overflow-hidden hidden lg:flex">
             <div className="p-5 border-b border-white/[0.06]">
-              <button
+              <Button
                 onClick={() => navigate(`/m/learning/milestone/${mId}`)}
-                className="flex items-center gap-2 text-zinc-600 hover:text-white transition-colors text-[12px] mb-4 group"
+                className="flex items-center gap-2 text-zinc-600 hover:text-white transition-colors text-[12px] mb-4 group h-auto"
               >
                 <ArrowLeft size={13} className="group-hover:-translate-x-0.5 transition-transform" /> {t('readingView.roadmap')}
-              </button>
+              </Button>
               <h2 className="text-[14px] font-semibold text-white leading-snug line-clamp-2">{milestone?.title}</h2>
               <div className="flex items-center justify-between mt-2">
                 <span className="text-[10px] text-zinc-600 uppercase tracking-wider">{t('readingView.progress')}</span>
@@ -249,7 +250,7 @@ const ReadingView = () => {
                     <p className="text-[11px] text-zinc-500">{t('readingView.industryMentor')}</p>
                   </div>
                 </div>
-                <button 
+                <Button
                   onClick={() => setIsNotesOpen(true)}
                   className="w-9 h-9 rounded-xl bg-[#111113] border border-white/[0.07] flex items-center justify-center text-[#f5a623] hover:text-white transition-colors relative"
                 >
@@ -259,10 +260,10 @@ const ReadingView = () => {
                       {highlights.length}
                     </span>
                   )}
-                </button>
-                <button className="w-9 h-9 rounded-xl bg-[#111113] border border-white/[0.07] flex items-center justify-center text-zinc-500 hover:text-white transition-colors">
+                </Button>
+                <Button className="w-9 h-9 rounded-xl bg-[#111113] border border-white/[0.07] flex items-center justify-center text-zinc-500 hover:text-white transition-colors">
                   <Share2 size={15} />
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -284,7 +285,7 @@ const ReadingView = () => {
                   <p className="text-zinc-500 text-[12px]">{t('readingView.finishedGuideDesc')}</p>
                 </div>
               </div>
-              <button
+              <Button
                 onClick={async () => {
                   completedRef.current = true;
                   if (courseId) {
@@ -297,10 +298,10 @@ const ReadingView = () => {
                     navigate(-1);
                   }
                 }}
-                className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] text-black rounded-xl text-[13px] font-semibold hover:bg-[#e09520] transition-colors shrink-0"
+                className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] text-black rounded-xl text-[13px] font-semibold hover:bg-[#e09520] transition-colors shrink-0 h-auto"
               >
                 {t('readingView.completeReading')} <ChevronRight size={15} />
-              </button>
+              </Button>
             </div>
           </div>
         </div>
