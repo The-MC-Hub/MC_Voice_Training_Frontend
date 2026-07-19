@@ -9,6 +9,7 @@ import { fetchLessons } from '../../controllers/voiceController';
 import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent } from "@/components/animate-ui/components/radix/dialog";
 
 const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
 const inputClsShadcn = `${inputCls} h-auto rounded-none focus-visible:ring-0`;
@@ -289,9 +290,8 @@ const AcademyManager = () => {
       </div>
 
       {/* Milestone Editor Modal */}
-      {isEditingMilestone && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70">
-          <div className="w-full max-w-md bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden">
+      <Dialog open={isEditingMilestone} onOpenChange={(open) => { if (!open) setIsEditingMilestone(false); }}>
+        <DialogContent showCloseButton={false} className="w-full max-w-md bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden">
             <form onSubmit={handleSaveMilestone} className="p-6 space-y-4">
               <h3 className="text-[14px] font-semibold text-white border-b border-white/[0.06] pb-4">{t("admin.academyManager.modal.newStageMilestone")}</h3>
               <div className="space-y-1">
@@ -324,14 +324,12 @@ const AcademyManager = () => {
                 </Button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
 
       {/* Add Content Modal */}
-      {isAddingContent && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70">
-          <div className="w-full max-w-4xl bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <Dialog open={isAddingContent} onOpenChange={(open) => { if (!open) setIsAddingContent(false); }}>
+        <DialogContent showCloseButton={false} className="w-full max-w-4xl bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div className="flex justify-between items-center p-5 border-b border-white/[0.06]">
               <div>
                 <h3 className="text-[14px] font-semibold text-white">{t("admin.academyManager.modal.assignCurriculumContent")}</h3>
@@ -458,14 +456,13 @@ const AcademyManager = () => {
                 )}
               </div>
             </div>
-          </div>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
 
       {/* Preview Modal */}
-      {isPreviewModalOpen && selectedContentDetails && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70">
-          <div className="w-full max-w-xl bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden">
+      <Dialog open={isPreviewModalOpen && !!selectedContentDetails} onOpenChange={(open) => { if (!open) setIsPreviewModalOpen(false); }}>
+        {selectedContentDetails && (
+          <DialogContent showCloseButton={false} className="w-full max-w-xl bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden">
             <div className="flex justify-between items-center p-5 border-b border-white/[0.06]">
               <div className="flex items-center gap-3">
                 <div className={`w-8 h-8 flex items-center justify-center border ${selectedContentDetails.type === 'VOICE_PRACTICE' ? 'bg-[--bg-elevated] text-[--text-primary] border-[--border-subtle]' : 'bg-[#09090b] text-zinc-500 border-white/[0.07]'}`}>
@@ -514,9 +511,9 @@ const AcademyManager = () => {
                 {t("admin.academyManager.modal.closePreview")}
               </Button>
             </div>
-          </div>
-        </div>
-      )}
+          </DialogContent>
+        )}
+      </Dialog>
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { getMCProfile } from "../../../services/publicService";
 import api from "../../../services/api";
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
+import { Dialog, DialogContent } from "@/components/animate-ui/components/radix/dialog";
 import { Input } from "@/components/ui/input";
 
 const fmtDate = (v) => {
@@ -927,9 +928,8 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
       )}
 
       {/* ── Add User Modal ────────────────────────────────────────── */}
-      {showAddModal && (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 p-4">
-          <div className="bg-white border border-gray-200 w-full max-w-md shadow-xl rounded-xl overflow-hidden">
+      <Dialog open={showAddModal} onOpenChange={(open) => { if (!open) setShowAddModal(false); }}>
+        <DialogContent showCloseButton={false} className="bg-white border border-gray-200 w-full max-w-md shadow-xl rounded-xl overflow-hidden p-0 gap-0">
             <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
               <h2 className="text-[15px] font-semibold text-gray-900">{t("admin.userManagement.addNewAccount")}</h2>
               <Button onClick={() => setShowAddModal(false)} className="h-auto text-gray-400 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100"><X size={16} /></Button>
@@ -991,14 +991,12 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                 </Button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
 
       {/* ── Change Password Modal ─────────────────────────────────── */}
-      {pwdModal && (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 p-4">
-          <div className="bg-white border border-gray-200 w-full max-w-sm shadow-xl rounded-xl overflow-hidden">
+      <Dialog open={!!pwdModal} onOpenChange={(open) => { if (!open) setPwdModal(null); }}>
+        <DialogContent showCloseButton={false} className="bg-white border border-gray-200 w-full max-w-sm shadow-xl rounded-xl overflow-hidden p-0 gap-0">
             <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
               <h2 className="text-[15px] font-semibold text-gray-900">{t("admin.userManagement.changePassword")}</h2>
               <Button onClick={() => setPwdModal(null)} className="h-auto text-gray-400 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100"><X size={16} /></Button>
@@ -1017,9 +1015,8 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                 </Button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

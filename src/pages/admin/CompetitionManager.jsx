@@ -6,6 +6,7 @@ import { fetchLessons } from "../../controllers/voiceController";
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent } from "@/components/animate-ui/components/radix/dialog";
 
 const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
 const inputClsShadcn = `${inputCls} h-auto rounded-none focus-visible:ring-0`;
@@ -143,9 +144,8 @@ const CompetitionManager = () => {
       </div>
 
       {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70">
-          <div className="w-full max-w-lg bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden">
+      <Dialog open={isModalOpen} onOpenChange={(open) => { if (!open) setIsModalOpen(false); }}>
+        <DialogContent showCloseButton={false} className="relative w-full max-w-lg bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden">
             <Button onClick={() => setIsModalOpen(false)} className="absolute right-4 top-4 h-auto p-0 bg-transparent text-zinc-500 hover:text-white transition-colors">
               <X size={17} />
             </Button>
@@ -214,9 +214,8 @@ const CompetitionManager = () => {
                 </Button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

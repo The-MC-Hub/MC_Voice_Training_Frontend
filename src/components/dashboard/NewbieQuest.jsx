@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { questService } from '../../services/questService';
 import { useNavigate } from 'react-router-dom';
 import { useQuestGuide } from '../../contexts/QuestGuideContext';
+import { Dialog, DialogContent } from '@/components/animate-ui/components/radix/dialog';
 
 const QUEST_IDS = ['profile', 'practice', 'courses', 'leaderboard'];
 const QUEST_LINKS = {
@@ -67,23 +68,12 @@ const NewbieQuest = () => {
   return (
     <>
       {/* Voucher Modal */}
-      <AnimatePresence>
+      <Dialog open={!!voucherCode} onOpenChange={(open) => { if (!open) setVoucherCode(null); }}>
         {voucherCode && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4"
-            onClick={() => setVoucherCode(null)}
+          <DialogContent
+            showCloseButton={false}
+            className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl"
           >
-            <motion.div
-              initial={{ scale: 0.85, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.85, opacity: 0 }}
-              transition={{ type: 'spring', damping: 18, stiffness: 280 }}
-              className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl"
-              onClick={e => e.stopPropagation()}
-            >
               <div className="w-16 h-16 rounded-2xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center mx-auto mb-4">
                 <Gift size={30} className="text-amber-500" />
               </div>
@@ -113,10 +103,9 @@ const NewbieQuest = () => {
               >
                 {t('newbieQuest.later')}
               </button>
-            </motion.div>
-          </motion.div>
+          </DialogContent>
         )}
-      </AnimatePresence>
+      </Dialog>
 
       {/* Quest Card */}
       <motion.div

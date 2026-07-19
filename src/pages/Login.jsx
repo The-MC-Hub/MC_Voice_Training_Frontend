@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "../store/useAuthStore";
 import { trackLoginSubmit, trackLoginSuccess, trackLoginOtpVerify } from "@/utils/analytics";
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Dialog, DialogContent } from "@/components/animate-ui/components/radix/dialog";
 
 const ROLE_REDIRECT = { admin: "/m/dashboard", mc: "/m/dashboard", client: "/m/dashboard" };
 
@@ -178,13 +179,10 @@ const AdminOtpModal = ({ adminEmail, rememberMe, onSuccess, onCancel }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 16 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 16 }}
-        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-sm mx-4 bg-white rounded-2xl shadow-2xl overflow-hidden"
+    <Dialog open onOpenChange={(open) => { if (!open) onCancel(); }}>
+      <DialogContent
+        showCloseButton={false}
+        className="w-full max-w-sm mx-4 bg-white rounded-2xl shadow-2xl overflow-hidden p-0"
       >
         {/* Header */}
         <div className="bg-amber-500 px-6 py-5 text-center">
@@ -256,8 +254,8 @@ const AdminOtpModal = ({ adminEmail, rememberMe, onSuccess, onCancel }) => {
             Huỷ đăng nhập
           </Button>
         </div>
-      </motion.div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -17,6 +17,7 @@ import { fetchFeaturedTrainingStats } from '../controllers/publicController';
 import { fetchFeaturedLessons } from '../controllers/voiceController';
 import ScrollToTop from '../components/ui/ScrollToTop';
 import ContactModal from '../components/modals/ContactModal';
+import { Dialog, DialogContent } from '@/components/animate-ui/components/radix/dialog';
 import SpotlightCard from '../components/ui/SpotlightCard';
 import SocialFeedCarousel from '../components/ui/SocialFeedCarousel';
 
@@ -1220,16 +1221,12 @@ const Home = () => {
       <ContactModal isOpen={isContactModalOpen} onClose={() => setIsContactModalOpen(false)} />
 
       {/* ── MC Certificate Modal ─────────────────────────────────────────── */}
-      <AnimatePresence>
-        {showCertModal && selectedMCForCert && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.97, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.97, y: 10 }}
-              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-full max-w-2xl bg-[#111113] border border-white/[0.08] rounded-2xl p-8 shadow-2xl"
-            >
+      <Dialog open={showCertModal && !!selectedMCForCert} onOpenChange={(open) => { if (!open) { setShowCertModal(false); setCopiedCert(false); } }}>
+        {selectedMCForCert && (
+          <DialogContent
+            showCloseButton={false}
+            className="w-full max-w-2xl bg-[#111113] border border-white/[0.08] rounded-2xl p-8 shadow-2xl overflow-y-auto max-h-[90vh]"
+          >
               <Button
                 onClick={() => { setShowCertModal(false); setCopiedCert(false); }}
                 className="absolute top-5 right-5 w-7 h-7 flex items-center justify-center rounded-lg bg-white/[0.06] hover:bg-white/[0.1] text-zinc-500 hover:text-white transition-colors"
@@ -1300,10 +1297,9 @@ const Home = () => {
                   {i18n.language === 'vi' ? 'Đóng' : 'Close'}
                 </Button>
               </div>
-            </motion.div>
-          </div>
+          </DialogContent>
         )}
-      </AnimatePresence>
+      </Dialog>
 
       <style>{`
         @keyframes marquee      { from { transform: translateX(0); } to { transform: translateX(-50%); } }

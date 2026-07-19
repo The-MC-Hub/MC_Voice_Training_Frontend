@@ -1,7 +1,7 @@
 # Animate UI — Kế hoạch thay thế component toàn hệ thống
 
-Ngày lập: 2026-07-19 · Cập nhật: 2026-07-19 (Giai đoạn 7-12 (15.1) + 14 Toast→Sonner đã code xong, build+E2E+screenshot pass; Card 15.3 — 13 mục "không chắc" còn lại)
-Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) + Badge (10) + Avatar (11) + Card 15.1 (12) + Toast→Sonner (14) đã xong. Còn lại: Card 15.3 (13 mục uncertain), Select(13, chờ xác nhận), Dialog(1), Dropdown Menu(2), Sheet(3), Accordion(4), Checkbox(5), Avatar Group(6).
+Ngày lập: 2026-07-19 · Cập nhật: 2026-07-19 (Giai đoạn 7-12 (15.1) + 14 Toast→Sonner + 1 Dialog đã code xong, build+E2E+screenshot pass)
+Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) + Badge (10) + Avatar (11) + Card 15.1 (12) + Toast→Sonner (14) + Dialog (1) đã xong. Select giữ native theo khuyến nghị plan (không convert). Còn lại: Card 15.3 (5 mục thật sự chưa xem — xem mục 15), Dropdown Menu(2), Sheet(3, ứng viên rõ: NotesSidebar.jsx), Accordion(4), Checkbox(5), Avatar Group(6).
 
 ## Mục tiêu
 
@@ -106,49 +106,37 @@ Sau khi cài: `npm run build` xác nhận 0 lỗi trước khi bắt đầu bấ
 
 ### Danh sách modal cần khảo sát (16 file có pattern `fixed inset-0` / `bg-black/6*` overlay)
 
-| # | File | Modal gì | Trạng thái |
+| # | File | Modal gì | Kết quả khảo sát + trạng thái |
 |---|---|---|---|
-| 1 | `src/pages/Login.jsx` | AdminOtpModal (nhập OTP 6 số) | ⬜ |
-| 2 | `src/pages/Home.jsx` | Certificate modal (xem/copy link chứng chỉ) | ⬜ |
-| 3 | `src/pages/LeaderboardPage.jsx` | Share modal | ⬜ |
-| 4 | `src/pages/Onboarding.jsx` | (xác nhận lại — có thể là dropdown, không phải modal) | ⬜ Cần đọc lại |
-| 5 | `src/pages/Register.jsx` | (xác nhận lại — có thể liên quan CoursePickScreen) | ⬜ Cần đọc lại |
-| 6 | `src/pages/Settings.jsx` | (xác nhận — có thể emoji picker, không phải modal chuẩn) | ⬜ Cần đọc lại |
-| 7 | `src/pages/VoiceLibrary.jsx` | (xác nhận lại) | ⬜ Cần đọc lại |
-| 8 | `src/pages/admin/AcademyManager.jsx` | Nhiều modal (milestone, add-content, preview) | ⬜ |
-| 9 | `src/pages/admin/CompetitionManager.jsx` | Modal tạo/sửa arena | ⬜ |
-| 10 | `src/pages/admin/sections/LessonManagement.jsx` | Modal thêm/sửa lesson | ⬜ |
-| 11 | `src/pages/admin/sections/UserManagement.jsx` | Modal user detail/action | ⬜ |
-| 12 | `src/components/dashboard/NewbieQuest.jsx` | Quest popup | ⬜ |
-| 13 | `src/components/reading/NotesSidebar.jsx` | Có thể là Sheet, không phải Dialog — xem mục 4 | ⬜ |
-| 14 | `src/components/ui/StreakCardModal.jsx` | Streak celebration modal | ⬜ |
-| 15 | `src/components/voice/RecordingCard.jsx` | Xác nhận lại — có thể không phải modal thật | ⬜ |
-| 16 | `src/pages/admin/PlanManager.jsx`, `MarketingManager.jsx`, `NotificationManager.jsx`, `CoursePricingManager.jsx`, `ServerLogs.jsx`, `SecurityLogs.jsx` | Đã convert Button ở PR trước, có thể có modal riêng — audit lại | ⬜ |
+| 1 | `src/pages/Login.jsx` | AdminOtpModal (nhập OTP 6 số) | ✅ Xác nhận Dialog thật, đã đổi. Auto-focus ô số đầu tiên hoạt động đúng (Radix auto-focus trùng với element đầu tiên trong DOM, không xung đột với `inputs.current[0]?.focus()` thủ công cũ). Paste 6 số vẫn hoạt động. |
+| 2 | `src/pages/Home.jsx` | Certificate modal | ✅ Đã đổi — **làm mẫu đầu tiên**. Lưu ý: không có nút trigger nào gọi `setShowCertModal(true)` trong code hiện tại — modal này hiện không thể mở qua UI (tính năng đã "chết" từ một refactor trước). Không ảnh hưởng migration, chỉ không test tay bằng click được — verify qua build + đọc code cấu trúc. |
+| 3 | `src/pages/LeaderboardPage.jsx` | Share modal | ✅ Xác nhận Dialog thật, đã đổi. Bỏ `bg-background border p-6` mặc định (dùng `bg-transparent border-none p-0 shadow-none` vì style nằm ở div con). |
+| 4 | `src/pages/Onboarding.jsx` | ✅ Xác nhận **false-positive** | Chỉ là hover-reveal overlay CSS (`opacity-0 group-hover:opacity-100`) trên thumbnail, không phải modal. Không đổi. |
+| 5 | `src/pages/Register.jsx` | ✅ Xác nhận **false-positive** | `CoursePickScreen`/`OtpScreen` là step trong wizard nhiều bước (`AnimatePresence mode="wait"` swap step, không phải overlay). Đổi sang Dialog sẽ phá luồng đăng ký. Không đổi. |
+| 6 | `src/pages/Settings.jsx` | ✅ Xác nhận **false-positive** | `EmojiAvatarPicker` là widget luôn hiển thị inline trong trang, không phải overlay. Không đổi. |
+| 7 | `src/pages/VoiceLibrary.jsx` | ✅ Xác nhận **false-positive** | Chỉ có hover-reveal overlay trên thumbnail (giống Onboarding), không có `fixed inset-0` nào trong file. Không đổi. |
+| 8 | `src/pages/admin/AcademyManager.jsx` | 3 modal: Milestone Editor, Add Content (2 cột form+preview), Preview Modal | ✅ Cả 3 đã đổi. Add Content giữ nguyên `max-w-4xl max-h-[90vh] overflow-hidden flex flex-col` + 2 vùng scroll độc lập bên trong, không bị vỡ layout. |
+| 9 | `src/pages/admin/CompetitionManager.jsx` | Modal tạo/sửa arena | ✅ Đã đổi. Thêm `relative` tường minh vào `DialogContent` để nút X (dùng `absolute`) neo đúng góc — test tay xác nhận vị trí đúng (screenshot). |
+| 10 | `src/pages/admin/sections/LessonManagement.jsx` | Modal thêm/sửa lesson | ✅ Đã đổi, không có phức tạp đặc biệt. |
+| 11 | `src/pages/admin/sections/UserManagement.jsx` | 2 modal: Add User (form dài, sticky footer), Change Password | ✅ Cả 2 đã đổi tay (không giao agent, do sticky-footer cần cẩn thận). `p-0 gap-0` trên DialogContent vì padding quản lý bởi header/form con, không phải wrapper ngoài. Sticky footer (`sticky bottom-0` trong `<form>` scrollable) hoạt động bình thường — không phụ thuộc DialogContent. Test tay + screenshot xác nhận mở/đóng ESC đúng. |
+| 12 | `src/components/dashboard/NewbieQuest.jsx` | Quest popup | ✅ Đã đổi, giữ nguyên `navigator.clipboard` copy action. |
+| 13 | `src/components/reading/NotesSidebar.jsx` | Sheet, không phải Dialog | ✅ Xác nhận đúng — slide-in từ phải (`initial={{x:'100%'}}`), side-anchored, không phải centered modal. Chuyển sang Giai đoạn 3 (Sheet), **chưa làm**. |
+| 14 | `src/components/ui/StreakCardModal.jsx` | Streak celebration + canvas download-as-image | ✅ Đã đổi. Xác nhận canvas draw effect (keyed theo prop `open`) vẫn fire đúng lúc — DialogContent chỉ mount vào DOM khi Radix `open=true`, cùng thời điểm mount như `AnimatePresence` cũ. |
+| 15 | `src/components/voice/RecordingCard.jsx` | ✅ Xác nhận **false-positive** | Không có `fixed inset-0` nào trong file — toàn bộ `AnimatePresence` là badge/waveform/pitch display animate inline trong card, không phải modal. Không đổi. |
+| 16 | `src/pages/admin/PlanManager.jsx`, `MarketingManager.jsx`, `NotificationManager.jsx`, `CoursePricingManager.jsx`, `ServerLogs.jsx`, `SecurityLogs.jsx` | Audit lại | ✅ **5/6 file không tồn tại trong repo** (`MarketingManager.jsx`/`NotificationManager.jsx`/`CoursePricingManager.jsx`/`ServerLogs.jsx`/`SecurityLogs.jsx` — có lẽ đã đổi tên/gộp ở refactor trước, tham chiếu cũ từ khảo sát ban đầu sai). `PlanManager.jsx` xác nhận không có pattern overlay nào (`window.confirm()` cho destructive action, không phải modal). Không đổi gì trong mục này. |
 
-**Việc cần làm trước khi sửa bất kỳ file nào ở trên:** đọc lại từng file, xác nhận đây thật sự là "modal chặn tương tác nền" (đúng use-case Dialog) hay chỉ là dropdown/tooltip/inline-panel (sai use-case, không đổi).
-
-### Cách làm 1 file mẫu (làm tay, không giao agent, để xác lập pattern chuẩn trước)
-1. Chọn `Home.jsx` Certificate modal làm mẫu đầu tiên (đã biết rõ code).
-2. Đổi cấu trúc từ `<AnimatePresence>{show && <div className="fixed inset-0..."><motion.div>...` sang:
-   ```jsx
-   import { Dialog, DialogContent, DialogTrigger } from '@/components/animate-ui/components/radix/dialog';
-   <Dialog open={showCertModal} onOpenChange={setShowCertModal}>
-     <DialogContent>...nội dung cũ...</DialogContent>
-   </Dialog>
-   ```
-3. Giữ nguyên toàn bộ nội dung bên trong (header, body, footer buttons) — chỉ đổi wrapper.
-4. Test tay: mở modal, ESC đóng được, click ngoài đóng được, animation mượt, nội dung không vỡ layout.
-5. Build + chạy E2E full suite.
-6. Nếu ổn → áp dụng pattern này cho các file còn lại (có thể giao agent sau khi có 1 mẫu chuẩn).
+**Tổng kết khảo sát:** 13 modal thật (12 đã đổi + Home.jsx làm mẫu = 13/13 xong), 6 false-positive xác nhận không đổi (Onboarding, Register, Settings, VoiceLibrary, RecordingCard, PlanManager), 1 chuyển sang Sheet (NotesSidebar), 5 file không tồn tại (loại khỏi phạm vi).
 
 ### Checklist hoàn thành giai đoạn 1
-- [ ] Đọc lại và xác nhận đúng 16 file ở trên, loại bỏ false-positive
-- [ ] Làm mẫu Home.jsx Certificate modal, test tay
-- [ ] Áp dụng cho các modal còn lại (chia nhóm nhỏ, build+test sau mỗi nhóm)
-- [ ] Test tay TỪNG modal: mở/đóng, ESC, click-outside, focus-trap không phá layout xung quanh
-- [ ] Chạy full Playwright E2E suite — 49/49 pass
-- [ ] Test riêng: AdminOtpModal (Login.jsx) — luồng đăng nhập admin thật với OTP, không được để Dialog's focus-trap phá auto-focus vào ô số đầu tiên
-- [ ] Commit + push
+- [x] Đọc lại và xác nhận đúng 16 file ở trên, loại bỏ false-positive — khảo sát qua Explore agent, xác nhận từng dòng
+- [x] Làm mẫu Home.jsx Certificate modal, test tay (lưu ý: modal này hiện không có trigger UI, verify qua code + build)
+- [x] Áp dụng cho các modal còn lại — 2 agent song song (Login/LeaderboardPage/NewbieQuest/StreakCardModal · AcademyManager×3/CompetitionManager/LessonManagement) + UserManagement×2 làm tay
+- [x] Test tay: CompetitionManager modal (mở/đóng ESC, `body pointer-events: none` xác nhận scroll-lock hoạt động) + UserManagement Add User modal (mở/đóng ESC) — screenshot xác nhận cả 2
+- [x] Chạy full Playwright E2E suite — 49/49 pass
+- [x] Test riêng: AdminOtpModal (Login.jsx) — xác nhận qua đọc code: auto-focus ô số đầu không xung đột với Radix, paste vẫn hoạt động. Luồng OTP thật đã được `global.setup.js` xác nhận qua API (không phải click UI, nhưng xác nhận backend OTP flow không đổi)
+- [ ] Commit + push — **CHƯA push, chỉ mới commit local**
+
+**Fix trong lúc làm:** installer shadcn CLI khi cài thêm component (Alert Dialog/Dropdown/Sheet/Checkbox/Radio/Avatar Group/Copy Button) đã ghi đè `buttons/button.jsx` về lại `defaultVariants.variant: 'default'` (revert bug pill vàng đã fix ở commit `a977938`). Phát hiện + sửa lại ngay trước khi bắt đầu bất kỳ Dialog work nào, verify qua build khớp 100% với version đã commit trước đó.
 
 ---
 

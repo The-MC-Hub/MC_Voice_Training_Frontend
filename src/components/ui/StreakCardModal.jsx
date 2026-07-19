@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { X, Download, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
 import { STREAK_FRAMES } from './AvatarFrame';
+import { Dialog, DialogContent } from '@/components/animate-ui/components/radix/dialog';
 
 // ─── Card visual config — edit to restyle the exported image ─────────────────
 const CARD_WIDTH  = 560;
@@ -235,27 +235,11 @@ const StreakCardModal = ({ open, onClose, user, streak }) => {
   const accent = FRAME_ACCENT_COLORS[streak?.streakFrame] || '#f5a623';
 
   return (
-    <AnimatePresence>
-      {open && (
-        <>
-          <motion.div
-            key="sc-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9990]"
-            onClick={onClose}
-          />
-
-          <motion.div
-            key="sc-modal"
-            initial={{ opacity: 0, scale: 0.93, y: 16 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.93, y: 16 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[9991] w-full max-w-[520px] px-4"
-          >
+    <Dialog open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
+      <DialogContent
+        showCloseButton={false}
+        className="w-full max-w-[520px] px-4 bg-transparent border-none shadow-none"
+      >
             <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-xl">
               {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
@@ -307,10 +291,8 @@ const StreakCardModal = ({ open, onClose, user, streak }) => {
                 </p>
               </div>
             </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+      </DialogContent>
+    </Dialog>
   );
 };
 

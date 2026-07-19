@@ -6,6 +6,7 @@ import { fetchLessons } from "../../../controllers/voiceController";
 import api from "../../../services/api";
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent } from "@/components/animate-ui/components/radix/dialog";
 
 const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
 const inputClsShadcn = `${inputCls} h-auto rounded-none focus-visible:ring-0`;
@@ -162,9 +163,8 @@ const LessonManagement = () => {
       </div>
 
       {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70">
-          <div className="w-full max-w-lg bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden">
+      <Dialog open={isModalOpen} onOpenChange={(open) => { if (!open) setIsModalOpen(false); }}>
+        <DialogContent showCloseButton={false} className="w-full max-w-lg bg-[#111113] border border-white/[0.07] shadow-2xl overflow-hidden">
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div className="flex justify-between items-center border-b border-white/[0.06] pb-4">
                 <h3 className="text-[14px] font-semibold text-white flex items-center gap-2">
@@ -247,9 +247,8 @@ const LessonManagement = () => {
                 </Button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

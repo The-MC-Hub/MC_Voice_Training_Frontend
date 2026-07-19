@@ -17,6 +17,7 @@ import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Dialog, DialogContent } from "@/components/animate-ui/components/radix/dialog";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 // Note: `label` fields below are now resolved via i18n at render time using LABEL_KEYS maps,
@@ -207,20 +208,10 @@ const ShareModal = ({ myEntry, typeMeta, onClose }) => {
   const tierC = TIER_COLORS[myEntry?.currentTier] || TIER_COLORS.BRONZE;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ opacity: 0, scale: 0.88, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.88, y: 20 }}
-        transition={{ type: 'spring', stiffness: 360, damping: 28 }}
-        className="w-full max-w-sm"
-        onClick={e => e.stopPropagation()}
+    <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent
+        showCloseButton={false}
+        className="w-full max-w-sm bg-transparent border-none p-0 shadow-none"
       >
         {/* Share Card Preview */}
         <div className="rounded-2xl overflow-hidden border border-white/10 mb-3">
@@ -287,8 +278,8 @@ const ShareModal = ({ myEntry, typeMeta, onClose }) => {
         </div>
 
         <p className="text-center text-[11px] text-zinc-600">{t('leaderboard.shareFooter')}</p>
-      </motion.div>
-    </motion.div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
