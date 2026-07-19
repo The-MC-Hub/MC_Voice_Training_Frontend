@@ -1,7 +1,7 @@
 # Animate UI — Kế hoạch thay thế component toàn hệ thống
 
-Ngày lập: 2026-07-19 · Cập nhật: 2026-07-19 (Giai đoạn 7-11 + 12 Card (15.1, 22/22) đã code xong, build+E2E+screenshot pass; 15.3 — 13 mục "không chắc" còn lại cho phiên sau)
-Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) + Badge (10) + Avatar (11) + Card 15.1 (12) đã xong. Còn lại: Card 15.3 (13 mục uncertain), Select(13, chờ xác nhận), Toast(14), Dialog(1), Dropdown Menu(2), Sheet(3), Accordion(4), Checkbox(5), Avatar Group(6).
+Ngày lập: 2026-07-19 · Cập nhật: 2026-07-19 (Giai đoạn 7-12 (15.1) + 14 Toast→Sonner đã code xong, build+E2E+screenshot pass; Card 15.3 — 13 mục "không chắc" còn lại)
+Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) + Badge (10) + Avatar (11) + Card 15.1 (12) + Toast→Sonner (14) đã xong. Còn lại: Card 15.3 (13 mục uncertain), Select(13, chờ xác nhận), Dialog(1), Dropdown Menu(2), Sheet(3), Accordion(4), Checkbox(5), Avatar Group(6).
 
 ## Mục tiêu
 
@@ -498,17 +498,24 @@ Lệnh cài: `npx shadcn@latest add skeleton --yes`
 
 **Rủi ro: TRUNG BÌNH.** Phạm vi nhỏ hơn dự kiến ban đầu — chỉ 3 file gọi (`Dashboard.jsx`, `PaymentPage.jsx`, `Settings.jsx`), nhưng đổi toàn bộ API.
 
+**Phát hiện quan trọng khi vào việc:** hook `useToast()` cũ thực chất trả về **hàm** `toast(message, type)`, không phải object `{showSuccess, showError}` như khảo sát ban đầu giả định. `Dashboard.jsx`/`Settings.jsx` gọi đúng dạng `toast(msg, "success")`. Nhưng **`PaymentPage.jsx` gọi sai API từ trước** — `toast.showSuccess(...)`/`toast.showError(...)`/`toast.info(...)` — những method này **không tồn tại** trên hàm `toast` cũ, nghĩa là các lệnh này đã crash (`TypeError`) âm thầm ở production mỗi khi chạm tới (sau khi thanh toán thành công/thất bại, khi auto-fill mã giảm giá). Đây là bug có sẵn từ trước, migration sang Sonner **tình cờ sửa luôn** vì Sonner thật sự có `toast.success()`/`toast.error()`/`toast.info()`.
+
+Cũng phát hiện `sonner.jsx` do shadcn CLI tạo mặc định dùng package `next-themes` (`useTheme()`) — thư viện dành cho Next.js, không tương thích cách quản lý theme của project này (`ThemeContext.jsx` tự viết, dùng `data-theme` attribute, hiện tại **hardcode `theme: 'light'` vĩnh viễn** — dark mode đã bị tắt trong toàn bộ site). Đã gỡ `next-themes` khỏi `sonner.jsx` (hardcode `theme="light"` trực tiếp) và `npm uninstall next-themes` để tránh thêm dependency không dùng tới.
+
+`ReferralCard` (trong `Settings.jsx`) có `const toast = useToast();` nhưng **không bao giờ gọi** — dead code, xoá khi dọn import.
+
 | Việc cần làm | Trạng thái |
 |---|---|
-| Cài `sonner` (`npx shadcn@latest add sonner --yes`) | ⬜ |
-| Thêm `<Toaster />` vào `src/index.jsx` (hoặc `App.jsx`) — thay `<ToastProvider>` wrapper hiện tại | ⬜ |
-| Đổi `Dashboard.jsx`: `toast.showSuccess(...)` → `toast.success(...)` (import `{ toast } from 'sonner'`, bỏ `useToast()` hook) | ⬜ |
-| Đổi `PaymentPage.jsx`: tương tự (dòng 187, 218, 234, 237 đã biết vị trí) | ⬜ |
-| Đổi `Settings.jsx`: tương tự | ⬜ |
-| Xoá `src/components/ui/Toast.jsx` + `ToastProvider` wrapper trong `index.jsx`/`App.jsx` sau khi không còn ai import | ⬜ |
-| Screenshot xác nhận toast mới hiển thị đúng vị trí/màu sắc theo theme, không lộ style mặc định Sonner (trắng/đen) không khớp brand | ⬜ |
-| Build + E2E full suite | ⬜ |
-| Commit + push |
+| Cài `sonner` (`npx shadcn@latest add sonner --yes`) | ✅ Xong |
+| Sửa `sonner.jsx`: gỡ `next-themes`, hardcode `theme="light"` | ✅ Xong |
+| Thêm `<Toaster />` vào `src/index.jsx` — thay `<ToastProvider>` wrapper hiện tại | ✅ Xong |
+| Đổi `Dashboard.jsx`: `toast(msg, "success")` → `toast.success(msg)` | ✅ Xong |
+| Đổi `PaymentPage.jsx`: `.showSuccess()`→`.success()`, `.showError()`→`.error()`, `.info()` giữ nguyên (đã đúng sẵn với Sonner) | ✅ Xong |
+| Đổi `Settings.jsx`: 2 vị trí `toast(msg, "success"/"error")` → `toast.success()/.error()`, xoá `useToast()` dead call trong `ReferralCard` | ✅ Xong |
+| Xoá `src/components/ui/Toast.jsx` sau khi xác nhận không còn ai import | ✅ Xong |
+| Screenshot xác nhận toast mới hiển thị đúng vị trí/màu sắc theo theme (light, card nền sáng, icon check xanh lá) — không lộ style mặc định Sonner | ✅ Xong |
+| Build + E2E full suite | ✅ Xong — 49/49 pass |
+| Commit + push | ⬜ **CHƯA push, chỉ mới commit local** |
 
 ---
 

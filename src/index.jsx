@@ -5,15 +5,14 @@ import "./index.css";
 import "./i18n";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./hooks/useAuth";
-import { ToastProvider } from "./components/ui/Toast";
+import { Toaster } from "./components/ui/sonner";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <ToastProvider>
-          <App />
-        </ToastProvider>
+        <App />
+        <Toaster />
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,

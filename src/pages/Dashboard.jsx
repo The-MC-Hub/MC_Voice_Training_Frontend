@@ -14,7 +14,7 @@ import { trackDashboardView, trackDashboardTabSwitch, trackDashboardChartFilter,
 import OverviewTab from "../components/dashboard/OverviewTab";
 import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
-import { useToast } from '../components/ui/Toast';
+import { toast } from 'sonner';
 import NewbieQuest from '../components/dashboard/NewbieQuest';
 import StreakWidget from '../components/ui/StreakWidget';
 import StreakCardModal from '../components/ui/StreakCardModal';
@@ -28,7 +28,6 @@ const Dashboard = () => {
   const [prevStreak, setPrevStreak] = useState(null);
   const [streakCardOpen, setStreakCardOpen] = useState(false);
   const { t } = useTranslation();
-  const toast = useToast();
 
   const [activeTab, setActiveTab] = useState("Overview");
   const [sortOrder, setSortOrder] = useState("newest");
@@ -42,7 +41,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (localStorage.getItem("justVerified")) {
       localStorage.removeItem("justVerified");
-      toast(t('dashboard.emailVerifiedToast'), "success");
+      toast.success(t('dashboard.emailVerifiedToast'));
     }
   }, []);
 

@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import api from "../services/api";
 import { useAuth } from "../hooks/useAuth";
-import { useToast } from "../components/ui/Toast";
+import { toast } from "sonner";
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -99,7 +99,6 @@ const PaymentPage = () => {
   const { user, updateUser, refreshUser } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const toast = useToast();
 
   const [plans, setPlans] = useState([]);
   const [plansLoading, setPlansLoading] = useState(true);
@@ -188,7 +187,7 @@ const PaymentPage = () => {
         updateUser({ isPremium: true, plan: data.plan });
         await refreshUser();
         setSuccess(true);
-        toast.showSuccess(t('payment.activatedWithDiscount'));
+        toast.success(t('payment.activatedWithDiscount'));
         setTimeout(() => navigate("/m/dashboard"), 2500);
         return;
       }
@@ -219,7 +218,7 @@ const PaymentPage = () => {
           updateUser({ isPremium: true, plan: statusData.plan, aiSessionsUsed: 0, planExpiresAt: statusData.planExpiresAt });
           await refreshUser();
           setSuccess(true);
-          toast.showSuccess(t('payment.paymentSuccessUpgraded'));
+          toast.success(t('payment.paymentSuccessUpgraded'));
           setTimeout(() => navigate("/m/dashboard"), 2500);
         }
       } catch {}
@@ -235,10 +234,10 @@ const PaymentPage = () => {
       updateUser({ isPremium: true, plan: simData?.plan || selectedPlan, aiSessionsUsed: 0, planExpiresAt: simData?.planExpiresAt });
       await refreshUser();
       setSuccess(true);
-      toast.showSuccess(t('payment.activatedSuccess'));
+      toast.success(t('payment.activatedSuccess'));
       setTimeout(() => navigate("/m/dashboard"), 2500);
     } catch {
-      toast.showError(t('payment.simulationFailed'));
+      toast.error(t('payment.simulationFailed'));
     } finally {
       setSimulating(false);
     }

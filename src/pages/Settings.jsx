@@ -37,7 +37,7 @@ import {
 
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
-import { useToast } from "../components/ui/Toast";
+import { toast } from "sonner";
 import { handleUpdateSettings } from "../controllers/authController";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -163,7 +163,6 @@ const ReferralCard = ({ user, updateUser }) => {
   const { t } = useTranslation();
   const [generating, setGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
-  const toast = useToast();
 
   const referralCode = user?.referralCode;
   const referralCount = user?.referralCount ?? 0;
@@ -247,7 +246,6 @@ const Settings = () => {
   const { t, i18n: i18nInstance } = useTranslation();
   const { user, updateUser, logout, refreshUser } = useAuth();
   const navigate = useNavigate();
-  const toast = useToast();
   const { startTour } = useTour();
   const [showBioPreview, setShowBioPreview] = useState(false);
   const [showPersonalityPreview, setShowPersonalityPreview] = useState(false);
@@ -398,10 +396,10 @@ const Settings = () => {
         ...prev,
         eventPhotos: [...prev.eventPhotos, ...urls]
       }));
-      toast(t('settings.portfolioUploadSuccess', { count: urls.length }), "success");
+      toast.success(t('settings.portfolioUploadSuccess', { count: urls.length }));
     } catch (err) {
       console.error("Portfolio upload failed:", err);
-      toast(t('settings.portfolioUploadFailed'), "error");
+      toast.error(t('settings.portfolioUploadFailed'));
     } finally {
       setPortfolioLoading(false);
       e.target.value = '';
