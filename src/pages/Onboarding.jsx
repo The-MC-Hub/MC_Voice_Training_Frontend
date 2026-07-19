@@ -10,6 +10,7 @@ import { updateProfile } from "../controllers/mcController";
 import { uploadMedia } from "../services/mediaService";
 import { trackOnboardingStepComplete, trackOnboardingSubmit } from '@/utils/analytics';
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Card } from "@/components/ui/card";
 
 const inputCls = "w-full bg-[#09090b] border border-white/[0.07] rounded-xl py-3 px-4 text-[14px] text-white placeholder:text-zinc-600 outline-none focus:border-white/[0.14] transition-colors";
 
@@ -357,7 +358,7 @@ const Onboarding = () => {
                     badgeCls: "text-zinc-500 bg-[#09090b] border-white/[0.06]",
                   },
                 ].map((card, i) => (
-                  <div key={i} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 hover:border-[#f5a623]/20 transition-colors group space-y-4">
+                  <Card key={i} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 hover:border-[#f5a623]/20 transition-colors group space-y-4 gap-0 shadow-none">
                     <h3 className="text-[14px] font-semibold text-white group-hover:text-[#f5a623] transition-colors flex items-center gap-2">
                       <span className="text-[#f5a623]">{card.icon}</span> {card.title}
                     </h3>
@@ -368,7 +369,7 @@ const Onboarding = () => {
                     <div className={`flex items-center gap-1.5 text-[11px] font-medium px-3 py-1.5 rounded-lg border w-max ${card.badgeCls}`}>
                       {card.badge}
                     </div>
-                  </div>
+                  </Card>
                 ))}
               </div>
             </div>

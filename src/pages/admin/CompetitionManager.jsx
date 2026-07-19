@@ -5,6 +5,7 @@ import { fetchAdminCompetitions, addCompetition, updateCompetition, deleteCompet
 import { fetchLessons } from "../../controllers/voiceController";
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
 
 const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
 const inputClsShadcn = `${inputCls} h-auto rounded-none focus-visible:ring-0`;
@@ -97,7 +98,7 @@ const CompetitionManager = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {competitions.length > 0 ? (
           competitions.map((comp) => (
-            <div key={comp.id} className="bg-[#111113] border border-white/[0.07] p-5 flex flex-col justify-between">
+            <Card key={comp.id} className="bg-[#111113] border border-white/[0.07] p-5 flex flex-col justify-between gap-0 rounded-none shadow-none">
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className={`px-2 py-0.5 text-[10px] font-medium border ${comp.active ? "text-emerald-400 border-emerald-900/40 bg-emerald-950/20" : "text-zinc-500 border-white/[0.07] bg-[#09090b]"}`}>
@@ -131,13 +132,13 @@ const CompetitionManager = () => {
                   </Button>
                 </div>
               </div>
-            </div>
+            </Card>
           ))
         ) : (
-          <div className="col-span-full text-center py-14 bg-[#111113] border border-white/[0.07]">
+          <Card className="col-span-full text-center py-14 bg-[#111113] border border-white/[0.07] gap-0 rounded-none shadow-none">
             <Trophy size={32} className="text-zinc-700 mx-auto mb-3" />
             <p className="text-zinc-500 text-[12px]">{t('admin.competitionManager.noArenas')}</p>
-          </div>
+          </Card>
         )}
       </div>
 

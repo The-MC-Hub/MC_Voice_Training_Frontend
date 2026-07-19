@@ -15,6 +15,7 @@ import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { voucherService } from '../services/voucherService';
 import { trackPaymentPageView, trackPlanSelect, trackPaymentSubmit, trackDiscountCodeApplied } from '@/utils/analytics';
 
@@ -297,7 +298,7 @@ const PaymentPage = () => {
 
             {/* FREE indicator — only if user is free */}
             {currentPlanOrder === 0 && (
-              <div className="w-full text-left p-5 rounded-2xl border border-gray-200 bg-white opacity-60">
+              <Card className="w-full text-left p-5 rounded-2xl border border-gray-200 bg-white opacity-60 gap-0 shadow-none">
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2 mb-1">
@@ -313,7 +314,7 @@ const PaymentPage = () => {
                     <p className="text-[11px] text-gray-400">{t('payment.usedOutOfFive', { count: user?.aiSessionsUsed ?? 0 })}</p>
                   </div>
                 </div>
-              </div>
+              </Card>
             )}
 
             {/* Course access note */}
@@ -663,11 +664,11 @@ const PaymentPage = () => {
               ) : orderData ? (
                 <div className="flex flex-col items-center gap-5 w-full">
                   {/* Amount */}
-                  <div className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center">
+                  <Card className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center gap-0 shadow-none">
                     <p className="text-[11px] text-gray-400 uppercase tracking-wider mb-1">{t('payment.amountToPay')}</p>
                     <p className="text-3xl font-bold text-gray-900">{orderData.amount?.toLocaleString("vi-VN")}đ</p>
                     <p className="text-[12px] text-gray-400 mt-1">{t('payment.planLabel', { plan: orderData.plan })}</p>
-                  </div>
+                  </Card>
 
                   {/* PayOS CTA */}
                   <motion.button
@@ -788,7 +789,7 @@ const PaymentPage = () => {
             { name: "Trần Thị Bảo Châu", role: t('payment.testimonial2Role'), quote: t('payment.testimonial2Quote'), plan: "ANNUAL" },
             { name: "Lê Đức Anh", role: t('payment.testimonial3Role'), quote: t('payment.testimonial3Quote'), plan: "FULL" },
           ].map((item, i) => (
-            <div key={i} className="bg-white border border-gray-200 rounded-2xl p-5">
+            <Card key={i} className="bg-white border border-gray-200 rounded-2xl p-5 gap-0 shadow-none">
               <div className="flex gap-0.5 mb-3">
                 {[...Array(5)].map((_, j) => <Star key={j} size={11} className="text-amber-400 fill-amber-400" />)}
               </div>
@@ -802,7 +803,7 @@ const PaymentPage = () => {
                   item.plan === 'ANNUAL' ? 'bg-purple-50 border-purple-200 text-purple-600' : 'bg-blue-50 border-blue-200 text-blue-600'
                 }`}>{item.plan}</span>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
 

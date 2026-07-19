@@ -1,7 +1,7 @@
 # Animate UI — Kế hoạch thay thế component toàn hệ thống
 
-Ngày lập: 2026-07-19 · Cập nhật: 2026-07-19 (Giai đoạn 7 Skeleton + 8 Input + 9 Table + 10 Badge + 11 Avatar đã code xong, build+E2E+screenshot pass, xem mục 10-14)
-Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) + Badge (10) + Avatar (11) đã xong. Còn lại: Card(12), Select(13, chờ xác nhận), Toast(14), Dialog(1), Dropdown Menu(2), Sheet(3), Accordion(4), Checkbox(5), Avatar Group(6) — theo thứ tự ưu tiên trong mục "Khảo sát hoàn tất".
+Ngày lập: 2026-07-19 · Cập nhật: 2026-07-19 (Giai đoạn 7-11 + 12 Card (15.1, 22/22) đã code xong, build+E2E+screenshot pass; 15.3 — 13 mục "không chắc" còn lại cho phiên sau)
+Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) + Badge (10) + Avatar (11) + Card 15.1 (12) đã xong. Còn lại: Card 15.3 (13 mục uncertain), Select(13, chờ xác nhận), Toast(14), Dialog(1), Dropdown Menu(2), Sheet(3), Accordion(4), Checkbox(5), Avatar Group(6).
 
 ## Mục tiêu
 
@@ -405,28 +405,30 @@ Lệnh cài: `npx shadcn@latest add skeleton --yes`
 
 | # | File | Vị trí | Trạng thái |
 |---|---|---|---|
-| 1 | `Wallet.jsx` | Balance card, Payout method card (không import framer-motion) | ⬜ |
-| 2 | `PaymentResult.jsx` | Result card duy nhất | ⬜ |
-| 3 | `Success.jsx` | Booking summary card | ⬜ |
-| 4 | `MilestoneDetail.jsx` | "Overall progress" box, "Rewards" sidebar card | ⬜ |
-| 5 | `Learning.jsx` | "Mentorship" premium card | ⬜ |
-| 6 | `ComingSoon.jsx` | 4 stat cards nhỏ | ⬜ |
-| 7 | `PrivacyHub.jsx` / `TermsOfService.jsx` | TOC sidebar card, contact-info cards (`.map()` không stagger), footer note card | ⬜ |
-| 8 | `Settings.jsx` | "General" card, Password form card, Session/Danger Zone card, `ReferralCard` — **KHÔNG đụng "Personal Info" card** (chứa `data-quest="quest-avatar-picker"`/`quest-name-input"`/`quest-save-profile"`, để riêng ở 15.3) | ⬜ |
-| 9 | `Dashboard.jsx` | DAILY countdown banner, FREE upgrade banner | ⬜ |
-| 10 | `PaymentPage.jsx` | FREE indicator card, Amount sub-card, Testimonials strip cards — **KHÔNG đụng plan cards (motion.button) hay comparison table** | ⬜ |
-| 11 | `admin/sections/DashboardSection.jsx` | `Card`/`KPI`/`RevCard`/`Stat` helper component (phần **visible only**) — ứng viên tốt nhất vì đây là pattern thủ công gần giống shadcn Card nhất | ⬜ **BẮT BUỘC loại trừ hoàn toàn block `#pdf-report-content` dòng 917-993** |
-| 12 | `admin/sections/TransactionManagement.jsx` | Revenue summary cards, "Revenue by plan" cards | ⬜ |
-| 13 | `admin/sections/CoursePricingManager.jsx` | Course pricing rows (dòng 71-129) | ⬜ |
-| 14 | `admin/CompetitionManager.jsx` | Competition cards (dòng 98-132), empty state card | ⬜ |
-| 15 | `admin/PlanManager.jsx` | Voucher stats summary cards (dòng 899-905), Guest cooldown settings card (dòng 826-867) — **KHÔNG đụng `PlanEditor`/`DiscountRow` accordion (logic phức tạp)** | ⬜ |
-| 16 | `admin/sections/NotificationManager.jsx` | Stats cards tĩnh (dòng 681-693) — **KHÔNG đụng `AnnouncementRow`** | ⬜ |
-| 17 | `admin/sections/MarketingManager.jsx` | Email template cards (dòng 481-509) | ⬜ |
-| 18 | `HelpCenter.jsx` | "Tài nguyên hữu ích" card, "Vẫn cần trợ giúp?" card (tách khỏi `motion.div fadeUp` wrapper — giữ wrapper, đổi nội dung Card con bên trong) | ⬜ |
-| 19 | `ContactUs.jsx` | Contact info cards, "Thời gian phản hồi"/"Trước khi liên hệ" cards | ⬜ |
-| 20 | `Onboarding.jsx` | Step 3 identity/bank cards (2 cards cố định) | ⬜ |
-| 21 | `Community.jsx` | "No active arena" fallback card | ⬜ |
-| 22 | `CourseDetail.jsx` | `QuizTab` result cards (dòng 281-373, khi hiển thị kết quả) | ⬜ |
+| 1 | `Wallet.jsx` | Balance card, Payout method card | ✅ Xong |
+| 2 | `PaymentResult.jsx` | Result card duy nhất | ✅ Xong |
+| 3 | `Success.jsx` | Booking summary card | ✅ Xong |
+| 4 | `MilestoneDetail.jsx` | "Overall progress" box, "Rewards" sidebar card (giữ `sticky top-20`) | ✅ Xong |
+| 5 | `Learning.jsx` | "Mentorship" premium card | ✅ Xong |
+| 6 | `ComingSoon.jsx` | 4 stat cards nhỏ | ✅ Xong |
+| 7 | `PrivacyHub.jsx` / `TermsOfService.jsx` | TOC sidebar card, contact-info cards (`.map()` không stagger) — **footer note card bị loại** (bọc trực tiếp `motion.div fadeUp`, không có lớp div con để tách) | ✅ Xong (trừ footer note) |
+| 8 | `Settings.jsx` | "General" card, Session/Danger Zone card, `ReferralCard` — **Password form là `<form>`, không đổi sang Card (div) vì phá semantic submit — để nguyên**. Personal Info card giữ nguyên (data-quest) | ✅ Xong (trừ Password form) |
+| 9 | `Dashboard.jsx` | DAILY countdown banner, FREE upgrade banner | ✅ Xong |
+| 10 | `PaymentPage.jsx` | FREE indicator card, Amount sub-card, Testimonials strip cards | ✅ Xong |
+| 11 | `admin/sections/DashboardSection.jsx` | `KPI`/`RevCard` + local `Card` helper (title/subtitle/icon wrapper dùng khắp file) | ✅ Xong — **phát hiện xung đột tên**: file có sẵn `const Card = (...)` riêng (dòng 84, dùng cho toàn bộ chart section), import shadcn `Card` trùng tên → build lỗi ngay lập tức. Sửa bằng cách alias `import { Card as ShadcnCard }`, `KPI`/`RevCard` dùng `ShadcnCard` trực tiếp, local `Card` refactor để render `ShadcnCard` bên trong (giữ nguyên API title/subtitle/icon/children cho toàn bộ call site). Xác nhận `#pdf-report-content` dùng markup riêng biệt hoàn toàn (hex màu hardcode, không dùng `KPI`/`RevCard`/`Card`) — không bị ảnh hưởng. |
+| 12 | `admin/sections/TransactionManagement.jsx` | Revenue summary cards, "Revenue by plan" cards | ✅ Xong |
+| 13 | `admin/sections/CoursePricingManager.jsx` | Course pricing rows | ✅ Xong |
+| 14 | `admin/CompetitionManager.jsx` | Competition cards, empty state card | ✅ Xong |
+| 15 | `admin/PlanManager.jsx` | Voucher stats summary cards, Guest cooldown settings card — `PlanEditor`/`DiscountRow` giữ nguyên | ✅ Xong |
+| 16 | `admin/sections/NotificationManager.jsx` | Stats cards tĩnh — `AnnouncementRow` giữ nguyên | ✅ Xong |
+| 17 | `admin/sections/MarketingManager.jsx` | Email template cards | ✅ Xong |
+| 18 | `HelpCenter.jsx` | ✅ Xác nhận **cả 2 card đều bọc trực tiếp `motion.div {...fadeUp}`/`whileInView`, không có lớp div con** → không đổi được theo quy tắc loại trừ, giữ nguyên hoàn toàn | ⬜ Không áp dụng (đúng theo exclusion rule) |
+| 19 | `ContactUs.jsx` | Contact info cards, "Thời gian phản hồi"/"Trước khi liên hệ" cards (nằm trong `motion.div fadeUp`, là div con nên an toàn) — form bên phải bọc trực tiếp motion, giữ nguyên | ✅ Xong (trừ form) |
+| 20 | `Onboarding.jsx` | Step 3 identity/bank cards (2 cards cố định, `.map()`) | ✅ Xong |
+| 21 | `Community.jsx` | "No active arena" fallback card | ✅ Xong |
+| 22 | `CourseDetail.jsx` | `QuizTab` result cards (certificate box, score box, feedback items — đều là div con trong `motion.div` ngoài, an toàn) | ✅ Xong |
+
+**Bug tránh được (thứ 2, cùng loại với DashboardSection):** không phát hiện thêm xung đột tên `Card` ở 20 file còn lại — đã grep toàn bộ `^const Card = \|^function Card\(` sau khi hoàn tất, chỉ có `DashboardSection.jsx` bị (đã sửa) và `AnalyticsSection.jsx` (dead code, không đụng).
 
 ### 15.2 — KHÔNG ĐỔI (giữ nguyên, ghi lý do để không ai đổi nhầm sau này)
 
@@ -460,14 +462,19 @@ Lệnh cài: `npx shadcn@latest add skeleton --yes`
 | `admin/sections/AnalyticsSection.jsx`, `AdminOverview.jsx` | `Card`/`Stat` helper | **Nghi ngờ không active trong routing** (`AdminDashboard.jsx` chỉ import `DashboardSection`, không thấy import 2 file này) — xác nhận trước khi đổi, nếu dead code thì bỏ qua hoàn toàn, không tốn công |
 
 ### Checklist giai đoạn 12
-- [ ] Xác nhận `AnalyticsSection.jsx`/`AdminOverview.jsx` có active trong routing không (`grep -n "AnalyticsSection\|AdminOverview" src/pages/AdminDashboard.jsx`) — nếu dead code, loại khỏi phạm vi hoàn toàn
-- [ ] Cài `card` (`npx shadcn@latest add card --yes`)
-- [ ] Làm mẫu 2-3 file đơn giản nhất trong 15.1 trước (`PaymentResult.jsx`, `Success.jsx`) — test tay + screenshot
-- [ ] Áp dụng hàng loạt phần còn lại của 15.1 — chia nhóm nhỏ 3-4 file/agent, build sau mỗi nhóm
-- [ ] Với từng mục 15.3: đọc kỹ, quyết định NÊN/KHÔNG trước khi đổi — không đoán
-- [ ] Screenshot trước/sau cho mỗi trang đã đổi — bài học từ vụ Button pill cam, không chỉ tin build pass
-- [ ] Chạy full E2E suite sau mỗi nhóm lớn
-- [ ] Test tay riêng: `Settings.jsx` Personal Info card nếu có đổi — quest-tour (`QuestGuideTour.jsx`) vẫn phải tìm đúng `data-quest` anchor
+- [x] Xác nhận `AnalyticsSection.jsx`/`AdminOverview.jsx` — **đã xác nhận dead code**, không import ở đâu trong `AdminDashboard.jsx`, loại khỏi phạm vi hoàn toàn
+- [x] Cài `card` (`npx shadcn@latest add card --yes`)
+- [x] Làm mẫu 3 file đơn giản nhất trong 15.1 trước (`PaymentResult.jsx`, `Success.jsx`, `MilestoneDetail.jsx`) — test tay + screenshot, xác lập pattern `gap-0 shadow-none` cho card không dùng `gap-6`/không có shadow
+- [x] Áp dụng hàng loạt phần còn lại của 15.1 — giao 3 agent song song theo nhóm (Learning/ComingSoon/Privacy/Terms · Settings/Dashboard/PaymentPage · 6 file admin), phần còn lại (Wallet, ContactUs, Onboarding, Community, CourseDetail, DashboardSection) làm tay do rủi ro cao hơn (PDF-export, motion-wrapper, data-quest)
+- [x] **Toàn bộ 22/22 mục 15.1 đã convert** (trừ 2 ngoại lệ hợp lệ theo exclusion rule: HelpCenter cả 2 card + PaymentPage form phải + Settings Password form — đều bọc trực tiếp motion/là `<form>`, giữ nguyên đúng quy tắc)
+- [x] Screenshot xác nhận: Wallet, Onboarding, Community (2 lần), Dashboard, admin/transactions, admin/marketing, admin/dashboard (KPI+RevCard+local Card wrapper) — không vỡ layout, PDF export button vẫn còn nguyên
+- [x] Chạy full E2E suite — 49/49 pass
+- [ ] **Mục 15.3 (13 item "KHÔNG CHẮC") CHƯA làm — để lại cho phiên sau, cần quyết định từng cái một, không tự ý giao agent** (đúng theo quy tắc gốc của mục này)
+- [ ] Commit + push — **CHƯA push, chỉ mới commit local**
+
+**Bug phát hiện + tự sửa trong giai đoạn này:**
+1. `DashboardSection.jsx` có sẵn `const Card = (...)` cục bộ (title/subtitle/icon wrapper) — import shadcn `Card` trùng tên gây lỗi build ngay lập tức. Sửa bằng alias `Card as ShadcnCard`, refactor local `Card` để dùng `ShadcnCard` bên trong, giữ nguyên API cũ cho ~15+ call site trong file. Đã grep toàn bộ codebase xác nhận không còn file nào khác có xung đột tương tự.
+2. `CourseDetail.jsx` QuizTab feedback item: thêm `gap-0` chồng lên `gap-3` đã có sẵn trong className gốc → IDE cssConflict warning, sửa bằng cách bỏ `gap-0` (giữ `gap-3` gốc thắng).
 - [ ] Test tay riêng: `PaymentPage.jsx` comparison table nếu có đổi — `e2e/payment.spec.js` phải pass
 - [ ] Commit theo từng nhóm nhỏ (không gộp 1 commit khổng lồ cho cả giai đoạn 12)
 

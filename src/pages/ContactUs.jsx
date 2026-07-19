@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, CheckCircle2, AlertCircle, Clock, MessageSquare, Sparkles } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { Card } from '@/components/ui/card';
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -93,14 +94,14 @@ const ContactUs = () => {
           {/* Contact info cards */}
           <motion.div {...fadeUp} className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {contacts.map(({ icon: Icon, label, value, sub }) => (
-              <div key={label} className="p-4 bg-[#111113] border border-white/[0.07] rounded-2xl hover:border-white/[0.12] transition-colors">
+              <Card key={label} className="p-4 bg-[#111113] border border-white/[0.07] rounded-2xl hover:border-white/[0.12] transition-colors gap-0 shadow-none">
                 <div className="w-9 h-9 rounded-xl bg-[#f5a623]/[0.08] border border-[#f5a623]/15 flex items-center justify-center mb-3">
                   <Icon size={16} className="text-[#f5a623]" />
                 </div>
                 <p className="text-[11px] text-zinc-600 uppercase tracking-wider mb-1">{label}</p>
                 <p className="text-[13px] font-semibold text-white leading-snug">{value}</p>
                 <p className="text-[11px] text-zinc-600 mt-0.5">{sub}</p>
-              </div>
+              </Card>
             ))}
           </motion.div>
 
@@ -109,7 +110,7 @@ const ContactUs = () => {
 
             {/* Left — info + social */}
             <motion.div {...fadeUp} className="space-y-6">
-              <div className="p-6 bg-[#111113] border border-white/[0.07] rounded-2xl space-y-4">
+              <Card className="p-6 bg-[#111113] border border-white/[0.07] rounded-2xl space-y-4 gap-0 shadow-none">
                 <p className="text-[13px] font-semibold text-white mb-1">Thời gian phản hồi dự kiến</p>
                 {[
                   { type: 'Email',   time: '24–48 giờ làm việc', dot: 'bg-emerald-400' },
@@ -124,9 +125,9 @@ const ContactUs = () => {
                     <span className="text-[12px] text-zinc-600">{time}</span>
                   </div>
                 ))}
-              </div>
+              </Card>
 
-              <div className="p-6 bg-[#111113] border border-white/[0.07] rounded-2xl">
+              <Card className="p-6 bg-[#111113] border border-white/[0.07] rounded-2xl gap-0 shadow-none">
                 <p className="text-[13px] font-semibold text-white mb-3">Trước khi liên hệ, thử xem</p>
                 <div className="space-y-2.5">
                   {[
@@ -144,7 +145,7 @@ const ContactUs = () => {
                     </Link>
                   ))}
                 </div>
-              </div>
+              </Card>
             </motion.div>
 
             {/* Right — form */}

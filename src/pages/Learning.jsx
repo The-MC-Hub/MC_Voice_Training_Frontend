@@ -9,6 +9,7 @@ import {
     CheckCircle2, User, Lock, ArrowRight, Sparkles, Trophy, Target
 } from 'lucide-react';
 import PageBanner from '../components/ui/PageBanner';
+import { Card } from '@/components/ui/card';
 
 const Learning = () => {
     const { t, i18n } = useTranslation();
@@ -224,7 +225,7 @@ const Learning = () => {
                     </div>
 
                     {/* Mentorship */}
-                    <div className="relative bg-[#111113] border border-[#f5a623]/20 rounded-2xl overflow-hidden">
+                    <Card className="relative bg-[#111113] border border-[#f5a623]/20 rounded-2xl overflow-hidden gap-0 shadow-none py-0">
                         <div className="absolute inset-0 bg-gradient-to-br from-[#f5a623]/[0.07] via-transparent to-transparent pointer-events-none" />
                         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#f5a623]/50 to-transparent" />
                         <div className="relative p-5">
@@ -243,7 +244,7 @@ const Learning = () => {
                                 {t('learning.applyCoaching')}
                             </button>
                         </div>
-                    </div>
+                    </Card>
                 </div>
             </div>
         </div>

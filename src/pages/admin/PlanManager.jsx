@@ -9,6 +9,7 @@ import {
 import api from "../../services/api";
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
 
 const inputCls = "w-full bg-[#0d0d0f] border border-white/8 px-3 py-2.5 text-[13px] text-white focus:outline-none focus:border-white/[0.2] focus:bg-[#111114] placeholder:text-zinc-600 rounded-lg transition-colors";
 const inputClsShadcn = `${inputCls} h-auto rounded-none focus-visible:ring-0`;
@@ -825,7 +826,7 @@ const PlanManager = () => {
       {tab === "settings" && (
         <div className="space-y-6 max-w-lg">
           {/* Guest cooldown card */}
-          <div className="border border-white/7 rounded-xl overflow-hidden">
+          <Card className="border border-white/7 rounded-xl overflow-hidden gap-0 shadow-none">
             <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-white/2">
               <Clock size={13} className="text-amber-400" />
               <span className="text-[12px] font-semibold text-white">{t('admin.planManager.guestCooldownTitle')}</span>
@@ -866,7 +867,7 @@ const PlanManager = () => {
               )}
               <p className="text-[10px] text-zinc-600">{t('admin.planManager.cooldownRangeHint')}</p>
             </div>
-          </div>
+          </Card>
         </div>
       )}
 
@@ -898,11 +899,11 @@ const PlanManager = () => {
                   { label: t('admin.planManager.statRemainingUses'), value: totalRemaining, sub: unlimited > 0 ? t('admin.planManager.statUnlimitedCodes', { count: unlimited }) : t('admin.planManager.statTotalLimited'), color: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/5" },
                   { label: t('admin.planManager.statUsed'), value: discounts.reduce((s, d) => s + (d.usedCount ?? 0), 0), sub: t('admin.planManager.statTotalUses'), color: "text-zinc-400", border: "border-white/10", bg: "bg-white/[0.02]" },
                 ].map(({ label, value, sub, color, border, bg }) => (
-                  <div key={label} className={`rounded-xl border ${border} ${bg} px-4 py-3`}>
+                  <Card key={label} className={`rounded-xl border ${border} ${bg} px-4 py-3 gap-0 shadow-none`}>
                     <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1">{label}</p>
                     <p className={`text-[22px] font-bold tabular-nums ${color}`}>{value}</p>
                     <p className="text-[10px] text-zinc-600 mt-0.5">{sub}</p>
-                  </div>
+                  </Card>
                 ))}
               </div>
             );

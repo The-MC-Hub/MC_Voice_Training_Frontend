@@ -12,6 +12,7 @@ import {
   Zap, UserCheck, UserX, Mic, Star, Download,
 } from "lucide-react";
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Card as ShadcnCard } from "@/components/ui/card";
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 const fmt  = (v) => (v ?? 0).toLocaleString("vi-VN");
@@ -38,7 +39,7 @@ export const DASHBOARD_NAV = [
 // ── shared sub-components ────────────────────────────────────────────────────
 
 const KPI = ({ label, value, sub, icon: Icon, color, isMoney, delta }) => (
-  <div className="p-6 flex flex-col gap-4 border" style={{ background: "var(--bg-surface)", borderColor: "var(--border-subtle)" }}>
+  <ShadcnCard className="p-6 flex flex-col gap-4 border shadow-none" style={{ background: "var(--bg-surface)", borderColor: "var(--border-subtle)" }}>
     <div className="flex items-start justify-between">
       <div className={`w-11 h-11 flex items-center justify-center border ${color}`} style={{ background: "var(--bg-elevated)", borderColor: "var(--border-subtle)" }}>
         <Icon size={20} />
@@ -59,13 +60,13 @@ const KPI = ({ label, value, sub, icon: Icon, color, isMoney, delta }) => (
       </div>
       {sub && <p className="text-[12px] mt-1" style={{ color: "var(--text-muted)" }}>{sub}</p>}
     </div>
-  </div>
+  </ShadcnCard>
 );
 
 const RevCard = ({ icon: Icon, label, colorCls, borderCls, revenue, count }) => {
   const { t } = useTranslation();
   return (
-  <div className={`p-5 border ${borderCls} flex flex-col gap-3`} style={{ background: "var(--bg-surface)" }}>
+  <ShadcnCard className={`p-5 border ${borderCls} flex flex-col gap-3 shadow-none`} style={{ background: "var(--bg-surface)" }}>
     <div className="flex items-center gap-2">
       <Icon size={16} className={colorCls} />
       <span className={`text-[12px] font-semibold uppercase tracking-wider ${colorCls}`}>{label}</span>
@@ -76,12 +77,12 @@ const RevCard = ({ icon: Icon, label, colorCls, borderCls, revenue, count }) => 
       </div>
       <div className="text-[12px] mt-0.5" style={{ color: "var(--text-muted)" }}>{t("admin.dashboardSection.transactionsUnit", { count: count ?? 0 })}</div>
     </div>
-  </div>
+  </ShadcnCard>
   );
 };
 
 const Card = ({ title, subtitle, icon: Icon, children, className = "" }) => (
-  <div className={`bg-[--bg-surface] border border-[--border-subtle] p-5 ${className}`}>
+  <ShadcnCard className={`bg-[--bg-surface] border border-[--border-subtle] p-5 gap-0 shadow-none ${className}`}>
     <div className="flex items-center gap-2 mb-4">
       {Icon && <Icon size={15} className="text-[--text-muted] shrink-0" />}
       <div>
@@ -90,7 +91,7 @@ const Card = ({ title, subtitle, icon: Icon, children, className = "" }) => (
       </div>
     </div>
     {children}
-  </div>
+  </ShadcnCard>
 );
 
 const Tabs = ({ value, onChange, options }) => (

@@ -20,6 +20,7 @@ import StreakWidget from '../components/ui/StreakWidget';
 import StreakCardModal from '../components/ui/StreakCardModal';
 import StreakMilestoneToast from '../components/ui/StreakMilestoneToast';
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Card } from "@/components/ui/card";
 
 const Dashboard = () => {
   const { user } = useAuthStore();
@@ -312,7 +313,7 @@ const Dashboard = () => {
 
       {/* DAILY plan countdown banner */}
       {plan === 'DAILY' && dailyRemaining > 0 && !showLimitWarning && (
-        <div className="rounded-2xl border border-emerald-500/20 bg-linear-to-r from-emerald-500/6 to-transparent p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <Card className="rounded-2xl border border-emerald-500/20 bg-linear-to-r from-emerald-500/6 to-transparent p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 shadow-none">
           <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
             <Clock size={18} className="text-emerald-400" />
           </div>
@@ -326,12 +327,12 @@ const Dashboard = () => {
           >
             <Zap size={14} /> {t('dashboard.dailyPlanExtend')}
           </Link>
-        </div>
+        </Card>
       )}
 
       {/* Upgrade ad banner for FREE users (not near limit) */}
       {plan === 'FREE' && !showLimitWarning && (
-        <div className="rounded-2xl border border-gold/20 bg-linear-to-r from-amber-500/6 to-transparent p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <Card className="rounded-2xl border border-gold/20 bg-linear-to-r from-amber-500/6 to-transparent p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 shadow-none">
           <div className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
             <Crown size={18} className="text-gold" />
           </div>
@@ -345,7 +346,7 @@ const Dashboard = () => {
           >
             <Sparkles size={14} /> {t('dashboard.freeUpgradeCta')}
           </Link>
-        </div>
+        </Card>
       )}
 
       {/* Tab bar */}

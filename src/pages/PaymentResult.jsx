@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { CheckCircle, XCircle, Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Card } from "@/components/ui/card";
 import api from "../services/api";
 import { useAuth } from "../hooks/useAuth";
 import { trackPaymentSuccess, trackPaymentCancel } from '@/utils/analytics';
@@ -53,7 +54,7 @@ const PaymentResult = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#09090b] px-4">
-      <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-10 max-w-md w-full text-center space-y-6">
+      <Card className="bg-[#111113] border border-white/[0.07] rounded-2xl p-10 max-w-md w-full text-center space-y-6 gap-0 shadow-none">
 
         {verified === null ? (
           <div className="flex flex-col items-center gap-4 py-8">
@@ -107,7 +108,7 @@ const PaymentResult = () => {
             )}
           </div>
         )}
-      </div>
+      </Card>
     </div>
   );
 };

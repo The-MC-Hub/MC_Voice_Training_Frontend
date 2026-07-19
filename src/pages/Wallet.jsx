@@ -9,6 +9,7 @@ import { useApi } from "../hooks/useApi";
 import { fetchWallet } from "../controllers/mcController";
 import { formatAmount } from "../controllers/paymentController";
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Card } from "@/components/ui/card";
 
 const statusStyle = (s) => {
   if (s === "Available") return "text-emerald-400 bg-emerald-500/[0.08] border-emerald-500/20";
@@ -51,7 +52,7 @@ const Wallet = () => {
         {/* Left sidebar */}
         <div className="lg:col-span-1 space-y-4">
           {/* Balance card */}
-          <div className="bg-[#f5a623] rounded-xl p-6 relative overflow-hidden">
+          <Card className="bg-[#f5a623] rounded-xl p-6 relative overflow-hidden gap-0 shadow-none">
             <div className="flex items-center gap-1.5 mb-4 text-black/60">
               <WalletIcon size={14} />
               <span className="text-[11px] font-medium uppercase tracking-wider">{t('wallet.balance')}</span>
@@ -81,10 +82,10 @@ const Wallet = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
 
           {/* Payout method */}
-          <div className="bg-[#111113] border border-white/[0.07] rounded-xl p-5">
+          <Card className="bg-[#111113] border border-white/[0.07] rounded-xl p-5 gap-0 shadow-none">
             <h4 className="text-[11px] font-medium text-zinc-600 uppercase tracking-wider mb-4 pb-3 border-b border-white/[0.06]">{t('wallet.payoutMethod')}</h4>
             <div className="flex items-center gap-3 group">
               <div className="w-10 h-10 bg-[#09090b] border border-white/[0.07] rounded-xl flex items-center justify-center text-[#f5a623] shrink-0">
@@ -101,7 +102,7 @@ const Wallet = () => {
             <Button hoverScale={1} className="mt-4 w-full py-2 h-auto rounded-lg border border-white/[0.07] text-[12px] text-zinc-500 hover:text-white hover:border-[#f5a623]/30 transition-colors flex items-center justify-center gap-1.5">
               <Zap size={13} /> {t('wallet.manageMethods')}
             </Button>
-          </div>
+          </Card>
         </div>
 
         {/* Main */}

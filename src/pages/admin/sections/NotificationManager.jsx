@@ -9,6 +9,7 @@ import api from "../../../services/api";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
 
 // ── Shared style tokens ───────────────────────────────────────────────────────
 
@@ -679,7 +680,7 @@ const NotificationManager = () => {
         ].map(s => {
           const Icon = s.icon;
           return (
-            <div key={s.label} className="bg-[--bg-surface] border border-[--border-subtle] p-5 flex items-center gap-4">
+            <Card key={s.label} className="bg-[--bg-surface] border border-[--border-subtle] p-5 flex items-center gap-4 rounded-none shadow-none">
               <div className="w-10 h-10 bg-[--bg-elevated] border border-[--border-subtle] flex items-center justify-center shrink-0">
                 <Icon size={18} className={s.color} />
               </div>
@@ -688,7 +689,7 @@ const NotificationManager = () => {
                 <p className="text-[11px] text-[--text-muted] mt-1">{s.label}</p>
                 <p className="text-[10px] text-[--text-muted] opacity-60">{s.sub}</p>
               </div>
-            </div>
+            </Card>
           );
         })}
       </div>

@@ -6,6 +6,7 @@ import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 
 const fmt = (v) => (v ?? 0).toLocaleString("vi-VN");
 
@@ -125,10 +126,10 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
         {Object.entries(STATUS_CONFIG).map(([key, cfg]) => {
           const Icon = cfg.icon;
           return (
-            <div
+            <Card
               key={key}
               onClick={() => setFilterStatus(filterStatus === key ? "ALL" : key)}
-              className={`bg-[--bg-surface] border p-4 cursor-pointer transition-all ${
+              className={`bg-[--bg-surface] border p-4 gap-0 rounded-none shadow-none cursor-pointer transition-all ${
                 filterStatus === key ? "border-gold/40 ring-1 ring-gold/20" : "border-[--border-subtle] hover:border-[--border-subtle]"
               }`}
             >
@@ -138,14 +139,14 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
               </div>
               <div className="text-xl font-bold text-[--text-primary]">{fmt(statusRevenue[key])} <span className="text-[10px] text-[--text-muted] font-normal">VND</span></div>
               <div className="text-[11px] text-[--text-muted] mt-0.5">{t("admin.transactionManagement.transactionsCount", { count: countByStatus[key] ?? 0 })}</div>
-            </div>
+            </Card>
           );
         })}
       </div>
 
       {/* Revenue by plan */}
       {revenueStats?.revenueByPlan && Object.keys(revenueStats.revenueByPlan).length > 0 && (
-        <div className=" mt-4 bg-[--bg-surface] border border-[--border-subtle] p-4">
+        <Card className=" mt-4 bg-[--bg-surface] border border-[--border-subtle] p-4 gap-0 rounded-none shadow-none">
           <div className="flex items-center gap-2 mb-4">
             <TrendingUp size={14} className="text-[--text-muted]" />
             <span className="text-[13px] font-semibold text-[--text-primary]">{t("admin.transactionManagement.revenueByPlanTitle")}</span>
@@ -159,7 +160,7 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       )}
 
       {/* Filters & Sort */}

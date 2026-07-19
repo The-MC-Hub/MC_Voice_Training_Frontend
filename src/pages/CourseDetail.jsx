@@ -13,6 +13,7 @@ import { trackCourseDetailView, trackCourseEnrollClick, trackLessonStart } from 
 import { useAuthStore } from '../store/useAuthStore';
 import PageLoader from '../components/ui/PageLoader';
 import Breadcrumb from '../components/ui/Breadcrumb';
+import { Card } from '@/components/ui/card';
 import CertificateModal from '../components/CertificateModal';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 
@@ -278,24 +279,24 @@ const QuizTab = ({ questions, courseId }) => {
     return (
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
         {certificateEarned && (
-          <div className="p-6 rounded-2xl bg-[#f5a623]/[0.06] border border-[#f5a623]/20 text-center space-y-3">
+          <Card className="p-6 rounded-2xl bg-[#f5a623]/[0.06] border border-[#f5a623]/20 text-center space-y-3 gap-0 shadow-none">
             <div className="w-12 h-12 mx-auto rounded-xl bg-[#f5a623] flex items-center justify-center">
               <Award size={24} className="text-black" />
             </div>
             <h3 className="text-[15px] font-semibold text-[#f5a623]">{t('courses.certEarned')}</h3>
             <p className="text-zinc-500 text-[13px]">{t('courses.certMsg')}</p>
-          </div>
+          </Card>
         )}
-        <div className={`p-6 rounded-2xl border text-center space-y-2 ${passed ? 'bg-emerald-500/[0.04] border-emerald-500/20' : 'bg-red-500/[0.04] border-red-500/20'}`}>
+        <Card className={`p-6 rounded-2xl border text-center space-y-2 gap-0 shadow-none ${passed ? 'bg-emerald-500/[0.04] border-emerald-500/20' : 'bg-red-500/[0.04] border-red-500/20'}`}>
           <div className={`text-5xl font-bold ${passed ? 'text-emerald-400' : 'text-red-400'}`}>{Math.round(score)}%</div>
           <div className={`text-[11px] font-medium uppercase tracking-wider ${passed ? 'text-emerald-400' : 'text-red-400'}`}>{passed ? t('courses.passed') : t('courses.failed')}</div>
           {!passed && <p className="text-zinc-600 text-[12px]">{t('courses.reviewAndRetry')}</p>}
-        </div>
+        </Card>
         {feedback.length > 0 && (
           <div className="space-y-2">
             <p className="text-[11px] text-zinc-600 uppercase tracking-wider">{t('courses.resultPerQuestion')}</p>
             {feedback.map((fb, i) => (
-              <div key={i} className={`p-3.5 rounded-xl border flex items-start gap-3 ${fb.correct ? 'bg-emerald-500/[0.04] border-emerald-500/20' : 'bg-red-500/[0.04] border-red-500/20'}`}>
+              <Card key={i} className={`p-3.5 rounded-xl border flex items-start gap-3 shadow-none ${fb.correct ? 'bg-emerald-500/[0.04] border-emerald-500/20' : 'bg-red-500/[0.04] border-red-500/20'}`}>
                 <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${fb.correct ? 'bg-emerald-500/[0.08] text-emerald-400' : 'bg-red-500/[0.08] text-red-400'}`}>
                   {fb.correct ? <CheckCircle2 size={13} /> : <AlertCircle size={13} />}
                 </div>
@@ -303,7 +304,7 @@ const QuizTab = ({ questions, courseId }) => {
                   <p className="text-[13px] font-medium text-white">{t('courses.question')} {i + 1}</p>
                   {fb.explanation && <p className="text-[12px] text-zinc-500 mt-0.5 leading-relaxed">{fb.explanation}</p>}
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
         )}

@@ -16,6 +16,7 @@ import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Card } from '@/components/ui/card';
 
 const getTierBadge = (tier) => {
   const base = "flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-medium border";
@@ -280,7 +281,7 @@ const Community = () => {
               <p className="text-[12px] text-zinc-600">{t('community.arenaDescription')}</p>
             </div>
           </div>
-          <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-12 flex flex-col items-center text-center gap-4">
+          <Card className="bg-[#111113] border border-white/[0.07] rounded-2xl p-12 flex flex-col items-center text-center gap-4 shadow-none">
             <div className="w-12 h-12 bg-[#09090b] border border-white/[0.07] rounded-xl flex items-center justify-center text-zinc-700">
               <Gamepad2 size={24} />
             </div>
@@ -292,7 +293,7 @@ const Community = () => {
               className="flex items-center gap-2 px-5 py-2 bg-[#111113] border border-white/[0.07] hover:border-[#f5a623]/30 text-zinc-400 hover:text-white text-[13px] rounded-xl transition-colors h-auto">
               {t('community.goToPractice') || "Luyện Tập Ngay"} <Play size={11} fill="currentColor" />
             </Button>
-          </div>
+          </Card>
         </div>
       )}
 

@@ -4,6 +4,7 @@ import { GraduationCap, Pencil, Check, X, Users, Tag, RefreshCw } from 'lucide-r
 import { academyService } from '../../../services/academyService';
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
 
 const fmt = (n) => (n ?? 0).toLocaleString('vi-VN');
 
@@ -69,7 +70,7 @@ const CoursePricingManager = () => {
               ? Math.round(Number(form.priceVnd || 0) * (100 - Number(form.discountPercent || 0)) / 100)
               : (c.finalPriceVnd ?? c.priceVnd ?? 199000);
             return (
-              <div key={c.id} className="p-4 rounded-xl bg-[--bg-surface] border border-[--border-subtle] flex flex-col lg:flex-row lg:items-center gap-4">
+              <Card key={c.id} className="p-4 rounded-xl bg-[--bg-surface] border border-[--border-subtle] flex flex-col lg:flex-row lg:items-center gap-4 shadow-none">
                 <div className="flex-1 min-w-0">
                   <p className="text-[14px] font-semibold text-[--text-primary] truncate">{c.title}</p>
                   <div className="flex items-center gap-3 mt-1 text-[11px] text-[--text-muted]">
@@ -126,7 +127,7 @@ const CoursePricingManager = () => {
                     </Button>
                   </div>
                 )}
-              </div>
+              </Card>
             );
           })}
           {!courses.length && (

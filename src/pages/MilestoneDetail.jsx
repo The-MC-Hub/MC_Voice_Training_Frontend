@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { academyService } from '../services/academyService';
 import PageLoader from '../components/ui/PageLoader';
+import { Card } from '@/components/ui/card';
 
 const MilestoneDetail = () => {
   const { t } = useTranslation();
@@ -75,7 +76,7 @@ const MilestoneDetail = () => {
             <p className="text-zinc-500 text-[14px] leading-relaxed max-w-xl">"{course.shortDescription}"</p>
           </div>
 
-          <div className="w-full lg:w-80 bg-[#111113] border border-white/[0.07] rounded-xl p-5 shrink-0">
+          <Card className="w-full lg:w-80 bg-[#111113] border border-white/[0.07] rounded-xl p-5 shrink-0 gap-0 shadow-none">
             <div className="flex justify-between items-end mb-3">
               <span className="text-[11px] text-zinc-600 uppercase tracking-wider">{t('milestone.overallProgress')}</span>
               <span className="text-2xl font-bold text-[#f5a623]">{Math.round(progress)}%</span>
@@ -88,7 +89,7 @@ const MilestoneDetail = () => {
             <div className="flex items-center gap-1.5 mt-3 text-[11px] text-emerald-400 font-medium">
               <ShieldCheck size={13} /> {t('milestone.verified')}
             </div>
-          </div>
+          </Card>
         </div>
       </div>
 
@@ -181,7 +182,7 @@ const MilestoneDetail = () => {
 
         {/* Sidebar rewards */}
         <div className="lg:col-span-3">
-          <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 sticky top-20">
+          <Card className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 sticky top-20 gap-0 shadow-none">
             <div className="w-10 h-10 bg-[#f5a623] rounded-xl flex items-center justify-center mb-4">
               <Trophy size={20} className="text-black" />
             </div>
@@ -206,7 +207,7 @@ const MilestoneDetail = () => {
             <button className="w-full py-2.5 bg-[#f5a623] text-black rounded-xl text-[13px] font-semibold hover:bg-[#e09520] transition-colors">
               {t('milestone.claim')}
             </button>
-          </div>
+          </Card>
         </div>
       </div>
     </div>

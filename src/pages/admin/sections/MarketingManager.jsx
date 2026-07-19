@@ -17,6 +17,7 @@ import {
 } from '../../../services/emailCampaignService';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
 
 // ── Shared────────────────────────────────────────────────────────────────────
   
@@ -385,7 +386,7 @@ function EmailTemplatesTab() {
       </div>
 
       {showForm && (
-        <div className="bg-[--bg-surface] border border-[--border-subtle]">
+        <Card className="bg-[--bg-surface] border border-[--border-subtle] gap-0 rounded-none shadow-none py-0">
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-3 border-b border-[--border-subtle]">
             <span className="text-[13px] font-semibold text-[--text-primary]">{editing ? t('admin.marketingManager.editTemplateTitle') : t('admin.marketingManager.createTemplateTitle')}</span>
@@ -469,7 +470,7 @@ function EmailTemplatesTab() {
             </div>
 
           </div>
-        </div>
+        </Card>
       )}
 
       {loading ? (
@@ -479,7 +480,7 @@ function EmailTemplatesTab() {
       ) : (
         <div className="space-y-3">
           {templates.map(tpl => (
-            <div key={tpl.id} className="bg-[--bg-surface] border border-[--border-subtle] p-4">
+            <Card key={tpl.id} className="bg-[--bg-surface] border border-[--border-subtle] p-4 gap-0 rounded-none shadow-none">
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
                   <p className="text-[13px] font-semibold text-[--text-primary]">{tpl.name}</p>
@@ -506,7 +507,7 @@ function EmailTemplatesTab() {
                   </Button>
                 </div>
               )}
-            </div>
+            </Card>
           ))}
         </div>
       )}

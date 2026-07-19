@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { Card } from '@/components/ui/card';
 
 const SECTIONS = [
   { id: 'overview',      icon: Shield,    title: '1. Tổng quan' },
@@ -118,7 +119,7 @@ const PrivacyHub = () => {
 
           {/* Sticky TOC */}
           <aside className="hidden lg:block w-64 shrink-0 sticky top-24 self-start">
-            <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-4">
+            <Card className="bg-[#111113] border border-white/[0.07] rounded-2xl p-4 gap-0 shadow-none">
               <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-wider px-2 mb-3">Mục lục</p>
               <nav className="space-y-0.5">
                 {SECTIONS.map(({ id, icon: Icon, title }) => (
@@ -138,7 +139,7 @@ const PrivacyHub = () => {
                   <FileText size={11} /> Điều khoản dịch vụ →
                 </Link>
               </div>
-            </div>
+            </Card>
           </aside>
 
           {/* Content */}
@@ -309,7 +310,7 @@ const PrivacyHub = () => {
                   { label: 'Đối tượng áp dụng', value: 'Người dùng tại Việt Nam và quốc tế', icon: Globe },
                   { label: 'Khiếu nại', value: 'Bộ TT&TT Việt Nam (nếu không giải quyết được)', icon: AlertCircle },
                 ].map(({ label, value, icon: Icon }) => (
-                  <div key={label} className="flex items-start gap-3 p-4 bg-[#111113] border border-white/[0.07] rounded-xl">
+                  <Card key={label} className="flex-row items-start gap-3 p-4 bg-[#111113] border border-white/[0.07] rounded-xl shadow-none">
                     <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center shrink-0">
                       <Icon size={14} className="text-zinc-500" />
                     </div>
@@ -317,7 +318,7 @@ const PrivacyHub = () => {
                       <p className="text-[11px] text-zinc-600 mb-0.5">{label}</p>
                       <p className="text-[13px] text-zinc-300 font-medium">{value}</p>
                     </div>
-                  </div>
+                  </Card>
                 ))}
               </div>
             </SectionBlock>

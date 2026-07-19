@@ -51,6 +51,7 @@ import { useTour } from '../contexts/TourContext';
 import { trackSettingsProfileUpdate, trackSettingsAvatarUpload, trackLogoutClick, trackPasswordChangeSubmit } from '@/utils/analytics';
 import { questService } from '../services/questService';
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Card } from "@/components/ui/card";
 
 const inputCls = "flex-1 bg-transparent text-[13px] text-gray-800 placeholder:text-gray-400 focus:outline-none min-w-0";
 const inputWrapCls = "flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5 focus-within:border-amber-400 transition-colors";
@@ -195,7 +196,7 @@ const ReferralCard = ({ user, updateUser }) => {
         <Gift size={16} className="text-[#f5a623]" />
         <h2 className="text-[15px] font-semibold text-gray-900">{t('settings.referralCode')}</h2>
       </div>
-      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 space-y-4">
+      <Card className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 space-y-4 gap-0">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[12px] text-gray-500 mb-1">{t('settings.referralCountLabel')}</p>
@@ -237,7 +238,7 @@ const ReferralCard = ({ user, updateUser }) => {
             </Button>
           </div>
         )}
-      </div>
+      </Card>
     </div>
   );
 };
@@ -938,7 +939,7 @@ const Settings = () => {
               <Globe size={16} className="text-[#f5a623]" />
               <h2 className="text-[15px] font-semibold text-gray-900">{t('settings.general')}</h2>
             </div>
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-3">
+            <Card className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-3 gap-0">
                 {/* Replay tour */}
                 <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 border border-gray-100">
                   <div>
@@ -992,7 +993,7 @@ const Settings = () => {
                     )}
                   </div>
                 </div>
-            </div>
+            </Card>
           </div>
 
           {/* Security Section */}
@@ -1047,7 +1048,7 @@ const Settings = () => {
               </form>
 
               {/* Session + Danger Zone */}
-              <div className="bg-white border border-red-100 rounded-2xl overflow-hidden shadow-sm">
+              <Card className="bg-white border border-red-100 rounded-2xl overflow-hidden shadow-sm gap-0">
                 {/* Header */}
                 <div className="px-5 py-3 bg-red-50 border-b border-red-100 flex items-center gap-2">
                   <LogOut size={13} className="text-red-500" />
@@ -1067,7 +1068,7 @@ const Settings = () => {
                     <LogOut size={13} /> {t('navbar.logout')}
                   </Button>
                 </div>
-              </div>
+              </Card>
             </div>
           </div>
 

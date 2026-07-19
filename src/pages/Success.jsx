@@ -5,6 +5,7 @@ import {
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Card } from "@/components/ui/card";
 
 const Success = () => {
   const { t } = useTranslation();
@@ -48,7 +49,7 @@ const Success = () => {
         </div>
 
         {/* Booking summary */}
-        <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 mt-8 flex flex-col md:flex-row gap-8 items-center text-left">
+        <Card className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 mt-8 flex-col md:flex-row gap-8 items-center text-left flex shadow-none">
           <div className="flex items-center gap-4 md:border-r md:border-white/[0.07] md:pr-8">
             <div className="w-14 h-14 rounded-xl bg-[#09090b] border border-[#f5a623]/20 flex items-center justify-center text-[#f5a623] font-bold text-lg">
               {mcInitial}
@@ -81,7 +82,7 @@ const Success = () => {
               </div>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Actions */}
         <div className="flex flex-col md:flex-row gap-3 justify-center pt-4">
