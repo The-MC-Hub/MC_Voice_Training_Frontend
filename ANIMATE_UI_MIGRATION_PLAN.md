@@ -1,7 +1,7 @@
 # Animate UI — Kế hoạch thay thế component toàn hệ thống
 
-Ngày lập: 2026-07-19 · Cập nhật: 2026-07-19 (Giai đoạn 7 Skeleton + 8 Input + 9 Table + 10 Badge đã code xong, build+E2E+screenshot pass, xem mục 10-13)
-Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) + Badge (10) đã xong. Còn lại: Avatar(11), Card(12), Select(13, chờ xác nhận), Toast(14), Dialog(1), Dropdown Menu(2), Sheet(3), Accordion(4), Checkbox(5), Avatar Group(6) — theo thứ tự ưu tiên trong mục "Khảo sát hoàn tất".
+Ngày lập: 2026-07-19 · Cập nhật: 2026-07-19 (Giai đoạn 7 Skeleton + 8 Input + 9 Table + 10 Badge + 11 Avatar đã code xong, build+E2E+screenshot pass, xem mục 10-14)
+Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) + Badge (10) + Avatar (11) đã xong. Còn lại: Card(12), Select(13, chờ xác nhận), Toast(14), Dialog(1), Dropdown Menu(2), Sheet(3), Accordion(4), Checkbox(5), Avatar Group(6) — theo thứ tự ưu tiên trong mục "Khảo sát hoàn tất".
 
 ## Mục tiêu
 
@@ -382,15 +382,18 @@ Lệnh cài: `npx shadcn@latest add skeleton --yes`
 
 | # | File | Vị trí | Trạng thái |
 |---|---|---|---|
-| 1 | `src/pages/Community.jsx` | 10 chỗ `<img src={x || "/default-avatar.png"} onError={...}>` (dòng 234-236, 340-342, 361-363, 381-383, 421-423, +5 nữa) | ⬜ |
+| 1 | `src/pages/Community.jsx` | **Đếm lại chính xác: 5 chỗ** (không phải 10 — khảo sát cũ đếm trùng `src`+`onError` là 2 dòng riêng cho cùng 1 avatar). Dòng ~234, ~340, ~361, ~381, ~421 | ✅ Xong |
 
 **Giữ nguyên hoàn toàn:** `src/components/ui/AvatarFrame.jsx` — hệ thống frame theo streak-tier (7 cấp: NONE/SPARK/FLAME/STORM/LEGEND/ELITE/IMMORTAL), mỗi cấp có `border`/`glow`/`animation` CSS riêng, gắn chặt gamification logic. shadcn Avatar không thể thay thế được component này, không nằm trong phạm vi.
 
+**Cách xử lý fallback:** giữ nguyên logic `src={x || "/default-avatar.png"}` trên `AvatarImage` (không đổi hành vi), đồng thời set `AvatarFallback` cũng render `<img src="/default-avatar.png">` — double-safe, đúng 100% hành vi `onError` cũ (ảnh lỗi → hiện default avatar), không đổi sang kiểu "initials fallback" vì bản gốc không có concept đó. Vị trí dòng ~421 dùng `rounded-xl` (squircle, không phải hình tròn) — override tường minh cả `Avatar` lẫn `AvatarFallback` vì Avatar mặc định `rounded-full`.
+
 ### Checklist
-- [ ] Cài `avatar` (`npx shadcn@latest add avatar --yes`)
-- [ ] Đổi 10 vị trí trong `Community.jsx` → `<Avatar><AvatarImage src={...} /><AvatarFallback>...</AvatarFallback></Avatar>` (bỏ được `onError` thủ công, dùng `AvatarFallback` tự động)
-- [ ] Build + E2E
-- [ ] Commit + push
+- [x] Cài `avatar` (`npx shadcn@latest add avatar --yes`)
+- [x] Đổi 5 vị trí trong `Community.jsx` → `<Avatar><AvatarImage src={...} /><AvatarFallback><img .../></AvatarFallback></Avatar>`
+- [x] Build + E2E — 49/49 pass
+- [x] Screenshot xác nhận Community.jsx render đúng, không vỡ layout
+- [ ] Commit + push — **CHƯA push, chỉ mới commit local**
 
 ---
 

@@ -15,6 +15,7 @@ import PageLoader from "../components/ui/PageLoader";
 import PageBanner from '../components/ui/PageBanner';
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { Button } from '@/components/animate-ui/components/buttons/button';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 const getTierBadge = (tier) => {
   const base = "flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-medium border";
@@ -231,9 +232,10 @@ const Community = () => {
                                 {getRankMedal(index + 1)}
                               </div>
                               <div className="relative">
-                                <img src={record.userAvatar || "/default-avatar.png"} alt={record.userName}
-                                  className={`w-8 h-8 rounded-full border ${index === 0 ? "border-[#f5a623]/50" : "border-white/[0.08]"} object-cover`}
-                                  onError={(e) => { e.target.src = "/default-avatar.png"; }} />
+                                <Avatar className={`w-8 h-8 rounded-full border ${index === 0 ? "border-[#f5a623]/50" : "border-white/[0.08]"}`}>
+                                  <AvatarImage src={record.userAvatar || "/default-avatar.png"} alt={record.userName} className="object-cover" />
+                                  <AvatarFallback><img src="/default-avatar.png" alt={record.userName} className="w-full h-full object-cover" /></AvatarFallback>
+                                </Avatar>
                                 {index === 0 && <div className="absolute -top-1.5 -right-0.5 text-[#f5a623]"><Crown size={9} fill="currentColor" /></div>}
                               </div>
                               <div>
@@ -337,9 +339,10 @@ const Community = () => {
                 {leaderboards[activeTab]?.[1] ? (
                   <div className="flex flex-col items-center flex-1">
                     <div className="flex flex-col items-center">
-                      <img src={leaderboards[activeTab][1].userAvatar || "/default-avatar.png"} alt="2nd"
-                        className="w-14 h-14 rounded-full border-2 border-zinc-500 object-cover"
-                        onError={(e) => { e.target.src = "/default-avatar.png"; }} />
+                      <Avatar className="w-14 h-14 rounded-full border-2 border-zinc-500">
+                        <AvatarImage src={leaderboards[activeTab][1].userAvatar || "/default-avatar.png"} alt="2nd" className="object-cover" />
+                        <AvatarFallback><img src="/default-avatar.png" alt="2nd" className="w-full h-full object-cover" /></AvatarFallback>
+                      </Avatar>
                       <span className="text-[11px] font-medium text-zinc-300 mt-2 max-w-[70px] truncate text-center">{leaderboards[activeTab][1].userName}</span>
                       <span className="text-[10px] text-zinc-600 font-mono">
                         {activeTab === "precision" && `${leaderboards[activeTab][1].cumulativeXP.toFixed(0)} XP`}
@@ -358,9 +361,10 @@ const Community = () => {
                   <div className="flex flex-col items-center flex-1 -translate-y-3">
                     <div className="flex flex-col items-center">
                       <Crown size={16} className="text-[#f5a623] mb-1" fill="currentColor" />
-                      <img src={leaderboards[activeTab][0].userAvatar || "/default-avatar.png"} alt="1st"
-                        className="w-16 h-16 rounded-full border-2 border-[#f5a623] object-cover"
-                        onError={(e) => { e.target.src = "/default-avatar.png"; }} />
+                      <Avatar className="w-16 h-16 rounded-full border-2 border-[#f5a623]">
+                        <AvatarImage src={leaderboards[activeTab][0].userAvatar || "/default-avatar.png"} alt="1st" className="object-cover" />
+                        <AvatarFallback><img src="/default-avatar.png" alt="1st" className="w-full h-full object-cover" /></AvatarFallback>
+                      </Avatar>
                       <span className="text-[12px] font-medium text-white mt-2 max-w-[80px] truncate text-center">{leaderboards[activeTab][0].userName}</span>
                       <span className="text-[10px] text-[#f5a623] font-mono">
                         {activeTab === "precision" && `${leaderboards[activeTab][0].cumulativeXP.toFixed(0)} XP`}
@@ -378,9 +382,10 @@ const Community = () => {
                 {leaderboards[activeTab]?.[2] ? (
                   <div className="flex flex-col items-center flex-1">
                     <div className="flex flex-col items-center">
-                      <img src={leaderboards[activeTab][2].userAvatar || "/default-avatar.png"} alt="3rd"
-                        className="w-12 h-12 rounded-full border-2 border-amber-600 object-cover"
-                        onError={(e) => { e.target.src = "/default-avatar.png"; }} />
+                      <Avatar className="w-12 h-12 rounded-full border-2 border-amber-600">
+                        <AvatarImage src={leaderboards[activeTab][2].userAvatar || "/default-avatar.png"} alt="3rd" className="object-cover" />
+                        <AvatarFallback><img src="/default-avatar.png" alt="3rd" className="w-full h-full object-cover" /></AvatarFallback>
+                      </Avatar>
                       <span className="text-[11px] font-medium text-zinc-400 mt-2 max-w-[65px] truncate text-center">{leaderboards[activeTab][2].userName}</span>
                       <span className="text-[10px] text-zinc-600 font-mono">
                         {activeTab === "precision" && `${leaderboards[activeTab][2].cumulativeXP.toFixed(0)} XP`}
@@ -418,9 +423,10 @@ const Community = () => {
                       <div key={entry.userId}
                         className="flex items-center gap-3 p-3 rounded-xl bg-[#09090b] border border-white/[0.04] hover:border-[#f5a623]/20 hover:bg-[#f5a623]/[0.02] transition-colors">
                         <span className="font-mono text-[12px] text-zinc-600 w-5 shrink-0">#{index + 1}</span>
-                        <img src={entry.userAvatar || "/default-avatar.png"} alt={entry.userName}
-                          className={`w-10 h-10 rounded-xl border object-cover shrink-0 ${index === 0 ? 'border-[#f5a623]/50' : 'border-white/[0.08]'}`}
-                          onError={(e) => { e.target.src = "/default-avatar.png"; }} />
+                        <Avatar className={`w-10 h-10 rounded-xl border shrink-0 ${index === 0 ? 'border-[#f5a623]/50' : 'border-white/[0.08]'}`}>
+                          <AvatarImage src={entry.userAvatar || "/default-avatar.png"} alt={entry.userName} className="object-cover" />
+                          <AvatarFallback className="rounded-xl"><img src="/default-avatar.png" alt={entry.userName} className="w-full h-full object-cover" /></AvatarFallback>
+                        </Avatar>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1">
                             <span className="text-[13px] font-medium text-white truncate max-w-[100px]">{entry.userName}</span>
