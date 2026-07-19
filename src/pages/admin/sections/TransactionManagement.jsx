@@ -4,6 +4,7 @@ import api from "../../../services/api";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Input } from "@/components/ui/input";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 
 const fmt = (v) => (v ?? 0).toLocaleString("vi-VN");
 
@@ -216,67 +217,67 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
 
       {/* Table */}
       <div className="bg-[--bg-surface] border border-[--border-subtle] overflow-x-auto">
-        <table className="w-full text-left border-collapse text-[12px]">
-          <thead>
-            <tr className="bg-[--bg-elevated] border-b border-[--border-subtle] text-[--text-muted] uppercase text-[10px] font-semibold tracking-wider">
-              <th className="px-4 py-3">{t("admin.transactionManagement.table.orderCode")}</th>
-              <th className="px-4 py-3">{t("admin.transactionManagement.table.user")}</th>
-              <th className="px-4 py-3">{t("admin.transactionManagement.table.plan")}</th>
-              <th className="px-4 py-3">{t("admin.transactionManagement.table.amount")}</th>
-              <th className="px-4 py-3">{t("admin.transactionManagement.table.status")}</th>
-              <th className="px-4 py-3">{t("admin.transactionManagement.table.memo")}</th>
-              <th className="px-4 py-3">{t("admin.transactionManagement.table.bankRef")}</th>
-              <th className="px-4 py-3 text-right">{t("admin.transactionManagement.table.createdAt")}</th>
-              <th className="px-4 py-3 text-right">{t("admin.transactionManagement.table.completed")}</th>
-              <th className="px-4 py-3 text-right">{t("admin.transactionManagement.table.actions")}</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[--border-subtle] text-[--text-secondary]">
+        <Table className="w-full text-left border-collapse text-[12px]">
+          <TableHeader>
+            <TableRow className="bg-[--bg-elevated] border-b border-[--border-subtle] text-[--text-muted] uppercase text-[10px] font-semibold tracking-wider hover:bg-[--bg-elevated]">
+              <TableHead className="px-4 py-3 h-auto">{t("admin.transactionManagement.table.orderCode")}</TableHead>
+              <TableHead className="px-4 py-3 h-auto">{t("admin.transactionManagement.table.user")}</TableHead>
+              <TableHead className="px-4 py-3 h-auto">{t("admin.transactionManagement.table.plan")}</TableHead>
+              <TableHead className="px-4 py-3 h-auto">{t("admin.transactionManagement.table.amount")}</TableHead>
+              <TableHead className="px-4 py-3 h-auto">{t("admin.transactionManagement.table.status")}</TableHead>
+              <TableHead className="px-4 py-3 h-auto">{t("admin.transactionManagement.table.memo")}</TableHead>
+              <TableHead className="px-4 py-3 h-auto">{t("admin.transactionManagement.table.bankRef")}</TableHead>
+              <TableHead className="px-4 py-3 h-auto text-right">{t("admin.transactionManagement.table.createdAt")}</TableHead>
+              <TableHead className="px-4 py-3 h-auto text-right">{t("admin.transactionManagement.table.completed")}</TableHead>
+              <TableHead className="px-4 py-3 h-auto text-right">{t("admin.transactionManagement.table.actions")}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-[--border-subtle] text-[--text-secondary]">
             {!transactions ? (
-              <tr><td colSpan={10} className="px-4 py-8 text-center text-[--text-muted]">{t("admin.transactionManagement.table.loading")}</td></tr>
+              <TableRow className="hover:bg-transparent"><TableCell colSpan={10} className="px-4 py-8 h-auto text-center text-[--text-muted] whitespace-normal">{t("admin.transactionManagement.table.loading")}</TableCell></TableRow>
             ) : filtered.length === 0 ? (
-              <tr><td colSpan={10} className="px-4 py-8 text-center text-[--text-muted]">{t("admin.transactionManagement.table.empty")}</td></tr>
+              <TableRow className="hover:bg-transparent"><TableCell colSpan={10} className="px-4 py-8 h-auto text-center text-[--text-muted] whitespace-normal">{t("admin.transactionManagement.table.empty")}</TableCell></TableRow>
             ) : filtered.map((tx, i) => {
               const statusCfg = STATUS_CONFIG[tx.status] || {};
               const planCfg = PLAN_CONFIG[tx.plan] || {};
               const date = tx.createdAt ? new Date(tx.createdAt).toLocaleDateString("vi-VN", { day:"2-digit", month:"2-digit", year:"numeric" }) : "—";
               return (
-                <tr key={tx.id || i} className="hover:bg-[--bg-elevated] transition-colors">
-                  <td className="px-4 py-3">
+                <TableRow key={tx.id || i} className="hover:bg-[--bg-elevated] transition-colors">
+                  <TableCell className="px-4 py-3 h-auto">
                     <span className="font-mono text-[11px] text-[--text-muted]">#{String(tx.orderCode || tx.id || "").slice(-8)}</span>
-                  </td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell className="px-4 py-3 h-auto whitespace-normal">
                     <span className="font-medium text-[--text-primary] block text-[13px]">{tx.userName || "—"}</span>
                     <span className="text-[11px] text-[--text-muted]">{tx.userEmail || ""}</span>
-                  </td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell className="px-4 py-3 h-auto">
                     {tx.plan ? (
                       <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold border uppercase ${planCfg.color || "bg-[--bg-elevated] text-[--text-secondary] border-[--border-subtle]"}`}>
                         {tx.plan}
                       </span>
                     ) : <span className="text-[--text-muted]">—</span>}
-                  </td>
-                  <td className="px-4 py-3 font-semibold text-[--text-primary]">
+                  </TableCell>
+                  <TableCell className="px-4 py-3 h-auto font-semibold text-[--text-primary]">
                     {fmt(tx.amount)} <span className="text-[10px] text-[--text-muted] font-normal">VND</span>
-                  </td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell className="px-4 py-3 h-auto">
                     <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium border ${statusCfg.color || "bg-[--bg-elevated] text-[--text-muted] border-[--border-subtle]"}`}>
                       {statusCfg.label || tx.status}
                     </span>
-                  </td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell className="px-4 py-3 h-auto">
                     <div className="text-[11px] text-[--text-secondary] max-w-[150px] truncate" title={tx.memo}>
                       {tx.memo || "—"}
                     </div>
-                  </td>
-                  <td className="px-4 py-3 font-mono text-[11px] text-[--text-muted]">
+                  </TableCell>
+                  <TableCell className="px-4 py-3 h-auto font-mono text-[11px] text-[--text-muted]">
                     {tx.bankRef || "—"}
-                  </td>
-                  <td className="px-4 py-3 text-right text-[--text-muted] text-[11px]">{date}</td>
-                  <td className="px-4 py-3 text-right text-[--text-muted] text-[11px]">
+                  </TableCell>
+                  <TableCell className="px-4 py-3 h-auto text-right text-[--text-muted] text-[11px]">{date}</TableCell>
+                  <TableCell className="px-4 py-3 h-auto text-right text-[--text-muted] text-[11px]">
                     {tx.completedAt ? new Date(tx.completedAt).toLocaleDateString("vi-VN", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" }) : "—"}
-                  </td>
-                  <td className="px-4 py-3 text-right">
+                  </TableCell>
+                  <TableCell className="px-4 py-3 h-auto text-right">
                     {tx.status === "PENDING" && (
                       <Button
                         onClick={() => handleComplete(tx.id)}
@@ -288,12 +289,12 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
                         {completing === tx.id ? "..." : t("admin.transactionManagement.confirm")}
                       </Button>
                     )}
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               );
             })}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
         {filtered.length > 0 && (
           <div className="px-4 py-3 border-t border-[--border-subtle] text-[11px] text-[--text-muted]">
             {t("admin.transactionManagement.showingCount", { shown: filtered.length, total: transactions?.length ?? 0 })}

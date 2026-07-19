@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import api from '../../../services/api';
 import { Button } from '@/components/animate-ui/components/buttons/button';
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 
 const ACTION_LABEL_KEYS = {
   AUTH_LOGIN: 'authLogin',
@@ -73,36 +74,36 @@ const LogRow = ({ log }) => {
 
   return (
     <>
-      <tr
+      <TableRow
         className={`border-b border-[--border-subtle] hover:bg-[--bg-elevated] transition-colors cursor-pointer ${isFailed ? 'bg-red-500/[0.03]' : ''}`}
         onClick={handleExpand}
       >
-        <td className="px-4 py-3 text-[11px] text-[--text-muted] font-mono whitespace-nowrap">
+        <TableCell className="px-4 py-3 h-auto text-[11px] text-[--text-muted] font-mono whitespace-nowrap">
           {fmtDate(log.createdAt)}
-        </td>
-        <td className="px-4 py-3">
+        </TableCell>
+        <TableCell className="px-4 py-3 h-auto">
           <span className={`inline-flex items-center gap-1 px-2 py-0.5 border text-[10px] font-semibold uppercase tracking-wide ${actionColor}`}>
             {ACTION_LABEL_KEYS[log.action] ? t(`admin.securityLogs.actions.${ACTION_LABEL_KEYS[log.action]}`) : log.action}
           </span>
-        </td>
-        <td className="px-4 py-3 text-[12px] text-[--text-secondary] font-mono">{log.ipAddress || '—'}</td>
-        <td className="px-4 py-3 text-[11px] text-[--text-muted] max-w-[160px] truncate" title={log.userAgent}>
+        </TableCell>
+        <TableCell className="px-4 py-3 h-auto text-[12px] text-[--text-secondary] font-mono">{log.ipAddress || '—'}</TableCell>
+        <TableCell className="px-4 py-3 h-auto text-[11px] text-[--text-muted] max-w-[160px] truncate" title={log.userAgent}>
           {truncateUA(log.userAgent)}
-        </td>
-        <td className="px-4 py-3">
+        </TableCell>
+        <TableCell className="px-4 py-3 h-auto">
           {isFailed
             ? <span className="flex items-center gap-1 text-red-400 text-[11px]"><XCircle size={11} /> {t('admin.securityLogs.failed')}</span>
             : <span className="flex items-center gap-1 text-emerald-400 text-[11px]"><CheckCircle size={11} /> {t('admin.securityLogs.success')}</span>
           }
-        </td>
-        <td className="px-4 py-3 text-[11px] text-[--text-muted] font-mono max-w-[120px] truncate">{log.userId || '—'}</td>
-        <td className="px-3 py-3 text-[--text-muted]">
+        </TableCell>
+        <TableCell className="px-4 py-3 h-auto text-[11px] text-[--text-muted] font-mono max-w-[120px] truncate">{log.userId || '—'}</TableCell>
+        <TableCell className="px-3 py-3 h-auto text-[--text-muted]">
           {expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
       {expanded && (
-        <tr className="bg-[--bg-elevated] border-b border-[--border-subtle]">
-          <td colSpan={7} className="px-6 py-4">
+        <TableRow className="bg-[--bg-elevated] border-b border-[--border-subtle] hover:bg-[--bg-elevated]">
+          <TableCell colSpan={7} className="px-6 py-4 h-auto whitespace-normal">
             <div className="space-y-4 text-[12px]">
 
               {/* User Info Panel */}
@@ -181,8 +182,8 @@ const LogRow = ({ log }) => {
                 )}
               </div>
             </div>
-          </td>
-        </tr>
+          </TableCell>
+        </TableRow>
       )}
     </>
   );
@@ -337,18 +338,18 @@ const SecurityLogs = () => {
         <div className="py-16 text-center text-[12px] text-[--text-muted]">{t('admin.securityLogs.noRecords')}</div>
       ) : (
         <div className="overflow-x-auto border border-[--border-subtle]">
-          <table className="w-full min-w-[700px]">
-            <thead>
-              <tr className="border-b border-[--border-subtle] bg-[--bg-surface]">
+          <Table className="w-full min-w-[700px]">
+            <TableHeader>
+              <TableRow className="border-b border-[--border-subtle] bg-[--bg-surface] hover:bg-[--bg-surface]">
                 {[t('admin.securityLogs.colTime'), t('admin.securityLogs.colAction'), t('admin.securityLogs.colIp'), t('admin.securityLogs.colDevice'), t('admin.securityLogs.colStatus'), 'User ID', ''].map(h => (
-                  <th key={h} className="px-4 py-3 text-left text-[10px] text-[--text-muted] uppercase tracking-widest font-semibold">{h}</th>
+                  <TableHead key={h} className="px-4 py-3 h-auto text-left text-[10px] text-[--text-muted] uppercase tracking-widest font-semibold">{h}</TableHead>
                 ))}
-              </tr>
-            </thead>
-            <tbody>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filtered.map(log => <LogRow key={log.id} log={log} />)}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
           <div className="px-4 py-2.5 border-t border-[--border-subtle] text-[11px] text-[--text-muted] bg-[--bg-surface]">
             {t('admin.securityLogs.showingCount', { shown: filtered.length, total: logs.length })}
           </div>

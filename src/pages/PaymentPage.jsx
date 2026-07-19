@@ -13,6 +13,7 @@ import { useToast } from "../components/ui/Toast";
 import Breadcrumb from '../components/ui/Breadcrumb';
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { voucherService } from '../services/voucherService';
 import { trackPaymentPageView, trackPlanSelect, trackPaymentSubmit, trackDiscountCodeApplied } from '@/utils/analytics';
 
@@ -711,31 +712,31 @@ const PaymentPage = () => {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-[13px]">
-              <thead>
-                <tr className="border-b border-gray-100">
-                  <th className="text-left px-6 py-3 font-semibold text-gray-500 text-[11px] uppercase tracking-wider w-[28%]">{t('payment.featureColumn')}</th>
+            <Table className="w-full text-[13px]">
+              <TableHeader>
+                <TableRow className="border-b border-gray-100 hover:bg-transparent">
+                  <TableHead className="text-left px-6 py-3 h-auto font-semibold text-gray-500 text-[11px] uppercase tracking-wider w-[28%]">{t('payment.featureColumn')}</TableHead>
                   {['Free', 'Daily', 'Basic', 'Full', 'Annual'].map((name) => {
                     const planKey = name.toUpperCase();
                     const isCurrent = (user?.plan || 'FREE').toUpperCase() === planKey;
                     const isHighlighted = selectedPlan === planKey;
                     const accent = PLAN_VISUAL[planKey]?.accentColor || '#6b7280';
                     return (
-                      <th key={name} className={`text-center px-3 py-3 font-bold text-[13px] ${isCurrent ? 'text-emerald-600' : isHighlighted ? 'text-gray-900' : 'text-gray-400'}`}>
+                      <TableHead key={name} className={`text-center px-3 py-3 h-auto font-bold text-[13px] ${isCurrent ? 'text-emerald-600' : isHighlighted ? 'text-gray-900' : 'text-gray-400'}`}>
                         <div className="flex flex-col items-center gap-1">
                           <span>{name}</span>
                           {isCurrent && <span className="text-[9px] font-semibold text-emerald-500 uppercase tracking-wide">{t('payment.currentColumnLabel')}</span>}
                           {isHighlighted && !isCurrent && <div className="h-0.5 w-8 rounded-full" style={{ background: accent }} />}
                         </div>
-                      </th>
+                      </TableHead>
                     );
                   })}
-                </tr>
-              </thead>
-              <tbody>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {comparisonRows.map((row, i) => (
-                  <tr key={i} className={`border-b border-gray-50 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
-                    <td className="px-6 py-3 text-gray-600 text-[12px]">{row.feature}</td>
+                  <TableRow key={i} className={`border-b border-gray-50 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'} hover:bg-inherit`}>
+                    <TableCell className="px-6 py-3 text-gray-600 text-[12px] whitespace-normal">{row.feature}</TableCell>
                     {['FREE', 'DAILY', 'BASIC', 'FULL', 'ANNUAL'].map(key => {
                       const val = row[key];
                       const isCurrent = (user?.plan || 'FREE').toUpperCase() === key;
@@ -744,7 +745,7 @@ const PaymentPage = () => {
                       const isCross = val === '❌';
                       const accent = PLAN_VISUAL[key]?.accentColor;
                       return (
-                        <td key={key} className={`text-center px-3 py-3 text-[12px] transition-colors ${
+                        <TableCell key={key} className={`text-center px-3 py-3 text-[12px] transition-colors ${
                           isCurrent ? 'bg-emerald-50/40' : isHighlighted ? 'bg-amber-50/30' : ''
                         }`}
                         style={isHighlighted && !isCurrent && !isCross && !isCheck ? { borderBottom: `2px solid ${accent}20` } : {}}
@@ -755,13 +756,13 @@ const PaymentPage = () => {
                             ? <Check size={13} className="mx-auto text-emerald-500" />
                             : <span className={isCurrent ? 'text-gray-700 font-medium' : isHighlighted ? 'text-gray-700 font-medium' : 'text-gray-400'}>{val}</span>
                           }
-                        </td>
+                        </TableCell>
                       );
                     })}
-                  </tr>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
 
           {/* Bottom CTA */}

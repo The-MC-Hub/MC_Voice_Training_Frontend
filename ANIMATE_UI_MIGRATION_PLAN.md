@@ -1,7 +1,7 @@
 # Animate UI — Kế hoạch thay thế component toàn hệ thống
 
-Ngày lập: 2026-07-19 · Cập nhật: 2026-07-18 (Giai đoạn 7 — Skeleton + Giai đoạn 8 — Input đã code xong, build+E2E+screenshot pass, xem mục 10-11)
-Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (giai đoạn 7) + Input (giai đoạn 8) đã xong. Còn lại: Table(9), Badge(10), Avatar(11), Card(12), Select(13, chờ xác nhận), Toast(14), Dialog(1), Dropdown Menu(2), Sheet(3), Accordion(4), Checkbox(5), Avatar Group(6) — theo thứ tự ưu tiên trong mục "Khảo sát hoàn tất".
+Ngày lập: 2026-07-19 · Cập nhật: 2026-07-19 (Giai đoạn 7 Skeleton + 8 Input + 9 Table đã code xong, build+E2E+screenshot pass, xem mục 10-12)
+Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) đã xong. Còn lại: Badge(10), Avatar(11), Card(12), Select(13, chờ xác nhận), Toast(14), Dialog(1), Dropdown Menu(2), Sheet(3), Accordion(4), Checkbox(5), Avatar Group(6) — theo thứ tự ưu tiên trong mục "Khảo sát hoàn tất".
 
 ## Mục tiêu
 
@@ -330,22 +330,25 @@ Lệnh cài: `npx shadcn@latest add skeleton --yes`
 
 | # | File | Dòng | Đặc điểm | Trạng thái |
 |---|---|---|---|---|
-| 1 | `src/pages/PaymentPage.jsx` | 713 | Comparison table — **CẢNH BÁO**: E2E `e2e/payment.spec.js` check `th:has-text("Daily")`, phải giữ nguyên `<th>` chứa đúng text "Daily" ở đúng vị trí | ⬜ |
-| 2 | `src/pages/admin/sections/BookingManagement.jsx` | 20 | Dark theme table (`bg-[#0f172a]`), đơn giản | ⬜ |
-| 3 | `src/pages/admin/sections/SecurityLogs.jsx` | 340 | `min-w-[700px]`, header dynamic từ mảng label | ⬜ |
-| 4 | `src/pages/admin/sections/TransactionManagement.jsx` | 218 | 10 cột, có `colSpan={10}` cho loading/empty state | ⬜ |
-| 5 | `src/pages/admin/sections/UserManagement.jsx` | 806 | Sticky header (`sticky top-0`), 8 cột, row có `onClick` chọn user — **shadcn TableRow phải giữ được `onClick` + `sticky` trên `TableHead`** | ⬜ |
+| 1 | `src/pages/PaymentPage.jsx` | 713 | Comparison table — `th:has-text("Daily")` giữ nguyên, đã chạy riêng `e2e/payment.spec.js` xác nhận pass | ✅ Xong |
+| 2 | `src/pages/admin/sections/BookingManagement.jsx` | 20 | Dark theme table, làm mẫu đầu tiên — xác lập pattern (giữ custom hover bằng cách append lại class hover gốc, thêm `whitespace-normal` cho cell có nội dung nhiều dòng) | ✅ Xong |
+| 3 | `src/pages/admin/sections/SecurityLogs.jsx` | 340 | `min-w-[700px]` giữ nguyên, header dynamic, row thất bại vẫn giữ tint đỏ | ✅ Xong |
+| 4 | `src/pages/admin/sections/TransactionManagement.jsx` | 218 | 10 cột, 2 chỗ `colSpan={10}` (loading/empty) chuyển đúng, giữ nguyên | ✅ Xong |
+| 5 | `src/pages/admin/sections/UserManagement.jsx` | 806 | Sticky header (`sticky top-0` trên `TableRow` trong `TableHeader`) + row `onClick` chọn user — cả 2 hoạt động bình thường sau khi đổi, test tay + E2E xác nhận | ✅ Xong |
 
 **Loại trừ:** `src/pages/admin/sections/DashboardSection.jsx` dòng 948 — nằm trong block PDF-export (`#pdf-report-content`, dòng 917-993), html2pdf.js cần HTML/CSS thuần, **KHÔNG đổi**. `NotificationManager.jsx` dòng 98-104 `<table>` là string literal HTML email template, không phải JSX — không thuộc phạm vi.
 
+**Lưu ý kỹ thuật phát hiện khi làm (áp dụng cho các Table còn lại nếu có):** shadcn `TableRow` có sẵn `hover:bg-muted/50`, `TableHead`/`TableCell` có sẵn `whitespace-nowrap` + padding riêng (`h-10`/`p-2`). Với mọi file có custom hover color hoặc cell chứa nội dung nhiều dòng (flex-col, span xuống dòng), phải tự thêm `hover:bg-[màu gốc hoặc hover:bg-transparent]` + `whitespace-normal` + padding gốc vào className để tailwind-merge override đúng, tránh lặp lại bug `rounded-none` như ở Input phase.
+
 ### Checklist
-- [ ] Cài `table` (`npx shadcn@latest add table --yes`)
-- [ ] Làm mẫu `BookingManagement.jsx` trước (đơn giản nhất)
-- [ ] Đổi `UserManagement.jsx` cẩn thận nhất (sticky header + row onClick) — test tay riêng
-- [ ] Đổi `PaymentPage.jsx` — sau khi đổi, chạy riêng `e2e/payment.spec.js` xác nhận `th:has-text("Daily")` vẫn pass
-- [ ] Đổi `SecurityLogs.jsx`, `TransactionManagement.jsx`
-- [ ] Build + E2E full suite sau mỗi file
-- [ ] Commit + push
+- [x] Cài `table` (`npx shadcn@latest add table --yes`)
+- [x] Làm mẫu `BookingManagement.jsx` trước (đơn giản nhất)
+- [x] Đổi `UserManagement.jsx` cẩn thận nhất (sticky header + row onClick) — test tay riêng
+- [x] Đổi `PaymentPage.jsx` — chạy riêng `e2e/payment.spec.js` xác nhận `th:has-text("Daily")` vẫn pass (3/3 pass)
+- [x] Đổi `SecurityLogs.jsx`, `TransactionManagement.jsx`
+- [x] Build + E2E full suite — 49/49 pass
+- [x] Screenshot xác nhận: admin/users, admin/transactions, admin/security-logs, payment — không vỡ layout, badge/status/sticky-header đều đúng
+- [ ] Commit + push — **CHƯA push, chỉ mới commit local**
 
 ---
 

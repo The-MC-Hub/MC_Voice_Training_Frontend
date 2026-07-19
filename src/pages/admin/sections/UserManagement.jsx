@@ -8,6 +8,7 @@ import {
 import { getMCProfile } from "../../../services/publicService";
 import api from "../../../services/api";
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 
 const fmtDate = (v) => {
@@ -804,31 +805,31 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
 
         {/* Table */}
         <div className="bg-white border border-gray-200 overflow-auto rounded-xl shadow-sm flex-1">
-          <table className="w-full text-left border-collapse text-[12px]">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200 text-gray-500 uppercase text-[10px] font-bold tracking-wider sticky top-0">
-                <th className="px-4 py-3">{t("admin.userManagement.colUser")}</th>
-                <th className="px-4 py-3">{t("admin.userManagement.colRole")}</th>
-                <th className="px-4 py-3">{t("admin.userManagement.colPlan")}</th>
-                <th className="px-4 py-3">{t("admin.userManagement.colReferralCode")}</th>
-                <th className="px-4 py-3 text-center">{t("admin.userManagement.colReferred")}</th>
-                <th className="px-4 py-3">Sessions</th>
-                <th className="px-4 py-3">{t("admin.userManagement.colStatus")}</th>
-                <th className="px-4 py-3 text-right">{t("admin.userManagement.colActions")}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
+          <Table className="w-full text-left border-collapse text-[12px]">
+            <TableHeader>
+              <TableRow className="bg-gray-50 border-b border-gray-200 text-gray-500 uppercase text-[10px] font-bold tracking-wider sticky top-0 hover:bg-gray-50">
+                <TableHead className="px-4 py-3 h-auto text-gray-500">{t("admin.userManagement.colUser")}</TableHead>
+                <TableHead className="px-4 py-3 h-auto text-gray-500">{t("admin.userManagement.colRole")}</TableHead>
+                <TableHead className="px-4 py-3 h-auto text-gray-500">{t("admin.userManagement.colPlan")}</TableHead>
+                <TableHead className="px-4 py-3 h-auto text-gray-500">{t("admin.userManagement.colReferralCode")}</TableHead>
+                <TableHead className="px-4 py-3 h-auto text-gray-500 text-center">{t("admin.userManagement.colReferred")}</TableHead>
+                <TableHead className="px-4 py-3 h-auto text-gray-500">Sessions</TableHead>
+                <TableHead className="px-4 py-3 h-auto text-gray-500">{t("admin.userManagement.colStatus")}</TableHead>
+                <TableHead className="px-4 py-3 h-auto text-gray-500 text-right">{t("admin.userManagement.colActions")}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="divide-y divide-gray-100">
               {filtered.length === 0 && (
-                <tr><td colSpan={8} className="px-6 py-12 text-center text-gray-400 text-[13px]">{t("admin.userManagement.noUsersFound")}</td></tr>
+                <TableRow className="hover:bg-transparent"><TableCell colSpan={8} className="px-6 py-12 text-center text-gray-400 text-[13px] whitespace-normal">{t("admin.userManagement.noUsersFound")}</TableCell></TableRow>
               )}
               {filtered.map(u => {
                 const isSelected = selectedUser?._id === u._id;
                 return (
-                  <tr key={u._id}
+                  <TableRow key={u._id}
                     onClick={() => setSelectedUser(isSelected ? null : u)}
-                    className={`transition-colors cursor-pointer ${isSelected ? "bg-amber-50 border-l-2 border-l-amber-400" : "hover:bg-amber-50/40"}`}>
+                    className={`transition-colors cursor-pointer ${isSelected ? "bg-amber-50 border-l-2 border-l-amber-400 hover:bg-amber-50" : "hover:bg-amber-50/40"}`}>
                     {/* User info */}
-                    <td className="px-4 py-3">
+                    <TableCell className="px-4 py-3 whitespace-normal">
                       <div className="flex items-center gap-2.5">
                         {isEmoji(u.avatar) ? (
                           <div className="w-8 h-8 rounded-full flex items-center justify-center text-lg bg-gray-100 border border-gray-200 shrink-0">{u.avatar}</div>
@@ -842,28 +843,28 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                           <span className="text-[10px] text-gray-400 font-mono truncate block">{u.email}</span>
                         </div>
                       </div>
-                    </td>
-                    <td className="px-4 py-3"><Badge cls={roleCls(u.role)}>{(u.role || "CLIENT").toUpperCase()}</Badge></td>
-                    <td className="px-4 py-3"><Badge cls={PLAN_BADGE[u.plan] || PLAN_BADGE.FREE}>{u.plan || "FREE"}</Badge></td>
-                    <td className="px-4 py-3">
+                    </TableCell>
+                    <TableCell className="px-4 py-3"><Badge cls={roleCls(u.role)}>{(u.role || "CLIENT").toUpperCase()}</Badge></TableCell>
+                    <TableCell className="px-4 py-3"><Badge cls={PLAN_BADGE[u.plan] || PLAN_BADGE.FREE}>{u.plan || "FREE"}</Badge></TableCell>
+                    <TableCell className="px-4 py-3">
                       {u.referralCode
                         ? <span className="font-mono text-[11px] text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">{u.referralCode}</span>
                         : <span className="text-gray-300 text-[11px]">—</span>}
-                    </td>
-                    <td className="px-4 py-3 text-center">
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-center">
                       {u.referralCount > 0
                         ? <span className="font-semibold text-emerald-600 text-[12px]">{u.referralCount}</span>
                         : <span className="text-gray-300 text-[11px]">0</span>}
-                    </td>
-                    <td className="px-4 py-3"><span className="font-mono text-[11px] text-gray-600">{u.aiSessionsUsed || 0}</span></td>
-                    <td className="px-4 py-3">
+                    </TableCell>
+                    <TableCell className="px-4 py-3"><span className="font-mono text-[11px] text-gray-600">{u.aiSessionsUsed || 0}</span></TableCell>
+                    <TableCell className="px-4 py-3">
                       {u.isActive
                         ? <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-md"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> {t("admin.userManagement.active")}</span>
                         : <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold bg-red-50 text-red-600 border border-red-200 rounded-md"><span className="w-1.5 h-1.5 rounded-full bg-red-500" /> {t("admin.userManagement.locked")}</span>
                       }
-                    </td>
+                    </TableCell>
                     {/* Actions */}
-                    <td className="px-4 py-3 text-right" onClick={e => e.stopPropagation()}>
+                    <TableCell className="px-4 py-3 text-right" onClick={e => e.stopPropagation()}>
                       <div className="flex justify-end gap-1 flex-wrap">
                         <Button onClick={() => setSelectedUser(isSelected ? null : u)} title={t("admin.userManagement.viewDetails")}
                           className={`p-1.5 border transition-colors rounded ${isSelected ? "bg-amber-100 text-amber-600 border-amber-200" : "bg-white text-gray-400 hover:text-gray-700 border-gray-200"}`}>
@@ -892,12 +893,12 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                           <Trash2 size={12} />
                         </Button>
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 );
               })}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       </div>
 
