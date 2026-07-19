@@ -1,7 +1,7 @@
 # Animate UI — Kế hoạch thay thế component toàn hệ thống
 
 Ngày lập: 2026-07-19 · Cập nhật: 2026-07-19 (Giai đoạn 7-12 (15.1) + 14 Toast→Sonner + 1 Dialog đã code xong, build+E2E+screenshot pass)
-Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) + Badge (10) + Avatar (11) + Card 15.1 (12) + Toast→Sonner (14) + Dialog (1) đã xong. Select giữ native theo khuyến nghị plan (không convert). Còn lại: Card 15.3 (5 mục thật sự chưa xem — xem mục 15), Dropdown Menu(2), Sheet(3, ứng viên rõ: NotesSidebar.jsx), Accordion(4), Checkbox(5), Avatar Group(6).
+Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) + Badge (10) + Avatar (11) + Card 15.1 (12) + Toast→Sonner (14) + Dialog (1) + Sheet (3) đã xong. Select giữ native theo khuyến nghị plan (không convert). Còn lại: Card 15.3 (5 mục thật sự chưa xem — xem mục 15), Dropdown Menu(2), Accordion(4), Checkbox(5), Avatar Group(6).
 
 ## Mục tiêu
 
@@ -169,15 +169,15 @@ Chưa xác định được file nào dùng dropdown-menu pattern (menu context,
 
 | # | File | Panel gì | Trạng thái |
 |---|---|---|---|
-| 1 | `src/components/reading/NotesSidebar.jsx` | Panel ghi chú khi đọc — ứng viên rõ nhất | ⬜ Xác nhận lại cấu trúc trước khi đổi |
-| 2 | _(khảo sát thêm: có filter drawer nào trên mobile không?)_ | | ⬜ |
+| 1 | `src/components/reading/NotesSidebar.jsx` | Panel ghi chú khi đọc | ✅ Xong |
+| 2 | _(khảo sát thêm: có filter drawer nào trên mobile không?)_ | ✅ Xác nhận **không có** — grep `x: '100%'` / `translateX(100%)` toàn repo chỉ khớp file thư viện `animate-ui/primitives/radix/sheet.jsx`, không có drawer nào khác trong code ứng dụng | ✅ Không có thêm |
 
 ### Checklist hoàn thành giai đoạn 3
-- [ ] Đọc kỹ `NotesSidebar.jsx`, xác nhận đúng use-case Sheet (không phải Dialog che toàn màn hình)
-- [ ] Khảo sát thêm các file khác có panel trượt cạnh (đặc biệt mobile menu, filter drawer)
-- [ ] Làm mẫu, test tay (trượt đúng hướng, đóng bằng vuốt/click ngoài, không đè lên nội dung quan trọng)
-- [ ] Chạy full E2E suite
-- [ ] Commit + push
+- [x] Đọc kỹ `NotesSidebar.jsx`, xác nhận đúng use-case Sheet (không phải Dialog che toàn màn hình) — 2 `motion.div` (backdrop + panel `x:'100%'→0`) chuyển thành `Sheet`/`SheetContent side="right"`
+- [x] Khảo sát thêm các file khác có panel trượt cạnh — không có
+- [x] Làm mẫu, test tay: trượt đúng hướng từ phải, ESC đóng được (screenshot xác nhận), custom close button (X icon riêng, không phải nút X mặc định của Radix) vẫn hoạt động đúng nhờ `showCloseButton={false}`
+- [x] Chạy full E2E suite — 49/49 pass
+- [ ] Commit + push — **CHƯA push, chỉ mới commit local**
 
 ---
 

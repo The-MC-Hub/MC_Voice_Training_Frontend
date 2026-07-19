@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { X, MessageSquare, Trash2, Edit2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/useAuthStore';
 import { academyService } from '../../services/academyService';
+import { Sheet, SheetContent } from '@/components/animate-ui/components/radix/sheet';
 
 const NotesSidebar = ({ isOpen, onClose, highlights, onHighlightDeleted, onHighlightUpdated }) => {
   const { t } = useTranslation();
@@ -31,23 +31,12 @@ const NotesSidebar = ({ isOpen, onClose, highlights, onHighlightDeleted, onHighl
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
-          />
-          <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-[360px] bg-[#09090b] border-l border-white/[0.08] shadow-2xl z-50 flex flex-col"
-          >
+    <Sheet open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+      <SheetContent
+        side="right"
+        showCloseButton={false}
+        className="h-full w-[360px] bg-[#09090b] border-l border-white/[0.08] shadow-2xl gap-0 p-0"
+      >
             <div className="flex items-center justify-between p-5 border-b border-white/[0.08]">
               <div className="flex items-center gap-2 text-white">
                 <MessageSquare size={16} className="text-[#f5a623]" />
@@ -113,10 +102,8 @@ const NotesSidebar = ({ isOpen, onClose, highlights, onHighlightDeleted, onHighl
                 ))
               )}
             </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+      </SheetContent>
+    </Sheet>
   );
 };
 
