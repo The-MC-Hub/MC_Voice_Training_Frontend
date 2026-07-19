@@ -14,6 +14,7 @@ import Breadcrumb from '../components/ui/Breadcrumb';
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { voucherService } from '../services/voucherService';
 import { trackPaymentPageView, trackPlanSelect, trackPaymentSubmit, trackDiscountCodeApplied } from '@/utils/analytics';
 
@@ -301,9 +302,9 @@ const PaymentPage = () => {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-[14px] font-bold text-gray-500">{t('payment.free')}</span>
-                      <span className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-gray-100 border-gray-300 text-gray-500">
+                      <Badge variant="outline" className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-gray-100 border-gray-300 text-gray-500">
                         {t('payment.currentPlanBadge')}
-                      </span>
+                      </Badge>
                     </div>
                     <p className="text-[12px] text-gray-400">{t('payment.freePlanQuickDesc')}</p>
                   </div>
@@ -378,13 +379,13 @@ const PaymentPage = () => {
                             {plan.name}
                           </span>
                           {isCurrentPlan ? (
-                            <span className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-emerald-50 border-emerald-300 text-emerald-700 flex items-center gap-1">
+                            <Badge variant="outline" className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-emerald-50 border-emerald-300 text-emerald-700 flex items-center gap-1">
                               <CheckCircle2 size={9} /> {t('payment.currentPlanBadge')}
-                            </span>
+                            </Badge>
                           ) : plan.badge && (
-                            <span className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold ${plan.badgeColor}`}>
+                            <Badge variant="outline" className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold ${plan.badgeColor}`}>
                               {plan.badge}
-                            </span>
+                            </Badge>
                           )}
                           {plan.key === "DAILY" && (user?.plan || "FREE").toUpperCase() === "DAILY" && user?.planExpiresAt && (() => {
                             const remaining = new Date(user.planExpiresAt) - new Date();
@@ -392,9 +393,9 @@ const PaymentPage = () => {
                             const hours = Math.floor(remaining / 3600000);
                             const minutes = Math.floor((remaining % 3600000) / 60000);
                             return (
-                              <span className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-emerald-50 border-emerald-300 text-emerald-700 flex items-center gap-1">
+                              <Badge variant="outline" className="rounded-full border px-2 py-0.5 text-[10px] font-semibold bg-emerald-50 border-emerald-300 text-emerald-700 flex items-center gap-1">
                                 <Clock size={9} /> {t('payment.remainingTime', { hours, minutes })}
-                              </span>
+                              </Badge>
                             );
                           })()}
                         </div>

@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 
 const fmt = (v) => (v ?? 0).toLocaleString("vi-VN");
 
@@ -252,18 +253,18 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
                   </TableCell>
                   <TableCell className="px-4 py-3 h-auto">
                     {tx.plan ? (
-                      <span className={`inline-flex px-2 py-0.5 text-[10px] font-bold border uppercase ${planCfg.color || "bg-[--bg-elevated] text-[--text-secondary] border-[--border-subtle]"}`}>
+                      <Badge variant="outline" className={`inline-flex px-2 py-0.5 text-[10px] font-bold border uppercase rounded-none ${planCfg.color || "bg-[--bg-elevated] text-[--text-secondary] border-[--border-subtle]"}`}>
                         {tx.plan}
-                      </span>
+                      </Badge>
                     ) : <span className="text-[--text-muted]">—</span>}
                   </TableCell>
                   <TableCell className="px-4 py-3 h-auto font-semibold text-[--text-primary]">
                     {fmt(tx.amount)} <span className="text-[10px] text-[--text-muted] font-normal">VND</span>
                   </TableCell>
                   <TableCell className="px-4 py-3 h-auto">
-                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium border ${statusCfg.color || "bg-[--bg-elevated] text-[--text-muted] border-[--border-subtle]"}`}>
+                    <Badge variant="outline" className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium border rounded-none ${statusCfg.color || "bg-[--bg-elevated] text-[--text-muted] border-[--border-subtle]"}`}>
                       {statusCfg.label || tx.status}
-                    </span>
+                    </Badge>
                   </TableCell>
                   <TableCell className="px-4 py-3 h-auto">
                     <div className="text-[11px] text-[--text-secondary] max-w-[150px] truncate" title={tx.memo}>

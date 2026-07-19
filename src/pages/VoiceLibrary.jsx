@@ -11,6 +11,7 @@ import Breadcrumb from '../components/ui/Breadcrumb';
 import { trackLessonClick, trackVoiceLibrarySearch, trackVoiceLibraryFilter } from '@/utils/analytics';
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
 
 const VoiceLibrary = () => {
   const { t } = useTranslation();
@@ -371,9 +372,9 @@ const VoiceLibrary = () => {
                       <div className="flex-1 min-w-0">
                         <h3 className="text-[14px] font-semibold text-white leading-snug truncate mb-1.5">{lesson.title}</h3>
                         <div className="flex items-center gap-2">
-                          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded border ${difficultyStyle(lesson.difficulty)}`}>
+                          <Badge variant="outline" className={`text-[10px] font-medium px-1.5 py-0.5 rounded-sm border ${difficultyStyle(lesson.difficulty)}`}>
                             {lesson.difficulty}
-                          </span>
+                          </Badge>
                           <span className="text-[11px] text-zinc-500">{CATEGORY_LABEL[lesson.category] || lesson.category}</span>
                           <span className="text-[11px] text-zinc-600">·</span>
                           <span className="text-[11px] text-zinc-600">{wordCount} {t('voiceLibrary.words')}</span>

@@ -1,7 +1,7 @@
 # Animate UI — Kế hoạch thay thế component toàn hệ thống
 
-Ngày lập: 2026-07-19 · Cập nhật: 2026-07-19 (Giai đoạn 7 Skeleton + 8 Input + 9 Table đã code xong, build+E2E+screenshot pass, xem mục 10-12)
-Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) đã xong. Còn lại: Badge(10), Avatar(11), Card(12), Select(13, chờ xác nhận), Toast(14), Dialog(1), Dropdown Menu(2), Sheet(3), Accordion(4), Checkbox(5), Avatar Group(6) — theo thứ tự ưu tiên trong mục "Khảo sát hoàn tất".
+Ngày lập: 2026-07-19 · Cập nhật: 2026-07-19 (Giai đoạn 7 Skeleton + 8 Input + 9 Table + 10 Badge đã code xong, build+E2E+screenshot pass, xem mục 10-13)
+Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) + Badge (10) đã xong. Còn lại: Avatar(11), Card(12), Select(13, chờ xác nhận), Toast(14), Dialog(1), Dropdown Menu(2), Sheet(3), Accordion(4), Checkbox(5), Avatar Group(6) — theo thứ tự ưu tiên trong mục "Khảo sát hoàn tất".
 
 ## Mục tiêu
 
@@ -358,18 +358,21 @@ Lệnh cài: `npx shadcn@latest add skeleton --yes`
 
 | # | File | Vị trí | Trạng thái |
 |---|---|---|---|
-| 1 | `src/pages/PaymentPage.jsx` | Dòng 302, 379, 383, 393 — "Gói hiện tại", "current plan" badge | ⬜ |
-| 2 | `src/pages/Home.jsx` | Badge helper (khảo sát lại vị trí chính xác khi vào việc) | ⬜ |
-| 3 | `src/pages/Register.jsx` | nt | ⬜ |
-| 4 | `src/pages/VoiceLibrary.jsx` | Difficulty badge (`difficultyStyle`) | ⬜ |
-| 5 | `src/pages/admin/sections/TransactionManagement.jsx` | Status badge (`STATUS_CONFIG`) | ⬜ |
+| 1 | `src/pages/PaymentPage.jsx` | Dòng 302, 379, 383, 393 — "Gói hiện tại", "current plan" badge + countdown DAILY | ✅ Xong |
+| 2 | `src/pages/Home.jsx` | ✅ Xác nhận **false-positive** — không có pattern badge nào trong file, khảo sát cũ sai | ✅ Không áp dụng |
+| 3 | `src/pages/Register.jsx` | ✅ Xác nhận **false-positive** — tương tự Home.jsx | ✅ Không áp dụng |
+| 4 | `src/pages/VoiceLibrary.jsx` | Difficulty badge (`difficultyStyle`) — 1 vị trí duy nhất, không phải E2E anchor | ✅ Xong |
+| 5 | `src/pages/admin/sections/TransactionManagement.jsx` | Status badge (`STATUS_CONFIG`) + plan badge (`PLAN_CONFIG`) — 2 vị trí | ✅ Xong |
+
+**Bug tránh được (rút kinh nghiệm từ Input phase):** shadcn Badge có `defaultVariants.variant = "default"` → nền vàng gold mặc định giống bug Button trước đây. Mọi vị trí ở đây đều có `bg-*` tường minh trong className gốc nên an toàn (tailwind-merge ưu tiên className truyền vào), nhưng đã dùng `variant="outline"` làm nền tảng (có border, không ép bg) thay vì `default` để giảm rủi ro nếu sau này có chỗ quên set bg riêng. Cũng chú ý bo góc: Badge mặc định `rounded-full` — nơi nào gốc là `rounded`/không bo (TransactionManagement, VoiceLibrary) đã thêm `rounded-none`/`rounded-sm` tường minh; nơi gốc vốn `rounded-full` (PaymentPage) giữ nguyên mặc định.
 
 ### Checklist
-- [ ] Cài `badge` (`npx shadcn@latest add badge --yes`)
-- [ ] Làm mẫu PaymentPage.jsx (4 vị trí, đã biết rõ code)
-- [ ] Áp dụng các file còn lại
-- [ ] Build + E2E full suite
-- [ ] Commit + push
+- [x] Cài `badge` (`npx shadcn@latest add badge --yes`)
+- [x] Làm mẫu PaymentPage.jsx (4 vị trí, đã biết rõ code)
+- [x] Áp dụng các file còn lại
+- [x] Build + E2E full suite — 49/49 pass (1 lần flake ở dashboard.spec.js do timing, rerun pass sạch)
+- [x] Screenshot xác nhận: TransactionManagement, VoiceLibrary (BEGINNER badge xanh lá đúng), Payment (Linh hoạt badge đúng) — không vỡ style
+- [ ] Commit + push — **CHƯA push, chỉ mới commit local**
 
 ---
 
