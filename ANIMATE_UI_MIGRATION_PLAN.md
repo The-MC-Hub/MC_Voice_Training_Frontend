@@ -1,7 +1,7 @@
 # Animate UI — Kế hoạch thay thế component toàn hệ thống
 
-Ngày lập: 2026-07-19 · Cập nhật: 2026-07-19 (Giai đoạn 7-12 (15.1) + 14 Toast→Sonner + 1 Dialog đã code xong, build+E2E+screenshot pass)
-Trạng thái tổng: 🟡 Đang triển khai — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) + Badge (10) + Avatar (11) + Card 15.1 (12) + Toast→Sonner (14) + Dialog (1) + Sheet (3) đã xong. Select giữ native theo khuyến nghị plan (không convert). Còn lại: Card 15.3 (5 mục thật sự chưa xem — xem mục 15), Dropdown Menu(2), Accordion(4), Checkbox(5), Avatar Group(6).
+Ngày lập: 2026-07-19 · Cập nhật: 2026-07-19 (TOÀN BỘ giai đoạn đã xử lý — xem tổng kết cuối file)
+Trạng thái tổng: 🟢 Migration cơ bản hoàn tất — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) + Badge (10) + Avatar (11) + Card 15.1 (12) + Toast→Sonner (14) + Dialog (1) + Sheet (3) + Checkbox (5) đã code+test xong. Dropdown Menu (2), Accordion (4), Avatar Group (6) đã khảo sát kỹ — xác nhận KHÔNG có use-case phù hợp trong codebase, đóng giai đoạn không cần code gì. Select giữ native theo khuyến nghị plan. Còn lại duy nhất: Card 15.3 (5 mục "không chắc" thật sự chưa xem lại — Settings Personal Info, PaymentPage voucher panel + comparison table, CourseDetail hero/sidebar, AcademyManager accordion, MarketingManager social/campaign) — để lại cho phiên sau, cần đọc kỹ từng cái, không đoán.
 
 ## Mục tiêu
 
@@ -144,22 +144,21 @@ Sau khi cài: `npm run build` xác nhận 0 lỗi trước khi bắt đầu bấ
 
 **Rủi ro: THẤP-TRUNG BÌNH.**
 
-### Cần khảo sát trước khi liệt kê chính xác
-Chưa xác định được file nào dùng dropdown-menu pattern (menu context, action menu 3-chấm) khác với `<select>` (form value picker — KHÔNG đổi). Việc cần làm:
-- [ ] Grep toàn bộ `MoreVertical|MoreHorizontal|⋮|"..."` icon + state toggle liền kề → khả năng cao là dropdown action menu (thường thấy trong bảng admin: UserManagement, TransactionManagement, LessonManagement)
-- [ ] Với mỗi kết quả tìm được, xác nhận đây là menu hành động (Edit/Delete/...) hay chỉ là filter dropdown (giữ nguyên)
-- [ ] Liệt kê danh sách chính xác vào bảng dưới đây trước khi sửa
+### Khảo sát hoàn tất — KHÔNG tìm thấy use-case nào
 
-| # | File | Vị trí | Trạng thái |
+Grep toàn repo cho `MoreVertical|MoreHorizontal`, `role="menu"`, `Ellipsis` — chỉ có **1 kết quả thật**: `src/components/chat/ConversationHeader.jsx` dòng 75, icon `<MoreVertical>` trong một `<button>` **không có `onClick`, không mở menu gì cả** — chỉ là nút hành động trang trí/chưa implement (cùng nhóm với Phone/Video buttons cũng không có handler). Không phải action-menu thật.
+
+Các bảng admin có action buttons (UserManagement, TransactionManagement) đều dùng **icon button trực tiếp theo hàng ngang** (Eye/Mail/Key/XCircle/Trash2 riêng biệt, không gộp vào menu 3-chấm) — đã xác nhận qua Table phase trước đó, không có pattern dropdown action-menu nào trong toàn bộ codebase.
+
+| # | File | Vị trí | Kết luận |
 |---|---|---|---|
-| _(điền sau khi grep)_ | | | ⬜ |
+| 1 | `src/components/chat/ConversationHeader.jsx` dòng 75 | `<MoreVertical>` icon, không có `onClick` | ❌ Không phải dropdown thật — nút chưa implement, không mở menu gì |
+
+**Kết luận giai đoạn 2:** Không có vị trí nào trong codebase phù hợp để dùng `radix-dropdown-menu`. Component giữ nguyên trạng thái "đã cài, chưa dùng ở đâu."
 
 ### Checklist hoàn thành giai đoạn 2
-- [ ] Grep + xác nhận danh sách chính xác
-- [ ] Làm mẫu 1 file, test tay (menu mở đúng vị trí trigger, đóng khi click ngoài, điều hướng bàn phím hoạt động)
-- [ ] Áp dụng cho các file còn lại
-- [ ] Chạy full E2E suite
-- [ ] Commit + push
+- [x] Grep toàn repo (`MoreVertical|MoreHorizontal`, `role="menu"`, `Ellipsis`) — xác nhận không có use-case thật
+- [x] Đóng giai đoạn này, không cần làm gì thêm
 
 ---
 
@@ -189,12 +188,13 @@ Chưa xác định được file nào dùng dropdown-menu pattern (menu context,
 |---|---|---|---|
 | 1 | `src/pages/HelpCenter.jsx` (dòng ~19-68) | FAQ item, custom style riêng với icon box + hover state | ⚠️ **KHÔNG đổi** — style quá custom (icon box, màu riêng theo brand), animate-ui Accordion mặc định sẽ mất hết styling này, phải viết lại từ đầu tương đương công sức giữ nguyên. Không có lợi ích rõ ràng. |
 | 2 | `src/pages/Home.jsx` FaqItem (dòng ~221-270) | Tương tự HelpCenter, dùng chung style pattern | ⚠️ **KHÔNG đổi** — cùng lý do trên |
-| 3 | `src/pages/Settings.jsx` `expandedSections` (dòng ~478) | Cần đọc lại — có thể là accordion section trong 1 form dài | ⬜ Khảo sát, có thể đổi được nếu style đơn giản hơn 2 case trên |
+| 3 | `src/pages/Settings.jsx` `expandedSections` (dòng 477-916) | 4 section: Professional Profile, Attributes, Pricing, Portfolio | ✅ **Xác nhận DEAD CODE hoàn toàn** — toàn bộ 4 section nằm trong `{false && (<>...</>)}` (dòng 608-916), có comment `{/* Professional Profile — removed */}` ngay tại chỗ. Không bao giờ render, `toggleSection`/`expandedSections` state tồn tại nhưng vô nghĩa vì UI phụ thuộc chưa bao giờ hiện ra. Không có gì để convert — Accordion component thật cũng sẽ không hiện ra, không có lợi ích. |
+
+**Kết luận giai đoạn 4:** Không có vị trí nào phù hợp để dùng animate-ui Accordion trong toàn bộ codebase — 2 FAQ pattern quá custom để đáng đổi, 1 pattern còn lại là dead code hoàn toàn. Component `radix-accordion` giữ nguyên trạng thái "đã cài, chưa dùng ở đâu."
 
 ### Checklist hoàn thành giai đoạn 4
-- [ ] Đọc `Settings.jsx` `expandedSections`, đánh giá có đáng đổi không
-- [ ] Nếu đổi: làm mẫu, test tay, chạy E2E
-- [ ] Nếu không đổi bất kỳ chỗ nào: đóng giai đoạn này, ghi rõ lý do (đã ghi ở trên)
+- [x] Đọc `Settings.jsx` `expandedSections`, đánh giá có đáng đổi không — xác nhận dead code, không đổi
+- [x] Không đổi bất kỳ chỗ nào trong toàn bộ giai đoạn — đã ghi rõ lý do cho cả 3 vị trí ở trên
 
 ---
 
@@ -225,12 +225,15 @@ animate-ui chỉ có "Avatar Group" (nhiều avatar chồng nhau), không có Av
 |---|---|---|---|
 | 1 | `src/pages/Community.jsx` leaderboard | Avatar đơn từng dòng, KHÔNG chồng lên nhau | ❌ Không áp dụng — sai use-case |
 | 2 | `src/pages/LeaderboardPage.jsx` | Tương tự — avatar đơn | ❌ Không áp dụng |
-| 3 | _(nếu tìm thấy chỗ nào thật sự cần "stacked avatars" — vd "X người đang online")_ | | ⬜ Khảo sát thêm |
+| 3 | `src/pages/Learning.jsx` dòng ~78 | ✅ **Tìm thấy thật** — 3 vòng tròn placeholder icon `<User>` chồng nhau (`-space-x-1.5`), chỉ mang tính trang trí ("có N học viên khác") | ❌ **Không đổi** — xem lý do bên dưới |
+| 4 | `src/components/profile/MCProfileView.jsx` dòng ~408 | ✅ **Tìm thấy thật** — 2 vòng tròn initials chồng nhau (`-space-x-2`), "Verified Stay" indicator | ❌ **Không đổi** — xem lý do bên dưới |
+
+**Lý do không đổi dù tìm thấy use-case đúng:** `animate-ui` AvatarGroup (`components/animate/avatar-group.jsx`) đi kèm hệ thống tooltip-per-avatar phức tạp (`AvatarGroupTooltip`, `invertOverlap`, hover-expand khi di chuột qua từng avatar) — được thiết kế cho danh sách thành viên tương tác thật (hover xem tên từng người). Cả 2 vị trí tìm thấy đều là **chỉ mang tính trang trí tĩnh** (placeholder icon hoặc initials cố định, không có data thành viên thật đằng sau để hiện tooltip). Đổi sang AvatarGroup sẽ thêm hành vi hover/tooltip không cần thiết và không có nội dung thật để hiển thị — không có lợi ích, chỉ tăng độ phức tạp. Giữ nguyên 2 vị trí này.
 
 ### Checklist hoàn thành giai đoạn 6
-- [ ] Khảo sát toàn bộ codebase tìm pattern "avatar chồng lên nhau" (thường thấy ở "X thành viên tham gia")
-- [ ] Nếu không tìm thấy use-case phù hợp: đóng giai đoạn này, không cài `animate-avatar-group`, ghi rõ lý do
-- [ ] `AvatarFrame.jsx` giữ nguyên trong mọi trường hợp (avatar đơn, animate-ui không có thay thế)
+- [x] Khảo sát toàn bộ codebase tìm pattern "avatar chồng lên nhau" — grep `-space-x-` toàn repo, tìm thấy 2 vị trí thật (Learning.jsx, MCProfileView.jsx)
+- [x] Đã tìm thấy use-case nhưng quyết định KHÔNG đổi — AvatarGroup mang theo tooltip/hover phức tạp không phù hợp với 2 chỗ này (đều là trang trí tĩnh, không có data member thật). Không cài đặt sử dụng.
+- [x] `AvatarFrame.jsx` giữ nguyên trong mọi trường hợp (avatar đơn, animate-ui không có thay thế)
 
 ---
 

@@ -7,6 +7,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { trackLoginSubmit, trackLoginSuccess, trackLoginOtpVerify } from "@/utils/analytics";
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Dialog, DialogContent } from "@/components/animate-ui/components/radix/dialog";
+import { Checkbox } from "@/components/animate-ui/components/radix/checkbox";
 
 const ROLE_REDIRECT = { admin: "/m/dashboard", mc: "/m/dashboard", client: "/m/dashboard" };
 
@@ -396,16 +397,11 @@ const Login = () => {
 
             {/* Remember */}
             <div className="flex items-center gap-2">
-              <button
-                type="button" onClick={() => setRememberMe(!rememberMe)}
-                className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${rememberMe ? 'bg-amber-500 border-amber-500' : 'border-gray-300 bg-white'}`}
-              >
-                {rememberMe && (
-                  <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
-                    <path d="M1 3.5L3.5 6L8 1" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                )}
-              </button>
+              <Checkbox
+                checked={rememberMe}
+                onCheckedChange={(checked) => setRememberMe(!!checked)}
+                className="w-4 h-4 rounded border-gray-300 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
+              />
               <span className="text-[13px] text-gray-500 select-none">{t('auth.rememberMe')}</span>
             </div>
 
