@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
 
 // ── Data ─────────────────────────────────────────────────────────────────────
 
@@ -1121,7 +1122,7 @@ export default function AdminGuide() {
     const isOpen = expanded === guide.id;
     const SectionIcon = guide.sectionIcon;
     return (
-      <div key={guide.id} className="bg-[--bg-surface] border border-[--border-subtle] overflow-hidden">
+      <Card key={guide.id} className="bg-[--bg-surface] border border-[--border-subtle] overflow-hidden gap-0 shadow-none py-0">
         <Button
           onClick={() => toggle(guide.id)}
           hoverScale={1}
@@ -1170,7 +1171,7 @@ export default function AdminGuide() {
             ))}
           </div>
         )}
-      </div>
+      </Card>
     );
   };
 

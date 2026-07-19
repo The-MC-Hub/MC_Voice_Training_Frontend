@@ -329,7 +329,7 @@ const Community = () => {
           </div>
         </div>
 
-        <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6">
+        <Card className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 gap-0 shadow-none">
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
             {/* Top 3 Podiums */}
             <div className="xl:col-span-1 flex flex-col justify-center items-center py-4 gap-4">
@@ -453,7 +453,7 @@ const Community = () => {
               </div>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

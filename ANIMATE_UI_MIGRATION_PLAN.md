@@ -445,21 +445,23 @@ Lệnh cài: `npx shadcn@latest add skeleton --yes`
 
 Đây là "wrapper card lớn" chứa nội dung con phức tạp — ranh giới mờ:
 
-| File | Vị trí | Vì sao không chắc |
+| File | Vị trí | Quyết định |
 |---|---|---|
-| `Settings.jsx` | "Personal Info" card (chứa `data-quest` x3) | Cần test kỹ quest-anchor sau khi đổi cấu trúc DOM |
-| `Settings.jsx` | "Payment" card (nhiều nhánh điều kiện lồng) | Cấu trúc lồng phức tạp |
-| `PaymentPage.jsx` | Payment panel phải (voucher AnimatePresence, discount input) | Logic phức tạp bên trong |
-| `PaymentPage.jsx` | Comparison table card (bọc `th:has-text("Daily")`) | E2E-critical, chỉ nên đổi phần header/footer CTA nếu tách riêng được |
-| `Community.jsx` | Leaderboard main card (Top 3 podium + list) | Nội dung con phức tạp dù wrapper tĩnh |
-| `CourseDetail.jsx` | Hero card, Sidebar stats box, "Lộ trình học" wrapper | Có `motion.div` stagger nhỏ + progress-bar animate bên trong |
-| `AcademyManager.jsx` | Milestone accordion cards, Syllabus content items | Không animation library nhưng logic accordion+hover-reveal phức tạp |
-| `PlanManager.jsx` | `PlanEditor`, `DiscountRow` | Logic phức tạp khi mở rộng |
-| `MarketingManager.jsx` | Social post list items, Campaign history cards | Expand/collapse phức tạp |
-| `NotificationManager.jsx` | `AnnouncementRow` | Expand/collapse với send-picker |
-| `AdminGuide.jsx` | `renderCard` (dòng 1119-1174) | 50+ guide cards, expand/collapse, có thể tách header ra đổi riêng |
-| `VerifyEmail.jsx` | Success/error card | `motion.div` chỉ mount 1 lần (không stagger) — có thể đổi được nhưng cần xác nhận animation wrapper không vỡ |
-| `admin/sections/AnalyticsSection.jsx`, `AdminOverview.jsx` | `Card`/`Stat` helper | **Nghi ngờ không active trong routing** (`AdminDashboard.jsx` chỉ import `DashboardSection`, không thấy import 2 file này) — xác nhận trước khi đổi, nếu dead code thì bỏ qua hoàn toàn, không tốn công |
+| `Settings.jsx` | "Personal Info" card (chứa `data-quest` x3) | ⬜ Chưa làm — để lại, rủi ro quest-anchor |
+| `Settings.jsx` | "Payment" card | ✅ **Xác nhận không tồn tại** — grep `"payment"` chỉ thấy 1 chỗ duy nhất là label tab điều hướng (dòng 474), không phải block nội dung riêng để convert. Không áp dụng. |
+| `PaymentPage.jsx` | Payment panel phải (voucher AnimatePresence, discount input) | ⬜ Chưa làm — để lại, logic phức tạp |
+| `PaymentPage.jsx` | Comparison table card (bọc `th:has-text("Daily")`) | ⬜ Chưa làm — để lại, E2E-critical |
+| `Community.jsx` | Leaderboard main card (Top 3 podium + list) | ✅ **Đã đổi** — wrapper ngoài (`bg-[#111113] border rounded-2xl p-6`) là div tĩnh, không có `data-quest`, không bọc motion. Đổi thành công, screenshot xác nhận. |
+| `CourseDetail.jsx` | Hero card, Sidebar stats box, "Lộ trình học" wrapper | ⬜ Chưa làm — để lại, có motion stagger + progress-bar animate |
+| `AcademyManager.jsx` | Milestone accordion cards, Syllabus content items | ⬜ Chưa làm — để lại, accordion+hover-reveal phức tạp |
+| `PlanManager.jsx` | `PlanEditor`, `DiscountRow` | ⬜ Giữ nguyên vĩnh viễn — đã loại trừ tường minh từ giai đoạn Card 15.1 (logic phức tạp khi mở rộng) |
+| `MarketingManager.jsx` | Social post list items, Campaign history cards | ⬜ Chưa làm — để lại, expand/collapse phức tạp |
+| `NotificationManager.jsx` | `AnnouncementRow` | ⬜ Giữ nguyên — đọc code xác nhận: 7 state hook riêng (expanded/editing/sending/deleting/sendIds/showSendPicker/previewCount) + async preview-load khi expand + conditional edit-mode render — rủi ro thật, không chỉ "trông phức tạp" |
+| `AdminGuide.jsx` | `renderCard` (dòng ~1120-1175) | ✅ **Đã đổi** — outer wrapper div (~dòng 1124) là accordion-item container tĩnh, expand state (`expanded`/`toggle`) sống ở component cha, không đụng logic. Đổi wrapper only, giữ nguyên `Button` trigger + conditional expand-content bên trong. Build + screenshot xác nhận. |
+| `VerifyEmail.jsx` | Success/error card | ⬜ **Xác nhận giữ nguyên** — outer `motion.div` (dòng 51) chính là card boundary luôn (bg/border/shadow nằm trực tiếp trên motion element), không có lớp div con để tách theo đúng quy tắc loại trừ (giống HelpCenter). Không phải "có thể đổi" như ghi chú gốc — đây thuộc nhóm loại trừ chuẩn. |
+| `admin/sections/AnalyticsSection.jsx`, `AdminOverview.jsx` | `Card`/`Stat` helper | ✅ **Xác nhận dead code lần 2** — không import ở đâu trong `AdminDashboard.jsx`. Bỏ qua hoàn toàn, không convert file chết. |
+
+**Tổng kết 15.3:** 4/13 đã xử lý dứt điểm (2 đổi thành công: Community + AdminGuide; 2 xác nhận không áp dụng: Settings Payment card không tồn tại, AnalyticsSection/AdminOverview dead code). 1/13 xác nhận thuộc nhóm loại trừ chuẩn (VerifyEmail). 1/13 giữ nguyên vĩnh viễn theo quyết định từ 15.1 (PlanEditor/DiscountRow). 1/13 giữ nguyên sau khi đọc kỹ code, rủi ro thật không phải chỉ "trông phức tạp" (AnnouncementRow). **5/13 còn lại thật sự chưa xem xét** (Settings Personal Info, PaymentPage voucher panel + comparison table, CourseDetail hero/sidebar/path, AcademyManager, MarketingManager social/campaign) — để lại cho phiên sau, cần đọc kỹ từng cái trước khi quyết định, không đoán.
 
 ### Checklist giai đoạn 12
 - [x] Xác nhận `AnalyticsSection.jsx`/`AdminOverview.jsx` — **đã xác nhận dead code**, không import ở đâu trong `AdminDashboard.jsx`, loại khỏi phạm vi hoàn toàn
