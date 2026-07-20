@@ -522,7 +522,7 @@ const PaymentPage = () => {
           </div>
 
           {/* Right: Payment panel */}
-          <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden sticky top-20">
+          <Card className="bg-white border border-gray-200 rounded-2xl overflow-hidden sticky top-20 gap-0 p-0">
 
             {/* Selected plan summary header */}
             {selectedPlanData && (
@@ -702,11 +702,11 @@ const PaymentPage = () => {
                 </div>
               ) : null}
             </div>
-          </div>
+          </Card>
         </div>
 
         {/* ── Comparison Table ── */}
-        <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+        <Card className="bg-white border border-gray-200 rounded-2xl overflow-hidden gap-0 p-0">
           <div className="px-6 py-5 border-b border-gray-100">
             <p className="text-[16px] font-bold text-gray-900">{t('payment.compareBenefitsTitle')}</p>
             <p className="text-[12px] text-gray-400 mt-0.5">{t('payment.compareBenefitsDesc')}</p>
@@ -779,7 +779,7 @@ const PaymentPage = () => {
               {t('payment.choosePlanNow')}
             </Button>
           </div>
-        </div>
+        </Card>
 
         {/* Testimonials strip */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

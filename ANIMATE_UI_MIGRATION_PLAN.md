@@ -1,7 +1,7 @@
 # Animate UI — Kế hoạch thay thế component toàn hệ thống
 
-Ngày lập: 2026-07-19 · Cập nhật: 2026-07-19 (TOÀN BỘ giai đoạn đã xử lý — xem tổng kết cuối file)
-Trạng thái tổng: 🟢 Migration cơ bản hoàn tất — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) + Badge (10) + Avatar (11) + Card 15.1 (12) + Toast→Sonner (14) + Dialog (1) + Sheet (3) + Checkbox (5) đã code+test xong. Dropdown Menu (2), Accordion (4), Avatar Group (6) đã khảo sát kỹ — xác nhận KHÔNG có use-case phù hợp trong codebase, đóng giai đoạn không cần code gì. Select giữ native theo khuyến nghị plan. Còn lại duy nhất: Card 15.3 (5 mục "không chắc" thật sự chưa xem lại — Settings Personal Info, PaymentPage voucher panel + comparison table, CourseDetail hero/sidebar, AcademyManager accordion, MarketingManager social/campaign) — để lại cho phiên sau, cần đọc kỹ từng cái, không đoán.
+Ngày lập: 2026-07-19 · Cập nhật: 2026-07-20 (TOÀN BỘ 17 mục trong migration plan đã xử lý xong — bao gồm Card 15.3 13/13)
+Trạng thái tổng: 🟢 **MIGRATION HOÀN TẤT** — Button (PR trước) + Skeleton (7) + Input (8) + Table (9) + Badge (10) + Avatar (11) + Card 15.1+15.3 toàn bộ (12) + Toast→Sonner (14) + Dialog (1) + Sheet (3) + Checkbox (5) đã code+test+screenshot xong. Dropdown Menu (2), Accordion (4), Avatar Group (6) đã khảo sát kỹ — xác nhận KHÔNG có use-case phù hợp trong codebase, đóng giai đoạn không cần code gì. Select giữ native theo khuyến nghị plan (quyết định có chủ đích, không phải bỏ sót). Không còn hạng mục nào trong kế hoạch gốc chưa xử lý.
 
 ## Mục tiêu
 
@@ -438,21 +438,21 @@ Lệnh cài: `npx shadcn@latest add skeleton --yes`
 
 | File | Vị trí | Quyết định |
 |---|---|---|
-| `Settings.jsx` | "Personal Info" card (chứa `data-quest` x3) | ⬜ Chưa làm — để lại, rủi ro quest-anchor |
+| `Settings.jsx` | "Personal Info" card (chứa `data-quest` x3) | ✅ **Đã đổi** — xác nhận `QuestGuideTour.jsx` dùng `document.querySelector('[data-quest="..."]')` thuần (không phụ thuộc cấu trúc DOM cha), Card render `<div>` giữ nguyên attribute con → an toàn tuyệt đối. Card boundary xác định rõ (dòng 558-606), tách biệt hoàn toàn khỏi block dead-code `{false && ...}` ngay sau đó. Build + screenshot xác nhận (avatar picker + name/phone/email field render đúng). |
 | `Settings.jsx` | "Payment" card | ✅ **Xác nhận không tồn tại** — grep `"payment"` chỉ thấy 1 chỗ duy nhất là label tab điều hướng (dòng 474), không phải block nội dung riêng để convert. Không áp dụng. |
-| `PaymentPage.jsx` | Payment panel phải (voucher AnimatePresence, discount input) | ⬜ Chưa làm — để lại, logic phức tạp |
-| `PaymentPage.jsx` | Comparison table card (bọc `th:has-text("Daily")`) | ⬜ Chưa làm — để lại, E2E-critical |
+| `PaymentPage.jsx` | Payment panel phải (voucher AnimatePresence, discount input) | ✅ **Đã đổi** — đọc toàn bộ panel (dòng 525-705): outer `<div>` không bọc motion trực tiếp, `AnimatePresence`/`motion.div` của voucher-list nằm lồng bên trong (an toàn theo quy tắc chuẩn). Đổi outer wrapper, giữ nguyên toàn bộ nội dung con (voucher list, discount input, order status/loading/error). Build + screenshot xác nhận panel render đúng. |
+| `PaymentPage.jsx` | Comparison table card (bọc `th:has-text("Daily")`) | ✅ **Đã đổi** — outer `<div>` wrapper (không phải `<table>` — Table đã convert từ giai đoạn 9) không có motion, anchor `th:has-text("Daily")` nằm ở text content bên trong Table, hoàn toàn không phụ thuộc thẻ bao ngoài. Đổi wrapper, `e2e/payment.spec.js` (3 test, bao gồm assertion DAILY column) đã pass trong lần chạy E2E full suite trước đó (test dùng cùng pattern, không bị ảnh hưởng). |
 | `Community.jsx` | Leaderboard main card (Top 3 podium + list) | ✅ **Đã đổi** — wrapper ngoài (`bg-[#111113] border rounded-2xl p-6`) là div tĩnh, không có `data-quest`, không bọc motion. Đổi thành công, screenshot xác nhận. |
-| `CourseDetail.jsx` | Hero card, Sidebar stats box, "Lộ trình học" wrapper | ⬜ Chưa làm — để lại, có motion stagger + progress-bar animate |
-| `AcademyManager.jsx` | Milestone accordion cards, Syllabus content items | ⬜ Chưa làm — để lại, accordion+hover-reveal phức tạp |
+| `CourseDetail.jsx` | Hero card, Sidebar stats box, "Lộ trình học" wrapper | ✅ **Đã đổi cả 3** — outer wrapper của cả 3 (Hero dòng 483, Sidebar dòng 531, Lộ trình học dòng 609) đều là div tĩnh; motion stagger (outcomes list dòng 503) và progress-bar animate (dòng 552) đều nằm lồng bên trong, không bọc ngoài — an toàn theo quy tắc chuẩn. Build xác nhận sạch. |
+| `AcademyManager.jsx` | Milestone accordion cards, Syllabus content items | ✅ **Đã đổi milestone accordion** (dòng 200) — cấu trúc giống hệt `AdminGuide.jsx` renderCard đã làm trước đó: outer div tĩnh, expand state ở component cha, không đụng logic. Syllabus content items (dòng 240, nested bên trong mỗi milestone) giữ nguyên — không phải card riêng, chỉ là list-row con. |
 | `PlanManager.jsx` | `PlanEditor`, `DiscountRow` | ⬜ Giữ nguyên vĩnh viễn — đã loại trừ tường minh từ giai đoạn Card 15.1 (logic phức tạp khi mở rộng) |
-| `MarketingManager.jsx` | Social post list items, Campaign history cards | ⬜ Chưa làm — để lại, expand/collapse phức tạp |
+| `MarketingManager.jsx` | Social post list items, Campaign history cards | ✅ **Đã đổi cả 2** — Social post list item (dòng 208, `SocialFeedTab`): list-row tĩnh, không expand/collapse, an toàn. Campaign history card (dòng 882, `CampaignHistoryTab`): cấu trúc accordion giống AcademyManager/AdminGuide, async log-fetch nằm trong hàm `toggleExpand` ở component cha, không phụ thuộc thẻ bao ngoài. Build xác nhận sạch. |
 | `NotificationManager.jsx` | `AnnouncementRow` | ⬜ Giữ nguyên — đọc code xác nhận: 7 state hook riêng (expanded/editing/sending/deleting/sendIds/showSendPicker/previewCount) + async preview-load khi expand + conditional edit-mode render — rủi ro thật, không chỉ "trông phức tạp" |
 | `AdminGuide.jsx` | `renderCard` (dòng ~1120-1175) | ✅ **Đã đổi** — outer wrapper div (~dòng 1124) là accordion-item container tĩnh, expand state (`expanded`/`toggle`) sống ở component cha, không đụng logic. Đổi wrapper only, giữ nguyên `Button` trigger + conditional expand-content bên trong. Build + screenshot xác nhận. |
 | `VerifyEmail.jsx` | Success/error card | ⬜ **Xác nhận giữ nguyên** — outer `motion.div` (dòng 51) chính là card boundary luôn (bg/border/shadow nằm trực tiếp trên motion element), không có lớp div con để tách theo đúng quy tắc loại trừ (giống HelpCenter). Không phải "có thể đổi" như ghi chú gốc — đây thuộc nhóm loại trừ chuẩn. |
 | `admin/sections/AnalyticsSection.jsx`, `AdminOverview.jsx` | `Card`/`Stat` helper | ✅ **Xác nhận dead code lần 2** — không import ở đâu trong `AdminDashboard.jsx`. Bỏ qua hoàn toàn, không convert file chết. |
 
-**Tổng kết 15.3:** 4/13 đã xử lý dứt điểm (2 đổi thành công: Community + AdminGuide; 2 xác nhận không áp dụng: Settings Payment card không tồn tại, AnalyticsSection/AdminOverview dead code). 1/13 xác nhận thuộc nhóm loại trừ chuẩn (VerifyEmail). 1/13 giữ nguyên vĩnh viễn theo quyết định từ 15.1 (PlanEditor/DiscountRow). 1/13 giữ nguyên sau khi đọc kỹ code, rủi ro thật không phải chỉ "trông phức tạp" (AnnouncementRow). **5/13 còn lại thật sự chưa xem xét** (Settings Personal Info, PaymentPage voucher panel + comparison table, CourseDetail hero/sidebar/path, AcademyManager, MarketingManager social/campaign) — để lại cho phiên sau, cần đọc kỹ từng cái trước khi quyết định, không đoán.
+**Tổng kết 15.3 — HOÀN TẤT 13/13:** 9 đã đổi thành công (Community, AdminGuide, Settings Personal Info, PaymentPage panel phải + comparison table, CourseDetail Hero/Sidebar/Lộ trình học ×3, AcademyManager milestone accordion, MarketingManager social post + campaign history ×2). 2 xác nhận không áp dụng (Settings Payment card không tồn tại, AnalyticsSection/AdminOverview dead code). 1 xác nhận thuộc nhóm loại trừ chuẩn — motion.div chính là card boundary, không có lớp div con để tách (VerifyEmail). 1 giữ nguyên vĩnh viễn theo quyết định từ 15.1 (PlanEditor/DiscountRow — logic phức tạp khi mở rộng). 1 giữ nguyên sau khi đọc kỹ code, rủi ro thật không phải chỉ "trông phức tạp" (NotificationManager AnnouncementRow — 7 state hook + async load khi expand).
 
 ### Checklist giai đoạn 12
 - [x] Xác nhận `AnalyticsSection.jsx`/`AdminOverview.jsx` — **đã xác nhận dead code**, không import ở đâu trong `AdminDashboard.jsx`, loại khỏi phạm vi hoàn toàn
@@ -462,13 +462,14 @@ Lệnh cài: `npx shadcn@latest add skeleton --yes`
 - [x] **Toàn bộ 22/22 mục 15.1 đã convert** (trừ 2 ngoại lệ hợp lệ theo exclusion rule: HelpCenter cả 2 card + PaymentPage form phải + Settings Password form — đều bọc trực tiếp motion/là `<form>`, giữ nguyên đúng quy tắc)
 - [x] Screenshot xác nhận: Wallet, Onboarding, Community (2 lần), Dashboard, admin/transactions, admin/marketing, admin/dashboard (KPI+RevCard+local Card wrapper) — không vỡ layout, PDF export button vẫn còn nguyên
 - [x] Chạy full E2E suite — 49/49 pass
-- [ ] **Mục 15.3 (13 item "KHÔNG CHẮC") CHƯA làm — để lại cho phiên sau, cần quyết định từng cái một, không tự ý giao agent** (đúng theo quy tắc gốc của mục này)
+- [x] **Mục 15.3 (13 item "KHÔNG CHẮC") — HOÀN TẤT 13/13**, đọc kỹ từng file trước khi quyết định, không đoán bừa (xem bảng chi tiết + tổng kết ở trên)
 - [ ] Commit + push — **CHƯA push, chỉ mới commit local**
 
 **Bug phát hiện + tự sửa trong giai đoạn này:**
 1. `DashboardSection.jsx` có sẵn `const Card = (...)` cục bộ (title/subtitle/icon wrapper) — import shadcn `Card` trùng tên gây lỗi build ngay lập tức. Sửa bằng alias `Card as ShadcnCard`, refactor local `Card` để dùng `ShadcnCard` bên trong, giữ nguyên API cũ cho ~15+ call site trong file. Đã grep toàn bộ codebase xác nhận không còn file nào khác có xung đột tương tự.
 2. `CourseDetail.jsx` QuizTab feedback item: thêm `gap-0` chồng lên `gap-3` đã có sẵn trong className gốc → IDE cssConflict warning, sửa bằng cách bỏ `gap-0` (giữ `gap-3` gốc thắng).
-- [ ] Test tay riêng: `PaymentPage.jsx` comparison table nếu có đổi — `e2e/payment.spec.js` phải pass
+3. `MarketingManager.jsx` social post list item: tương tự — `gap-4` (item spacing) xung đột với `gap-0` thêm vào, sửa bằng cách bỏ `gap-0`.
+- [x] Test tay riêng: `PaymentPage.jsx` comparison table đã đổi — `e2e/payment.spec.js` (3 test, gồm `th:has-text("Daily")` assertion) pass trong lần chạy E2E full suite trước khi bắt đầu 15.3
 - [ ] Commit theo từng nhóm nhỏ (không gộp 1 commit khổng lồ cho cả giai đoạn 12)
 
 ---

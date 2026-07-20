@@ -205,7 +205,7 @@ function SocialFeedTab() {
         {loading && <div className="text-center py-8 text-[--text-muted] text-[12px]">{t('admin.marketingManager.loading')}</div>}
         {!loading && posts.length === 0 && <div className="text-center py-12 text-[--text-muted] text-[13px]">{t('admin.marketingManager.noPosts')}</div>}
         {posts.map((post, i) => (
-          <div key={post.id} className={`bg-[--bg-surface] border p-4 flex items-start gap-4 transition-opacity ${post.active ? 'border-[--border-subtle]' : 'border-[--border-subtle] opacity-50'}`}>
+          <Card key={post.id} className={`bg-[--bg-surface] border p-4 flex-row items-start gap-4 transition-opacity shadow-none ${post.active ? 'border-[--border-subtle]' : 'border-[--border-subtle] opacity-50'}`}>
             <div className="w-16 h-12 shrink-0 bg-[--bg-elevated] border border-[--border-subtle] overflow-hidden flex items-center justify-center">
               {post.image ? <img src={post.image} alt="" className="w-full h-full object-cover" /> : <Facebook size={18} className="text-blue-400/40" />}
             </div>
@@ -234,7 +234,7 @@ function SocialFeedTab() {
                 <Trash2 size={13} />
               </Button>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
 
@@ -879,7 +879,7 @@ function CampaignHistoryTab() {
       ) : (
         <div className="space-y-2">
           {campaigns.map(c => (
-            <div key={c.id} className="bg-[--bg-surface] border border-[--border-subtle]">
+            <Card key={c.id} className="bg-[--bg-surface] border border-[--border-subtle] gap-0 shadow-none py-0">
               <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-[--bg-elevated] transition-colors" onClick={() => toggleExpand(c.id)}>
                 <div className="space-y-1 min-w-0">
                   <div className="flex items-center gap-2">
@@ -914,7 +914,7 @@ function CampaignHistoryTab() {
                   )}
                 </div>
               )}
-            </div>
+            </Card>
           ))}
         </div>
       )}

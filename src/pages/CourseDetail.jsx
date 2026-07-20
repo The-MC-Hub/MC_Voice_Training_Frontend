@@ -480,7 +480,7 @@ const CourseDetail = () => {
       </Button>
 
       {/* ── Hero ── */}
-      <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 relative overflow-hidden">
+      <Card className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 relative overflow-hidden gap-0 shadow-none">
         <div className="absolute top-0 left-8 right-8 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(245,166,35,0.4), transparent)' }} />
         <div className="flex flex-col lg:flex-row gap-8 justify-between items-start">
           <div className="flex-1 space-y-4">
@@ -528,7 +528,7 @@ const CourseDetail = () => {
           </div>
 
           {/* Sidebar stats + enroll */}
-          <div className="w-full lg:w-72 space-y-4 bg-[#09090b] border border-white/[0.07] rounded-xl p-5 shrink-0">
+          <Card className="w-full lg:w-72 space-y-4 bg-[#09090b] border border-white/[0.07] rounded-xl p-5 shrink-0 gap-0 shadow-none">
             <div className="grid grid-cols-3 gap-2">
               {[
                 { icon: <Layers size={14} />, val: course.totalLessons ?? 0, label: t('courses.lessons'), color: 'text-[#f5a623]' },
@@ -601,12 +601,12 @@ const CourseDetail = () => {
                 </p>
               </div>
             )}
-          </div>
+          </Card>
         </div>
-      </div>
+      </Card>
 
       {/* ── Lộ trình học (quiz mở inline từ node cuối) ── */}
-      <div className="bg-[#111113] border border-white/[0.07] rounded-2xl overflow-hidden">
+      <Card className="bg-[#111113] border border-white/[0.07] rounded-2xl overflow-hidden gap-0 shadow-none py-0">
         <div className="flex items-center justify-between border-b border-white/[0.07] px-5 py-4">
           <div className="flex items-center gap-1.5 text-[12px] font-medium text-[#f5a623]">
             {activeTab === 'quiz' ? <HelpCircle size={13} /> : <Map size={13} />}
@@ -627,7 +627,7 @@ const CourseDetail = () => {
             </motion.div>
           </AnimatePresence>
         </div>
-      </div>
+      </Card>
 
       <CertificateModal
         open={showCert}

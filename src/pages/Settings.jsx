@@ -555,7 +555,7 @@ const Settings = () => {
                 <h2 className="text-[15px] font-semibold text-gray-900">{t('settings.personalInfo')}</h2>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+              <Card className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden gap-0 p-0">
                 {/* Avatar + Fields */}
                 <div className="p-6 space-y-5">
                   {/* Avatar row */}
@@ -603,7 +603,7 @@ const Settings = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Card>
 
                 {false && (
                   <>

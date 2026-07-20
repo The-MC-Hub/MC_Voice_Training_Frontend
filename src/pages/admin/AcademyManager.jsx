@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent } from "@/components/animate-ui/components/radix/dialog";
+import { Card } from "@/components/ui/card";
 
 const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
 const inputClsShadcn = `${inputCls} h-auto rounded-none focus-visible:ring-0`;
@@ -197,7 +198,7 @@ const AcademyManager = () => {
           const isExpanded = !!expandedMilestones[m.id];
           const contents = milestoneContents[m.id] || [];
           return (
-            <div key={m.id} className={`bg-[#111113] border overflow-hidden transition-colors ${isExpanded ? 'border-white/[0.10]' : 'border-white/[0.07]'}`}>
+            <Card key={m.id} className={`bg-[#111113] border overflow-hidden transition-colors gap-0 shadow-none py-0 ${isExpanded ? 'border-white/[0.10]' : 'border-white/[0.07]'}`}>
               <div onClick={() => toggleExpand(m.id)}
                 className="px-4 py-3.5 flex justify-between items-center cursor-pointer select-none hover:bg-white/[0.02] transition-colors">
                 <div className="flex items-center gap-3">
@@ -284,7 +285,7 @@ const AcademyManager = () => {
                   )}
                 </div>
               )}
-            </div>
+            </Card>
           );
         })}
       </div>
