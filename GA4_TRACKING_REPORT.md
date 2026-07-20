@@ -437,5 +437,5 @@ Người dùng nhập mã sai nhiều lần → thất vọng → hủy. Nếu t
 
 ---
 
-*Tài liệu này phản ánh trạng thái hệ thống tracking tính đến ngày 20/06/2026.*  
+*Tài liệu này phản ánh trạng thái hệ thống tracking tính đến ngày 20/06/2026 — chưa được đối chiếu lại với code thật kể từ đó; nếu cần số liệu chính xác hiện tại, grep `gtag(` và các call site trong `src/utils/analytics.js` trước khi tin số liệu dưới đây.*  
 *Phụ trách kỹ thuật: Trung (CTO) — letritrung2605@gmail.com*

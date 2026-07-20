@@ -75,14 +75,14 @@ Project đã có sẵn `@radix-ui/react-popover` (dùng trong `date-picker.jsx`/
 
 | Component | Slug | Trạng thái |
 |---|---|---|
-| Alert Dialog | `radix-alert-dialog` | ⬜ Chưa cài |
-| Dropdown Menu | `radix-dropdown-menu` | ⬜ Chưa cài |
-| Sheet | `radix-sheet` | ⬜ Chưa cài |
-| Checkbox | `radix-checkbox` | ⬜ Chưa cài |
-| Radio Group | `radix-radio-group` | ⬜ Chưa cài |
-| Avatar Group | `animate-avatar-group` | ⬜ Chưa cài (dùng thận trọng — xem mục 7) |
-| Copy Button | `buttons-copy` | ⬜ Chưa cài (thay pattern "copy to clipboard" thủ công) |
-| Sidebar | `radix-sidebar` | ⬜ Đánh giá riêng, KHÔNG ưu tiên (xem mục 8) |
+| Alert Dialog | `radix-alert-dialog` | ✅ Đã cài (`radix/alert-dialog.jsx`) |
+| Dropdown Menu | `radix-dropdown-menu` | ✅ Đã cài (`radix/dropdown-menu.jsx`) — khảo sát xong, không có use-case thật để dùng |
+| Sheet | `radix-sheet` | ✅ Đã cài + dùng (`NotesSidebar.jsx`, Giai đoạn 3) |
+| Checkbox | `radix-checkbox` | ✅ Đã cài + dùng (`Login.jsx` "Ghi nhớ tôi") |
+| Radio Group | `radix-radio-group` | ✅ Đã cài (`radix/radio-group.jsx`) — khảo sát xong, không có use-case thật |
+| Avatar Group | `animate-avatar-group` | ✅ Đã cài (`animate/avatar-group.jsx`) — khảo sát xong, 2 use-case tìm được là placeholder tĩnh, quyết định KHÔNG dùng (xem mục 7) |
+| Copy Button | `buttons-copy` | ✅ Đã cài (`buttons/copy.jsx`) |
+| Sidebar | `radix-sidebar` | ⬜ Đánh giá riêng, KHÔNG ưu tiên (xem mục 8) — duy nhất còn treo, không thuộc phạm vi migration đã hoàn tất |
 
 Lệnh cài (chạy 1 lần, gộp):
 ```bash

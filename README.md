@@ -4,296 +4,65 @@
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react) ![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite) ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38BDF8?logo=tailwindcss) ![License](https://img.shields.io/badge/license-MIT-green)
 
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Pages & Routes](#pages--routes)
-- [Environment Variables](#environment-variables)
-- [Getting Started](#getting-started)
-- [Design System](#design-system)
-- [Role Access Matrix](#role-access-matrix)
-- [API Integration](#api-integration)
+For full architectural detail (route table, dead/orphaned routes, UI component migration status, known fragile spots, E2E setup pitfalls) see **[CLAUDE.md](./CLAUDE.md)** — this README is a quick-start only.
 
 ---
 
 ## Overview
 
-MC Voice Training Frontend is a React 19 SPA built for the MC Hub platform. It serves as the primary interface for voice practice sessions, AI analysis reports, academy course management, and community competitions.
+React 19 SPA for voice practice sessions, AI analysis reports, course/academy content, and community leaderboards/competitions. Three roles with distinct access: `CLIENT`, `MC`, `ADMIN` (route guards: `GuestRoute`, `ProtectedRoute`, `RoleRoute` — see `src/App.jsx`).
 
-The application serves **4 user roles**: `guest`, `user`, `mc`, and `admin`, each with distinct dashboards and access levels.
-
----
+**Note:** `package.json`'s `name` field is `fpt-s7-website-frontend` (inherited from the repo this was forked from) — this doesn't affect functionality but will show up in build output/lockfiles.
 
 ## Tech Stack
 
 | Category | Technology |
 |---|---|
-| Framework | React 19 + React Router v7 |
+| Framework | React 19.2 + React Router 7.13 |
 | Build Tool | Vite 7 |
 | Styling | Tailwind CSS 4 (`@tailwindcss/vite`) |
-| Animation | Framer Motion 12 |
-| State Management | Zustand |
-| HTTP Client | Axios |
-| Real-time | Socket.IO Client, SockJS + STOMP |
-| UI Components | HeroUI 3 (Avatar, Dropdown) |
-| Markdown | ReactMarkdown + remark-gfm |
-| Charts | Recharts |
-| i18n | react-i18next (VI / EN) |
-| Audio | Web Audio API (MediaRecorder) |
+| Animation | Framer Motion 12 + `motion` 12 |
+| State Management | Zustand 5 (single store: `src/store/useAuthStore.js`) |
+| UI Components | animate-ui (Radix-backed, animated) + shadcn/ui (plain primitives it doesn't cover) |
+| i18n | react-i18next (`src/locales/en.json` + `vi.json`) |
+| HTTP | axios (`src/services/api.js`, 45s timeout to survive backend cold-starts) |
+| Realtime | `@stomp/stompjs` + `sockjs-client` (connects to backend's `/ws-chat`; no chat feature is actually wired to it server-side) |
+| Collaborative editing | Tiptap 3 + Yjs (reading-guide highlight annotations) |
+| E2E | Playwright |
 
----
-
-## Features
-
-### Voice Practice
-- Record voice sessions directly in the browser via **MediaRecorder API**
-- Real-time waveform visualization during recording
-- AI analysis pipeline: pitch, rhythm, pacing, accuracy scoring
-- Detailed **Voice Report** with Mel-spectrogram breakdown (Premium)
-- Bilingual feedback output (Vietnamese & English)
-
-### Academy & Learning
-- Structured course catalog with milestones
-- Reading view for theory content with Markdown rendering
-- Quiz system integrated into milestones
-- Progress tracking per course
-
-### Community
-- **Voice Duel Arenas** — weekly/daily speech competitions
-- Leaderboard ranking system
-- Competition history and score comparison
-
-### Dashboard
-- Personal practice statistics and history
-- Score trends over time
-- Session replay and feedback review
-
-### Admin Panel
-- User management (verify/suspend MC accounts)
-- Lesson/script catalog management (CRUD)
-- Competition arena management
-- Transaction ledger overview
-- Academy course and milestone builder
-
-### Premium Subscription
-- One-time lifetime payment via **VietQR MBBank**
-- Instant activation via payment memo matching
-- Unlocks unlimited recording attempts + advanced AI reports
-
----
-
-## Project Structure
-
-```
-MC_Voice_Training_Frontend/
-├── public/
-│   ├── images/             # MC profile photos
-│   └── legal/              # Terms & Privacy markdown files
-├── src/
-│   ├── assets/             # Static assets
-│   ├── components/
-│   │   ├── animations/     # PageTransition, ScrollReveal, CountUp, ShinyText
-│   │   ├── chat/           # ChatWindow, MessageList, ConversationHeader
-│   │   ├── dashboard/      # OverviewTab
-│   │   ├── editor/         # CollaborativeEditor
-│   │   ├── modals/         # ContactModal
-│   │   ├── profile/        # MCProfileView
-│   │   └── ui/             # Toast, PageLoader, Skeleton, EmptyState
-│   ├── contexts/           # ThemeContext
-│   ├── controllers/        # Data orchestration layer (services → pages)
-│   ├── hooks/              # useApi, useAuth, useSocket, useDebounce
-│   ├── layout/             # MainLayout (Navbar + Outlet + Footer)
-│   ├── locales/            # en.json, vi.json translation files
-│   ├── pages/
-│   │   ├── admin/          # Admin section components + managers
-│   │   └── *.jsx           # All route-level pages
-│   ├── services/           # Axios API wrappers per domain
-│   ├── store/              # Zustand auth store
-│   ├── App.jsx             # Route definitions
-│   ├── index.css           # Tailwind + design tokens
-│   └── index.jsx           # Entry point
-├── .env.example
-├── package.json
-└── vite.config.js
-```
-
----
-
-## Pages & Routes
-
-| Route | Page | Auth Required |
-|---|---|---|
-| `/` | Home | No |
-| `/about` | About | No |
-| `/login` | Login | Guest only |
-| `/register` | Register | Guest only |
-| `/forgot-password` | ForgotPassword | Guest only |
-| `/courses` | CoursesPublic | No |
-| `/terms` | Terms of Service | No |
-| `/privacy` | Privacy Policy | No |
-| `/help` | Help Center | No |
-| `/contact` | Contact Us | No |
-| `/onboarding` | Onboarding | Yes |
-| `/m/dashboard` | Dashboard | Yes |
-| `/m/voice/library` | Voice Library | No |
-| `/m/voice/practice/:id` | Voice Practice | Yes (full-screen) |
-| `/m/voice/report/:sessionId` | Voice Report | Yes |
-| `/m/learning` | Learning / Academy | No |
-| `/m/learning/milestone/:id` | Milestone Detail | Yes |
-| `/m/courses` | Course List | Yes |
-| `/m/courses/:id` | Course Detail | Yes |
-| `/m/community` | Community | No |
-| `/m/settings` | Settings | Yes |
-| `/m/payment` | Payment | Yes |
-| `/m/wallet` | Wallet | MC / Admin |
-| `/m/notifications` | Notifications | Yes |
-| `/m/admin` | Admin Dashboard | Admin only |
-
----
-
-## Environment Variables
-
-Copy `.env.example` to `.env` and fill in values:
+## Commands
 
 ```bash
-cp .env.example .env
-# Windows PowerShell:
-Copy-Item .env.example .env
-```
-
-| Variable | Description | Example |
-|---|---|---|
-| `VITE_APP_NAME` | Application display name | `MC Voice Training` |
-| `VITE_API_URL` | Backend REST API base URL | `http://localhost:5000/api/v1` |
-| `VITE_AI_API_URL` | AI voice analysis service URL | `http://localhost:8000` |
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- npm 9+ or pnpm
-
-### Install & Run
-
-```bash
-# Install dependencies
 npm install
-
-# Start development server (http://localhost:5173)
-npm run dev
-
-# Build for production
+npm run dev             # http://localhost:5173
 npm run build
-
-# Preview production build
 npm run preview
-
-# Lint
 npm run lint
+npm run test:e2e
+npm run test:e2e:ui
+npm run test:e2e:report
 ```
 
----
+Copy `.env.example` → `.env`, set `VITE_API_URL` to the backend's `/api/v1` root.
 
-## Design System
+## UI components — read before adding new UI
 
-The UI follows an **Apple / Linear** inspired dark design system with gold accent.
+The animate-ui/shadcn migration is complete (`ANIMATE_UI_MIGRATION_PLAN.md`). Check `src/components/animate-ui/components/radix/` first (Dialog, Sheet, Checkbox, Accordion, Dropdown Menu, Alert Dialog, Radio Group, Tabs, Switch, Progress, Tooltip, Avatar Group — animated, Radix-backed); fall back to `src/components/ui/` only for what animate-ui doesn't cover (Card, Input, Table, Badge, Avatar, Skeleton, Sonner toast). Select is intentionally kept as a native `<select>`, not migrated.
 
-### Color Tokens (`src/index.css`)
+**Known fragile spot:** re-running `npx shadcn@latest add` on `src/components/animate-ui/components/buttons/button.jsx` will silently revert its `defaultVariants.variant` from `'ghost'` back to shadcn's `'default'`, reintroducing a solid-gold-background bug across ~200 button usages. If the CLI prompts to overwrite this file, diff it before accepting.
 
-| Token | Value | Usage |
-|---|---|---|
-| `--bg-base` | `#09090b` | App background |
-| `--bg-surface` | `#111113` | Cards, panels |
-| `--bg-elevated` | `#1a1a1e` | Hover states, dropdowns |
-| `--gold` | `#f5a623` | Primary CTA, active states, metrics |
-| `--text-primary` | `#fafafa` | Main text |
-| `--text-secondary` | `#a1a1aa` | Supporting text |
-| `--text-muted` | `#52525b` | Placeholder, labels |
-| `--border` | `rgba(255,255,255,0.08)` | Card borders |
+## Routing gotchas
 
-### Animation Presets (Framer Motion)
+`/courses`, `/m/learning`, and `/m/learning/milestone/:id` render an inline `<ComingSoon>` placeholder — they do **not** use `src/pages/CoursesPublic.jsx` or `src/pages/MilestoneDetail.jsx`, which exist in the codebase but are orphaned (no route references them). Don't assume a page file being present means it's reachable — check `src/App.jsx`.
 
-```jsx
-const fadeUp    = { initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.4 } }
-const fadeIn    = { initial: { opacity: 0 },         animate: { opacity: 1 },        transition: { duration: 0.3 } }
-const hoverLift = { whileHover: { y: -4 },           transition: { duration: 0.2 } }
-```
+## E2E tests
 
-### Typography Rules
-- Headings: `font-bold` / `font-semibold` — no uppercase italic
-- Labels / badges: `text-[10px] uppercase tracking-wider`
-- Body text: `text-[13px]` or `text-[12px]`
-- Monospace: `font-mono` for IDs, codes, script content
+Playwright, config at repo root, specs in `e2e/`. `global.setup.js` registers/verifies a CLIENT and ADMIN test user and caches `e2e/.auth/{user,admin}.json` storage states. **If setup fails with `loginRes.ok() === false`**, check whether the backend's `MONGODB_URI` actually points at the same database `global.setup.js`'s mongosh verification step targets (`MONGODB_TEST_URI` / `mchub_test`) — there's no Spring test profile forcing this alignment automatically, so a backend pointed at production `mchub` will silently break the whole suite with no clearer error than a failed login.
 
----
+## Further reference
 
-## Role Access Matrix
-
-| Feature | Guest | User | MC | Admin |
-|---|---|---|---|---|
-| Browse Voice Library | ✓ | ✓ | ✓ | ✓ |
-| Start Practice Session | — | ✓ | ✓ | ✓ |
-| View AI Report (basic) | — | ✓ | ✓ | ✓ |
-| View AI Report (full) | — | Premium | Premium | ✓ |
-| Community Competitions | ✓ | ✓ | ✓ | ✓ |
-| MC Profile / Portfolio | — | — | ✓ | ✓ |
-| Wallet | — | — | ✓ | ✓ |
-| Admin Panel | — | — | — | ✓ |
-
----
-
-## API Integration
-
-### Backend (REST)
-
-All API calls go through `src/services/api.js` — Axios instance with JWT Bearer token interceptor.
-
-Base URL: `VITE_API_URL` (default `http://localhost:5000/api/v1`)
-
-| Service File | Domain |
-|---|---|
-| `authService.js` | Login, register, forgot password, update profile |
-| `voiceController.js` | Fetch lessons, submit recording, fetch history |
-| `academyService.js` | Courses, milestones, enrollment, progress |
-| `communityController.js` | Competitions, leaderboard, submissions |
-| `paymentService.js` | Create order, verify payment status |
-| `mediaService.js` | Cloudinary upload — avatar + portfolio photos |
-| `notificationService.js` | Fetch, mark read |
-| `mcService.js` | MC profile CRUD |
-| `publicService.js` | Public MC listing, search |
-
-### AI Service (Voice Analysis)
-
-Base URL: `VITE_AI_API_URL` (default `http://localhost:8000`)
-
-Called from `src/services/aiService.js`:
-
-```
-POST /analyze
-  Body: FormData { audio: Blob }
-  Returns: { accuracy_score, pitch_data, rhythm_score, ai_feedback, spectrogram_url }
-```
-
-### Real-time (WebSocket)
-
-STOMP over SockJS — managed in `src/hooks/useSocket.js`
-
-| Topic | Purpose |
-|---|---|
-| `/topic/notifications/{userId}` | Push notifications |
-| `/topic/messages/{conversationId}` | Live chat messages |
-| `/app/chat/send` | Send message |
-
----
-
-## License
-
-MIT © The MC Hub Team
+- [CLAUDE.md](./CLAUDE.md) — full route table, migration status detail, timeout/CORS history
+- [ANIMATE_UI_MIGRATION_PLAN.md](./ANIMATE_UI_MIGRATION_PLAN.md) — per-component migration decisions and rationale
+- [COLOR-SYSTEM.md](./COLOR-SYSTEM.md) — design tokens, spacing, component visual patterns
+- [FEATURES_LOG.md](./FEATURES_LOG.md) — historical sprint/feature changelog (not current-state — see CLAUDE.md for that)
+- [GA4_TRACKING_REPORT.md](./GA4_TRACKING_REPORT.md) — GA4 event tracking inventory
