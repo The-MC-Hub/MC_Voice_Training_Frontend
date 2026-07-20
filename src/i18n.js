@@ -3,6 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import enRes from './locales/en.json';
 import viRes from './locales/vi.json';
+import jaRes from './locales/ja.json';
 
 i18n
   .use(LanguageDetector)
@@ -10,9 +11,9 @@ i18n
   .init({
     resources: {
       en: { translation: enRes },
-      vi: { translation: viRes }
+      vi: { translation: viRes },
+      ja: { translation: jaRes }
     },
-    lng: 'vi',
     fallbackLng: 'vi',
     debug: false,
     interpolation: {

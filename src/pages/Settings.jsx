@@ -985,8 +985,19 @@ const Settings = () => {
                       >
                         EN
                       </Button>
+                      <Button
+                        type="button"
+                        onClick={() => i18nInstance.changeLanguage('ja')}
+                        className={`h-auto px-4 py-1.5 rounded-lg text-[12px] font-medium transition-colors ${
+                          i18nInstance.language === 'ja'
+                            ? 'bg-white text-gray-900 shadow-sm'
+                            : 'text-gray-500 hover:text-gray-700'
+                        }`}
+                      >
+                        JA
+                      </Button>
                     </div>
-                    {i18nInstance.language === 'en' && (
+                    {(i18nInstance.language === 'en' || i18nInstance.language === 'ja') && (
                       <span className="text-[10px] font-medium text-amber-400/80">⚠ {t('settings.inDevelopment')}</span>
                     )}
                   </div>
