@@ -80,7 +80,7 @@ const About = () => {
           ))}
         </div>
 
-        <div className="max-w-4xl mx-auto text-center relative z-10">
+        <div className="max-w-4xl mx-auto text-center relative z-10 m-10">
           <ScrollReveal direction="up">
            
 
@@ -95,16 +95,7 @@ const About = () => {
             </p>
           </ScrollReveal>
 
-          <ScrollReveal direction="up" delay={0.2}>
-            <div className="mt-10 mx-auto max-w-3xl rounded-md overflow-hidden shadow-2xl shadow-amber-500/10 border border-amber-400/10">
-              <img
-                src="/images/cover.png"
-                onError={e => { e.currentTarget.src = 'https://picsum.photos/seed/mchub-cover/1200/500'; e.currentTarget.onerror = null; }}
-                alt="The MC Hub — Cắt tiếng nói, Chạm tương lai"
-                className="w-full h-auto object-cover"
-              />
-            </div>
-          </ScrollReveal>
+        
         </div>
 
         {/* Bottom amber gradient fade */}

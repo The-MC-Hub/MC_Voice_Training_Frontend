@@ -20,6 +20,7 @@ import ContactModal from '../components/modals/ContactModal';
 import { Dialog, DialogContent } from '@/components/animate-ui/components/radix/dialog';
 import SpotlightCard from '../components/ui/SpotlightCard';
 import SocialFeedCarousel from '../components/ui/SocialFeedCarousel';
+import CardSwap, { Card as SwapCard } from '../components/ui/CardSwap';
 
 const CARD_HOVER_TRANSITION = { duration: 0.22, ease: [0.16, 1, 0.3, 1] };
 const DIFF_COLOR = {
@@ -1118,9 +1119,9 @@ const Home = () => {
 
       {/* ── 2. FAQ ──────────────────────────────────────────────────────────── */}
       <section className="py-24 max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
-          {/* Left: sticky header + contact CTA */}
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+          {/* Right (visually, via order-2): sticky header + contact CTA + rotating highlight cards */}
+          <div className="lg:order-2">
             <ScrollReveal direction="up">
               <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gray-200 bg-gray-50 text-gray-500 text-[11px] font-semibold uppercase tracking-widest mb-5">
                 Câu hỏi thường gặp
@@ -1138,10 +1139,26 @@ const Home = () => {
                 Liên hệ hỗ trợ <ArrowRight size={13} />
               </Link>
             </ScrollReveal>
+
+            <div className="hidden lg:flex justify-start pt-20 pl-4">
+              <CardSwap width={300} height={190} cardDistance={22} verticalDistance={26} delay={3600}>
+                {faqs.map((faq) => (
+                  <SwapCard key={faq.q} className="p-6 flex flex-col justify-between">
+                    <div className="w-9 h-9 rounded-md bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-500">
+                      <faq.icon size={16} />
+                    </div>
+                    <div>
+                      <p className="text-[14px] font-semibold text-gray-900 leading-snug mb-1.5">{faq.q}</p>
+                      <p className="text-[12px] text-gray-500 leading-relaxed line-clamp-2">{faq.short}</p>
+                    </div>
+                  </SwapCard>
+                ))}
+              </CardSwap>
+            </div>
           </div>
 
-          {/* Right: accordion */}
-          <div className="lg:col-span-3 space-y-2">
+          {/* Left (visually, via order-1): accordion */}
+          <div className="lg:order-1 space-y-2">
             {faqs.map((faq, i) => (
               <FaqItem key={i} icon={faq.icon} q={faq.q} short={faq.short} full={faq.full} index={i} />
             ))}
