@@ -18,7 +18,7 @@ const HighlightTooltip = ({ position, onHighlight, onClose }) => {
       initial={{ opacity: 0, y: 10, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 10, scale: 0.95 }}
-      className="fixed z-50 flex items-center gap-2 p-1.5 bg-[#18181b] border border-white/[0.08] shadow-2xl rounded-xl"
+      className="fixed z-50 flex items-center gap-2 p-1.5 bg-[#18181b] border border-white/[0.08] shadow-2xl rounded-md"
       style={{ top: position.y - 50, left: position.x - 70 }}
     >
       <div className="flex gap-1.5 px-1.5">

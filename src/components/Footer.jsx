@@ -20,7 +20,7 @@ const Footer = () => {
             <div className="flex gap-3">
               {[Facebook, Instagram, Twitter, Github].map((Icon, i) => (
                 <a key={i} href="#"
-                  className="w-9 h-9 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:border-gray-300 transition-colors shadow-sm">
+                  className="w-9 h-9 rounded-md bg-white border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:border-gray-300 transition-colors shadow-sm">
                   <Icon size={16} />
                 </a>
               ))}

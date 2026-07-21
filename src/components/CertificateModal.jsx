@@ -256,13 +256,13 @@ const CertificateModal = ({ open, onClose, name, courseTitle, courseId, isComple
                 </h3>
               </div>
               <button onClick={onClose}
-                className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors">
+                className="w-8 h-8 rounded-md bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors">
                 <X size={16} />
               </button>
             </div>
 
             {/* certificate canvas */}
-            <div className="rounded-2xl overflow-hidden shadow-[0_24px_80px_rgba(245,166,35,0.15)] border border-[#f5a623]/20">
+            <div className="rounded-md overflow-hidden shadow-[0_24px_80px_rgba(245,166,35,0.15)] border border-[#f5a623]/20">
               <canvas ref={canvasRef} className="w-full h-auto block" />
             </div>
 
@@ -274,7 +274,7 @@ const CertificateModal = ({ open, onClose, name, courseTitle, courseId, isComple
                   : t('certificateModal.previewNote')}
               </p>
               <button onClick={handleDownload}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] active:scale-[0.98] transition-all shrink-0">
+                className="flex items-center gap-2 px-5 py-2.5 rounded-md bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] active:scale-[0.98] transition-all shrink-0">
                 <Download size={14} /> {t('certificateModal.downloadPng')}
               </button>
             </div>

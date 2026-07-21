@@ -33,7 +33,7 @@ const TypewriterMarkdown = ({ content, speed = 2, enabled = true }) => {
                 remarkPlugins={[remarkGfm]}
                 components={{
                     table: ({ children }) => (
-                        <div className="my-4 overflow-hidden rounded-xl border border-white/[0.12] bg-[#111113]">
+                        <div className="my-4 overflow-hidden rounded-md border border-white/[0.12] bg-[#111113]">
                             <table className="w-full border-collapse text-sm">{children}</table>
                         </div>
                     ),

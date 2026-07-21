@@ -173,9 +173,9 @@ const OnboardingTour = () => {
               />
             </div>
 
-            <div className="bg-white rounded-2xl shadow-2xl shadow-black/20 overflow-hidden">
+            <div className="bg-white rounded-md shadow-2xl shadow-black/20 overflow-hidden">
               {/* Header */}
-              <div className="bg-gradient-to-r from-amber-500 to-amber-400 px-4 pt-3.5 pb-3 flex items-start justify-between">
+              <div className="bg-amber-500 px-4 pt-3.5 pb-3 flex items-start justify-between">
                 <div>
                   <p className="text-[10px] font-bold text-amber-100 uppercase tracking-widest mb-0.5">
                     Bước {stepIdx + 1} / {steps.length}
@@ -226,7 +226,7 @@ const OnboardingTour = () => {
                     )}
                     <button
                       onClick={() => { if (isLast) { trackOnboardingTourComplete(); } nextStep(); }}
-                      className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold transition-colors active:scale-95"
+                      className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold transition-colors active:scale-95"
                     >
                       {isLast ? "Hoàn tất" : "Tiếp theo"}
                       {isLast ? null : <ChevronRight size={13} />}
@@ -250,7 +250,7 @@ const OnboardingTour = () => {
                 left: rect.left - 4,
                 width: rect.width + 8,
                 height: rect.height + 8,
-                borderRadius: 14,
+                borderRadius: 6,
                 border: "2px solid rgba(245,166,35,0.9)",
                 zIndex: 9998,
                 pointerEvents: "none",

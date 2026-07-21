@@ -19,11 +19,7 @@ const ShinyText = ({ text, disabled = false, speed = 5, className = "" }) => {
             {...animationProps}
             className={`shiny-text ${className}`}
             style={{
-                backgroundImage: "linear-gradient(120deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 70%)",
-                backgroundSize: "200% 100%",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-                color: "transparent",
+                color: "rgba(255,255,255,0.8)",
                 display: "inline-block",
             }}
         >

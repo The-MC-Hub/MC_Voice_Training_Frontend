@@ -64,7 +64,7 @@ function UpgradeCard({ ad }) {
   const Icon = ad.icon;
   return (
     <div className="w-full bg-white border border-black/8 overflow-hidden">
-      <div className="h-[2px]" style={{ background: `linear-gradient(90deg,transparent,${ad.accent},transparent)` }} />
+      <div className="h-[2px]" style={{ background: ad.accent }} />
       <div className="p-3">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-6 h-6 flex items-center justify-center shrink-0"
@@ -165,7 +165,7 @@ function FlashDealCard({ deal, onClaim }) {
       exit={{ opacity: 0, scale: 0.96 }}
       className="w-full overflow-hidden relative"
       style={{
-        background: 'linear-gradient(160deg, #0f172a 0%, #1e1a2e 60%, #12172b 100%)',
+        background: '#0f172a',
         border: '1px solid rgba(251,191,36,0.22)',
         boxShadow: '0 0 24px rgba(251,191,36,0.07), inset 0 1px 0 rgba(255,255,255,0.04)',
       }}
@@ -173,13 +173,13 @@ function FlashDealCard({ deal, onClaim }) {
       {/* Shimmer sweep */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(251,191,36,0.06) 50%, transparent 65%)' }}
+        style={{ background: 'rgba(251,191,36,0.06)' }}
         animate={{ x: ['-100%', '200%'] }}
         transition={{ duration: 3, repeat: Infinity, ease: 'linear', repeatDelay: 1.5 }}
       />
 
       {/* Top gold bar */}
-      <div className="h-[1.5px]" style={{ background: 'linear-gradient(90deg, transparent, #fbbf24 30%, #f59e0b 70%, transparent)' }} />
+      <div className="h-[1.5px]" style={{ background: '#f59e0b' }} />
 
       <div className="p-3 relative">
 
@@ -208,7 +208,7 @@ function FlashDealCard({ deal, onClaim }) {
           <div
             className="shrink-0 px-2 py-1 rounded font-black text-[20px] leading-none tabular-nums"
             style={{
-              background: 'linear-gradient(135deg, rgba(251,191,36,0.12), rgba(245,158,11,0.06))',
+              background: 'rgba(251,191,36,0.12)',
               border: '1px solid rgba(251,191,36,0.2)',
               color: '#fcd34d',
               textShadow: '0 0 16px rgba(252,211,77,0.35)',
@@ -299,7 +299,7 @@ function FlashDealCard({ deal, onClaim }) {
             <div className="h-0.75 w-full rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
               <motion.div
                 className="h-full rounded-full"
-                style={{ background: pct > 40 ? 'linear-gradient(90deg,#f59e0b,#fcd34d)' : 'linear-gradient(90deg,#ef4444,#f97316)' }}
+                style={{ background: pct > 40 ? '#f59e0b' : '#ef4444' }}
                 initial={{ width: 0 }}
                 animate={{ width: `${pct}%` }}
                 transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -315,8 +315,7 @@ function FlashDealCard({ deal, onClaim }) {
           onClick={() => onClaim(deal)}
           className="w-full py-2 text-[11px] font-black uppercase tracking-[0.08em] flex items-center justify-center gap-1.5 rounded"
           style={{
-            background: 'linear-gradient(90deg, #f59e0b 0%, #fbbf24 50%, #f59e0b 100%)',
-            backgroundSize: '200% 100%',
+            background: '#f59e0b',
             color: '#0f172a',
             boxShadow: '0 2px 12px rgba(245,158,11,0.35)',
           }}

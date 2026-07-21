@@ -6,7 +6,7 @@ const InstantSearchResults = ({ results, loading, query, onResultClick }) => {
   if (!query) return null;
 
   return (
-    <div className="absolute top-full left-0 right-0 mt-2 bg-[#111113] border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] z-50">
+    <div className="absolute top-full left-0 right-0 mt-2 bg-[#111113] border border-white/[0.08] rounded-md shadow-[0_8px_32px_rgba(0,0,0,0.4)] z-50">
       {loading ? (
         <div className="p-8 flex flex-col items-center justify-center gap-3">
           <div className="relative w-8 h-8">
@@ -33,9 +33,9 @@ const InstantSearchResults = ({ results, loading, query, onResultClick }) => {
                 className="group flex items-center gap-4 px-4 py-3.5 hover:bg-white/[0.03] transition-colors border-b border-white/[0.04] last:border-0"
               >
                 <div className="relative shrink-0">
-                  <div className="w-10 h-10 rounded-xl bg-[#09090b] border border-white/[0.07] flex items-center justify-center text-zinc-400 font-medium text-[13px]">
+                  <div className="w-10 h-10 rounded-md bg-[#09090b] border border-white/[0.07] flex items-center justify-center text-zinc-400 font-medium text-[13px]">
                     {mc.avatar ? (
-                      <img src={mc.avatar} alt="" className="w-full h-full rounded-xl object-cover" />
+                      <img src={mc.avatar} alt="" className="w-full h-full rounded-md object-cover" />
                     ) : (
                       (mc.displayName || mc.name || "?").charAt(0).toUpperCase()
                     )}
@@ -61,7 +61,7 @@ const InstantSearchResults = ({ results, loading, query, onResultClick }) => {
                   </div>
                 </div>
 
-                <div className="w-7 h-7 rounded-lg border border-white/[0.06] flex items-center justify-center text-zinc-600 group-hover:text-white group-hover:border-white/[0.12] transition-colors shrink-0">
+                <div className="w-7 h-7 rounded-md border border-white/[0.06] flex items-center justify-center text-zinc-600 group-hover:text-white group-hover:border-white/[0.12] transition-colors shrink-0">
                   <ArrowRight size={13} />
                 </div>
               </Link>
@@ -78,7 +78,7 @@ const InstantSearchResults = ({ results, loading, query, onResultClick }) => {
         </div>
       ) : (
         <div className="p-10 text-center flex flex-col items-center gap-2">
-          <div className="w-10 h-10 bg-[#09090b] border border-white/[0.07] rounded-xl flex items-center justify-center mb-1">
+          <div className="w-10 h-10 bg-[#09090b] border border-white/[0.07] rounded-md flex items-center justify-center mb-1">
             <Search size={18} className="text-zinc-700" />
           </div>
           <p className="text-[13px] text-zinc-400">No results for "<span className="text-[#f5a623]">{query}</span>"</p>

@@ -29,7 +29,7 @@ function DatePicker({
         <Button
           variant="outline"
           className={cn(
-            "w-full sm:w-[240px] justify-start text-left font-normal rounded-xl px-4 py-2.5 border-white/10 bg-slate-800/50 hover:bg-slate-800 hover:border-[var(--accent-gold)]/30 transition-all",
+            "w-full sm:w-[240px] justify-start text-left font-normal rounded-md px-4 py-2.5 border-white/10 bg-slate-800/50 hover:bg-slate-800 hover:border-[var(--accent-gold)]/30 transition-all",
             !date && "text-slate-500",
             className,
           )}

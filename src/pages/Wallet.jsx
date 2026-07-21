@@ -39,10 +39,10 @@ const Wallet = () => {
           <p className="text-[13px] text-zinc-500">{t('wallet.headerDesc')}</p>
         </div>
         <div className="flex gap-3">
-          <Button className="flex items-center gap-2 px-4 py-2 h-auto rounded-xl border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] text-[13px] font-medium transition-colors">
+          <Button className="flex items-center gap-2 px-4 py-2 h-auto rounded-md border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] text-[13px] font-medium transition-colors">
             <History size={15} /> {t('wallet.statement')}
           </Button>
-          <Button className="flex items-center gap-2 px-4 py-2 h-auto rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors">
+          <Button className="flex items-center gap-2 px-4 py-2 h-auto rounded-md bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors">
             <CreditCard size={15} /> {t('wallet.requestPayout')}
           </Button>
         </div>
@@ -52,7 +52,7 @@ const Wallet = () => {
         {/* Left sidebar */}
         <div className="lg:col-span-1 space-y-4">
           {/* Balance card */}
-          <Card className="bg-[#f5a623] rounded-xl p-6 relative overflow-hidden gap-0 shadow-none">
+          <Card className="bg-[#f5a623] rounded-md p-6 relative overflow-hidden gap-0 shadow-none">
             <div className="flex items-center gap-1.5 mb-4 text-black/60">
               <WalletIcon size={14} />
               <span className="text-[11px] font-medium uppercase tracking-wider">{t('wallet.balance')}</span>
@@ -85,21 +85,21 @@ const Wallet = () => {
           </Card>
 
           {/* Payout method */}
-          <Card className="bg-[#111113] border border-white/[0.07] rounded-xl p-5 gap-0 shadow-none">
+          <Card className="bg-[#111113] border border-white/[0.07] rounded-md p-5 gap-0 shadow-none">
             <h4 className="text-[11px] font-medium text-zinc-600 uppercase tracking-wider mb-4 pb-3 border-b border-white/[0.06]">{t('wallet.payoutMethod')}</h4>
             <div className="flex items-center gap-3 group">
-              <div className="w-10 h-10 bg-[#09090b] border border-white/[0.07] rounded-xl flex items-center justify-center text-[#f5a623] shrink-0">
+              <div className="w-10 h-10 bg-[#09090b] border border-white/[0.07] rounded-md flex items-center justify-center text-[#f5a623] shrink-0">
                 <CreditCard size={18} />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[13px] font-medium text-white">Techcombank VN</p>
                 <p className="text-[11px] text-zinc-600">**** 8921</p>
               </div>
-              <Button className="w-7 h-7 rounded-lg border border-white/[0.07] flex items-center justify-center text-zinc-600 hover:text-white hover:border-white/[0.14] transition-colors opacity-0 group-hover:opacity-100">
+              <Button className="w-7 h-7 rounded-md border border-white/[0.07] flex items-center justify-center text-zinc-600 hover:text-white hover:border-white/[0.14] transition-colors opacity-0 group-hover:opacity-100">
                 <ArrowRight size={13} />
               </Button>
             </div>
-            <Button hoverScale={1} className="mt-4 w-full py-2 h-auto rounded-lg border border-white/[0.07] text-[12px] text-zinc-500 hover:text-white hover:border-[#f5a623]/30 transition-colors flex items-center justify-center gap-1.5">
+            <Button hoverScale={1} className="mt-4 w-full py-2 h-auto rounded-md border border-white/[0.07] text-[12px] text-zinc-500 hover:text-white hover:border-[#f5a623]/30 transition-colors flex items-center justify-center gap-1.5">
               <Zap size={13} /> {t('wallet.manageMethods')}
             </Button>
           </Card>
@@ -107,11 +107,11 @@ const Wallet = () => {
 
         {/* Main */}
         <div className="lg:col-span-3">
-          <div className="bg-[#111113] border border-white/[0.07] rounded-xl p-6">
+          <div className="bg-[#111113] border border-white/[0.07] rounded-md p-6">
             {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-5 border-b border-white/[0.06]">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-[#f5a623]/[0.08] rounded-xl flex items-center justify-center text-[#f5a623]">
+                <div className="w-9 h-9 bg-[#f5a623]/[0.08] rounded-md flex items-center justify-center text-[#f5a623]">
                   <History size={18} />
                 </div>
                 <div>
@@ -120,18 +120,18 @@ const Wallet = () => {
                 </div>
               </div>
               <div className="flex gap-2">
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-[#09090b] border border-white/[0.06] rounded-lg">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-[#09090b] border border-white/[0.06] rounded-md">
                   <History size={13} className="text-zinc-600" />
                   <input type="text" placeholder={t('wallet.filterPlaceholder')} className="bg-transparent outline-none text-[12px] text-white w-28 placeholder:text-zinc-700" />
                 </div>
-                <Button className="flex items-center gap-1.5 px-3 py-1.5 h-auto border border-white/[0.07] rounded-lg text-[12px] text-zinc-400 hover:text-white hover:border-white/[0.14] transition-colors">
+                <Button className="flex items-center gap-1.5 px-3 py-1.5 h-auto border border-white/[0.07] rounded-md text-[12px] text-zinc-400 hover:text-white hover:border-white/[0.14] transition-colors">
                   <Calendar size={13} /> {t('wallet.thisMonth')}
                 </Button>
               </div>
             </div>
 
             {/* Table header */}
-            <div className="hidden md:grid grid-cols-[2fr_1fr_1fr_1fr_auto] gap-4 px-4 py-2.5 bg-[#09090b] rounded-lg mb-3">
+            <div className="hidden md:grid grid-cols-[2fr_1fr_1fr_1fr_auto] gap-4 px-4 py-2.5 bg-[#09090b] rounded-md mb-3">
               {[t('wallet.details'), t('wallet.date'), t('wallet.amount'), t('wallet.status'), ""].map((h, i) => (
                 <span key={i} className={`text-[10px] font-medium text-zinc-600 uppercase tracking-wider ${i === 4 ? 'text-right' : ''}`}>{h}</span>
               ))}
@@ -141,9 +141,9 @@ const Wallet = () => {
             <div className="space-y-2">
               {transactions.length > 0 ? transactions.map((tx) => (
                 <div key={tx.id}
-                  className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-4 items-center px-4 py-4 rounded-xl border border-white/[0.04] hover:border-[#f5a623]/20 hover:bg-[#f5a623]/[0.02] transition-colors group">
+                  className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-4 items-center px-4 py-4 rounded-md border border-white/[0.04] hover:border-[#f5a623]/20 hover:bg-[#f5a623]/[0.02] transition-colors group">
                   <div className="flex items-center gap-3">
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${tx.amount?.startsWith("+") ? "bg-emerald-500/[0.08] text-emerald-400" : "bg-red-500/[0.08] text-red-400"}`}>
+                    <div className={`w-9 h-9 rounded-md flex items-center justify-center shrink-0 ${tx.amount?.startsWith("+") ? "bg-emerald-500/[0.08] text-emerald-400" : "bg-red-500/[0.08] text-red-400"}`}>
                       {tx.amount?.startsWith("+") ? <ArrowDownLeft size={16} /> : <ArrowUpRight size={16} />}
                     </div>
                     <div className="min-w-0">
@@ -154,13 +154,13 @@ const Wallet = () => {
                   <span className="text-[12px] text-zinc-500 md:text-center">{tx.date}</span>
                   <span className={`text-[14px] font-semibold md:text-center ${tx.amount?.startsWith("+") ? "text-white" : "text-zinc-500"}`}>{tx.amount}</span>
                   <div className="md:flex md:justify-center">
-                    <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-1 rounded-lg border ${statusStyle(tx.status)}`}>
+                    <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-1 rounded-md border ${statusStyle(tx.status)}`}>
                       {tx.status === "Available" ? <CheckCircle2 size={10} /> : tx.status === "Processing" ? <Clock size={10} /> : <ShieldCheck size={10} />}
                       {statusLabel(tx.status)}
                     </span>
                   </div>
                   <div className="md:flex md:justify-end">
-                    <button className="w-8 h-8 rounded-lg border border-white/[0.07] flex items-center justify-center text-zinc-600 hover:text-white hover:border-white/[0.14] transition-colors">
+                    <button className="w-8 h-8 rounded-md border border-white/[0.07] flex items-center justify-center text-zinc-600 hover:text-white hover:border-white/[0.14] transition-colors">
                       <ArrowRight size={14} />
                     </button>
                   </div>
@@ -175,7 +175,7 @@ const Wallet = () => {
 
             {transactions.length > 0 && (
               <div className="flex justify-center pt-6 mt-2 border-t border-white/[0.06]">
-                <Button className="px-6 py-2 h-auto rounded-lg border border-white/[0.07] text-[12px] text-zinc-500 hover:text-white hover:border-[#f5a623]/30 transition-colors">
+                <Button className="px-6 py-2 h-auto rounded-md border border-white/[0.07] text-[12px] text-zinc-500 hover:text-white hover:border-[#f5a623]/30 transition-colors">
                   {t('wallet.loadFullHistory')}
                 </Button>
               </div>

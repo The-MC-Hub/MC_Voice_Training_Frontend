@@ -71,7 +71,7 @@ function Calendar({
         hidden: "invisible",
         dropdowns: "flex items-center gap-3",
         dropdown:
-          "bg-slate-800 text-white border border-white/10 rounded-lg px-3 py-1.5 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[var(--accent-gold)] cursor-pointer",
+          "bg-slate-800 text-white border border-white/10 rounded-md px-3 py-1.5 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[var(--accent-gold)] cursor-pointer",
         ...classNames,
       }}
       {...props}

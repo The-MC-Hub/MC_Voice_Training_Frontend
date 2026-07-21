@@ -21,7 +21,7 @@ const empty = (arr) => !arr || arr.length === 0;
 const TIP_STYLE = {
   backgroundColor: "var(--bg-surface)",
   border: "1px solid var(--border-subtle)",
-  borderRadius: "10px",
+  borderRadius: "6px",
   padding: "0.55rem 0.85rem",
 };
 const LABEL_STYLE = { color: "var(--text-muted)", fontSize: 11 };
@@ -32,7 +32,7 @@ const ROLE_COLORS = { MC:"#3B82F6", CLIENT:"#10B981", ADMIN:"#EF4444" };
 
 // ── reusable card shell ───────────────────────────────────────────────────────
 const Card = ({ title, subtitle, icon: Icon, children, className = "" }) => (
-  <div className={`bg-[--bg-surface] border border-[--border-subtle] rounded-xl p-5 ${className}`}>
+  <div className={`bg-[--bg-surface] border border-[--border-subtle] rounded-md p-5 ${className}`}>
     <div className="flex items-center gap-2 mb-4">
       {Icon && <Icon size={15} className="text-[--text-muted] shrink-0" />}
       <div>
@@ -46,9 +46,9 @@ const Card = ({ title, subtitle, icon: Icon, children, className = "" }) => (
 
 // ── stat pill ────────────────────────────────────────────────────────────────
 const Stat = ({ label, value, icon: Icon, color, sub }) => (
-  <div className="bg-[--bg-surface] border border-[--border-subtle] rounded-xl p-4">
+  <div className="bg-[--bg-surface] border border-[--border-subtle] rounded-md p-4">
     <div className="flex justify-between items-start mb-3">
-      <div className={`w-9 h-9 rounded-lg flex items-center justify-center bg-[--bg-elevated] border border-[--border-subtle] ${color}`}>
+      <div className={`w-9 h-9 rounded-md flex items-center justify-center bg-[--bg-elevated] border border-[--border-subtle] ${color}`}>
         <Icon size={16} />
       </div>
       {sub && <span className="text-[10px] text-[--text-muted] text-right max-w-[90px] leading-tight">{sub}</span>}
@@ -70,7 +70,7 @@ const Empty = ({ h = 200 }) => {
 
 // ── tab buttons ───────────────────────────────────────────────────────────────
 const Tabs = ({ value, onChange, options }) => (
-  <div className="flex gap-1 bg-[--bg-elevated] border border-[--border-subtle] rounded-lg p-1 w-fit">
+  <div className="flex gap-1 bg-[--bg-elevated] border border-[--border-subtle] rounded-md p-1 w-fit">
     {options.map(o => (
       <Button key={o.value} onClick={() => onChange(o.value)}
         className={`h-auto px-3 py-1 rounded-md text-[11px] font-medium transition-all ${
@@ -89,10 +89,10 @@ const Tabs = ({ value, onChange, options }) => (
 const GA4ReportTab = () => {
   const { t } = useTranslation();
   return (
-  <div className="bg-[--bg-surface] border border-[--border-subtle] rounded-xl p-6 lg:p-8">
+  <div className="bg-[--bg-surface] border border-[--border-subtle] rounded-md p-6 lg:p-8">
     <div className="flex items-center justify-between mb-6 pb-4 border-b border-[--border-subtle]">
       <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-lg bg-[--bg-elevated] border border-[--border-subtle] flex items-center justify-center">
+        <div className="w-9 h-9 rounded-md bg-[--bg-elevated] border border-[--border-subtle] flex items-center justify-center">
           <FileText size={16} className="text-[gold]" />
         </div>
         <div>
@@ -104,7 +104,7 @@ const GA4ReportTab = () => {
         href="https://analytics.google.com"
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[--bg-elevated] border border-[--border-subtle] text-[11px] text-[--text-muted] hover:text-[--text-primary] transition-colors"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[--bg-elevated] border border-[--border-subtle] text-[11px] text-[--text-muted] hover:text-[--text-primary] transition-colors"
       >
         <ExternalLink size={12} />
         {t("admin.analyticsSection.openGa4")}
@@ -118,14 +118,14 @@ const GA4ReportTab = () => {
       prose-p:text-[12px] prose-p:text-[--text-muted] prose-p:leading-relaxed
       prose-strong:text-[--text-primary] prose-strong:font-semibold
       prose-code:text-[11px] prose-code:bg-[--bg-elevated] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-amber-400 prose-code:font-mono prose-code:before:content-none prose-code:after:content-none
-      prose-pre:bg-[--bg-elevated] prose-pre:border prose-pre:border-[--border-subtle] prose-pre:rounded-lg prose-pre:text-[11px]
+      prose-pre:bg-[--bg-elevated] prose-pre:border prose-pre:border-[--border-subtle] prose-pre:rounded-md prose-pre:text-[11px]
       prose-table:text-[11px] prose-table:w-full
       prose-th:text-[--text-muted] prose-th:font-semibold prose-th:text-left prose-th:pb-2 prose-th:border-b prose-th:border-[--border-subtle]
       prose-td:text-[--text-muted] prose-td:py-2 prose-td:border-b prose-td:border-[--border-subtle]/50
       prose-li:text-[12px] prose-li:text-[--text-muted]
       prose-a:text-amber-400 prose-a:no-underline hover:prose-a:underline
       prose-hr:border-[--border-subtle]
-      prose-blockquote:border-l-amber-400 prose-blockquote:text-[--text-muted] prose-blockquote:bg-[--bg-elevated] prose-blockquote:rounded-r-lg prose-blockquote:py-1
+      prose-blockquote:border-l-amber-400 prose-blockquote:text-[--text-muted] prose-blockquote:bg-[--bg-elevated] prose-blockquote:rounded-r-md prose-blockquote:py-1
     ">
       <ReactMarkdown remarkPlugins={[remarkGfm]}>
         {ga4ReportMd}
@@ -375,7 +375,7 @@ const AnalyticsSection = ({ analytics }) => {
             </div>
             <div className="space-y-2 w-full mt-1">
               {activityData.map((e, i) => (
-                <div key={i} className="flex justify-between items-center px-3 py-2 rounded-lg bg-[--bg-elevated] border border-[--border-subtle]">
+                <div key={i} className="flex justify-between items-center px-3 py-2 rounded-md bg-[--bg-elevated] border border-[--border-subtle]">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full" style={{ backgroundColor: e.fill }} />
                     <span className="text-[12px] text-[--text-muted]">{e.name}</span>
@@ -383,7 +383,7 @@ const AnalyticsSection = ({ analytics }) => {
                   <span className="text-[13px] font-semibold text-[--text-primary]">{fmt(e.value)}</span>
                 </div>
               ))}
-              <div className="flex justify-between items-center px-3 py-1.5 rounded-lg bg-[gold]/[0.05] border border-[gold]/15">
+              <div className="flex justify-between items-center px-3 py-1.5 rounded-md bg-[gold]/[0.05] border border-[gold]/15">
                 <span className="text-[11px] text-[--text-muted]">{t("admin.analyticsSection.active7dLabel")}</span>
                 <span className="text-[13px] font-semibold text-[gold]">{fmt(a.activeUsersLast7d)}</span>
               </div>
@@ -411,7 +411,7 @@ const AnalyticsSection = ({ analytics }) => {
               </div>
               <div className="flex-1 space-y-2">
                 {planData.map((e, i) => (
-                  <div key={i} className="flex items-center justify-between px-3 py-2 rounded-lg bg-[--bg-elevated] border border-[--border-subtle]">
+                  <div key={i} className="flex items-center justify-between px-3 py-2 rounded-md bg-[--bg-elevated] border border-[--border-subtle]">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: e.color }} />
                       <span className="text-[12px] text-[--text-muted] font-medium">{e.name}</span>
@@ -448,7 +448,7 @@ const AnalyticsSection = ({ analytics }) => {
               </div>
               <div className="flex-1 space-y-2">
                 {roleData.map((e, i) => (
-                  <div key={i} className="flex items-center justify-between px-3 py-2 rounded-lg bg-[--bg-elevated] border border-[--border-subtle]">
+                  <div key={i} className="flex items-center justify-between px-3 py-2 rounded-md bg-[--bg-elevated] border border-[--border-subtle]">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: e.color }} />
                       <span className="text-[12px] text-[--text-muted] font-medium">{e.name}</span>

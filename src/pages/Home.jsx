@@ -80,7 +80,7 @@ const SpotlightHero = () => {
           top: topPct,
           x: '-50%',
           y: '-50%',
-          background: 'radial-gradient(circle, rgba(245,166,35,0.055) 0%, rgba(245,166,35,0.018) 40%, transparent 70%)',
+          background: 'rgba(245,166,35,0.03)',
           transition: 'none',
         }}
       />
@@ -90,7 +90,7 @@ const SpotlightHero = () => {
         style={{
           left: '15%', top: '-60px',
           width: '320px', height: '600px',
-          background: 'conic-gradient(from 0deg at 50% 0%, transparent 70deg, rgba(245,166,35,0.04) 90deg, transparent 110deg)',
+          background: 'rgba(245,166,35,0.02)',
           filter: 'blur(1px)',
         }}
       />
@@ -100,7 +100,7 @@ const SpotlightHero = () => {
         style={{
           right: '15%', top: '-60px',
           width: '320px', height: '600px',
-          background: 'conic-gradient(from 180deg at 50% 0%, transparent 70deg, rgba(245,166,35,0.04) 90deg, transparent 110deg)',
+          background: 'rgba(245,166,35,0.02)',
           filter: 'blur(1px)',
         }}
       />
@@ -133,10 +133,7 @@ const GridBackground = () => (
   <div
     className="absolute inset-0 pointer-events-none"
     style={{
-      backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)`,
-      backgroundSize: '32px 32px',
-      WebkitMaskImage: 'radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 100%)',
-      maskImage: 'radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 100%)',
+      backgroundColor: 'rgba(255,255,255,0.03)',
     }}
   />
 );
@@ -231,11 +228,11 @@ const FaqItem = ({ icon: Icon, q, short, full, index }) => {
     <SpotlightCard
       spotlightColor="rgba(245,166,35,0.08)"
       spotlightSize={280}
-      className={`border rounded-2xl overflow-hidden transition-all duration-200 ${open ? 'border-amber-200 bg-amber-50/50 shadow-sm' : 'border-gray-100 bg-white hover:border-amber-100 hover:shadow-sm'}`}
+      className={`border rounded-md overflow-hidden transition-all duration-200 ${open ? 'border-amber-200 bg-amber-50/50 shadow-sm' : 'border-gray-100 bg-white hover:border-amber-100 hover:shadow-sm'}`}
     >
       <Button hoverScale={1} onClick={() => { setOpen(!open); setExpanded(false); }} className="w-full flex items-center justify-between p-5 text-left gap-4 group h-auto">
         <div className="flex items-center gap-3 min-w-0">
-          <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${open ? 'bg-amber-100 text-amber-600' : 'bg-gray-100 text-gray-500 group-hover:bg-amber-50 group-hover:text-amber-500'}`}>
+          <div className={`w-8 h-8 rounded-md flex items-center justify-center shrink-0 transition-colors ${open ? 'bg-amber-100 text-amber-600' : 'bg-gray-100 text-gray-500 group-hover:bg-amber-50 group-hover:text-amber-500'}`}>
             <Icon size={14} />
           </div>
           <span className={`text-[14px] font-medium transition-colors ${open ? 'text-gray-900' : 'text-gray-700 group-hover:text-gray-900'}`}>{q}</span>
@@ -421,15 +418,15 @@ const SampleReportCard = () => {
   const waveHeights = [12, 22, 18, 28, 14, 32, 20, 24, 16, 26, 18, 30, 12, 22, 28, 16, 24, 20, 14, 18];
 
   return (
-    <div ref={ref} className="bg-[#111113] border border-white/[0.08] rounded-2xl overflow-hidden relative">
+    <div ref={ref} className="bg-[#111113] border border-white/[0.08] rounded-md overflow-hidden relative">
       {/* Gold top line */}
       <div className="absolute top-0 inset-x-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent 5%, rgba(245,166,35,0.5) 40%, rgba(245,166,35,0.5) 60%, transparent 95%)' }} />
+        style={{ background: 'rgba(245,166,35,0.5)' }} />
 
       {/* Header */}
       <div className="p-5 flex items-center justify-between border-b border-white/[0.05]">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#f5a623]/[0.1] border border-[#f5a623]/20 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-md bg-[#f5a623]/[0.1] border border-[#f5a623]/20 flex items-center justify-center">
             <Sparkles size={13} className="text-[#f5a623]" />
           </div>
           <div>
@@ -525,7 +522,7 @@ const SampleReportCard = () => {
                     animate={inView ? { width: `${overall}%` } : {}}
                     transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
                     className="absolute inset-y-0 left-0 rounded-full"
-                    style={{ background: 'linear-gradient(90deg, #10b981, #f5a623)' }}
+                    style={{ background: '#f5a623' }}
                   />
                 </div>
               </div>
@@ -562,7 +559,7 @@ const SampleReportCard = () => {
                 </div>
                 <span className="px-2 py-0.5 rounded-md bg-emerald-500/[0.1] border border-emerald-500/20 text-[10px] text-emerald-400 font-medium">Live</span>
               </div>
-              <div className="bg-[#0e0e10] rounded-xl p-4 border border-white/[0.05]">
+              <div className="bg-[#0e0e10] rounded-md p-4 border border-white/[0.05]">
                 <div className="flex items-end justify-center gap-[3px] h-[52px]">
                   {waveHeights.map((h, i) => (
                     <WaveformBar key={i} height={h} delay={i * 0.06} active={inView} />
@@ -578,7 +575,7 @@ const SampleReportCard = () => {
                   { label: 'Cao điểm', value: '142', sub: 'WPM tối đa', color: 'text-blue-400' },
                   { label: 'Cảm xúc', value: '69%', sub: 'Biểu cảm', color: 'text-amber-400' },
                 ].map((m, i) => (
-                  <div key={i} className="bg-[#0e0e10] rounded-xl p-3 border border-white/[0.05] text-center">
+                  <div key={i} className="bg-[#0e0e10] rounded-md p-3 border border-white/[0.05] text-center">
                     <p className={`text-[14px] font-bold ${m.color}`}>{m.value}</p>
                     <p className="text-[9px] text-zinc-600 mt-0.5">{m.sub}</p>
                   </div>
@@ -681,7 +678,7 @@ const LessonCarousel = ({ lessons, navigate }) => {
               whileHover={{ y: -4 }}
               transition={CARD_HOVER_TRANSITION}
               onClick={() => navigate(`/m/voice/practice/${lesson.id}`)}
-              className="min-w-[220px] bg-white border border-gray-100 rounded-2xl overflow-hidden cursor-pointer hover:border-amber-200 hover:shadow-lg hover:shadow-amber-50 transition-all duration-300 group flex flex-col shrink-0"
+              className="min-w-[220px] bg-white border border-gray-100 rounded-md overflow-hidden cursor-pointer hover:border-amber-200 hover:shadow-lg hover:shadow-amber-50 transition-all duration-300 group flex flex-col shrink-0"
             >
               {/* Thumbnail */}
               <div className="relative h-28 bg-amber-50 overflow-hidden shrink-0">
@@ -693,7 +690,7 @@ const LessonCarousel = ({ lessons, navigate }) => {
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-amber-50">
-                    <div className="w-10 h-10 rounded-xl bg-amber-100 border border-amber-200 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-md bg-amber-100 border border-amber-200 flex items-center justify-center">
                       <Mic size={18} className="text-amber-400" />
                     </div>
                   </div>
@@ -751,16 +748,16 @@ const Home = () => {
 
       {/* ── 1. HERO ─────────────────────────────────────────────────────────── */}
       <section className="relative pt-32 pb-24 px-6 overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-amber-400 via-amber-500 to-amber-400" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-amber-500" />
         <GridBackground />
         <SpotlightHero />
         {/* Ambient orbs */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[280px] rounded-full blur-[80px] pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse, rgba(245,166,35,0.12) 0%, transparent 70%)' }} />
+          style={{ background: 'rgba(245,166,35,0.06)' }} />
         <div className="absolute top-20 -left-20 w-[350px] h-[350px] rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(251,191,36,0.07) 0%, transparent 70%)', filter: 'blur(40px)' }} />
+          style={{ background: 'rgba(251,191,36,0.04)', filter: 'blur(40px)' }} />
         <div className="absolute top-20 -right-20 w-[300px] h-[300px] rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%)', filter: 'blur(40px)' }} />
+          style={{ background: 'rgba(245,166,35,0.03)', filter: 'blur(40px)' }} />
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <motion.div {...stagger(0)}>
@@ -784,13 +781,13 @@ const Home = () => {
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate(isAuthenticated ? '/m/voice/library' : '/register')}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#f5a623] text-black text-[14px] font-semibold hover:bg-[#e09520] transition-colors shadow-lg shadow-[#f5a623]/10"
+              className="flex items-center gap-2 px-6 py-3 rounded-md bg-[#f5a623] text-black text-[14px] font-semibold hover:bg-[#e09520] transition-colors shadow-lg shadow-[#f5a623]/10"
             >
               {t('home.startTraining')} <ArrowRight size={16} />
             </motion.button>
             <Link
               to="/m/voice/library"
-              className="flex items-center gap-2 px-6 py-3 rounded-xl border border-gray-200 text-gray-600 text-[14px] font-medium hover:border-gray-300 hover:text-gray-900 transition-colors"
+              className="flex items-center gap-2 px-6 py-3 rounded-md border border-gray-200 text-gray-600 text-[14px] font-medium hover:border-gray-300 hover:text-gray-900 transition-colors"
             >
               {t('home.browseLibrary')}
             </Link>
@@ -825,7 +822,7 @@ const Home = () => {
       {/* ── FEATURES ────────────────────────────────────────────────────────── */}
       <section className="py-28 max-w-6xl mx-auto px-6 mt-12 relative">
         <div className="absolute -top-20 right-0 w-[400px] h-[400px] rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(245,166,35,0.07) 0%, transparent 70%)', filter: 'blur(60px)' }} />
+          style={{ background: 'rgba(245,166,35,0.035)', filter: 'blur(60px)' }} />
         <ScrollReveal direction="up">
           <div className="mb-16">
             <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-500 mb-4">{t('home.whyChooseUs')}</p>
@@ -849,17 +846,17 @@ const Home = () => {
                 <SpotlightCard
                   spotlightColor="rgba(245,166,35,0.14)"
                   spotlightSize={400}
-                  className="relative group p-8 bg-white rounded-2xl overflow-hidden flex flex-col h-full min-h-[280px] cursor-default transition-all duration-300 shadow-sm hover:shadow-xl"
+                  className="relative group p-8 bg-white rounded-md overflow-hidden flex flex-col h-full min-h-[280px] cursor-default transition-all duration-300 shadow-sm hover:shadow-xl"
                   style={{ border: '1px solid rgba(0,0,0,0.06)' }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = '#f5a62340'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(245,166,35,0.10)'; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.06)'; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)'; }}
                 >
                   <div className="absolute top-0 inset-x-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{ background: 'linear-gradient(90deg, transparent, rgba(245,166,35,0.5), transparent)' }} />
+                    style={{ background: 'rgba(245,166,35,0.5)' }} />
                   <div className="absolute bottom-0 right-0 w-64 h-64 pointer-events-none opacity-30"
-                    style={{ background: 'radial-gradient(ellipse at 100% 100%, rgba(245,166,35,0.15) 0%, transparent 70%)' }} />
+                    style={{ background: 'rgba(245,166,35,0.08)' }} />
                   <div className="relative z-10 flex flex-col h-full">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6"
+                    <div className="w-12 h-12 rounded-md flex items-center justify-center mb-6"
                       style={{ background: f.iconBg, border: `1px solid ${f.iconBorder}`, color: f.iconColor }}>
                       {f.icon}
                     </div>
@@ -896,16 +893,16 @@ const Home = () => {
                 <SpotlightCard
                   spotlightColor={`rgba(${i === 0 ? '59,130,246' : '139,92,246'},0.12)`}
                   spotlightSize={250}
-                  className="relative group p-6 bg-white rounded-2xl overflow-hidden flex flex-col h-full cursor-default transition-all duration-300 shadow-sm hover:shadow-lg"
+                  className="relative group p-6 bg-white rounded-md overflow-hidden flex flex-col h-full cursor-default transition-all duration-300 shadow-sm hover:shadow-lg"
                   style={{ border: '1px solid rgba(0,0,0,0.06)' }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = f.accentColor + '40'; e.currentTarget.style.boxShadow = `0 8px 24px ${f.accentColor}12`; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.06)'; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)'; }}
                 >
                   <div className="absolute top-0 inset-x-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{ background: `linear-gradient(90deg, transparent, ${f.accentColor}50, transparent)` }} />
+                    style={{ background: `${f.accentColor}50` }} />
                   <div className="relative z-10 flex flex-col h-full">
                     <div className="flex items-start justify-between mb-4">
-                      <div className="w-10 h-10 rounded-lg flex items-center justify-center"
+                      <div className="w-10 h-10 rounded-md flex items-center justify-center"
                         style={{ background: f.iconBg, border: `1px solid ${f.iconBorder}`, color: f.iconColor }}>
                         {f.icon}
                       </div>
@@ -950,7 +947,7 @@ const Home = () => {
               </ul>
               <Link
                 to={isAuthenticated ? '/m/voice/library' : '/register'}
-                className="inline-flex items-center gap-2 mt-8 px-5 py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors"
+                className="inline-flex items-center gap-2 mt-8 px-5 py-2.5 rounded-md bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors"
               >
                 Thử ngay miễn phí <ArrowRight size={14} />
               </Link>
@@ -1005,7 +1002,7 @@ const Home = () => {
             <SpotlightCard
               spotlightColor="rgba(245,166,35,0.09)"
               spotlightSize={380}
-              className="p-8 bg-white border border-gray-100 rounded-2xl hover:border-amber-200 hover:shadow-lg hover:shadow-amber-50/60 transition-all h-full flex flex-col"
+              className="p-8 bg-white border border-gray-100 rounded-md hover:border-amber-200 hover:shadow-lg hover:shadow-amber-50/60 transition-all h-full flex flex-col"
             >
               <div className="flex gap-0.5 mb-5">
                 {[...Array(5)].map((_, j) => (
@@ -1015,7 +1012,7 @@ const Home = () => {
               <Quote size={24} className="text-amber-200 mb-4" />
               <p className="text-[15px] text-gray-700 leading-relaxed flex-1 mb-6">"{testimonials[0].quote}"</p>
               <div className="flex items-center gap-3 pt-5 border-t border-gray-100">
-                <img src={testimonials[0].avatar} alt={testimonials[0].name} onError={e => { e.currentTarget.src = testimonials[0].fallback; }} className="w-12 h-12 rounded-xl object-cover border border-gray-200" />
+                <img src={testimonials[0].avatar} alt={testimonials[0].name} onError={e => { e.currentTarget.src = testimonials[0].fallback; }} className="w-12 h-12 rounded-md object-cover border border-gray-200" />
                 <div className="flex-1 min-w-0">
                   <p className="text-[14px] font-semibold text-gray-900">{testimonials[0].name}</p>
                   <p className="text-[12px] text-gray-400">{testimonials[0].role}</p>
@@ -1035,14 +1032,14 @@ const Home = () => {
                 <SpotlightCard
                   spotlightColor="rgba(245,166,35,0.07)"
                   spotlightSize={240}
-                  className="p-6 bg-white border border-gray-100 rounded-2xl hover:border-amber-200 hover:shadow-md hover:shadow-amber-50 transition-all h-full flex flex-col"
+                  className="p-6 bg-white border border-gray-100 rounded-md hover:border-amber-200 hover:shadow-md hover:shadow-amber-50 transition-all h-full flex flex-col"
                 >
                   <div className="flex gap-0.5 mb-4">
                     {[...Array(5)].map((_, j) => <Star key={j} size={11} className="text-[#f5a623] fill-[#f5a623]" />)}
                   </div>
                   <p className="text-[13px] text-gray-600 leading-relaxed flex-1 mb-4 line-clamp-3">"{t.quote}"</p>
                   <div className="flex items-center gap-2.5 pt-3 border-t border-gray-100">
-                    <img src={t.avatar} alt={t.name} onError={e => { e.currentTarget.src = t.fallback; }} className="w-10 h-10 rounded-lg object-cover border border-gray-200" />
+                    <img src={t.avatar} alt={t.name} onError={e => { e.currentTarget.src = t.fallback; }} className="w-10 h-10 rounded-md object-cover border border-gray-200" />
                     <div className="flex-1 min-w-0">
                       <p className="text-[12px] font-semibold text-gray-900">{t.name}</p>
                       <p className="text-[11px] text-gray-400 truncate">{t.role}</p>
@@ -1092,7 +1089,7 @@ const Home = () => {
             <ScrollReveal key={i} delay={i * 0.12} className={item.offset}>
               <div className="group flex flex-col gap-4">
                 {/* Image */}
-                <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm group-hover:shadow-md group-hover:border-amber-100 transition-all">
+                <div className="rounded-md overflow-hidden border border-gray-100 shadow-sm group-hover:shadow-md group-hover:border-amber-100 transition-all">
                   <img
                     src={item.img}
                     alt={item.title}
@@ -1136,7 +1133,7 @@ const Home = () => {
               </p>
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 text-[13px] font-medium hover:border-amber-300 hover:text-amber-600 transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-gray-200 text-gray-700 text-[13px] font-medium hover:border-amber-300 hover:text-amber-600 transition-colors"
               >
                 Liên hệ hỗ trợ <ArrowRight size={13} />
               </Link>
@@ -1155,17 +1152,17 @@ const Home = () => {
       {/* ── CTA BANNER ──────────────────────────────────────────────────────── */}
       <section className="pb-24 px-6 max-w-6xl mx-auto">
         <ScrollReveal>
-          <div className="relative bg-amber-50 border border-amber-100 rounded-3xl overflow-hidden">
+          <div className="relative bg-amber-50 border border-amber-100 rounded-md overflow-hidden">
             {/* Top gold line */}
             <div className="absolute top-0 inset-x-0 h-px"
-              style={{ background: 'linear-gradient(90deg, transparent 10%, rgba(245,166,35,0.45) 40%, rgba(245,166,35,0.45) 60%, transparent 90%)' }} />
+              style={{ background: 'rgba(245,166,35,0.45)' }} />
             {/* Subtle glow center */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-[#f5a623]/[0.04] rounded-full blur-[60px] pointer-events-none" />
 
             <div className="relative z-10 px-6 py-10 sm:px-10 sm:py-16 lg:px-20 lg:py-16 flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
               {/* Left: icon + text + buttons */}
               <div className="flex-1 text-center lg:text-left">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#f5a623] text-black mb-6 shadow-lg shadow-[#f5a623]/20">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-md bg-[#f5a623] text-black mb-6 shadow-lg shadow-[#f5a623]/20">
                   <Mic size={22} />
                 </div>
                 <h2 className="text-3xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
@@ -1178,7 +1175,7 @@ const Home = () => {
                 <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                   <Link
                     to="/m/payment"
-                    className="flex items-center justify-center gap-2 px-7 py-3 rounded-xl bg-[#f5a623] text-black text-[14px] font-semibold hover:bg-[#e09520] transition-colors shadow-lg shadow-[#f5a623]/15 whitespace-nowrap"
+                    className="flex items-center justify-center gap-2 px-7 py-3 rounded-md bg-[#f5a623] text-black text-[14px] font-semibold hover:bg-[#e09520] transition-colors shadow-lg shadow-[#f5a623]/15 whitespace-nowrap"
                   >
                     Xem gói <ArrowRight size={14} />
                   </Link>
@@ -1186,7 +1183,7 @@ const Home = () => {
                     whileHover={{ y: -2 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => setIsContactModalOpen(true)}
-                    className="flex items-center justify-center gap-2 px-7 py-3 rounded-xl border border-gray-200 text-gray-600 text-[14px] font-medium hover:border-gray-300 hover:text-gray-900 transition-colors whitespace-nowrap"
+                    className="flex items-center justify-center gap-2 px-7 py-3 rounded-md border border-gray-200 text-gray-600 text-[14px] font-medium hover:border-gray-300 hover:text-gray-900 transition-colors whitespace-nowrap"
                   >
                     {t('home.sendMessage') || 'Liên hệ ngay'}
                   </motion.button>
@@ -1195,7 +1192,7 @@ const Home = () => {
 
               {/* Right: mockup image */}
               <div className="shrink-0 w-full max-w-xs lg:max-w-sm">
-                <div className="rounded-2xl overflow-hidden shadow-xl shadow-amber-100/60 border border-amber-100/60">
+                <div className="rounded-md overflow-hidden shadow-xl shadow-amber-100/60 border border-amber-100/60">
                   <img
                     src="/images/cta-mockup.png"
                     alt="MC Hub app mockup"
@@ -1225,11 +1222,11 @@ const Home = () => {
         {selectedMCForCert && (
           <DialogContent
             showCloseButton={false}
-            className="w-full max-w-2xl bg-[#111113] border border-white/[0.08] rounded-2xl p-8 shadow-2xl overflow-y-auto max-h-[90vh]"
+            className="w-full max-w-2xl bg-[#111113] border border-white/[0.08] rounded-md p-8 shadow-2xl overflow-y-auto max-h-[90vh]"
           >
               <Button
                 onClick={() => { setShowCertModal(false); setCopiedCert(false); }}
-                className="absolute top-5 right-5 w-7 h-7 flex items-center justify-center rounded-lg bg-white/[0.06] hover:bg-white/[0.1] text-zinc-500 hover:text-white transition-colors"
+                className="absolute top-5 right-5 w-7 h-7 flex items-center justify-center rounded-md bg-white/[0.06] hover:bg-white/[0.1] text-zinc-500 hover:text-white transition-colors"
               >
                 <X size={14} />
               </Button>
@@ -1255,7 +1252,7 @@ const Home = () => {
                   { label: i18n.language === 'vi' ? 'Buổi tập' : 'Sessions', value: selectedMCForCert.totalSessions, color: 'text-violet-400' },
                   { label: i18n.language === 'vi' ? 'Giờ tập' : 'Hours', value: `${selectedMCForCert.totalPracticeHours?.toFixed(1)}h`, color: 'text-emerald-400' },
                 ].map((stat, i) => (
-                  <div key={i} className="p-4 bg-[#09090b] rounded-xl border border-white/[0.05] text-center">
+                  <div key={i} className="p-4 bg-[#09090b] rounded-md border border-white/[0.05] text-center">
                     <p className="text-[10px] text-zinc-600 uppercase tracking-wider mb-1.5">{stat.label}</p>
                     <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
                   </div>
@@ -1270,7 +1267,7 @@ const Home = () => {
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button
                   onClick={() => { navigate(`/m/messaging?mcId=${selectedMCForCert.mcId}`); setShowCertModal(false); }}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/[0.08] text-zinc-300 text-[13px] font-medium hover:bg-white/[0.04] transition-colors h-auto"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md border border-white/[0.08] text-zinc-300 text-[13px] font-medium hover:bg-white/[0.04] transition-colors h-auto"
                 >
                   <ExternalLink size={13} className="text-[#f5a623]" />
                   {i18n.language === 'vi' ? 'Đặt lịch MC' : 'Book MC'}
@@ -1281,7 +1278,7 @@ const Home = () => {
                     setCopiedCert(true);
                     setTimeout(() => setCopiedCert(false), 2000);
                   }}
-                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-medium transition-colors h-auto ${
+                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-[13px] font-medium transition-colors h-auto ${
                     copiedCert
                       ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20'
                       : 'border border-white/[0.08] text-zinc-300 hover:bg-white/[0.04]'
@@ -1292,7 +1289,7 @@ const Home = () => {
                 </Button>
                 <Button
                   onClick={() => { setShowCertModal(false); setCopiedCert(false); }}
-                  className="px-6 py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors h-auto"
+                  className="px-6 py-2.5 rounded-md bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors h-auto"
                 >
                   {i18n.language === 'vi' ? 'Đóng' : 'Close'}
                 </Button>

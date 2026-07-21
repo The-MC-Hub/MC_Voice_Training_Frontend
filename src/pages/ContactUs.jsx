@@ -15,7 +15,7 @@ const fadeUp = {
 
 const FloatingInput = ({ label, error, textarea, ...props }) => {
   const [focused, setFocused] = useState(false);
-  const base = `w-full bg-[#09090b] border rounded-xl text-[14px] text-white placeholder:text-zinc-700 outline-none transition-all duration-200 ${
+  const base = `w-full bg-[#09090b] border rounded-md text-[14px] text-white placeholder:text-zinc-700 outline-none transition-all duration-200 ${
     focused ? 'border-[#f5a623]/50 shadow-[0_0_0_3px_rgba(245,166,35,0.08)]' : 'border-white/[0.07] hover:border-white/[0.12]'
   }`;
   return (
@@ -72,9 +72,9 @@ const ContactUs = () => {
       {/* Hero */}
       <div className="relative pt-32 pb-16 px-6 text-center overflow-hidden">
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(245,166,35,0.07) 0%, transparent 70%)' }} />
+          style={{ background: 'rgba(245,166,35,0.035)' }} />
         <div className="absolute top-0 left-0 right-0 h-px"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(245,166,35,0.2), transparent)' }} />
+          style={{ background: 'rgba(245,166,35,0.2)' }} />
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f5a623]/[0.08] border border-[#f5a623]/20 text-[11px] font-medium text-[#f5a623] mb-5 uppercase tracking-wider">
             <MessageSquare size={11} /> Liên hệ
@@ -94,8 +94,8 @@ const ContactUs = () => {
           {/* Contact info cards */}
           <motion.div {...fadeUp} className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {contacts.map(({ icon: Icon, label, value, sub }) => (
-              <Card key={label} className="p-4 bg-[#111113] border border-white/[0.07] rounded-2xl hover:border-white/[0.12] transition-colors gap-0 shadow-none">
-                <div className="w-9 h-9 rounded-xl bg-[#f5a623]/[0.08] border border-[#f5a623]/15 flex items-center justify-center mb-3">
+              <Card key={label} className="p-4 bg-[#111113] border border-white/[0.07] rounded-md hover:border-white/[0.12] transition-colors gap-0 shadow-none">
+                <div className="w-9 h-9 rounded-md bg-[#f5a623]/[0.08] border border-[#f5a623]/15 flex items-center justify-center mb-3">
                   <Icon size={16} className="text-[#f5a623]" />
                 </div>
                 <p className="text-[11px] text-zinc-600 uppercase tracking-wider mb-1">{label}</p>
@@ -110,7 +110,7 @@ const ContactUs = () => {
 
             {/* Left — info + social */}
             <motion.div {...fadeUp} className="space-y-6">
-              <Card className="p-6 bg-[#111113] border border-white/[0.07] rounded-2xl space-y-4 gap-0 shadow-none">
+              <Card className="p-6 bg-[#111113] border border-white/[0.07] rounded-md space-y-4 gap-0 shadow-none">
                 <p className="text-[13px] font-semibold text-white mb-1">Thời gian phản hồi dự kiến</p>
                 {[
                   { type: 'Email',   time: '24–48 giờ làm việc', dot: 'bg-emerald-400' },
@@ -127,7 +127,7 @@ const ContactUs = () => {
                 ))}
               </Card>
 
-              <Card className="p-6 bg-[#111113] border border-white/[0.07] rounded-2xl gap-0 shadow-none">
+              <Card className="p-6 bg-[#111113] border border-white/[0.07] rounded-md gap-0 shadow-none">
                 <p className="text-[13px] font-semibold text-white mb-3">Trước khi liên hệ, thử xem</p>
                 <div className="space-y-2.5">
                   {[
@@ -136,7 +136,7 @@ const ContactUs = () => {
                     { label: 'Chính sách bảo mật', link: '/privacy', desc: 'Cách chúng tôi xử lý dữ liệu' },
                   ].map(({ label, link, desc }) => (
                     <Link key={label} to={link}
-                      className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.1] hover:bg-white/[0.04] transition-all group">
+                      className="flex items-center justify-between p-3 rounded-md bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.1] hover:bg-white/[0.04] transition-all group">
                       <div>
                         <p className="text-[13px] text-zinc-300 group-hover:text-white transition-colors">{label}</p>
                         <p className="text-[11px] text-zinc-600">{desc}</p>
@@ -154,10 +154,10 @@ const ContactUs = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-[#111113] border border-white/[0.07] rounded-2xl p-7 relative overflow-hidden"
+              className="bg-[#111113] border border-white/[0.07] rounded-md p-7 relative overflow-hidden"
             >
               <div className="absolute top-0 left-8 right-8 h-px"
-                style={{ background: 'linear-gradient(90deg, transparent, rgba(245,166,35,0.25), transparent)' }} />
+                style={{ background: 'rgba(245,166,35,0.25)' }} />
 
               <div className="flex items-center gap-2 mb-6">
                 <Sparkles size={16} className="text-[#f5a623]" />
@@ -177,7 +177,7 @@ const ContactUs = () => {
                   disabled={isSending}
                   whileHover={{ scale: isSending ? 1 : 1.01, boxShadow: isSending ? 'none' : '0 0 20px rgba(245,166,35,0.22)' }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-2.5 bg-[#f5a623] text-black rounded-xl text-[14px] font-semibold hover:bg-[#e09520] transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full py-2.5 bg-[#f5a623] text-black rounded-md text-[14px] font-semibold hover:bg-[#e09520] transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   <AnimatePresence mode="wait">
                     {isSending ? (
@@ -195,13 +195,13 @@ const ContactUs = () => {
                 <AnimatePresence>
                   {status === 'success' && (
                     <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                      className="flex items-center gap-2 p-3 rounded-xl bg-emerald-500/[0.08] border border-emerald-500/20 text-emerald-400 text-[13px] font-medium justify-center">
+                      className="flex items-center gap-2 p-3 rounded-md bg-emerald-500/[0.08] border border-emerald-500/20 text-emerald-400 text-[13px] font-medium justify-center">
                       <CheckCircle2 size={16} /> Tin nhắn đã gửi thành công! Chúng tôi sẽ phản hồi sớm.
                     </motion.div>
                   )}
                   {status === 'error' && (
                     <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                      className="flex items-center gap-2 p-3 rounded-xl bg-red-500/[0.08] border border-red-500/20 text-red-400 text-[13px] font-medium justify-center">
+                      className="flex items-center gap-2 p-3 rounded-md bg-red-500/[0.08] border border-red-500/20 text-red-400 text-[13px] font-medium justify-center">
                       <AlertCircle size={16} /> Gửi thất bại. Vui lòng thử lại hoặc email trực tiếp.
                     </motion.div>
                   )}

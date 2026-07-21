@@ -66,7 +66,7 @@ export function celebrate(message = 'Chúc mừng! Bạn đã hoàn thành 🎉'
   Object.assign(banner.style, {
     position: 'fixed', top: '38%', left: '50%', transform: 'translate(-50%,-50%) scale(0.6)',
     padding: '18px 36px', borderRadius: '20px', zIndex: '100000', pointerEvents: 'none',
-    background: 'linear-gradient(135deg, #f5a623, #fbbf24)', color: '#000',
+    background: '#f5a623', color: '#000',
     fontWeight: '800', fontSize: '22px', textAlign: 'center', whiteSpace: 'nowrap',
     boxShadow: '0 12px 48px rgba(245,166,35,0.45)', opacity: '0',
     transition: 'opacity 0.35s ease, transform 0.45s cubic-bezier(0.34,1.56,0.64,1)',

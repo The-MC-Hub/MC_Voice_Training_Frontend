@@ -33,7 +33,7 @@ const ForgotPassword = () => {
     finally { setLoading(false); }
   };
 
-  const inputCls = "flex items-center gap-2.5 px-3.5 py-3 border border-gray-200 bg-gray-50 rounded-xl focus-within:border-amber-400 focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(245,166,35,0.12)] transition-all";
+  const inputCls = "flex items-center gap-2.5 px-3.5 py-3 border border-gray-200 bg-gray-50 rounded-md focus-within:border-amber-400 focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(245,166,35,0.12)] transition-all";
   const iconCls = "shrink-0 text-gray-400";
   const textInputCls = "bg-transparent border-none outline-none flex-1 text-[14px] text-gray-900 placeholder:text-gray-400";
   const labelCls = "text-[13px] font-semibold text-gray-700";
@@ -65,7 +65,7 @@ const ForgotPassword = () => {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-xl p-3 text-center mb-5">
+          <div className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-md p-3 text-center mb-5">
             {error}
           </div>
         )}
@@ -82,7 +82,7 @@ const ForgotPassword = () => {
               </div>
             </div>
             <Button type="submit" disabled={loading}
-              className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 transition-all mt-2 h-auto">
+              className="w-full py-3 rounded-md bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 transition-all mt-2 h-auto">
               {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>{t('auth.sendCode')} <ArrowRight size={16} /></>}
             </Button>
             <Link to="/login" className="flex items-center justify-center gap-2 text-[13px] text-gray-500 hover:text-gray-800 transition-colors pt-1">
@@ -119,7 +119,7 @@ const ForgotPassword = () => {
               </div>
             </div>
             <Button type="submit" disabled={loading || code.length < 6}
-              className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 transition-all mt-2 h-auto">
+              className="w-full py-3 rounded-md bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 transition-all mt-2 h-auto">
               {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : t('auth.resetPasswordBtn')}
             </Button>
             <Button type="button" variant="ghost" onClick={() => setStep(1)}
@@ -139,7 +139,7 @@ const ForgotPassword = () => {
               <p className="text-[13px] text-gray-400">{t('auth.nowCanSignIn')}</p>
             </div>
             <Link to="/login"
-              className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 transition-colors flex items-center justify-center gap-2">
+              className="w-full py-3 rounded-md bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 transition-colors flex items-center justify-center gap-2">
               {t('auth.goToLogin')} <ArrowRight size={16} />
             </Link>
           </div>

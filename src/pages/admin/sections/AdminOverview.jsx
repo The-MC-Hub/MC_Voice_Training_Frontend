@@ -13,7 +13,7 @@ const fmt    = (v) => (v ?? 0).toLocaleString("vi-VN");
 const fmtM   = (v) => { const m = (v ?? 0) / 1_000_000; return m >= 1 ? `${m.toFixed(1)}tr` : `${((v??0)/1000).toFixed(0)}k`; };
 
 const TIP = {
-  contentStyle: { backgroundColor: "var(--bg-surface)", border: "1px solid var(--border-subtle)", borderRadius: 10, padding: "8px 14px" },
+  contentStyle: { backgroundColor: "var(--bg-surface)", border: "1px solid var(--border-subtle)", borderRadius: 6, padding: "8px 14px" },
   labelStyle:   { color: "var(--text-muted)", fontSize: 11 },
   itemStyle:    { color: "var(--text-primary)", fontSize: 13 },
 };
@@ -22,9 +22,9 @@ const PLAN_COLORS = { BASIC: "#3B82F6", FULL: "#10B981", ANNUAL: "gold", FREE: "
 
 // ── KPI card ─────────────────────────────────────────────────────────────────
 const KPI = ({ label, value, sub, icon: Icon, color, isMoney, delta }) => (
-  <div className="rounded-2xl p-6 flex flex-col gap-4 border" style={{background:"var(--bg-surface)",borderColor:"var(--border-subtle)"}}>
+  <div className="rounded-md p-6 flex flex-col gap-4 border" style={{background:"var(--bg-surface)",borderColor:"var(--border-subtle)"}}>
     <div className="flex items-start justify-between">
-      <div className={`w-11 h-11 rounded-xl flex items-center justify-center border ${color}`} style={{background:"var(--bg-elevated)",borderColor:"var(--border-subtle)"}}>
+      <div className={`w-11 h-11 rounded-md flex items-center justify-center border ${color}`} style={{background:"var(--bg-elevated)",borderColor:"var(--border-subtle)"}}>
         <Icon size={20} />
       </div>
       {delta !== undefined && (
@@ -50,7 +50,7 @@ const KPI = ({ label, value, sub, icon: Icon, color, isMoney, delta }) => (
 const RevCard = ({ icon: Icon, label, colorCls, borderCls, revenue, count }) => {
   const { t } = useTranslation();
   return (
-  <div className={`rounded-2xl p-5 border ${borderCls} flex flex-col gap-3`} style={{background:"var(--bg-surface)"}}>
+  <div className={`rounded-md p-5 border ${borderCls} flex flex-col gap-3`} style={{background:"var(--bg-surface)"}}>
     <div className="flex items-center gap-2">
       <Icon size={16} className={colorCls} />
       <span className={`text-[12px] font-semibold uppercase tracking-wider ${colorCls}`}>{label}</span>
@@ -100,13 +100,13 @@ const AdminOverview = ({ stats, revenueData, revenueStats, userData, totalUsers 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
 
         {/* Area chart — monthly revenue */}
-        <div className="lg:col-span-8 rounded-2xl p-6 border" style={{background:"var(--bg-surface)",borderColor:"var(--border-subtle)"}}>
+        <div className="lg:col-span-8 rounded-md p-6 border" style={{background:"var(--bg-surface)",borderColor:"var(--border-subtle)"}}>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <BarChart3 size={16} style={{color:"var(--text-muted)"}} />
               <h3 className="text-[15px] font-semibold" style={{color:"var(--text-primary)"}}>{t("admin.overview.revenueByMonth")}</h3>
             </div>
-            <span className="text-[12px] px-3 py-1 rounded-lg border" style={{color:"var(--text-muted)",background:"var(--bg-elevated)",borderColor:"var(--border-subtle)"}}>
+            <span className="text-[12px] px-3 py-1 rounded-md border" style={{color:"var(--text-muted)",background:"var(--bg-elevated)",borderColor:"var(--border-subtle)"}}>
               {t("admin.overview.completedOnly")}
             </span>
           </div>
@@ -138,7 +138,7 @@ const AdminOverview = ({ stats, revenueData, revenueStats, userData, totalUsers 
         </div>
 
         {/* Donut — user distribution */}
-        <div className="lg:col-span-4 rounded-2xl p-6 flex flex-col border" style={{background:"var(--bg-surface)",borderColor:"var(--border-subtle)"}}>
+        <div className="lg:col-span-4 rounded-md p-6 flex flex-col border" style={{background:"var(--bg-surface)",borderColor:"var(--border-subtle)"}}>
           <div className="flex items-center gap-2 mb-4">
             <Activity size={16} style={{color:"var(--text-muted)"}} />
             <h3 className="text-[15px] font-semibold" style={{color:"var(--text-primary)"}}>{t("admin.overview.userDistribution")}</h3>
@@ -162,7 +162,7 @@ const AdminOverview = ({ stats, revenueData, revenueStats, userData, totalUsers 
             {userData.map((e, i) => {
               const pct = totalUsers > 0 ? Math.round(e.value / totalUsers * 100) : 0;
               return (
-                <div key={i} className="flex items-center gap-3 px-3 py-2.5 rounded-xl border" style={{background:"var(--bg-elevated)",borderColor:"var(--border-subtle)"}}>
+                <div key={i} className="flex items-center gap-3 px-3 py-2.5 rounded-md border" style={{background:"var(--bg-elevated)",borderColor:"var(--border-subtle)"}}>
                   <div className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ backgroundColor: e.color }} />
                   <span className="text-[13px] flex-1" style={{color:"var(--text-secondary)"}}>{e.name}</span>
                   <span className="text-[12px]" style={{color:"var(--text-muted)"}}>{pct}%</span>
@@ -176,7 +176,7 @@ const AdminOverview = ({ stats, revenueData, revenueStats, userData, totalUsers 
 
       {/* ── Revenue by plan ───────────────────────────────────────────── */}
       {planData.length > 0 && (
-        <div className="rounded-2xl p-6 border" style={{background:"var(--bg-surface)",borderColor:"var(--border-subtle)"}}>
+        <div className="rounded-md p-6 border" style={{background:"var(--bg-surface)",borderColor:"var(--border-subtle)"}}>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <TrendingUp size={16} style={{color:"var(--text-muted)"}} />
@@ -205,7 +205,7 @@ const AdminOverview = ({ stats, revenueData, revenueStats, userData, totalUsers 
                 const total = planData.reduce((s, x) => s + x.revenue, 0);
                 const pct   = total > 0 ? Math.round(e.revenue / total * 100) : 0;
                 return (
-                  <div key={i} className="flex items-center gap-3 p-3 rounded-xl border" style={{background:"var(--bg-elevated)",borderColor:"var(--border-subtle)"}}>
+                  <div key={i} className="flex items-center gap-3 p-3 rounded-md border" style={{background:"var(--bg-elevated)",borderColor:"var(--border-subtle)"}}>
                     <div className="w-3 h-3 rounded-sm shrink-0" style={{ backgroundColor: PLAN_COLORS[e.name] || "#6366f1" }} />
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-baseline mb-1">

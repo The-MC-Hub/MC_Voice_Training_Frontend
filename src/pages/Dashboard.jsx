@@ -256,10 +256,10 @@ const Dashboard = () => {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
-            className="p-5 bg-[#111113] border border-white/[0.07] rounded-2xl hover:border-white/[0.14] hover:-translate-y-0.5 transition-all"
+            className="p-5 bg-[#111113] border border-white/[0.07] rounded-md hover:border-white/[0.14] hover:-translate-y-0.5 transition-all"
           >
             <div className="flex items-start justify-between mb-4">
-              <div className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 ${s.iconBg}`}>
+              <div className={`w-10 h-10 rounded-md border flex items-center justify-center shrink-0 ${s.iconBg}`}>
                 <s.Icon size={18} className={s.iconColor} />
               </div>
               <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${s.tagColor}`}>{s.tag}</span>
@@ -312,8 +312,8 @@ const Dashboard = () => {
 
       {/* DAILY plan countdown banner */}
       {plan === 'DAILY' && dailyRemaining > 0 && !showLimitWarning && (
-        <Card className="rounded-2xl border border-emerald-500/20 bg-linear-to-r from-emerald-500/6 to-transparent p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 shadow-none">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+        <Card className="rounded-md border border-emerald-500/20 bg-emerald-500/5 p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 shadow-none">
+          <div className="w-10 h-10 rounded-md bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
             <Clock size={18} className="text-emerald-400" />
           </div>
           <div className="flex-1 min-w-0">
@@ -322,7 +322,7 @@ const Dashboard = () => {
           </div>
           <Link
             to="/m/payment"
-            className="shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-500 text-white text-[13px] font-semibold hover:bg-emerald-400 transition-colors whitespace-nowrap"
+            className="shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-md bg-emerald-500 text-white text-[13px] font-semibold hover:bg-emerald-400 transition-colors whitespace-nowrap"
           >
             <Zap size={14} /> {t('dashboard.dailyPlanExtend')}
           </Link>
@@ -331,8 +331,8 @@ const Dashboard = () => {
 
       {/* Upgrade ad banner for FREE users (not near limit) */}
       {plan === 'FREE' && !showLimitWarning && (
-        <Card className="rounded-2xl border border-gold/20 bg-linear-to-r from-amber-500/6 to-transparent p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 shadow-none">
-          <div className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
+        <Card className="rounded-md border border-gold/20 bg-amber-500/5 p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 shadow-none">
+          <div className="w-10 h-10 rounded-md bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
             <Crown size={18} className="text-gold" />
           </div>
           <div className="flex-1 min-w-0">
@@ -341,7 +341,7 @@ const Dashboard = () => {
           </div>
           <Link
             to="/m/payment"
-            className="shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-gold text-black text-[13px] font-semibold hover:bg-amber-400 transition-colors whitespace-nowrap"
+            className="shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-md bg-gold text-black text-[13px] font-semibold hover:bg-amber-400 transition-colors whitespace-nowrap"
           >
             <Sparkles size={14} /> {t('dashboard.freeUpgradeCta')}
           </Link>
@@ -383,7 +383,7 @@ const Dashboard = () => {
         )}
 
         {activeTab === "Training History" && (
-          <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-5">
+          <div className="bg-[#111113] border border-white/[0.07] rounded-md p-5">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
               <h3 className="text-[14px] font-semibold text-white">{t('dashboard.trainingHistory')}</h3>
               <div className="flex gap-2">
@@ -404,7 +404,7 @@ const Dashboard = () => {
                     key={i}
                     value={sel.value}
                     onChange={(e) => sel.onChange(e.target.value)}
-                    className="bg-[#09090b] border border-white/[0.08] text-zinc-400 text-[12px] py-1.5 px-3 rounded-xl focus:outline-none focus:border-[#f5a623]/40 cursor-pointer"
+                    className="bg-[#09090b] border border-white/[0.08] text-zinc-400 text-[12px] py-1.5 px-3 rounded-md focus:outline-none focus:border-[#f5a623]/40 cursor-pointer"
                   >
                     {sel.options.map(o => <option key={o.v} value={o.v}>{o.l}</option>)}
                   </select>
@@ -431,7 +431,7 @@ const Dashboard = () => {
                     <Button
                       disabled={currentPage === 1}
                       onClick={() => setCurrentPage(p => p - 1)}
-                      className="h-auto w-8 h-8 flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.06] text-zinc-500 disabled:opacity-30 hover:bg-white/[0.08] hover:text-white transition-colors"
+                      className="h-auto w-8 h-8 flex items-center justify-center rounded-md bg-white/[0.04] border border-white/[0.06] text-zinc-500 disabled:opacity-30 hover:bg-white/[0.08] hover:text-white transition-colors"
                     >
                       <ChevronLeft size={15} />
                     </Button>
@@ -439,7 +439,7 @@ const Dashboard = () => {
                     <Button
                       disabled={currentPage === totalPages}
                       onClick={() => setCurrentPage(p => p + 1)}
-                      className="h-auto w-8 h-8 flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.06] text-zinc-500 disabled:opacity-30 hover:bg-white/[0.08] hover:text-white transition-colors"
+                      className="h-auto w-8 h-8 flex items-center justify-center rounded-md bg-white/[0.04] border border-white/[0.06] text-zinc-500 disabled:opacity-30 hover:bg-white/[0.08] hover:text-white transition-colors"
                     >
                       <ChevronRight size={15} />
                     </Button>
@@ -447,13 +447,13 @@ const Dashboard = () => {
                 )}
               </>
             ) : (
-              <div className="py-16 text-center border border-dashed border-white/[0.06] rounded-xl">
+              <div className="py-16 text-center border border-dashed border-white/[0.06] rounded-md">
                 <Mic size={28} className="mx-auto text-zinc-800 mb-3" />
                 <p className="text-[13px] text-zinc-600 mb-4">{t('dashboard.noSessions')}</p>
                 {plan === 'FREE' && (
                   <Link
                     to="/m/payment"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gold/10 border border-gold/20 text-gold text-[12px] font-semibold hover:bg-gold/20 transition-colors"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-gold/10 border border-gold/20 text-gold text-[12px] font-semibold hover:bg-gold/20 transition-colors"
                   >
                     <Crown size={12} /> {t('dashboard.upgradeBasicUnlimited')}
                   </Link>

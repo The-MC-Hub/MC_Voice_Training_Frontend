@@ -52,7 +52,7 @@ const VerifyEmail = () => {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="bg-white rounded-2xl shadow-xl p-10 max-w-md w-full text-center"
+        className="bg-white rounded-md shadow-xl p-10 max-w-md w-full text-center"
       >
         {status === "loading" && (
           <>
@@ -94,7 +94,7 @@ const VerifyEmail = () => {
             <p className="text-[14px] text-gray-500 mb-6">{message}</p>
             <button
               onClick={() => navigate("/register", { replace: true })}
-              className="px-6 py-2.5 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 transition-colors"
+              className="px-6 py-2.5 rounded-md bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 transition-colors"
             >
               Quay lại đăng ký
             </button>

@@ -71,12 +71,12 @@ const MilestoneDetail = () => {
           <div className="space-y-3 flex-1">
             <div className="flex items-center gap-3 flex-wrap">
               <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">{course.title}</h1>
-              <span className="px-3 py-1 rounded-lg bg-[#f5a623]/[0.08] border border-[#f5a623]/20 text-[#f5a623] text-[12px] font-medium">{course.difficulty}</span>
+              <span className="px-3 py-1 rounded-md bg-[#f5a623]/[0.08] border border-[#f5a623]/20 text-[#f5a623] text-[12px] font-medium">{course.difficulty}</span>
             </div>
             <p className="text-zinc-500 text-[14px] leading-relaxed max-w-xl">"{course.shortDescription}"</p>
           </div>
 
-          <Card className="w-full lg:w-80 bg-[#111113] border border-white/[0.07] rounded-xl p-5 shrink-0 gap-0 shadow-none">
+          <Card className="w-full lg:w-80 bg-[#111113] border border-white/[0.07] rounded-md p-5 shrink-0 gap-0 shadow-none">
             <div className="flex justify-between items-end mb-3">
               <span className="text-[11px] text-zinc-600 uppercase tracking-wider">{t('milestone.overallProgress')}</span>
               <span className="text-2xl font-bold text-[#f5a623]">{Math.round(progress)}%</span>
@@ -112,12 +112,12 @@ const MilestoneDetail = () => {
                 return (
                   <motion.div key={item.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.04 }}
                     onClick={() => handleItemClick(item)}
-                    className={`flex items-center gap-4 p-4 rounded-xl border transition-colors group ${
+                    className={`flex items-center gap-4 p-4 rounded-md border transition-colors group ${
                       isLocked
                         ? 'border-white/[0.04] opacity-50 cursor-not-allowed'
                         : 'border-white/[0.06] hover:border-[#f5a623]/20 hover:bg-[#f5a623]/[0.02] cursor-pointer'
                     }`}>
-                    <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                    <div className={`w-11 h-11 rounded-md flex items-center justify-center shrink-0 transition-colors ${
                       item.status === 'completed' ? 'bg-emerald-500 text-black' :
                       item.status === 'in-progress' ? 'bg-[#f5a623] text-black' :
                       'bg-[#09090b] border border-white/[0.07] text-zinc-600 group-hover:text-[#f5a623]'
@@ -141,7 +141,7 @@ const MilestoneDetail = () => {
                     </div>
 
                     {!isLocked && (
-                      <div className="w-8 h-8 rounded-xl bg-[#09090b] border border-white/[0.06] flex items-center justify-center text-zinc-600 group-hover:text-white group-hover:border-white/[0.14] transition-colors shrink-0">
+                      <div className="w-8 h-8 rounded-md bg-[#09090b] border border-white/[0.06] flex items-center justify-center text-zinc-600 group-hover:text-white group-hover:border-white/[0.14] transition-colors shrink-0">
                         <ChevronRight size={15} />
                       </div>
                     )}
@@ -156,7 +156,7 @@ const MilestoneDetail = () => {
               <div className="flex items-center gap-1.5">
                 {Array.from({ length: totalPages }).map((_, idx) => (
                   <button key={idx} onClick={() => setCurrentPage(idx + 1)}
-                    className={`w-8 h-8 rounded-lg text-[12px] font-medium border transition-colors ${
+                    className={`w-8 h-8 rounded-md text-[12px] font-medium border transition-colors ${
                       currentPage === idx + 1
                         ? 'bg-[#f5a623] border-[#f5a623] text-black'
                         : 'border-white/[0.07] text-zinc-600 hover:border-white/[0.14] hover:text-white'
@@ -168,11 +168,11 @@ const MilestoneDetail = () => {
               </div>
               <div className="flex items-center gap-2">
                 <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-white/[0.07] text-zinc-500 hover:text-white hover:border-white/[0.14] text-[12px] font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-md border border-white/[0.07] text-zinc-500 hover:text-white hover:border-white/[0.14] text-[12px] font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
                   <ChevronLeft size={14} /> {t('common.prev')}
                 </button>
                 <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-white/[0.07] text-zinc-500 hover:text-white hover:border-white/[0.14] text-[12px] font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-md border border-white/[0.07] text-zinc-500 hover:text-white hover:border-white/[0.14] text-[12px] font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
                   {t('common.next')} <ChevronRight size={14} />
                 </button>
               </div>
@@ -182,8 +182,8 @@ const MilestoneDetail = () => {
 
         {/* Sidebar rewards */}
         <div className="lg:col-span-3">
-          <Card className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 sticky top-20 gap-0 shadow-none">
-            <div className="w-10 h-10 bg-[#f5a623] rounded-xl flex items-center justify-center mb-4">
+          <Card className="bg-[#111113] border border-white/[0.07] rounded-md p-6 sticky top-20 gap-0 shadow-none">
+            <div className="w-10 h-10 bg-[#f5a623] rounded-md flex items-center justify-center mb-4">
               <Trophy size={20} className="text-black" />
             </div>
             <h3 className="text-[15px] font-semibold text-white mb-1">{t('milestone.rewards')}</h3>
@@ -196,7 +196,7 @@ const MilestoneDetail = () => {
                 { icon: Play, text: t('milestone.highTier'), color: "text-blue-400" },
               ].map((reward, i) => (
                 <li key={i} className="flex items-center gap-3 text-[13px] text-zinc-400">
-                  <div className="w-7 h-7 rounded-lg bg-[#09090b] border border-white/[0.06] flex items-center justify-center shrink-0">
+                  <div className="w-7 h-7 rounded-md bg-[#09090b] border border-white/[0.06] flex items-center justify-center shrink-0">
                     <reward.icon size={14} className={reward.color} />
                   </div>
                   {reward.text}
@@ -204,7 +204,7 @@ const MilestoneDetail = () => {
               ))}
             </ul>
 
-            <button className="w-full py-2.5 bg-[#f5a623] text-black rounded-xl text-[13px] font-semibold hover:bg-[#e09520] transition-colors">
+            <button className="w-full py-2.5 bg-[#f5a623] text-black rounded-md text-[13px] font-semibold hover:bg-[#e09520] transition-colors">
               {t('milestone.claim')}
             </button>
           </Card>

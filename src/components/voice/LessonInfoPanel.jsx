@@ -5,7 +5,7 @@ export default function LessonInfoPanel({ lesson }) {
   const { t } = useTranslation();
   if (!lesson) return null;
   return (
-    <div className="mb-5 rounded-2xl border border-white/[0.07] bg-[#111113] overflow-hidden">
+    <div className="mb-5 rounded-md border border-white/[0.07] bg-[#111113] overflow-hidden">
       <div className="flex flex-col lg:flex-row">
         {(lesson.thumbnailUrl || lesson.videoUrl) && (
           <div className="lg:w-72 shrink-0">
@@ -75,12 +75,12 @@ export default function LessonInfoPanel({ lesson }) {
               <div className="flex flex-wrap gap-2">
                 {lesson.evaluationCriteria.map((c, i) => (
                   <div key={i} className="group relative">
-                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.07] hover:border-[#f5a623]/30 transition-colors cursor-default">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-white/[0.04] border border-white/[0.07] hover:border-[#f5a623]/30 transition-colors cursor-default">
                       <span className="text-[12px] font-medium text-zinc-300">{c.aspect}</span>
                       <span className="text-[11px] text-[#f5a623] font-semibold">{c.weight}%</span>
                     </div>
                     {c.description && (
-                      <div className="pointer-events-none absolute bottom-full left-0 mb-1.5 w-56 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-300 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-xl">
+                      <div className="pointer-events-none absolute bottom-full left-0 mb-1.5 w-56 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-300 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-xl">
                         <span className="font-semibold text-white">{c.aspect} ({c.weight}%)</span>
                         <br />{c.description}
                       </div>
@@ -92,7 +92,7 @@ export default function LessonInfoPanel({ lesson }) {
           )}
 
           {lesson.evaluationHint && (
-            <div className="flex items-start gap-2 px-3 py-2.5 rounded-xl bg-[#f5a623]/[0.05] border border-[#f5a623]/15">
+            <div className="flex items-start gap-2 px-3 py-2.5 rounded-md bg-[#f5a623]/[0.05] border border-[#f5a623]/15">
               <Info size={13} className="text-[#f5a623] mt-0.5 shrink-0" />
               <p className="text-[12px] text-zinc-400 leading-relaxed">{lesson.evaluationHint}</p>
             </div>

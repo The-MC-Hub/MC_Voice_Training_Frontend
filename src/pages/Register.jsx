@@ -63,7 +63,7 @@ const RightPanel = () => {
         className="absolute inset-0 w-full h-full object-cover object-center"
       />
       <div className="absolute inset-0 bg-black/65" />
-      <div className="absolute inset-0 bg-linear-to-b from-black/75 via-black/50 to-black/85" />
+      <div className="absolute inset-0 bg-black/70" />
 
       {/* Top: logo */}
       <div className="relative z-10">
@@ -95,7 +95,7 @@ const RightPanel = () => {
               >
                 {SLIDE_FEATURES.map((f, i) => (
                   <div key={i} className="flex items-center gap-3.5">
-                    <div className="w-8 h-8 rounded-lg bg-amber-500/25 border border-amber-400/40 flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-md bg-amber-500/25 border border-amber-400/40 flex items-center justify-center shrink-0">
                       <f.icon size={15} className="text-amber-300" />
                     </div>
                     <div>
@@ -119,7 +119,7 @@ const RightPanel = () => {
               >
                 {SLIDE_PLANS.map((p, i) => (
                   <div key={i} className="flex items-center gap-4">
-                    <div className="w-8 h-8 rounded-lg bg-amber-500/25 border border-amber-400/40 flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-md bg-amber-500/25 border border-amber-400/40 flex items-center justify-center shrink-0">
                       <p.icon size={15} className="text-amber-300" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -223,7 +223,7 @@ const InputField = ({ label, icon: Icon, suffix, ...props }) => {
   return (
     <div className="flex flex-col gap-1.5">
       {label && <label className="text-[13px] font-semibold text-gray-700">{label}</label>}
-      <div className={`flex items-center gap-2.5 px-3.5 py-3 border rounded-xl transition-all ${
+      <div className={`flex items-center gap-2.5 px-3.5 py-3 border rounded-md transition-all ${
         focused
           ? 'border-amber-400 bg-white shadow-[0_0_0_3px_rgba(245,166,35,0.12)]'
           : 'border-gray-200 bg-gray-50 hover:border-gray-300'
@@ -324,7 +324,7 @@ const OtpScreen = ({ email, onSuccess }) => {
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ delay: 0.1, type: "spring", damping: 14, stiffness: 260 }}
-        className="w-16 h-16 rounded-2xl bg-linear-to-br from-amber-400 to-amber-500 flex items-center justify-center mb-5 shadow-lg shadow-amber-200"
+        className="w-16 h-16 rounded-md bg-amber-500 flex items-center justify-center mb-5 shadow-lg shadow-amber-200"
       >
         <Mail size={28} className="text-white" />
       </motion.div>
@@ -334,13 +334,13 @@ const OtpScreen = ({ email, onSuccess }) => {
       <p className="text-[14px] font-semibold text-amber-600 mb-2">{email}</p>
 
       {/* Magic link hint */}
-      <div className="w-full bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 mb-3 text-left">
+      <div className="w-full bg-emerald-50 border border-emerald-200 rounded-md p-3.5 mb-3 text-left">
         <p className="text-[12px] text-emerald-700 font-medium mb-0.5">✅ Cách nhanh nhất</p>
         <p className="text-[12px] text-emerald-600">Mở email và nhấn nút <strong>"Xác nhận email ngay"</strong> — tự động đăng nhập, không cần nhập mã.</p>
       </div>
 
       {/* Spam hint */}
-      <div className="w-full bg-amber-50 border border-amber-200 rounded-xl p-3 mb-6 text-left flex items-start gap-2">
+      <div className="w-full bg-amber-50 border border-amber-200 rounded-md p-3 mb-6 text-left flex items-start gap-2">
         <span className="text-amber-500 text-[14px] mt-px">⚠️</span>
         <p className="text-[12px] text-amber-700">Không thấy email? Kiểm tra thư mục <strong>Spam / Quảng cáo</strong> — đôi khi email bị lọc nhầm.</p>
       </div>
@@ -356,7 +356,7 @@ const OtpScreen = ({ email, onSuccess }) => {
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
-          className="w-full bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-xl p-3 mb-4"
+          className="w-full bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-md p-3 mb-4"
         >
           {error}
         </motion.div>
@@ -365,7 +365,7 @@ const OtpScreen = ({ email, onSuccess }) => {
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
-          className="w-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[13px] rounded-xl p-3 mb-4"
+          className="w-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[13px] rounded-md p-3 mb-4"
         >
           {resendMsg}
         </motion.div>
@@ -383,7 +383,7 @@ const OtpScreen = ({ email, onSuccess }) => {
             value={d}
             onChange={e => handleDigit(i, e.target.value)}
             onKeyDown={e => handleKeyDown(i, e)}
-            className={`w-11 h-13 text-center text-[20px] font-bold border-2 rounded-xl transition-all outline-none
+            className={`w-11 h-13 text-center text-[20px] font-bold border-2 rounded-md transition-all outline-none
               ${d ? 'border-amber-400 bg-amber-50 text-amber-700' : 'border-gray-200 bg-gray-50 text-gray-900'}
               focus:border-amber-400 focus:bg-white focus:shadow-[0_0_0_3px_rgba(245,166,35,0.12)]`}
           />
@@ -394,7 +394,7 @@ const OtpScreen = ({ email, onSuccess }) => {
         onClick={() => handleVerify(digits.join(""))}
         disabled={loading || digits.some(d => !d)}
         hoverScale={1}
-        className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-40 flex items-center justify-center gap-2 transition-all mb-4 h-auto"
+        className="w-full py-3 rounded-md bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 active:scale-[0.98] disabled:opacity-40 flex items-center justify-center gap-2 transition-all mb-4 h-auto"
       >
         {loading
           ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -463,14 +463,14 @@ const CoursePickScreen = ({ onPick, onSkip, submitting }) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03, duration: 0.25 }}
                 onClick={() => setSelectedKey(key)}
-                className={`flex items-center gap-3 px-3.5 py-3 rounded-xl border-2 text-left transition-all ${
+                className={`flex items-center gap-3 px-3.5 py-3 rounded-md border-2 text-left transition-all ${
                   isSelected
                     ? "border-amber-400 bg-amber-50 shadow-[0_0_0_3px_rgba(245,166,35,0.12)]"
                     : "border-gray-200 bg-white hover:border-amber-200 hover:bg-amber-50/30"
                 }`}
               >
                 {/* Thumbnail */}
-                <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-gray-100">
+                <div className="w-12 h-12 rounded-md overflow-hidden shrink-0 bg-gray-100">
                   {c.thumbnail
                     ? <img src={c.thumbnail} alt={c.title} className="w-full h-full object-cover" />
                     : <div className="w-full h-full flex items-center justify-center text-xl">📚</div>
@@ -514,7 +514,7 @@ const CoursePickScreen = ({ onPick, onSkip, submitting }) => {
           disabled={submitting}
           whileHover={{ scale: submitting ? 1 : 1.01 }}
           whileTap={{ scale: 0.98 }}
-          className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 disabled:opacity-50 flex items-center justify-center gap-2 transition-all shadow-sm shadow-amber-200"
+          className="w-full py-3 rounded-md bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 disabled:opacity-50 flex items-center justify-center gap-2 transition-all shadow-sm shadow-amber-200"
         >
           {submitting
             ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Đang tạo tài khoản...</>
@@ -737,7 +737,7 @@ const Register = () => {
                       initial={{ opacity: 0, height: 0, marginBottom: 0 }}
                       animate={{ opacity: 1, height: 'auto', marginBottom: 20 }}
                       exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-                      className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-xl p-3 text-center overflow-hidden"
+                      className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-md p-3 text-center overflow-hidden"
                     >
                       {displayError}
                     </motion.div>
@@ -819,7 +819,7 @@ const Register = () => {
                           key={av.id}
                           type="button"
                           onClick={() => setSelectedAvatar(av.id)}
-                          className={`flex flex-col items-center justify-center py-2.5 rounded-xl border-2 transition-all text-[22px] h-auto ${
+                          className={`flex flex-col items-center justify-center py-2.5 rounded-md border-2 transition-all text-[22px] h-auto ${
                             selectedAvatar === av.id
                               ? 'border-amber-400 bg-amber-50 shadow-[0_0_0_3px_rgba(245,166,35,0.15)]'
                               : 'border-gray-200 bg-gray-50 hover:border-amber-300 hover:bg-amber-50/50'
@@ -860,7 +860,7 @@ const Register = () => {
                     disabled={loading || !agreed}
                     whileHover={{ scale: (loading || !agreed) ? 1 : 1.01, boxShadow: (loading || !agreed) ? 'none' : '0 4px 20px rgba(245,166,35,0.3)' }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 disabled:opacity-40 flex items-center justify-center gap-2 transition-all"
+                    className="w-full py-3 rounded-md bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 disabled:opacity-40 flex items-center justify-center gap-2 transition-all"
                   >
                     {loading
                       ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

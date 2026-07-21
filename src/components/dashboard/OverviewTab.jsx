@@ -29,7 +29,7 @@ const OverviewTab = ({
   const cleanTooltipStyle = {
     backgroundColor: theme === 'light' ? '#ffffff' : '#18181b',
     border: `1px solid ${theme === 'light' ? 'rgba(0,0,0,0.10)' : 'rgba(255,255,255,0.08)'}`,
-    borderRadius: '12px',
+    borderRadius: '6px',
     fontSize: '12px',
     color: theme === 'light' ? '#111113' : '#fafafa',
     boxShadow: theme === 'light' ? '0 8px 32px rgba(0,0,0,0.08)' : '0 8px 32px rgba(0,0,0,0.4)',
@@ -55,7 +55,7 @@ const OverviewTab = ({
 
         {/* Area Chart */}
         <motion.div {...fadeUp} className="lg:col-span-8">
-          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6">
+          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="bg-[#111113] border border-white/[0.07] rounded-md p-6">
           <div className="flex justify-between items-center mb-6">
             <div>
               <h3 className="text-[14px] font-semibold text-white flex items-center gap-2">
@@ -66,12 +66,12 @@ const OverviewTab = ({
                 {timeFrame === "Daily" ? t('dashboard.last7Days') : timeFrame === "Weekly" ? t('dashboard.last4Weeks') : t('dashboard.last6Months')}
               </p>
             </div>
-            <div className="flex bg-[#09090b] p-1 rounded-xl border border-white/[0.06]">
+            <div className="flex bg-[#09090b] p-1 rounded-md border border-white/[0.06]">
               {["Daily", "Weekly", "Monthly"].map(tf => (
                 <button
                   key={tf}
                   onClick={() => setTimeFrame(tf)}
-                  className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${
+                  className={`px-3 py-1.5 rounded-md text-[11px] font-medium transition-colors ${
                     timeFrame === tf ? "bg-[#f5a623] text-black" : "text-zinc-500 hover:text-white"
                   }`}
                 >
@@ -114,11 +114,11 @@ const OverviewTab = ({
           transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="lg:col-span-4"
         >
-          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 flex flex-col relative overflow-hidden">
+          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="bg-[#111113] border border-white/[0.07] rounded-md p-6 flex flex-col relative overflow-hidden">
           <div className="absolute top-0 left-6 right-6 h-px"
-            style={{ background: 'linear-gradient(90deg, transparent, rgba(245,166,35,0.3), transparent)' }} />
+            style={{ background: 'rgba(245,166,35,0.3)' }} />
 
-          <div className="w-10 h-10 rounded-2xl bg-[#f5a623]/[0.1] border border-[#f5a623]/20 flex items-center justify-center mb-4">
+          <div className="w-10 h-10 rounded-md bg-[#f5a623]/[0.1] border border-[#f5a623]/20 flex items-center justify-center mb-4">
             <Zap size={18} className="text-[#f5a623]" />
           </div>
           <h3 className="text-[14px] font-semibold text-white mb-1 tracking-tight">{t('dashboard.voiceMasteryRoadmap')}</h3>
@@ -145,7 +145,7 @@ const OverviewTab = ({
           </div>
 
           <Link to="/m/learning"
-            className="mt-6 w-full py-2.5 rounded-xl bg-white/[0.05] border border-white/[0.08] text-zinc-300 text-[12px] font-semibold hover:bg-white/[0.08] hover:border-white/[0.14] transition-all flex items-center justify-center gap-2">
+            className="mt-6 w-full py-2.5 rounded-md bg-white/[0.05] border border-white/[0.08] text-zinc-300 text-[12px] font-semibold hover:bg-white/[0.08] hover:border-white/[0.14] transition-all flex items-center justify-center gap-2">
             {t('dashboard.viewDetailedPath')} <ChevronRight size={13} />
           </Link>
           </SpotlightCard>
@@ -165,9 +165,9 @@ const OverviewTab = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.2 + i * 0.05, ease: [0.16, 1, 0.3, 1] }}
           >
-            <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="p-5 bg-[#111113] border border-white/[0.07] rounded-2xl">
+            <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="p-5 bg-[#111113] border border-white/[0.07] rounded-md">
               <div className="flex items-start justify-between mb-3">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center border shrink-0 ${bg}`}>
+                <div className={`w-10 h-10 rounded-md flex items-center justify-center border shrink-0 ${bg}`}>
                   <Icon size={18} className={color} />
                 </div>
               </div>
@@ -189,9 +189,9 @@ const OverviewTab = ({
 
         {/* Radar */}
         <motion.div {...fadeUp} className="h-full">
-          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="h-full bg-[#111113] border border-white/[0.07] rounded-2xl p-6 flex flex-col items-center">
+          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="h-full bg-[#111113] border border-white/[0.07] rounded-md p-6 flex flex-col items-center">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 rounded-md bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
               <Award size={13} className="text-[#f5a623]" />
             </div>
             <h4 className="text-[13px] font-semibold text-white">{t('dashboard.skillsMatrix')}</h4>
@@ -206,7 +206,7 @@ const OverviewTab = ({
               </RadarChart>
             </ResponsiveContainer>
           </div>
-          <p className="text-[11px] text-zinc-600 text-center mt-2 leading-relaxed bg-[#09090b] border border-white/[0.05] py-2 px-3 rounded-xl w-full">
+          <p className="text-[11px] text-zinc-600 text-center mt-2 leading-relaxed bg-[#09090b] border border-white/[0.05] py-2 px-3 rounded-md w-full">
             {t('dashboard.speedExcellent')}
           </p>
           </SpotlightCard>
@@ -214,10 +214,10 @@ const OverviewTab = ({
 
         {/* Heat map */}
         <motion.div {...fadeUp}>
-          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="h-full bg-[#111113] border border-white/[0.07] rounded-2xl p-6">
+          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="h-full bg-[#111113] border border-white/[0.07] rounded-md p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-md bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
                 <BarChart3 size={13} className="text-indigo-400" />
               </div>
               <h4 className="text-[13px] font-semibold text-white">Lịch luyện tập</h4>
@@ -283,9 +283,9 @@ const OverviewTab = ({
 
         {/* Donut */}
         <motion.div {...fadeUp}>
-          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="h-full bg-[#111113] border border-white/[0.07] rounded-2xl p-6 flex flex-col items-center">
+          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="h-full bg-[#111113] border border-white/[0.07] rounded-md p-6 flex flex-col items-center">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+            <div className="w-7 h-7 rounded-md bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
               <PieIcon size={13} className="text-emerald-400" />
             </div>
             <h4 className="text-[13px] font-semibold text-white">{t('dashboard.proficiency')}</h4>
@@ -333,7 +333,7 @@ const OverviewTab = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
       >
-        <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6">
+        <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="bg-[#111113] border border-white/[0.07] rounded-md p-6">
         <div className="flex justify-between items-center mb-5 pb-4 border-b border-white/[0.05]">
           <h3 className="text-[14px] font-semibold text-white flex items-center gap-2">
             <TrendingUp size={14} className="text-[#f5a623]" />
@@ -357,11 +357,11 @@ const OverviewTab = ({
             ))}
           </div>
         ) : (
-          <div className="py-14 text-center border border-dashed border-white/[0.06] rounded-xl">
+          <div className="py-14 text-center border border-dashed border-white/[0.06] rounded-md">
             <Mic size={28} className="text-zinc-800 mx-auto my-3" />
             <p className="text-[13px] text-zinc-600 mb-4">{t('dashboard.noSessionsYet')}</p>
             <Link to="/m/voice/library"
-              className="inline-flex mb-3 items-center gap-2 px-5 py-2 bg-[#f5a623] text-black text-[13px] font-semibold rounded-xl hover:bg-[#e09520] transition-colors">
+              className="inline-flex mb-3 items-center gap-2 px-5 py-2 bg-[#f5a623] text-black text-[13px] font-semibold rounded-md hover:bg-[#e09520] transition-colors">
               {t('dashboard.startFirstPractice')}
             </Link>
           </div>

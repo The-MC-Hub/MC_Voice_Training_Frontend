@@ -124,7 +124,7 @@ const Navbar = () => {
                 </Link>
                 <Link
                   to="/register"
-                  className="hidden sm:block px-4 py-1.5 rounded-lg bg-amber-500 text-white text-[13px] font-semibold hover:bg-amber-600 transition-colors"
+                  className="hidden sm:block px-4 py-1.5 rounded-md bg-amber-500 text-white text-[13px] font-semibold hover:bg-amber-600 transition-colors"
                 >
                   {t('navbar.join')}
                 </Link>
@@ -160,7 +160,7 @@ const Navbar = () => {
                     data-tour="tour-settings"
                     data-quest="quest-settings-nav"
                     to="/m/settings"
-                    className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${isDark ? 'text-zinc-500 hover:text-white hover:bg-white/[0.07]' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'}`}
+                    className={`w-8 h-8 flex items-center justify-center rounded-md transition-colors ${isDark ? 'text-zinc-500 hover:text-white hover:bg-white/[0.07]' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'}`}
                   >
                     <Settings size={16} />
                   </Link>
@@ -171,7 +171,7 @@ const Navbar = () => {
             {/* Mobile hamburger */}
             <button
               onClick={() => setIsMobileMenuOpen(v => !v)}
-              className={`flex md:hidden w-8 h-8 items-center justify-center rounded-lg transition-colors ${isDark ? 'text-zinc-500 hover:text-white hover:bg-white/[0.07]' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'}`}
+              className={`flex md:hidden w-8 h-8 items-center justify-center rounded-md transition-colors ${isDark ? 'text-zinc-500 hover:text-white hover:bg-white/[0.07]' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'}`}
             >
               {isMobileMenuOpen ? <X size={16} /> : <Menu size={16} />}
             </button>
@@ -219,10 +219,10 @@ const Navbar = () => {
                 )}
                 {!isAuthenticated && (
                   <div className="flex gap-3 mt-4 pt-4 border-t border-black/8">
-                    <Link to="/login" className="flex-1 py-2 text-center text-[13px] font-medium border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                    <Link to="/login" className="flex-1 py-2 text-center text-[13px] font-medium border border-gray-200 rounded-md text-gray-600 hover:bg-gray-50 transition-colors">
                       {t('navbar.login')}
                     </Link>
-                    <Link to="/register" className="flex-1 py-2 text-center text-[13px] font-semibold bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors">
+                    <Link to="/register" className="flex-1 py-2 text-center text-[13px] font-semibold bg-amber-500 text-white rounded-md hover:bg-amber-600 transition-colors">
                       {t('navbar.join')}
                     </Link>
                   </div>
@@ -239,7 +239,7 @@ const Navbar = () => {
 const MobileNavLink = ({ to, label, active }) => (
   <Link
     to={to}
-    className={`px-3 py-2.5 rounded-lg text-[14px] font-medium transition-colors ${
+    className={`px-3 py-2.5 rounded-md text-[14px] font-medium transition-colors ${
       active ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
     }`}
   >

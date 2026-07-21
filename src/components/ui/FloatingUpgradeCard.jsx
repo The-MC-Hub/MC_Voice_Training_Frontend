@@ -90,7 +90,7 @@ export default function FloatingUpgradeCard({ plan = 'FREE' }) {
             {/* Accent glow top */}
             <div
               className="absolute top-0 left-0 right-0 h-[2px]"
-              style={{ background: `linear-gradient(90deg, transparent, ${card.accent}, transparent)` }}
+              style={{ background: card.accent }}
             />
 
             {/* Header */}

@@ -55,7 +55,7 @@ export default function AnalysisPanel({
           <button
             onClick={handleDownloadPdf}
             disabled={isDownloading}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium bg-white/[0.04] border border-white/[0.08] text-zinc-400 hover:text-white hover:border-white/20 transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] font-medium bg-white/[0.04] border border-white/[0.08] text-zinc-400 hover:text-white hover:border-white/20 transition-colors disabled:opacity-50"
           >
             {isDownloading ? <Loader2 size={12} className="animate-spin" /> : <Download size={12} />}
             {isDownloading ? t_vp("pdfGenerating") : t_vp("pdfDownload")}
@@ -63,7 +63,7 @@ export default function AnalysisPanel({
 
           <div id="voice-report-pdf-content" className="space-y-4">
           {/* Vocal dynamics */}
-          <div className="rounded-2xl border border-white/[0.07] bg-[#111113] p-5">
+          <div className="rounded-md border border-white/[0.07] bg-[#111113] p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-[13px] font-semibold text-white">{t("voicePractice.vocalDynamics")}</h3>
               <AudioLines size={15} className="text-blue-400" />
@@ -82,7 +82,7 @@ export default function AnalysisPanel({
                   <span className="text-[12px] font-semibold text-white w-14 text-right tabular-nums shrink-0">{`${m.value.toFixed(0)}${m.unit}`}</span>
                   <div className="relative cursor-help shrink-0">
                     <Info size={11} className="text-zinc-700 group-hover/m:text-zinc-500 transition-colors" />
-                    <div className="pointer-events-none absolute bottom-full right-0 mb-2 w-44 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-300 leading-relaxed opacity-0 group-hover/m:opacity-100 transition-opacity z-50 shadow-xl">{m.desc}</div>
+                    <div className="pointer-events-none absolute bottom-full right-0 mb-2 w-44 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-300 leading-relaxed opacity-0 group-hover/m:opacity-100 transition-opacity z-50 shadow-xl">{m.desc}</div>
                   </div>
                 </div>
               ))}
@@ -95,7 +95,7 @@ export default function AnalysisPanel({
 
           {/* Voice Quality — Phase 2+3 */}
           {(result.voice_quality || result.spectral_features || result.filler_words || result.wer_rate > 0 || result.cer_rate > 0) && (
-            <div className="rounded-2xl border border-white/[0.07] bg-[#111113] p-5">
+            <div className="rounded-md border border-white/[0.07] bg-[#111113] p-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-[13px] font-semibold text-white">Voice Quality</h3>
                 <BarChart3 size={15} className="text-purple-400" />
@@ -108,13 +108,13 @@ export default function AnalysisPanel({
                       { label: "Shimmer", value: result.voice_quality.shimmer_pct, unit: "%", color: (v) => v < 3.0 ? "text-emerald-400" : v < 5.0 ? "text-amber-400" : "text-red-400", tooltip: t_vp("shimmerTooltip") },
                       { label: "HNR", value: result.voice_quality.hnr_db, unit: "dB", color: (v) => v >= 15 ? "text-emerald-400" : v >= 10 ? "text-amber-400" : "text-red-400", tooltip: t_vp("hnrTooltip") },
                     ].map((m) => (
-                      <div key={m.label} className="p-3 rounded-xl bg-[#09090b] border border-white/[0.05] text-center">
+                      <div key={m.label} className="p-3 rounded-md bg-[#09090b] border border-white/[0.05] text-center">
                         <div className="flex items-center justify-center gap-1 mb-1">
                           <span className="text-[10px] text-zinc-600">{m.label}</span>
                           {m.tooltip && (
                             <div className="relative group/tt cursor-help">
                               <Info size={9} className="text-zinc-700" />
-                              <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">{m.tooltip}</div>
+                              <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">{m.tooltip}</div>
                             </div>
                           )}
                         </div>
@@ -127,19 +127,19 @@ export default function AnalysisPanel({
                 )}
                 {result.spectral_features && (
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="p-3 rounded-xl bg-[#09090b] border border-white/[0.05]">
+                    <div className="p-3 rounded-md bg-[#09090b] border border-white/[0.05]">
                       <div className="flex items-center gap-1 mb-1">
                         <span className="text-[10px] text-zinc-600">Spectral Centroid</span>
-                        <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">{t_vp("spectralCentroidTooltip")}</div></div>
+                        <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">{t_vp("spectralCentroidTooltip")}</div></div>
                       </div>
                       <p className={`text-[14px] font-bold tabular-nums ${(result.spectral_features.spectral_centroid_hz ?? 0) < 1500 ? "text-amber-400" : "text-emerald-400"}`}>
                         {Math.round(result.spectral_features.spectral_centroid_hz ?? 0)}<span className="text-[10px] text-zinc-600"> Hz</span>
                       </p>
                     </div>
-                    <div className="p-3 rounded-xl bg-[#09090b] border border-white/[0.05]">
+                    <div className="p-3 rounded-md bg-[#09090b] border border-white/[0.05]">
                       <div className="flex items-center gap-1 mb-1">
                         <span className="text-[10px] text-zinc-600">MFCC Stability</span>
-                        <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">{t_vp("mfccStabilityTooltip")}</div></div>
+                        <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">{t_vp("mfccStabilityTooltip")}</div></div>
                       </div>
                       <p className={`text-[14px] font-bold tabular-nums ${(result.spectral_features.mfcc_stability_score ?? 0) >= 50 ? "text-emerald-400" : "text-amber-400"}`}>
                         {(result.spectral_features.mfcc_stability_score ?? 0).toFixed(1)}<span className="text-[10px] text-zinc-600">/100</span>
@@ -148,10 +148,10 @@ export default function AnalysisPanel({
                   </div>
                 )}
                 {result.pitch_contour && (
-                  <div className="flex items-center gap-3 p-3 rounded-xl bg-[#09090b] border border-white/[0.05]">
+                  <div className="flex items-center gap-3 p-3 rounded-md bg-[#09090b] border border-white/[0.05]">
                     <div className="flex items-center gap-1 w-24 shrink-0">
                       <span className="text-[11px] text-zinc-500">Pitch Contour</span>
-                      <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-0 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">{t_vp("pitchContourTooltip")}</div></div>
+                      <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-0 mb-2 w-52 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">{t_vp("pitchContourTooltip")}</div></div>
                     </div>
                     <span className={`text-[12px] font-semibold px-2 py-0.5 rounded-md ${result.pitch_contour.pitch_contour === "rising" ? "bg-cyan-500/10 text-cyan-400" : result.pitch_contour.pitch_contour === "falling" ? "bg-purple-500/10 text-purple-400" : "bg-amber-500/10 text-amber-400"}`}>
                       {result.pitch_contour.pitch_contour === "rising" ? "↗ Rising" : result.pitch_contour.pitch_contour === "falling" ? "↘ Falling" : "→ Flat"}
@@ -160,11 +160,11 @@ export default function AnalysisPanel({
                   </div>
                 )}
                 {result.filler_words && result.filler_words.filler_count > 0 && (
-                  <div className="p-3 rounded-xl bg-amber-500/[0.04] border border-amber-500/10">
+                  <div className="p-3 rounded-md bg-amber-500/[0.04] border border-amber-500/10">
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-1">
                         <span className="text-[11px] text-zinc-500">Filler Words</span>
-                        <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-0 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">{t_vp("fillerWordsTooltip")}</div></div>
+                        <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-0 mb-2 w-52 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">{t_vp("fillerWordsTooltip")}</div></div>
                       </div>
                       <span className="text-[12px] font-semibold text-amber-400">{result.filler_words.filler_count} detected</span>
                     </div>
@@ -183,10 +183,10 @@ export default function AnalysisPanel({
                       { label: "WER", value: result.wer_rate, unit: "%", desc: t_vp("werTooltip"), color: (v) => v < 15 ? "text-emerald-400" : v < 30 ? "text-amber-400" : "text-red-400" },
                       { label: "CER", value: result.cer_rate, unit: "%", desc: t_vp("cerTooltip"), color: (v) => v < 10 ? "text-emerald-400" : v < 20 ? "text-amber-400" : "text-red-400" },
                     ].map((m) => (
-                      <div key={m.label} className="p-3 rounded-xl bg-[#09090b] border border-white/[0.05]">
+                      <div key={m.label} className="p-3 rounded-md bg-[#09090b] border border-white/[0.05]">
                         <div className="flex items-center gap-1 mb-1">
                           <span className="text-[10px] text-zinc-600">{m.label}</span>
-                          <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-xl bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">{m.desc}</div></div>
+                          <div className="relative group/tt cursor-help"><Info size={9} className="text-zinc-700" /><div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">{m.desc}</div></div>
                         </div>
                         <p className={`text-[15px] font-bold tabular-nums ${m.color(m.value)}`}>
                           {(m.value ?? 0).toFixed(1)}<span className="text-[10px] text-zinc-600">{m.unit}</span>
@@ -200,7 +200,7 @@ export default function AnalysisPanel({
           )}
 
           {/* AI Analysis */}
-          <div className={`rounded-2xl border transition-all ${result ? "border-[#f5a623]/20 bg-[#111113]" : analyzing ? "border-[#f5a623]/15 bg-[#111113]" : "border-[#f5a623]/10 bg-[#f5a623]/[0.02]"}`}>
+          <div className={`rounded-md border transition-all ${result ? "border-[#f5a623]/20 bg-[#111113]" : analyzing ? "border-[#f5a623]/15 bg-[#111113]" : "border-[#f5a623]/10 bg-[#f5a623]/[0.02]"}`}>
             <div className={`flex items-center gap-2 px-5 py-4 border-b ${result ? "border-[#f5a623]/10" : "border-[#f5a623]/[0.07]"}`}>
               <Sparkles size={14} className="text-[#f5a623]" />
               <h3 className="text-[13px] font-semibold text-white">{t_vp("aiAnalysis")}</h3>
@@ -209,8 +209,8 @@ export default function AnalysisPanel({
             {result ? (
               <div className="p-5 space-y-4">
                 {markdownReport && (
-                  <div className="relative rounded-xl bg-[#09090b] border border-white/[0.05] overflow-hidden">
-                    <div className="absolute top-0 left-0 w-[3px] h-full bg-gradient-to-b from-[#f5a623]/60 to-[#f5a623]/10" />
+                  <div className="relative rounded-md bg-[#09090b] border border-white/[0.05] overflow-hidden">
+                    <div className="absolute top-0 left-0 w-[3px] h-full bg-[#f5a623]/40" />
                     <div className="pl-5 pr-4 py-4 prose prose-invert prose-sm max-w-none prose-headings:text-[13px] prose-headings:font-semibold prose-headings:text-[#f5a623] prose-headings:mb-1 prose-headings:mt-3 prose-p:text-[13px] prose-p:text-zinc-300 prose-p:leading-relaxed prose-p:my-1 prose-strong:text-white prose-strong:font-semibold prose-li:text-[13px] prose-li:text-zinc-300 prose-ul:my-1 prose-ol:my-1">
                       <TypewriterMarkdown content={markdownReport} />
                     </div>
@@ -234,7 +234,7 @@ export default function AnalysisPanel({
                     <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider mb-2">{t_vp("coachingTips")}</p>
                     <div className="space-y-2">
                       {expertTips.map((tip, i) => (
-                        <div key={i} className="flex gap-3 p-3 rounded-xl bg-[#f5a623]/[0.04] border border-[#f5a623]/10">
+                        <div key={i} className="flex gap-3 p-3 rounded-md bg-[#f5a623]/[0.04] border border-[#f5a623]/10">
                           <span className="text-[#f5a623] text-[16px] shrink-0 leading-none mt-0.5">✦</span>
                           <div>
                             {tip.label && <p className="text-[11px] font-semibold text-[#f5a623] mb-0.5">{tip.label}</p>}
@@ -258,7 +258,7 @@ export default function AnalysisPanel({
                 </AnimatePresence>
                 <div className="w-full max-w-[240px] mb-3">
                   <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
-                    <motion.div className="h-full rounded-full bg-gradient-to-r from-[#f5a623] to-[#f5a623]/70" animate={{ width: `${analyzeProgress}%` }} transition={{ duration: 0.3, ease: "easeOut" }} />
+                    <motion.div className="h-full rounded-full bg-[#f5a623]" animate={{ width: `${analyzeProgress}%` }} transition={{ duration: 0.3, ease: "easeOut" }} />
                   </div>
                   <div className="flex justify-between mt-1.5">
                     <span className="text-[10px] text-zinc-600">{t_vp("aiProcessing")}</span>
@@ -290,7 +290,7 @@ export default function AnalysisPanel({
           </div>
 
           {/* Performance summary */}
-          <div className="rounded-2xl border border-white/[0.07] bg-[#111113] p-5">
+          <div className="rounded-md border border-white/[0.07] bg-[#111113] p-5">
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-2">
                 <Award size={16} className="text-[#f5a623]" />
@@ -302,7 +302,7 @@ export default function AnalysisPanel({
             </div>
             {result ? (
               <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-[#09090b] border border-white/[0.06]">
+                <div className="p-4 rounded-md bg-[#09090b] border border-white/[0.06]">
                   <div className="flex items-end justify-between mb-3">
                     <div>
                       <p className="text-[11px] text-zinc-600 mb-1">{t("overallScore")}</p>
@@ -316,18 +316,18 @@ export default function AnalysisPanel({
                         })()}
                       </div>
                     </div>
-                    <span className={`text-[12px] font-semibold px-2.5 py-1 rounded-lg bg-white/[0.06] ${overallLevel.color}`}>{overallLevel.label}</span>
+                    <span className={`text-[12px] font-semibold px-2.5 py-1 rounded-md bg-white/[0.06] ${overallLevel.color}`}>{overallLevel.label}</span>
                   </div>
                   <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden">
                     <div className="h-full bg-[#f5a623] rounded-full transition-all duration-700" style={{ width: `${overallScore}%` }} />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="p-4 rounded-xl bg-[#09090b] border border-white/[0.06]">
+                  <div className="p-4 rounded-md bg-[#09090b] border border-white/[0.06]">
                     <div className="flex items-center gap-1.5 mb-2"><BarChart3 size={13} className="text-cyan-400" /><p className="text-[10px] text-zinc-600 uppercase tracking-wider">{t("coverage")}</p></div>
                     <p className="text-2xl font-bold text-white">{completionPercent.toFixed(0)}<span className="text-sm text-zinc-500">%</span></p>
                   </div>
-                  <div className="p-4 rounded-xl bg-[#09090b] border border-white/[0.06]">
+                  <div className="p-4 rounded-md bg-[#09090b] border border-white/[0.06]">
                     <div className="flex items-center gap-1.5 mb-2"><Clock size={13} className="text-purple-400" /><p className="text-[10px] text-zinc-600 uppercase tracking-wider">Pace</p></div>
                     <p className="text-2xl font-bold text-white">{pace.toFixed(0)}<span className="text-sm text-zinc-500"> wpm</span></p>
                   </div>

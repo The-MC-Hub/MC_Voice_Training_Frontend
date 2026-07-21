@@ -26,11 +26,11 @@ const ConversationHeader = ({ activeChat, otherUser, online }) => {
   return (
     <div className="chat-view-header p-6 px-10 flex justify-between items-center border-b border-white/5 bg-slate-900/20">
       <div className="header-user-info flex items-center gap-6">
-        <button className="md:hidden icon-btn h-10 w-10 glass-effect rounded-lg mr-2">
+        <button className="md:hidden icon-btn h-10 w-10 glass-effect rounded-md mr-2">
           <ChevronLeft size={20} />
         </button>
         <div className="avatar-preview-sm relative">
-          <div className="w-12 h-12 rounded-xl bg-gold text-slate-950 flex items-center justify-center font-black shadow-xl shadow-gold/20 active:scale-95 transition-transform">
+          <div className="w-12 h-12 rounded-md bg-gold text-slate-950 flex items-center justify-center font-black shadow-xl shadow-gold/20 active:scale-95 transition-transform">
             {otherUser?.name?.[0] || "?"}
           </div>
         </div>
@@ -65,13 +65,13 @@ const ConversationHeader = ({ activeChat, otherUser, online }) => {
         </div>
       </div>
       <div className="header-actions-chat flex gap-4">
-        <button className="icon-btn h-12 w-12 glass-effect rounded-xl border border-white/10 text-muted hover:text-gold hover:border-gold/30 transition-all active:scale-95">
+        <button className="icon-btn h-12 w-12 glass-effect rounded-md border border-white/10 text-muted hover:text-gold hover:border-gold/30 transition-all active:scale-95">
           <Phone size={22} />
         </button>
-        <button className="icon-btn h-12 w-12 glass-effect rounded-xl border border-white/10 text-muted hover:text-gold hover:border-gold/30 transition-all active:scale-95">
+        <button className="icon-btn h-12 w-12 glass-effect rounded-md border border-white/10 text-muted hover:text-gold hover:border-gold/30 transition-all active:scale-95">
           <Video size={22} />
         </button>
-        <button className="icon-btn h-12 w-12 glass-effect rounded-xl border border-white/10 text-muted hover:text-gold hover:border-gold/30 transition-all active:scale-95">
+        <button className="icon-btn h-12 w-12 glass-effect rounded-md border border-white/10 text-muted hover:text-gold hover:border-gold/30 transition-all active:scale-95">
           <MoreVertical size={22} />
         </button>
       </div>

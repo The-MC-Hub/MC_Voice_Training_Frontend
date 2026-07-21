@@ -104,7 +104,7 @@ const Community = () => {
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-[#f5a623]/[0.08] border border-[#f5a623]/20 rounded-xl flex items-center justify-center text-[#f5a623]">
+              <div className="w-9 h-9 bg-[#f5a623]/[0.08] border border-[#f5a623]/20 rounded-md flex items-center justify-center text-[#f5a623]">
                 <Trophy size={18} />
               </div>
               <div>
@@ -117,7 +117,7 @@ const Community = () => {
               <div className="flex items-center gap-2">
                 <Button
                   onClick={() => { setDirection(-1); setCurrentSlideIndex((prev) => (prev - 1 + allSlides.length) % allSlides.length); }}
-                  className="w-8 h-8 rounded-lg bg-[#111113] border border-white/[0.07] flex items-center justify-center text-zinc-500 hover:text-white hover:border-white/[0.14] transition-colors"
+                  className="w-8 h-8 rounded-md bg-[#111113] border border-white/[0.07] flex items-center justify-center text-zinc-500 hover:text-white hover:border-white/[0.14] transition-colors"
                 >
                   <ChevronLeft size={16} />
                 </Button>
@@ -131,7 +131,7 @@ const Community = () => {
                 </div>
                 <Button
                   onClick={() => { setDirection(1); setCurrentSlideIndex((prev) => (prev + 1) % allSlides.length); }}
-                  className="w-8 h-8 rounded-lg bg-[#111113] border border-white/[0.07] flex items-center justify-center text-zinc-500 hover:text-white hover:border-white/[0.14] transition-colors"
+                  className="w-8 h-8 rounded-md bg-[#111113] border border-white/[0.07] flex items-center justify-center text-zinc-500 hover:text-white hover:border-white/[0.14] transition-colors"
                 >
                   <ChevronRight size={16} />
                 </Button>
@@ -145,14 +145,14 @@ const Community = () => {
                 {slide && (
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                     {/* Arena card */}
-                    <div className="lg:col-span-2 bg-[#111113] border border-white/[0.07] rounded-2xl p-6 flex flex-col justify-between hover:border-[#f5a623]/20 transition-colors">
+                    <div className="lg:col-span-2 bg-[#111113] border border-white/[0.07] rounded-md p-6 flex flex-col justify-between hover:border-[#f5a623]/20 transition-colors">
                       <div className="space-y-5">
                         <div className="flex justify-between items-center">
-                          <span className="px-3 py-1 rounded-lg bg-[#f5a623]/[0.08] border border-[#f5a623]/20 text-[11px] text-[#f5a623] flex items-center gap-1.5">
+                          <span className="px-3 py-1 rounded-md bg-[#f5a623]/[0.08] border border-[#f5a623]/20 text-[11px] text-[#f5a623] flex items-center gap-1.5">
                             <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
                             {slide.competition.type} {t('community.challengeSuffix')}
                           </span>
-                          <span className="text-[11px] text-zinc-600 flex items-center gap-1.5 bg-[#09090b] px-3 py-1 rounded-lg border border-white/[0.06]">
+                          <span className="text-[11px] text-zinc-600 flex items-center gap-1.5 bg-[#09090b] px-3 py-1 rounded-md border border-white/[0.06]">
                             <Clock size={11} className="text-[#f5a623]" />
                             {t('community.deadline')}{new Date(slide.competition.endDate).toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'vi-VN')}
                           </span>
@@ -163,7 +163,7 @@ const Community = () => {
                           <p className="text-zinc-500 text-[13px] leading-relaxed">{slide.competition.description}</p>
                         </div>
 
-                        <div className="bg-[#09090b] border border-white/[0.06] rounded-xl p-4 relative">
+                        <div className="bg-[#09090b] border border-white/[0.06] rounded-md p-4 relative">
                           <div className="flex items-center gap-1.5 mb-2">
                             <BookOpen size={11} className="text-[#f5a623]" />
                             <span className="text-[10px] text-zinc-600 uppercase tracking-wider">{t('community.challengeScript')}</span>
@@ -183,7 +183,7 @@ const Community = () => {
 
                       <div className="border-t border-white/[0.06] pt-5 mt-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         {slide.userRecord ? (
-                          <div className="flex items-center gap-3 bg-emerald-500/[0.06] px-4 py-3 rounded-xl border border-emerald-500/20">
+                          <div className="flex items-center gap-3 bg-emerald-500/[0.06] px-4 py-3 rounded-md border border-emerald-500/20">
                             <div className="w-2 h-2 rounded-full bg-emerald-500" />
                             <div>
                               <span className="text-[10px] text-emerald-400 uppercase tracking-wider block">{t('community.yourPerformance')}</span>
@@ -193,7 +193,7 @@ const Community = () => {
                             </div>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-2 text-zinc-600 text-[12px] bg-[#09090b] px-3 py-2.5 rounded-xl border border-white/[0.06]">
+                          <div className="flex items-center gap-2 text-zinc-600 text-[12px] bg-[#09090b] px-3 py-2.5 rounded-md border border-white/[0.06]">
                             <Zap size={13} className="text-[#f5a623]" />
                             {t('community.noAttemptText')}
                           </div>
@@ -206,7 +206,7 @@ const Community = () => {
                               navigate(`/m/voice/practice/${slide.competition.challengeScriptId}`);
                             }
                           }}
-                          className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] text-black text-[13px] font-semibold rounded-xl hover:bg-[#e09520] transition-colors h-auto"
+                          className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] text-black text-[13px] font-semibold rounded-md hover:bg-[#e09520] transition-colors h-auto"
                         >
                           {t('community.competeNow')} <Play size={12} fill="currentColor" />
                         </Button>
@@ -214,7 +214,7 @@ const Community = () => {
                     </div>
 
                     {/* Leaderboard */}
-                    <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 flex flex-col">
+                    <div className="bg-[#111113] border border-white/[0.07] rounded-md p-6 flex flex-col">
                       <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/[0.06]">
                         <span className="text-[12px] font-medium text-white flex items-center gap-2">
                           <TrendingUp size={14} className="text-[#f5a623]" /> {t('community.arenaLeaderboard')}
@@ -227,9 +227,9 @@ const Community = () => {
                       <div className="space-y-2 flex-1 overflow-y-auto max-h-[280px]">
                         {slide.leaderboard.length > 0 ? slide.leaderboard.map((record, index) => (
                           <div key={record.userId}
-                            className="flex items-center justify-between p-3 rounded-xl bg-[#09090b] border border-white/[0.04] hover:border-[#f5a623]/20 transition-colors">
+                            className="flex items-center justify-between p-3 rounded-md bg-[#09090b] border border-white/[0.04] hover:border-[#f5a623]/20 transition-colors">
                             <div className="flex items-center gap-3">
-                              <div className="w-7 h-7 rounded-lg bg-[#111113] border border-white/[0.06] flex items-center justify-center shrink-0">
+                              <div className="w-7 h-7 rounded-md bg-[#111113] border border-white/[0.06] flex items-center justify-center shrink-0">
                                 {getRankMedal(index + 1)}
                               </div>
                               <div className="relative">
@@ -273,7 +273,7 @@ const Community = () => {
       ) : (
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-[#111113] border border-white/[0.07] rounded-xl flex items-center justify-center text-zinc-600">
+            <div className="w-9 h-9 bg-[#111113] border border-white/[0.07] rounded-md flex items-center justify-center text-zinc-600">
               <Trophy size={18} />
             </div>
             <div>
@@ -281,8 +281,8 @@ const Community = () => {
               <p className="text-[12px] text-zinc-600">{t('community.arenaDescription')}</p>
             </div>
           </div>
-          <Card className="bg-[#111113] border border-white/[0.07] rounded-2xl p-12 flex flex-col items-center text-center gap-4 shadow-none">
-            <div className="w-12 h-12 bg-[#09090b] border border-white/[0.07] rounded-xl flex items-center justify-center text-zinc-700">
+          <Card className="bg-[#111113] border border-white/[0.07] rounded-md p-12 flex flex-col items-center text-center gap-4 shadow-none">
+            <div className="w-12 h-12 bg-[#09090b] border border-white/[0.07] rounded-md flex items-center justify-center text-zinc-700">
               <Gamepad2 size={24} />
             </div>
             <div>
@@ -290,7 +290,7 @@ const Community = () => {
               <p className="text-[13px] text-zinc-600 max-w-sm">{t('community.noActiveArenaDesc') || "Không có giải đấu nào đang diễn ra. Tiếp tục luyện tập!"}</p>
             </div>
             <Button onClick={() => navigate("/m/voice/library")}
-              className="flex items-center gap-2 px-5 py-2 bg-[#111113] border border-white/[0.07] hover:border-[#f5a623]/30 text-zinc-400 hover:text-white text-[13px] rounded-xl transition-colors h-auto">
+              className="flex items-center gap-2 px-5 py-2 bg-[#111113] border border-white/[0.07] hover:border-[#f5a623]/30 text-zinc-400 hover:text-white text-[13px] rounded-md transition-colors h-auto">
               {t('community.goToPractice') || "Luyện Tập Ngay"} <Play size={11} fill="currentColor" />
             </Button>
           </Card>
@@ -301,7 +301,7 @@ const Community = () => {
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 pb-5 border-b border-white/[0.07]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-blue-500/[0.08] border border-blue-500/20 rounded-xl flex items-center justify-center text-blue-400">
+            <div className="w-9 h-9 bg-blue-500/[0.08] border border-blue-500/20 rounded-md flex items-center justify-center text-blue-400">
               <Award size={18} />
             </div>
             <div>
@@ -310,14 +310,14 @@ const Community = () => {
             </div>
           </div>
 
-          <div className="flex bg-[#09090b] p-1 rounded-xl border border-white/[0.06]">
+          <div className="flex bg-[#09090b] p-1 rounded-md border border-white/[0.06]">
             {[
               { id: "precision", label: t('community.precision'), icon: Target },
               { id: "diligent", label: t('community.diligent'), icon: Clock },
               { id: "streak", label: t('community.streak'), icon: Flame },
             ].map((tab) => (
               <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-[12px] font-medium transition-colors ${
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-md text-[12px] font-medium transition-colors ${
                   activeTab === tab.id
                     ? "bg-[#f5a623] text-black"
                     : "text-zinc-500 hover:text-white"
@@ -329,7 +329,7 @@ const Community = () => {
           </div>
         </div>
 
-        <Card className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 gap-0 shadow-none">
+        <Card className="bg-[#111113] border border-white/[0.07] rounded-md p-6 gap-0 shadow-none">
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
             {/* Top 3 Podiums */}
             <div className="xl:col-span-1 flex flex-col justify-center items-center py-4 gap-4">
@@ -351,7 +351,7 @@ const Community = () => {
                         {activeTab === "streak" && `${leaderboards[activeTab][1].currentStreak}d 🔥`}
                       </span>
                     </div>
-                    <div className="w-16 h-12 bg-[#09090b] border border-white/[0.06] rounded-t-lg mt-3 flex items-center justify-center">
+                    <div className="w-16 h-12 bg-[#09090b] border border-white/[0.06] rounded-t-md mt-3 flex items-center justify-center">
                       <span className="font-mono text-[13px] font-semibold text-zinc-500">2nd</span>
                     </div>
                   </div>
@@ -373,7 +373,7 @@ const Community = () => {
                         {activeTab === "streak" && `${leaderboards[activeTab][0].currentStreak}d 🔥`}
                       </span>
                     </div>
-                    <div className="w-20 h-16 bg-[#f5a623]/[0.08] border border-[#f5a623]/20 rounded-t-xl mt-3 flex items-center justify-center">
+                    <div className="w-20 h-16 bg-[#f5a623]/[0.08] border border-[#f5a623]/20 rounded-t-md mt-3 flex items-center justify-center">
                       <span className="font-mono text-[15px] font-bold text-[#f5a623]">1st</span>
                     </div>
                   </div>
@@ -394,7 +394,7 @@ const Community = () => {
                         {activeTab === "streak" && `${leaderboards[activeTab][2].currentStreak}d 🔥`}
                       </span>
                     </div>
-                    <div className="w-16 h-9 bg-[#09090b] border border-white/[0.06] rounded-t-lg mt-3 flex items-center justify-center">
+                    <div className="w-16 h-9 bg-[#09090b] border border-white/[0.06] rounded-t-md mt-3 flex items-center justify-center">
                       <span className="font-mono text-[12px] font-semibold text-amber-700">3rd</span>
                     </div>
                   </div>
@@ -422,11 +422,11 @@ const Community = () => {
                     const barColor = activeTab === "precision" ? "#f5a623" : activeTab === "diligent" ? "#3b82f6" : "#f97316";
                     return (
                       <div key={entry.userId}
-                        className="flex items-center gap-3 p-3 rounded-xl bg-[#09090b] border border-white/[0.04] hover:border-[#f5a623]/20 hover:bg-[#f5a623]/[0.02] transition-colors">
+                        className="flex items-center gap-3 p-3 rounded-md bg-[#09090b] border border-white/[0.04] hover:border-[#f5a623]/20 hover:bg-[#f5a623]/[0.02] transition-colors">
                         <span className="font-mono text-[12px] text-zinc-600 w-5 shrink-0">#{index + 1}</span>
-                        <Avatar className={`w-10 h-10 rounded-xl border shrink-0 ${index === 0 ? 'border-[#f5a623]/50' : 'border-white/[0.08]'}`}>
+                        <Avatar className={`w-10 h-10 rounded-md border shrink-0 ${index === 0 ? 'border-[#f5a623]/50' : 'border-white/[0.08]'}`}>
                           <AvatarImage src={entry.userAvatar || "/default-avatar.png"} alt={entry.userName} className="object-cover" />
-                          <AvatarFallback className="rounded-xl"><img src="/default-avatar.png" alt={entry.userName} className="w-full h-full object-cover" /></AvatarFallback>
+                          <AvatarFallback className="rounded-md"><img src="/default-avatar.png" alt={entry.userName} className="w-full h-full object-cover" /></AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1">

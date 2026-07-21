@@ -3,7 +3,7 @@ import React, { useRef, useCallback } from 'react';
 /**
  * SpotlightCard — mouse-tracking radial gradient spotlight on hover.
  * Usage:
- *   <SpotlightCard className="p-6 rounded-2xl bg-white border border-gray-100">
+ *   <SpotlightCard className="p-6 rounded-md bg-white border border-gray-100">
  *     content
  *   </SpotlightCard>
  *

@@ -75,7 +75,7 @@ const MessageList = ({
                 className={`msg-bubble-wrapper flex ${isSelf ? "justify-end" : "justify-start"} group`}
               >
                 <div
-                  className={`msg-bubble p-5 px-6 rounded-3xl max-w-[65%] space-y-2 relative transition-all duration-300 hover:scale-[1.01] ${
+                  className={`msg-bubble p-5 px-6 rounded-md max-w-[65%] space-y-2 relative transition-all duration-300 hover:scale-[1.01] ${
                     isSelf
                       ? "bg-gold text-slate-950 shadow-2xl shadow-gold/10"
                       : "bg-slate-900 border border-white/5 text-slate-200"
@@ -108,7 +108,7 @@ const MessageList = ({
 
           {typingUser && typingUser.conversationId === activeChat._id && (
             <div className="flex justify-start">
-              <div className="bg-slate-900 border border-white/5 rounded-3xl p-4 px-6">
+              <div className="bg-slate-900 border border-white/5 rounded-md p-4 px-6">
                 <div className="flex items-center gap-2 text-slate-400 text-sm">
                   <span className="font-medium">
                     {typingUser.name || "Someone"}

@@ -83,13 +83,13 @@ const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
           animate={{ scale: 1, y: 0, opacity: 1 }}
           exit={{ scale: 0.95, y: 12, opacity: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-          className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-white/[0.08] bg-[#111113] text-white shadow-[0_24px_80px_rgba(0,0,0,0.6)]"
+          className="relative w-full max-w-2xl overflow-hidden rounded-md border border-white/[0.08] bg-[#111113] text-white shadow-[0_24px_80px_rgba(0,0,0,0.6)]"
         >
           {/* Gold top bar */}
           <div className="h-1 w-full bg-[#f5a623]" />
 
           <button onClick={() => { trackPremiumModalDismiss(); onClose(); }}
-            className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-lg border border-white/[0.07] text-zinc-500 hover:text-white hover:border-white/[0.14] transition-colors">
+            className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-md border border-white/[0.07] text-zinc-500 hover:text-white hover:border-white/[0.14] transition-colors">
             <X size={16} />
           </button>
 
@@ -108,7 +108,7 @@ const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
               {/* Features */}
               <div className="p-7 flex flex-col justify-between border-r border-white/[0.06]">
                 <div>
-                  <div className="inline-flex items-center gap-1.5 rounded-lg bg-[#f5a623]/[0.08] border border-[#f5a623]/20 px-3 py-1 text-[11px] font-medium text-[#f5a623] mb-4">
+                  <div className="inline-flex items-center gap-1.5 rounded-md bg-[#f5a623]/[0.08] border border-[#f5a623]/20 px-3 py-1 text-[11px] font-medium text-[#f5a623] mb-4">
                     <Sparkles size={11} fill="currentColor" /> {t('premiumModal.premiumTier')}
                   </div>
                   <h3 className="text-[20px] font-bold text-white leading-tight mb-2">
@@ -156,16 +156,16 @@ const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
                     <AlertCircle className="mx-auto text-red-400 mb-3" size={28} />
                     <p className="text-[13px] text-zinc-400">{error}</p>
                     <button onClick={fetchOrderDetails}
-                      className="mt-4 px-4 py-2 bg-[#09090b] border border-white/[0.07] rounded-xl text-[12px] text-zinc-400 hover:text-white hover:border-white/[0.14] transition-colors">
+                      className="mt-4 px-4 py-2 bg-[#09090b] border border-white/[0.07] rounded-md text-[12px] text-zinc-400 hover:text-white hover:border-white/[0.14] transition-colors">
                       {t('premiumModal.tryAgain')}
                     </button>
                   </div>
                 ) : orderData ? (
                   <div className="w-full flex flex-col items-center">
-                    <div className="p-2 rounded-2xl bg-white shadow-lg mb-4">
-                      <img src={orderData.qrUrl} alt="Payment VietQR" className="w-44 h-44 object-contain rounded-xl" />
+                    <div className="p-2 rounded-md bg-white shadow-lg mb-4">
+                      <img src={orderData.qrUrl} alt="Payment VietQR" className="w-44 h-44 object-contain rounded-md" />
                     </div>
-                    <div className="w-full space-y-2 rounded-xl bg-[#09090b] border border-white/[0.06] p-4 text-left mb-5">
+                    <div className="w-full space-y-2 rounded-md bg-[#09090b] border border-white/[0.06] p-4 text-left mb-5">
                       {[
                         { label: t('premiumModal.accountOwner'), val: orderData.accountName },
                         { label: t('premiumModal.bank'), val: "MBBank" },
@@ -178,14 +178,14 @@ const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
                       ))}
                       <div className="pt-2 border-t border-white/[0.06]">
                         <p className="text-[11px] text-[#f5a623] uppercase tracking-wider mb-1">{t('premiumModal.transferMemo')}</p>
-                        <div className="flex items-center justify-between rounded-lg bg-[#f5a623]/[0.06] border border-[#f5a623]/20 px-3 py-1.5">
+                        <div className="flex items-center justify-between rounded-md bg-[#f5a623]/[0.06] border border-[#f5a623]/20 px-3 py-1.5">
                           <code className="text-[12px] font-medium text-[#f5a623] select-all">{orderData.memo}</code>
                           <span className="text-[10px] text-zinc-600">{t('premiumModal.doubleClickCopy')}</span>
                         </div>
                       </div>
                     </div>
                     <button onClick={() => { trackPremiumModalUpgradeClick('premium'); handleSimulateSuccess(); }} disabled={simulating}
-                      className="w-full py-2.5 bg-emerald-500 text-white font-medium rounded-xl text-[13px] hover:bg-emerald-600 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-60">
+                      className="w-full py-2.5 bg-emerald-500 text-white font-medium rounded-md text-[13px] hover:bg-emerald-600 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-60">
                       {simulating ? (
                         <><div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" /> {t('premiumModal.upgrading')}</>
                       ) : (

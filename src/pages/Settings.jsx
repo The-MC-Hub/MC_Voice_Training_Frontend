@@ -54,7 +54,7 @@ import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Card } from "@/components/ui/card";
 
 const inputCls = "flex-1 bg-transparent text-[13px] text-gray-800 placeholder:text-gray-400 focus:outline-none min-w-0";
-const inputWrapCls = "flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5 focus-within:border-amber-400 transition-colors";
+const inputWrapCls = "flex items-center gap-2 bg-white border border-gray-200 rounded-md px-3 py-2.5 focus-within:border-amber-400 transition-colors";
 const labelCls = "text-[10px] font-medium text-gray-500 uppercase tracking-wider";
 
 const EMOJI_CATEGORIES = [
@@ -109,7 +109,7 @@ const EmojiAvatarPicker = ({ selected, onSelect, compact = false }) => {
         value={search}
         onChange={e => setSearch(e.target.value)}
         placeholder={t('settings.searchEmoji')}
-        className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-[12px] text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-amber-400 transition-colors"
+        className="w-full bg-white border border-gray-200 rounded-md px-3 py-2.5 text-[12px] text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-amber-400 transition-colors"
       />
 
       {/* Category tabs */}
@@ -120,7 +120,7 @@ const EmojiAvatarPicker = ({ selected, onSelect, compact = false }) => {
               key={cat.label}
               type="button"
               onClick={() => setActiveCategory(idx)}
-              className={`h-auto px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors ${
+              className={`h-auto px-3 py-1.5 rounded-md text-[11px] font-medium transition-colors ${
                 activeCategory === idx
                   ? 'bg-[#f5a623]/10 text-[#f5a623] border border-[#f5a623]/25'
                   : 'text-gray-500 hover:text-gray-700 border border-gray-200 bg-white'
@@ -133,7 +133,7 @@ const EmojiAvatarPicker = ({ selected, onSelect, compact = false }) => {
       )}
 
       {/* Emoji grid */}
-      <div className={`${compact ? 'h-40' : 'h-52'} overflow-y-auto rounded-xl bg-gray-50 border border-gray-200 p-2.5`}>
+      <div className={`${compact ? 'h-40' : 'h-52'} overflow-y-auto rounded-md bg-gray-50 border border-gray-200 p-2.5`}>
         <div className="grid grid-cols-[repeat(auto-fill,minmax(36px,1fr))] gap-1">
           {displayEmojis.map((emoji, i) => {
             const isSelected = selected === emoji;
@@ -143,7 +143,7 @@ const EmojiAvatarPicker = ({ selected, onSelect, compact = false }) => {
                 type="button"
                 onClick={() => onSelect(emoji)}
                 title={emoji}
-                className={`aspect-square rounded-lg flex items-center justify-center text-xl leading-none transition-all duration-150 ${
+                className={`aspect-square rounded-md flex items-center justify-center text-xl leading-none transition-all duration-150 ${
                   isSelected
                     ? 'bg-[#f5a623]/15 ring-1 ring-[#f5a623] scale-110'
                     : 'hover:bg-gray-100 hover:scale-105'
@@ -195,7 +195,7 @@ const ReferralCard = ({ user, updateUser }) => {
         <Gift size={16} className="text-[#f5a623]" />
         <h2 className="text-[15px] font-semibold text-gray-900">{t('settings.referralCode')}</h2>
       </div>
-      <Card className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 space-y-4 gap-0">
+      <Card className="bg-white border border-gray-200 rounded-md shadow-sm p-6 space-y-4 gap-0">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[12px] text-gray-500 mb-1">{t('settings.referralCountLabel')}</p>
@@ -204,19 +204,19 @@ const ReferralCard = ({ user, updateUser }) => {
           {referralCode && (
             <div className="text-right">
               <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">{t('settings.yourCode')}</p>
-              <span className="font-mono text-[20px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-xl">{referralCode}</span>
+              <span className="font-mono text-[20px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-md">{referralCode}</span>
             </div>
           )}
         </div>
 
         {referralCode ? (
           <div className="space-y-3">
-            <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5">
+            <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-md px-3 py-2.5">
               <span className="flex-1 text-[12px] text-gray-600 font-mono truncate">{referralLink}</span>
               <Button
                 type="button"
                 onClick={handleCopy}
-                className={`h-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all shrink-0 ${copied ? "bg-emerald-500 text-white" : "bg-amber-500 hover:bg-amber-600 text-white"}`}
+                className={`h-auto flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] font-semibold transition-all shrink-0 ${copied ? "bg-emerald-500 text-white" : "bg-amber-500 hover:bg-amber-600 text-white"}`}
               >
                 {copied ? <><CheckCircle2 size={12} /> {t('settings.referralCopied')}</> : <><Copy size={12} /> {t('settings.referralCopyLink')}</>}
               </Button>
@@ -230,7 +230,7 @@ const ReferralCard = ({ user, updateUser }) => {
               type="button"
               onClick={handleGenerate}
               disabled={generating}
-              className="h-auto flex items-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-[13px] font-semibold transition-colors disabled:opacity-50"
+              className="h-auto flex items-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-md text-[13px] font-semibold transition-colors disabled:opacity-50"
             >
               {generating ? <Loader2 size={14} className="animate-spin" /> : <Gift size={14} />}
               {generating ? t('settings.referralGenerating') : t('settings.referralGenerateBtn')}
@@ -513,13 +513,13 @@ const Settings = () => {
       </div>
 
       {success && (
-        <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 text-emerald-700 p-4 rounded-xl">
+        <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 text-emerald-700 p-4 rounded-md">
           <CheckCircle2 size={16} />
           <span className="text-[13px] font-medium">{success}</span>
         </div>
       )}
       {error && (
-        <div className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl">
+        <div className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-700 p-4 rounded-md">
           <AlertCircle size={16} />
           <span className="text-[13px] font-medium">{error}</span>
         </div>
@@ -533,7 +533,7 @@ const Settings = () => {
               key={item.id}
               hoverScale={1}
               onClick={() => sectionRefs[item.id]?.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
-              className={`h-auto mt-4 w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left justify-start ${
+              className={`h-auto mt-4 w-full flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors text-left justify-start ${
                 activeSection === item.id
                   ? 'bg-amber-50 text-amber-700 border border-amber-200'
                   : 'text-gray-500 hover:text-gray-800 hover:bg-gray-100 border border-transparent'
@@ -555,7 +555,7 @@ const Settings = () => {
                 <h2 className="text-[15px] font-semibold text-gray-900">{t('settings.personalInfo')}</h2>
               </div>
 
-              <Card className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden gap-0 p-0">
+              <Card className="bg-white border border-gray-200 rounded-md shadow-sm overflow-hidden gap-0 p-0">
                 {/* Avatar + Fields */}
                 <div className="p-6 space-y-5">
                   {/* Avatar row */}
@@ -563,7 +563,7 @@ const Settings = () => {
                     {/* Current avatar display */}
                     <div className="shrink-0">
                       <p className={labelCls + " mb-2"}>{t('settings.avatarLabel')}</p>
-                      <div className="w-16 h-16 rounded-2xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center text-[36px] leading-none select-none">
+                      <div className="w-16 h-16 rounded-md bg-amber-50 border-2 border-amber-200 flex items-center justify-center text-[36px] leading-none select-none">
                         {(() => { const a = profileData.avatar || user?.avatar || "🎤"; return (a.includes('.') || a.startsWith('http')) ? "🎤" : a; })()}
                       </div>
                     </div>
@@ -608,7 +608,7 @@ const Settings = () => {
                 {isMC && (
                   <>
                     {/* Professional Profile */}
-                    <Card className={`bg-white border border-gray-200 rounded-2xl shadow-sm ${expandedSections.professional ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300 gap-0 p-0`}>
+                    <Card className={`bg-white border border-gray-200 rounded-md shadow-sm ${expandedSections.professional ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300 gap-0 p-0`}>
                       <button
                         type="button"
                         onClick={() => toggleSection('professional')}
@@ -659,7 +659,7 @@ const Settings = () => {
                                 {showBioPreview ? 'Edit' : 'Preview'}
                               </button>
                             </div>
-                            <div className="bg-gray-50 border border-gray-200 rounded-xl p-3 flex items-start gap-2.5 focus-within:border-amber-400 transition-colors">
+                            <div className="bg-gray-50 border border-gray-200 rounded-md p-3 flex items-start gap-2.5 focus-within:border-amber-400 transition-colors">
                               <User size={15} className="text-gray-400 mt-0.5 shrink-0" />
                               {showBioPreview ? (
                                 <div className="w-full min-h-[120px] text-gray-700 prose prose-xs max-w-none overflow-y-auto">
@@ -682,7 +682,7 @@ const Settings = () => {
                                 {showPersonalityPreview ? 'Edit' : 'Preview'}
                               </button>
                             </div>
-                            <div className="bg-gray-50 border border-gray-200 rounded-xl p-3 flex items-start gap-2.5 focus-within:border-amber-400 transition-colors">
+                            <div className="bg-gray-50 border border-gray-200 rounded-md p-3 flex items-start gap-2.5 focus-within:border-amber-400 transition-colors">
                               <Zap size={15} className="text-gray-400 mt-0.5 shrink-0" />
                               {showPersonalityPreview ? (
                                 <div className="w-full min-h-[80px] text-gray-700 prose prose-xs max-w-none overflow-y-auto">
@@ -698,7 +698,7 @@ const Settings = () => {
                     </Card>
 
                     {/* Attributes */}
-                    <Card className={`bg-white border border-gray-200 rounded-2xl shadow-sm ${expandedSections.attributes ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300 gap-0 p-0`}>
+                    <Card className={`bg-white border border-gray-200 rounded-md shadow-sm ${expandedSections.attributes ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300 gap-0 p-0`}>
                       <button
                         type="button"
                         onClick={() => toggleSection('attributes')}
@@ -736,7 +736,7 @@ const Settings = () => {
                     </Card>
 
                     {/* Pricing */}
-                    <Card className={`bg-white border border-gray-200 rounded-2xl shadow-sm ${expandedSections.pricing ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300 gap-0 p-0`}>
+                    <Card className={`bg-white border border-gray-200 rounded-md shadow-sm ${expandedSections.pricing ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300 gap-0 p-0`}>
                       <button
                         type="button"
                         onClick={() => toggleSection('pricing')}
@@ -841,7 +841,7 @@ const Settings = () => {
                     </Card>
 
                     {/* Event Portfolio */}
-                    <Card className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm gap-0 p-0">
+                    <Card className="bg-white border border-gray-200 rounded-md overflow-hidden shadow-sm gap-0 p-0">
                       <button
                         type="button"
                         onClick={() => toggleSection('portfolio')}
@@ -861,7 +861,7 @@ const Settings = () => {
                             <label className={`${labelCls} block mb-3`}>{t('settings.portfolioHighlights')}</label>
                             <label className={`
                               flex flex-col items-center justify-center w-full min-h-[140px]
-                              rounded-xl border border-dashed border-gray-200 transition-colors cursor-pointer
+                              rounded-md border border-dashed border-gray-200 transition-colors cursor-pointer
                               ${portfolioLoading ? 'bg-amber-50' : 'bg-gray-50 hover:border-gray-300 hover:bg-gray-100'}
                             `}>
                               <div className="flex flex-col items-center text-center px-6 py-4">
@@ -872,7 +872,7 @@ const Settings = () => {
                                   </>
                                 ) : (
                                   <>
-                                    <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center mb-3 text-amber-600">
+                                    <div className="w-12 h-12 rounded-md bg-amber-100 flex items-center justify-center mb-3 text-amber-600">
                                       <Upload size={22} />
                                     </div>
                                     <p className="text-[13px] font-medium text-gray-800 mb-1">{t('settings.uploadEventPhotos')}</p>
@@ -894,13 +894,13 @@ const Settings = () => {
                           {mcProfileData.eventPhotos.length > 0 && (
                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                               {mcProfileData.eventPhotos.map((photo, index) => (
-                                <div key={index} className="group relative aspect-square rounded-xl overflow-hidden border border-gray-200">
+                                <div key={index} className="group relative aspect-square rounded-md overflow-hidden border border-gray-200">
                                   <img src={photo} alt={`Event ${index}`} className="w-full h-full object-cover" />
                                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <button
                                       type="button"
                                       onClick={() => removeEventPhoto(index)}
-                                      className="p-2 bg-red-500 rounded-lg text-white"
+                                      className="p-2 bg-red-500 rounded-md text-white"
                                     >
                                       <Trash2 size={15} />
                                     </button>
@@ -920,7 +920,7 @@ const Settings = () => {
                     type="submit"
                     disabled={loading}
                     data-quest="quest-save-profile"
-                    className="h-auto flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[13px] font-semibold transition-colors disabled:opacity-50"
+                    className="h-auto flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-md text-[13px] font-semibold transition-colors disabled:opacity-50"
                   >
                     <Save size={15} /> {loading ? t('settings.saving') : t('settings.saveAllChanges')}
                   </Button>
@@ -937,9 +937,9 @@ const Settings = () => {
               <Globe size={16} className="text-[#f5a623]" />
               <h2 className="text-[15px] font-semibold text-gray-900">{t('settings.general')}</h2>
             </div>
-            <Card className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-3 gap-0">
+            <Card className="bg-white border border-gray-200 rounded-md p-6 shadow-sm space-y-3 gap-0">
                 {/* Replay tour */}
-                <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 border border-gray-100">
+                <div className="flex items-center justify-between p-4 rounded-md bg-gray-50 border border-gray-100">
                   <div>
                     <p className="text-[13px] font-medium text-gray-800">{t('settings.userGuideTitle')}</p>
                     <p className="text-[11px] text-gray-500 mt-0.5">{t('settings.userGuideDesc')}</p>
@@ -950,23 +950,23 @@ const Settings = () => {
                       localStorage.removeItem("mcvt_tour_done");
                       startTour();
                     }}
-                    className="h-auto flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 text-[12px] font-semibold hover:bg-amber-100 transition-colors"
+                    className="h-auto flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-amber-50 border border-amber-200 text-amber-700 text-[12px] font-semibold hover:bg-amber-100 transition-colors"
                   >
                     <History size={13} />
                     {t('settings.reviewGuideBtn')}
                   </Button>
                 </div>
-                <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 border border-gray-100">
+                <div className="flex items-center justify-between p-4 rounded-md bg-gray-50 border border-gray-100">
                   <div>
                     <p className="text-[13px] font-medium text-gray-800">{t('settings.interfaceLanguage')}</p>
                     <p className="text-[11px] text-gray-500 mt-0.5">{t('settings.interfaceLanguageDesc')}</p>
                   </div>
                   <div className="flex flex-col items-end gap-1.5">
-                    <div className="bg-gray-100 border border-gray-200 rounded-xl p-1 flex items-center gap-1">
+                    <div className="bg-gray-100 border border-gray-200 rounded-md p-1 flex items-center gap-1">
                       <Button
                         type="button"
                         onClick={() => i18nInstance.changeLanguage('vi')}
-                        className={`h-auto px-4 py-1.5 rounded-lg text-[12px] font-medium transition-colors ${
+                        className={`h-auto px-4 py-1.5 rounded-md text-[12px] font-medium transition-colors ${
                           i18nInstance.language === 'vi'
                             ? 'bg-white text-gray-900 shadow-sm'
                             : 'text-gray-500 hover:text-gray-700'
@@ -977,7 +977,7 @@ const Settings = () => {
                       <Button
                         type="button"
                         onClick={() => i18nInstance.changeLanguage('en')}
-                        className={`h-auto px-4 py-1.5 rounded-lg text-[12px] font-medium transition-colors ${
+                        className={`h-auto px-4 py-1.5 rounded-md text-[12px] font-medium transition-colors ${
                           i18nInstance.language === 'en'
                             ? 'bg-white text-gray-900 shadow-sm'
                             : 'text-gray-500 hover:text-gray-700'
@@ -988,7 +988,7 @@ const Settings = () => {
                       <Button
                         type="button"
                         onClick={() => i18nInstance.changeLanguage('ja')}
-                        className={`h-auto px-4 py-1.5 rounded-lg text-[12px] font-medium transition-colors ${
+                        className={`h-auto px-4 py-1.5 rounded-md text-[12px] font-medium transition-colors ${
                           i18nInstance.language === 'ja'
                             ? 'bg-white text-gray-900 shadow-sm'
                             : 'text-gray-500 hover:text-gray-700'
@@ -1011,7 +1011,7 @@ const Settings = () => {
 
             <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-4">
               {/* Password form */}
-              <form onSubmit={handlePasswordChange} className="bg-white border border-gray-200 rounded-2xl p-6 space-y-4 shadow-sm">
+              <form onSubmit={handlePasswordChange} className="bg-white border border-gray-200 rounded-md p-6 space-y-4 shadow-sm">
                 <p className="text-[13px] font-medium text-gray-800">{t('settings.changePassword')}</p>
                 <div className="space-y-1.5">
                   <label className={labelCls}>{t('settings.currentPassword')}</label>
@@ -1047,14 +1047,14 @@ const Settings = () => {
                   </div>
                 </div>
                 <div className="flex justify-end pt-1 border-t border-gray-100">
-                  <Button type="submit" disabled={loading} className="h-auto flex items-center gap-2 px-5 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-xl text-[13px] font-semibold transition-colors disabled:opacity-50">
+                  <Button type="submit" disabled={loading} className="h-auto flex items-center gap-2 px-5 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black rounded-md text-[13px] font-semibold transition-colors disabled:opacity-50">
                     <Save size={14} /> {loading ? t('settings.saving') : t('settings.updatePassword')}
                   </Button>
                 </div>
               </form>
 
               {/* Session + Danger Zone */}
-              <Card className="bg-white border border-red-100 rounded-2xl overflow-hidden shadow-sm gap-0">
+              <Card className="bg-white border border-red-100 rounded-md overflow-hidden shadow-sm gap-0">
                 {/* Header */}
                 <div className="px-5 py-3 bg-red-50 border-b border-red-100 flex items-center gap-2">
                   <LogOut size={13} className="text-red-500" />
@@ -1069,7 +1069,7 @@ const Settings = () => {
                   <Button
                     type="button"
                     onClick={() => { trackLogoutClick(); logout(); navigate('/'); }}
-                    className="h-auto shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-[12px] font-semibold transition-all duration-150"
+                    className="h-auto shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-md bg-red-500 hover:bg-red-600 text-white text-[12px] font-semibold transition-all duration-150"
                   >
                     <LogOut size={13} /> {t('navbar.logout')}
                   </Button>
@@ -1085,11 +1085,11 @@ const Settings = () => {
               <CreditCard size={16} className="text-[#f5a623]" />
               <h2 className="text-[15px] font-semibold text-gray-900">{t('settings.payment')}</h2>
             </div>
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+            <div className="bg-white border border-gray-200 rounded-md p-6 shadow-sm">
 
                 {user?.isPremium ? (
-                  <div className="flex items-center gap-4 p-4 rounded-xl bg-amber-50 border border-amber-200">
-                    <div className="w-10 h-10 rounded-xl bg-amber-100 border border-amber-200 flex items-center justify-center text-amber-600 shrink-0">
+                  <div className="flex items-center gap-4 p-4 rounded-md bg-amber-50 border border-amber-200">
+                    <div className="w-10 h-10 rounded-md bg-amber-100 border border-amber-200 flex items-center justify-center text-amber-600 shrink-0">
                       <Award size={18} />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -1103,8 +1103,8 @@ const Settings = () => {
                 ) : (
                   <div className="space-y-4">
                     {/* FREE plan info */}
-                    <div className="flex items-center gap-3 p-4 rounded-xl bg-gray-50 border border-gray-200">
-                      <div className="w-9 h-9 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-500 shrink-0">
+                    <div className="flex items-center gap-3 p-4 rounded-md bg-gray-50 border border-gray-200">
+                      <div className="w-9 h-9 rounded-md bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-500 shrink-0">
                         <Zap size={16} />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -1115,7 +1115,7 @@ const Settings = () => {
                     </div>
 
                     {/* FREE benefits */}
-                    <div className="rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
+                    <div className="rounded-md border border-gray-200 divide-y divide-gray-100 overflow-hidden">
                       <div className="px-4 py-2.5 bg-gray-50">
                         <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">{t('settings.currentBenefits')}</p>
                       </div>
@@ -1147,14 +1147,14 @@ const Settings = () => {
                     </div>
 
                     {/* Upgrade CTA */}
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-xl bg-amber-50 border border-amber-200">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-md bg-amber-50 border border-amber-200">
                       <div>
                         <p className="text-[13px] font-semibold text-gray-900 mb-0.5">{t('settings.upgradeToUnlockTitle')}</p>
                         <p className="text-[11px] text-gray-500">{t('settings.upgradeToUnlockDesc')}</p>
                       </div>
                       <Button
                         onClick={() => navigate('/m/payment')}
-                        className="h-auto shrink-0 px-5 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black text-[13px] font-semibold rounded-xl transition-colors"
+                        className="h-auto shrink-0 px-5 py-2 bg-[#f5a623] hover:bg-[#e09520] text-black text-[13px] font-semibold rounded-md transition-colors"
                       >
                         {t('settings.viewPlans')}
                       </Button>

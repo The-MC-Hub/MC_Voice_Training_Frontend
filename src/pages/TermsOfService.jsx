@@ -29,7 +29,7 @@ const fadeUp = { initial: { opacity: 0, y: 20 }, whileInView: { opacity: 1, y: 0
 const SectionBlock = ({ id, icon: Icon, title, children }) => (
   <motion.div id={id} {...fadeUp} className="scroll-mt-24">
     <div className="flex items-center gap-3 mb-5">
-      <div className="w-9 h-9 rounded-xl bg-[#f5a623]/[0.08] border border-[#f5a623]/15 flex items-center justify-center shrink-0">
+      <div className="w-9 h-9 rounded-md bg-[#f5a623]/[0.08] border border-[#f5a623]/15 flex items-center justify-center shrink-0">
         <Icon size={16} className="text-[#f5a623]" />
       </div>
       <h2 className="text-[17px] font-semibold text-white">{title}</h2>
@@ -82,8 +82,8 @@ const TermsOfService = () => {
       {/* Hero */}
       <div className="relative pt-32 pb-16 px-6 text-center overflow-hidden">
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(245,166,35,0.07) 0%, transparent 70%)' }} />
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#f5a623]/20 to-transparent" />
+          style={{ background: 'rgba(245,166,35,0.035)' }} />
+        <div className="absolute top-0 left-0 right-0 h-px bg-[#f5a623]/20" />
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f5a623]/[0.08] border border-[#f5a623]/20 text-[11px] font-medium text-[#f5a623] mb-5 uppercase tracking-wider">
             <FileText size={11} /> Pháp lý
@@ -109,14 +109,14 @@ const TermsOfService = () => {
 
           {/* Sticky TOC sidebar */}
           <aside className="hidden lg:block w-64 shrink-0 sticky top-24 self-start">
-            <Card className="bg-[#111113] border border-white/[0.07] rounded-2xl p-4 overflow-hidden gap-0 shadow-none">
+            <Card className="bg-[#111113] border border-white/[0.07] rounded-md p-4 overflow-hidden gap-0 shadow-none">
               <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-wider px-2 mb-3">Mục lục</p>
               <nav className="space-y-0.5">
                 {SECTIONS.map(({ id, icon: Icon, title }) => (
                   <button
                     key={id}
                     onClick={() => scrollTo(id)}
-                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-left text-[12px] transition-all ${
+                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left text-[12px] transition-all ${
                       activeId === id
                         ? 'bg-[#f5a623]/[0.08] text-[#f5a623] font-medium'
                         : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04]'
@@ -140,7 +140,7 @@ const TermsOfService = () => {
           <div className="flex-1 min-w-0 space-y-10">
 
             {/* Summary box */}
-            <motion.div {...fadeUp} className="p-5 rounded-2xl bg-[#f5a623]/[0.05] border border-[#f5a623]/15">
+            <motion.div {...fadeUp} className="p-5 rounded-md bg-[#f5a623]/[0.05] border border-[#f5a623]/15">
               <p className="text-[13px] font-semibold text-[#f5a623] mb-2">Tóm tắt nhanh</p>
               <p className="text-[13px] text-zinc-400 leading-relaxed">
                 MC Hub là nền tảng luyện giọng MC chuyên nghiệp. Khi sử dụng dịch vụ, bạn đồng ý không sao chép nội dung, bảo mật tài khoản, và tuân thủ các điều khoản thanh toán. Dữ liệu giọng nói của bạn chỉ dùng để phân tích AI và cải thiện trải nghiệm cá nhân.
@@ -282,8 +282,8 @@ const TermsOfService = () => {
                   { label: 'Phản hồi', value: 'Trong vòng 24–48 giờ làm việc', icon: RefreshCw },
                   { label: 'Ngôn ngữ hỗ trợ', value: 'Tiếng Việt & English', icon: CheckCircle2 },
                 ].map(({ label, value, icon: Icon }) => (
-                  <Card key={label} className="flex-row items-start gap-3 p-4 bg-[#111113] border border-white/[0.07] rounded-xl shadow-none">
-                    <div className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center shrink-0">
+                  <Card key={label} className="flex-row items-start gap-3 p-4 bg-[#111113] border border-white/[0.07] rounded-md shadow-none">
+                    <div className="w-8 h-8 rounded-md bg-white/[0.04] flex items-center justify-center shrink-0">
                       <Icon size={14} className="text-zinc-500" />
                     </div>
                     <div>
@@ -296,13 +296,13 @@ const TermsOfService = () => {
             </SectionBlock>
 
             {/* Footer note */}
-            <motion.div {...fadeUp} className="flex items-center justify-between p-5 rounded-2xl bg-[#111113] border border-white/[0.07]">
+            <motion.div {...fadeUp} className="flex items-center justify-between p-5 rounded-md bg-[#111113] border border-white/[0.07]">
               <div>
                 <p className="text-[13px] font-medium text-white mb-0.5">Chính sách Bảo mật</p>
                 <p className="text-[12px] text-zinc-600">Tìm hiểu cách chúng tôi xử lý dữ liệu của bạn</p>
               </div>
               <Link to="/privacy"
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.07] hover:border-white/[0.14] text-[13px] text-zinc-300 hover:text-white transition-all">
+                className="flex items-center gap-1.5 px-4 py-2 rounded-md bg-white/[0.04] border border-white/[0.07] hover:border-white/[0.14] text-[13px] text-zinc-300 hover:text-white transition-all">
                 Xem ngay <ChevronRight size={14} />
               </Link>
             </motion.div>

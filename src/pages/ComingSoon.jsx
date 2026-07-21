@@ -30,7 +30,7 @@ const ComingSoon = ({
             { label: "Resources", value: "100+" },
             { label: "Quizzes", value: "15" }
           ].map((stat, i) => (
-            <Card key={i} className="bg-[#111113] border border-white/[0.07] rounded-xl py-4 gap-0 shadow-none">
+            <Card key={i} className="bg-[#111113] border border-white/[0.07] rounded-md py-4 gap-0 shadow-none">
               <div className="text-2xl font-bold text-white mb-0.5">{stat.value}</div>
               <div className="text-[11px] text-zinc-600 uppercase tracking-wider">{stat.label}</div>
             </Card>

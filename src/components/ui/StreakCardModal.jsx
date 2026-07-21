@@ -8,7 +8,7 @@ import { Dialog, DialogContent } from '@/components/animate-ui/components/radix/
 // ─── Card visual config — edit to restyle the exported image ─────────────────
 const CARD_WIDTH  = 560;
 const CARD_HEIGHT = 240;
-const CARD_RADIUS = 24;
+const CARD_RADIUS = 6;
 
 const CARD_BG_COLOR      = '#ffffff';
 const CARD_NAME_COLOR    = '#111827';
@@ -80,7 +80,7 @@ async function drawStreakCard(canvas, { user, streak }) {
   ctx.restore();
 
   // ── Hero icon box ─────────────────────────────────────────────────────────────
-  const BX = 26, BY = H / 2 - 38, BS = 76, BR = 16;
+  const BX = 26, BY = H / 2 - 38, BS = 76, BR = 6;
   ctx.save();
   ctx.beginPath();
   ctx.roundRect(BX, BY, BS, BS, BR);
@@ -240,7 +240,7 @@ const StreakCardModal = ({ open, onClose, user, streak }) => {
         showCloseButton={false}
         className="w-full max-w-[520px] px-4 bg-transparent border-none shadow-none"
       >
-            <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-xl">
+            <div className="bg-white border border-gray-200 rounded-md overflow-hidden shadow-xl">
               {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
                 <div>
@@ -268,7 +268,7 @@ const StreakCardModal = ({ open, onClose, user, streak }) => {
                   style={{
                     width: CARD_WIDTH / 1.5,
                     height: CARD_HEIGHT / 1.5,
-                    borderRadius: 14,
+                    borderRadius: 6,
                     display: rendering ? 'none' : 'block',
                     boxShadow: `0 4px 24px ${accent}20, 0 1px 4px rgba(0,0,0,0.08)`,
                   }}
@@ -280,7 +280,7 @@ const StreakCardModal = ({ open, onClose, user, streak }) => {
                 <button
                   onClick={handleDownload}
                   disabled={!ready}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-black text-[13px] font-bold hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 rounded-md text-black text-[13px] font-bold hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                   style={{ background: accent }}
                 >
                   <Download size={14} />

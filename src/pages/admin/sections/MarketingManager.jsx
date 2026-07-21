@@ -261,7 +261,7 @@ function generatePreviewHtml(designData, sampleName = '{{tên}}', sampleEmail = 
 <style>
 body{margin:0;padding:0;background-color:#f3f4f6;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#1f2937;}
 .wrapper{width:100%;background-color:#f3f4f6;padding:32px 0;}
-.container{max-width:560px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 10px 15px -3px rgba(0,0,0,0.07);}
+.container{max-width:560px;margin:0 auto;background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 10px 15px -3px rgba(0,0,0,0.07);}
 .header{padding:28px 28px 0;text-align:center;}
 .content{padding:0 28px 28px;}
 .title{font-size:22px;font-weight:700;color:#111827;margin:16px 0 12px;line-height:1.3;}

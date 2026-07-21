@@ -208,7 +208,7 @@ function ApiInspector({ log }) {
         const method  = inferMethod(log.message, url);
         const display = url.length > 55 ? url.slice(0, 52) + "…" : url;
         return (
-          <div key={url} className="border border-gray-200 rounded-lg overflow-hidden">
+          <div key={url} className="border border-gray-200 rounded-md overflow-hidden">
             <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-gray-200">
               <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded font-mono ${
                 method === "GET" ? "bg-blue-100 text-blue-600" :
@@ -291,7 +291,7 @@ function UserLookup({ log }) {
     <div className="space-y-4">
       {/* JWT info box */}
       {jwtPayload && (
-        <div className="border border-purple-200 rounded-lg overflow-hidden">
+        <div className="border border-purple-200 rounded-md overflow-hidden">
           <div className="px-3 py-2 bg-purple-50 border-b border-purple-100 flex items-center gap-2">
             <User size={11} className="text-purple-500" />
             <span className="text-[11px] font-semibold text-purple-700">{t("admin.serverLogs.userLookup.jwtInLog")}</span>
@@ -313,7 +313,7 @@ function UserLookup({ log }) {
 
       {/* Current session info */}
       {sessionJwt && (
-        <div className="border border-gray-200 rounded-lg overflow-hidden">
+        <div className="border border-gray-200 rounded-md overflow-hidden">
           <div className="px-3 py-2 bg-gray-50 border-b border-gray-100 flex items-center gap-2">
             <User size={11} className="text-gray-400" />
             <span className="text-[11px] font-semibold text-gray-600">{t("admin.serverLogs.userLookup.currentAdminSession")}</span>
@@ -338,7 +338,7 @@ function UserLookup({ log }) {
               const r = results[id];
               const isLoad = loading[id];
               return (
-                <div key={id} className="border border-gray-200 rounded-lg overflow-hidden">
+                <div key={id} className="border border-gray-200 rounded-md overflow-hidden">
                   <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-gray-100">
                     <span className="flex-1 text-[11px] font-mono text-purple-600 truncate">{id}</span>
                     <Button onClick={() => fetchUser(id)} disabled={!!isLoad}

@@ -61,7 +61,7 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
                         <Link
                             to="/m/payment"
                             onClick={trackUpgradeBannerClick}
-                            className="flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-500 text-black text-[11px] font-semibold hover:bg-amber-400 transition-colors"
+                            className="flex items-center gap-1 px-3 py-1 rounded-md bg-amber-500 text-black text-[11px] font-semibold hover:bg-amber-400 transition-colors"
                         >
                             <Crown size={11} /> {t('upgradeBanner.upgradeToLabel', { label: nextLabel })}
                         </Link>
@@ -81,10 +81,10 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
             <motion.div
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-2xl border border-[#f5a623]/20 bg-[#f5a623]/[0.03] p-5"
+                className="rounded-md border border-[#f5a623]/20 bg-[#f5a623]/[0.03] p-5"
             >
                 <div className="flex items-start gap-3 mb-4">
-                    <div className="w-9 h-9 rounded-xl bg-[#f5a623]/10 border border-[#f5a623]/20 flex items-center justify-center shrink-0">
+                    <div className="w-9 h-9 rounded-md bg-[#f5a623]/10 border border-[#f5a623]/20 flex items-center justify-center shrink-0">
                         <Crown size={16} className="text-[#f5a623]" />
                     </div>
                     <div>
@@ -135,7 +135,7 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
                 <Link
                     to="/m/payment"
                     onClick={trackUpgradeBannerClick}
-                    className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-amber-400 transition-colors"
+                    className="flex items-center justify-center gap-2 w-full py-2.5 rounded-md bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-amber-400 transition-colors"
                 >
                     <Crown size={13} /> {t('upgradeBanner.upgradeToLabelLong', { label: nextLabel })} <ArrowRight size={13} />
                 </Link>
@@ -148,14 +148,14 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
             <motion.div
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className={`rounded-2xl border p-4 flex flex-col sm:flex-row sm:items-center gap-4 ${
+                className={`rounded-md border p-4 flex flex-col sm:flex-row sm:items-center gap-4 ${
                     variant === 'limit'
                         ? 'border-red-500/20 bg-red-500/[0.04]'
                         : 'border-amber-500/20 bg-amber-500/[0.04]'
                 }`}
             >
                 <div className="flex items-start gap-3 flex-1">
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                    <div className={`w-9 h-9 rounded-md flex items-center justify-center shrink-0 ${
                         variant === 'limit' ? 'bg-red-500/10 border border-red-500/20' : 'bg-amber-500/10 border border-amber-500/20'
                     }`}>
                         {variant === 'limit'
@@ -191,7 +191,7 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
                 <Link
                     to="/m/payment"
                     onClick={trackUpgradeBannerClick}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors shrink-0 whitespace-nowrap"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-[#f5a623] text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors shrink-0 whitespace-nowrap"
                 >
                     <Crown size={12} /> {t('upgradeBanner.upgradeNow')}
                 </Link>

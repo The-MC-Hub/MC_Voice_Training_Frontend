@@ -25,7 +25,7 @@ const FaqItem = ({ q, a, index }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-      className={`border rounded-2xl overflow-hidden transition-colors ${
+      className={`border rounded-md overflow-hidden transition-colors ${
         open ? 'border-[#f5a623]/25 bg-[#111113]' : 'border-white/[0.07] bg-[#111113] hover:border-white/[0.12]'
       }`}
     >
@@ -34,7 +34,7 @@ const FaqItem = ({ q, a, index }) => {
         className="w-full flex items-center justify-between p-5 text-left gap-4 group"
       >
         <div className="flex items-center gap-3">
-          <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
+          <div className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 transition-colors ${
             open ? 'bg-[#f5a623]/[0.15] text-[#f5a623]' : 'bg-white/[0.04] text-zinc-500 group-hover:text-[#f5a623] group-hover:bg-[#f5a623]/[0.08]'
           }`}>
             <HelpCircle size={14} />
@@ -172,9 +172,9 @@ const HelpCenter = () => {
       {/* Hero */}
       <div className="relative pt-32 pb-16 px-6 text-center overflow-hidden">
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(245,166,35,0.07) 0%, transparent 70%)' }} />
+          style={{ background: 'rgba(245,166,35,0.035)' }} />
         <div className="absolute top-0 left-0 right-0 h-px"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(245,166,35,0.2), transparent)' }} />
+          style={{ background: 'rgba(245,166,35,0.2)' }} />
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f5a623]/[0.08] border border-[#f5a623]/20 text-[11px] font-medium text-[#f5a623] mb-5 uppercase tracking-wider">
             <LifeBuoy size={11} /> Trung tâm trợ giúp
@@ -196,7 +196,7 @@ const HelpCenter = () => {
               value={query}
               onChange={e => setQuery(e.target.value)}
               placeholder="Tìm kiếm câu hỏi, hướng dẫn..."
-              className="w-full bg-[#0f0f11] border border-white/[0.09] rounded-2xl py-4 pl-[44px] pr-10 text-[14px] text-white placeholder:text-zinc-600 outline-none focus:border-[#f5a623]/40 focus:bg-[#111113] focus:shadow-[0_0_0_3px_rgba(245,166,35,0.07)] transition-all"
+              className="w-full bg-[#0f0f11] border border-white/[0.09] rounded-md py-4 pl-[44px] pr-10 text-[14px] text-white placeholder:text-zinc-600 outline-none focus:border-[#f5a623]/40 focus:bg-[#111113] focus:shadow-[0_0_0_3px_rgba(245,166,35,0.07)] transition-all"
             />
             {query ? (
               <button onClick={() => setQuery('')}
@@ -222,13 +222,13 @@ const HelpCenter = () => {
                 <button
                   key={value}
                   onClick={() => setActiveCategory(activeCategory === value ? 'all' : value)}
-                  className={`p-4 text-left rounded-2xl border transition-all ${
+                  className={`p-4 text-left rounded-md border transition-all ${
                     activeCategory === value
                       ? 'border-[#f5a623]/30 bg-[#f5a623]/[0.05]'
                       : 'border-white/[0.07] bg-[#111113] hover:border-white/[0.12]'
                   }`}
                 >
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-3 transition-colors ${
+                  <div className={`w-9 h-9 rounded-md flex items-center justify-center mb-3 transition-colors ${
                     activeCategory === value ? 'bg-[#f5a623]/[0.15] text-[#f5a623]' : 'bg-[#f5a623]/[0.08] border border-[#f5a623]/15 text-[#f5a623]'
                   }`}>
                     <Icon size={16} />
@@ -279,13 +279,13 @@ const HelpCenter = () => {
 
           {/* Quick links + still need help */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <motion.div {...fadeUp} className="p-6 bg-[#111113] border border-white/[0.07] rounded-2xl space-y-3">
+            <motion.div {...fadeUp} className="p-6 bg-[#111113] border border-white/[0.07] rounded-md space-y-3">
               <p className="text-[13px] font-semibold text-white mb-4">Tài nguyên hữu ích</p>
               {quickLinks.map(({ icon: Icon, label, desc, link }) => (
                 <Link key={label} to={link}
-                  className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.1] hover:bg-white/[0.04] transition-all group">
+                  className="flex items-center justify-between p-3 rounded-md bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.1] hover:bg-white/[0.04] transition-all group">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-[#f5a623]/[0.08] flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-md bg-[#f5a623]/[0.08] flex items-center justify-center">
                       <Icon size={14} className="text-[#f5a623]" />
                     </div>
                     <div>
@@ -303,12 +303,12 @@ const HelpCenter = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="p-6 bg-[#111113] border border-white/[0.07] rounded-2xl relative overflow-hidden flex flex-col justify-between"
+              className="p-6 bg-[#111113] border border-white/[0.07] rounded-md relative overflow-hidden flex flex-col justify-between"
             >
               <div className="absolute top-0 left-8 right-8 h-px"
-                style={{ background: 'linear-gradient(90deg, transparent, rgba(245,166,35,0.25), transparent)' }} />
+                style={{ background: 'rgba(245,166,35,0.25)' }} />
               <div>
-                <div className="w-10 h-10 rounded-2xl bg-[#f5a623]/[0.08] border border-[#f5a623]/15 flex items-center justify-center mb-4">
+                <div className="w-10 h-10 rounded-md bg-[#f5a623]/[0.08] border border-[#f5a623]/15 flex items-center justify-center mb-4">
                   <LifeBuoy size={18} className="text-[#f5a623]" />
                 </div>
                 <h3 className="text-[15px] font-semibold text-white mb-2">Vẫn cần trợ giúp?</h3>
@@ -331,7 +331,7 @@ const HelpCenter = () => {
                 </div>
               </div>
               <Link to="/contact"
-                className="mt-6 w-full py-2.5 bg-[#f5a623] text-black rounded-xl text-[13px] font-semibold hover:bg-[#e09520] transition-colors flex items-center justify-center gap-2">
+                className="mt-6 w-full py-2.5 bg-[#f5a623] text-black rounded-md text-[13px] font-semibold hover:bg-[#e09520] transition-colors flex items-center justify-center gap-2">
                 <MessageSquare size={14} /> Liên hệ hỗ trợ
               </Link>
             </motion.div>

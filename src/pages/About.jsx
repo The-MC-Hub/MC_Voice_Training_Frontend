@@ -37,13 +37,13 @@ const AmbientOrbs = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     {/* Large amber blob top-right */}
     <div className="hidden sm:block absolute -top-32 -right-32 w-125 h-125 rounded-full"
-      style={{ background: 'radial-gradient(circle, rgba(245,166,35,0.10) 0%, rgba(245,166,35,0.04) 50%, transparent 70%)', filter: 'blur(40px)' }} />
+      style={{ background: 'rgba(245,166,35,0.07)', filter: 'blur(40px)' }} />
     {/* Medium blue-ish blob left */}
     <div className="hidden sm:block absolute top-1/3 -left-40 w-100 h-100 rounded-full"
-      style={{ background: 'radial-gradient(circle, rgba(251,191,36,0.07) 0%, transparent 70%)', filter: 'blur(50px)' }} />
+      style={{ background: 'rgba(251,191,36,0.04)', filter: 'blur(50px)' }} />
     {/* Small amber blob bottom */}
     <div className="absolute bottom-0 right-1/4 w-75 h-75 rounded-full"
-      style={{ background: 'radial-gradient(circle, rgba(245,166,35,0.08) 0%, transparent 70%)', filter: 'blur(40px)' }} />
+      style={{ background: 'rgba(245,166,35,0.05)', filter: 'blur(40px)' }} />
   </div>
 );
 
@@ -96,7 +96,7 @@ const About = () => {
           </ScrollReveal>
 
           <ScrollReveal direction="up" delay={0.2}>
-            <div className="mt-10 mx-auto max-w-3xl rounded-2xl overflow-hidden shadow-2xl shadow-amber-500/10 border border-amber-400/10">
+            <div className="mt-10 mx-auto max-w-3xl rounded-md overflow-hidden shadow-2xl shadow-amber-500/10 border border-amber-400/10">
               <img
                 src="/images/cover.png"
                 onError={e => { e.currentTarget.src = 'https://picsum.photos/seed/mchub-cover/1200/500'; e.currentTarget.onerror = null; }}
@@ -108,14 +108,14 @@ const About = () => {
         </div>
 
         {/* Bottom amber gradient fade */}
-        <div className="absolute bottom-0 inset-x-0 h-24 bg-linear-to-t from-white to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 inset-x-0 h-24 bg-white/60 pointer-events-none" />
       </section>
 
       {/* Stats bar */}
       <section className="relative py-8 px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-r from-amber-50 via-white to-amber-50" />
-        <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-amber-300/50 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-amber-300/50 to-transparent" />
+        <div className="absolute inset-0 bg-amber-50" />
+        <div className="absolute inset-x-0 top-0 h-px bg-amber-300/50" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-amber-300/50" />
         <div className="max-w-4xl mx-auto relative z-10">
           <div className="grid grid-cols-3 gap-3 sm:gap-8 text-center">
             {[
@@ -163,9 +163,9 @@ const About = () => {
       {/* Mission */}
       <section className="py-20 px-6 relative overflow-hidden">
         {/* Section background tint */}
-        <div className="absolute inset-0 bg-linear-to-br from-amber-50/60 via-white to-orange-50/30 pointer-events-none" />
-        <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-amber-200 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-amber-200 to-transparent" />
+        <div className="absolute inset-0 bg-amber-50/40 pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-px bg-amber-200" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-amber-200" />
 
         {/* Corner decorative circles */}
         <div className="absolute top-8 right-8 w-24 h-24 rounded-full border-2 border-amber-200/40 pointer-events-none" />
@@ -177,15 +177,15 @@ const About = () => {
             <ScrollReveal direction="left">
               <div className="relative">
                 {/* Decorative ring behind image */}
-                <div className="absolute -inset-4 rounded-[2.5rem] border-2 border-amber-200/30 pointer-events-none" />
-                <div className="absolute -inset-8 rounded-[3rem] border border-amber-100/50 pointer-events-none" />
+                <div className="absolute -inset-4 rounded-md border-2 border-amber-200/30 pointer-events-none" />
+                <div className="absolute -inset-8 rounded-md border border-amber-100/50 pointer-events-none" />
 
-                <div className="aspect-square rounded-3xl overflow-hidden border border-amber-200/30 shadow-xl shadow-amber-100/50 bg-amber-50">
+                <div className="aspect-square rounded-md overflow-hidden border border-amber-200/30 shadow-xl shadow-amber-100/50 bg-amber-50">
                   <LazyImage src={mcImage} className="w-full h-full object-cover" />
                 </div>
 
                 {/* Stats badge */}
-                <div className="absolute -bottom-6 -right-4 lg:-right-8 bg-amber-500 p-6 rounded-2xl text-black z-20 shadow-lg shadow-amber-500/30">
+                <div className="absolute -bottom-6 -right-4 lg:-right-8 bg-amber-500 p-6 rounded-md text-black z-20 shadow-lg shadow-amber-500/30">
                   <div className="text-4xl font-bold mb-0.5">500+</div>
                   <div className="text-[10px] font-semibold uppercase tracking-widest">MCs Empowered</div>
                 </div>
@@ -215,10 +215,10 @@ const About = () => {
                       key={i}
                       spotlightColor="rgba(245,166,35,0.08)"
                       spotlightSize={250}
-                      className="flex gap-4 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-100 transition-all duration-300"
+                      className="flex gap-4 p-4 rounded-md bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-100 transition-all duration-300"
                       style={{ opacity: 1 }}
                     >
-                      <div className={`w-10 h-10 shrink-0 rounded-xl flex items-center justify-center border ${item.color}`}>
+                      <div className={`w-10 h-10 shrink-0 rounded-md flex items-center justify-center border ${item.color}`}>
                         {item.icon}
                       </div>
                       <div>
@@ -245,7 +245,7 @@ const About = () => {
 
         {/* Large amber blob top */}
         <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-150 h-75 rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse, rgba(245,166,35,0.06) 0%, transparent 70%)', filter: 'blur(30px)' }} />
+          style={{ background: 'rgba(245,166,35,0.04)', filter: 'blur(30px)' }} />
 
         <div className="max-w-6xl mx-auto relative z-10">
           <ScrollReveal direction="up">
@@ -270,13 +270,13 @@ const About = () => {
                 <SpotlightCard
                   spotlightColor="rgba(245,166,35,0.10)"
                   spotlightSize={300}
-                  className="group relative overflow-hidden rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-lg hover:shadow-amber-100/60 hover:border-amber-200/60 transition-all duration-300 cursor-default"
+                  className="group relative overflow-hidden rounded-md bg-white border border-gray-100 shadow-sm hover:shadow-lg hover:shadow-amber-100/60 hover:border-amber-200/60 transition-all duration-300 cursor-default"
                 >
                   {/* Top amber accent strip */}
-                  <div className="absolute top-0 inset-x-0 h-1 bg-linear-to-r from-transparent via-amber-400/60 to-transparent" />
+                  <div className="absolute top-0 inset-x-0 h-1 bg-amber-400/60" />
 
                   {/* Photo */}
-                  <div className="relative mx-4 mt-5 overflow-hidden rounded-xl border border-gray-100">
+                  <div className="relative mx-4 mt-5 overflow-hidden rounded-md border border-gray-100">
                     <div className="aspect-4/3 overflow-hidden bg-amber-50">
                       <LazyImage
                         src={member.image}
@@ -285,10 +285,10 @@ const About = () => {
                       />
                     </div>
                     {/* Social hover overlay */}
-                    <div className="absolute inset-0 bg-gray-900/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3 rounded-xl">
+                    <div className="absolute inset-0 bg-gray-900/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3 rounded-md">
                       {Object.entries(member.socials).map(([key, link]) => (
                         <a key={key} href={link}
-                          className="w-9 h-9 flex items-center justify-center text-white hover:text-amber-400 bg-white/10 hover:bg-amber-400/20 border border-white/20 rounded-lg transition-colors">
+                          className="w-9 h-9 flex items-center justify-center text-white hover:text-amber-400 bg-white/10 hover:bg-amber-400/20 border border-white/20 rounded-md transition-colors">
                           <SocialIcon type={key} />
                         </a>
                       ))}
@@ -317,8 +317,8 @@ const About = () => {
       {/* CTA */}
       <section className="py-16 px-6 relative overflow-hidden">
         {/* Amber gradient bg */}
-        <div className="absolute inset-0 bg-linear-to-br from-amber-50 via-white to-orange-50 pointer-events-none" />
-        <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-amber-300/60 to-transparent" />
+        <div className="absolute inset-0 bg-amber-50 pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-px bg-amber-300/60" />
 
         {/* Decorative circles */}
         <div className="absolute top-1/2 left-8 -translate-y-1/2 w-32 h-32 rounded-full border-2 border-amber-200/40 pointer-events-none" />
@@ -331,7 +331,7 @@ const About = () => {
             <SpotlightCard
               spotlightColor="rgba(245,166,35,0.09)"
               spotlightSize={400}
-              className="bg-white border border-amber-200/50 rounded-3xl p-12 lg:p-20 text-center shadow-xl shadow-amber-100/40"
+              className="bg-white border border-amber-200/50 rounded-md p-12 lg:p-20 text-center shadow-xl shadow-amber-100/40"
             >
               {/* Sparkles decoration */}
               <div className="flex justify-center mb-4">
@@ -350,13 +350,13 @@ const About = () => {
               <div className="flex flex-wrap justify-center gap-4">
                 <Button
                   onClick={() => setIsContactModalOpen(true)}
-                  className="px-8 py-3 bg-amber-500 text-white font-semibold text-[14px] rounded-xl hover:bg-amber-600 transition-colors shadow-md shadow-amber-500/25 h-auto"
+                  className="px-8 py-3 bg-amber-500 text-white font-semibold text-[14px] rounded-md hover:bg-amber-600 transition-colors shadow-md shadow-amber-500/25 h-auto"
                 >
                   {t('contact.sendMessage')}
                 </Button>
                 <Link
                   to="/"
-                  className="px-8 py-3 rounded-xl border border-gray-200 text-gray-600 hover:text-gray-900 hover:border-gray-300 font-medium text-[14px] transition-colors"
+                  className="px-8 py-3 rounded-md border border-gray-200 text-gray-600 hover:text-gray-900 hover:border-gray-300 font-medium text-[14px] transition-colors"
                 >
                   {t('common.backToHome')}
                 </Link>

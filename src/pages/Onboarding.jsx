@@ -12,7 +12,7 @@ import { trackOnboardingStepComplete, trackOnboardingSubmit } from '@/utils/anal
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Card } from "@/components/ui/card";
 
-const inputCls = "w-full bg-[#09090b] border border-white/[0.07] rounded-xl py-3 px-4 text-[14px] text-white placeholder:text-zinc-600 outline-none focus:border-white/[0.14] transition-colors";
+const inputCls = "w-full bg-[#09090b] border border-white/[0.07] rounded-md py-3 px-4 text-[14px] text-white placeholder:text-zinc-600 outline-none focus:border-white/[0.14] transition-colors";
 
 const Onboarding = () => {
   const { t } = useTranslation();
@@ -87,9 +87,9 @@ const Onboarding = () => {
   const labelCls = "text-[11px] font-medium text-zinc-500 uppercase tracking-wider";
 
   const DropdownMenu = ({ items, onSelect, selectedValue, searchVal, onSearchChange, placeholder, loading }) => (
-    <div className="absolute top-full left-0 right-0 mt-1.5 bg-[#111113] border border-white/[0.08] rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] z-[100] overflow-hidden">
+    <div className="absolute top-full left-0 right-0 mt-1.5 bg-[#111113] border border-white/[0.08] rounded-md shadow-[0_8px_32px_rgba(0,0,0,0.4)] z-[100] overflow-hidden">
       <div className="p-2 border-b border-white/[0.06]">
-        <div className="flex items-center gap-2 bg-[#09090b] rounded-lg px-3 py-1.5 border border-white/[0.06] focus-within:border-white/[0.14] transition-colors">
+        <div className="flex items-center gap-2 bg-[#09090b] rounded-md px-3 py-1.5 border border-white/[0.06] focus-within:border-white/[0.14] transition-colors">
           <Search size={13} className="text-zinc-600" />
           <input type="text" className="bg-transparent border-none outline-none w-full text-[13px] text-white placeholder:text-zinc-700"
             placeholder={placeholder} value={searchVal} onChange={(e) => onSearchChange(e.target.value)}
@@ -136,7 +136,7 @@ const Onboarding = () => {
           {step === 1 && (
             <div className="space-y-6">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-[#f5a623] rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-[#f5a623] rounded-md flex items-center justify-center">
                   <User size={20} className="text-black" />
                 </div>
                 <h2 className="text-[17px] font-semibold text-white">{t('onboarding.personalPresence')}</h2>
@@ -188,7 +188,7 @@ const Onboarding = () => {
                 <div className="space-y-1.5 relative">
                   <label className={labelCls}>{t('onboarding.country')}</label>
                   <div onClick={() => setOpenDropdown(openDropdown === 'country' ? null : 'country')}
-                    className="flex items-center justify-between bg-[#09090b] border border-white/[0.07] rounded-xl px-4 py-3 cursor-pointer hover:border-white/[0.14] transition-colors">
+                    className="flex items-center justify-between bg-[#09090b] border border-white/[0.07] rounded-md px-4 py-3 cursor-pointer hover:border-white/[0.14] transition-colors">
                     <div className="flex items-center gap-2">
                       <Globe size={14} className="text-[#f5a623]" />
                       <span className="text-[14px] text-white">{selectedCountry}</span>
@@ -211,7 +211,7 @@ const Onboarding = () => {
                 <div className="space-y-1.5 relative">
                   <label className={labelCls}>{t('onboarding.baseCity')}</label>
                   <div onClick={() => !locLoading && setOpenDropdown(openDropdown === 'city' ? null : 'city')}
-                    className={`flex items-center justify-between bg-[#09090b] border border-white/[0.07] rounded-xl px-4 py-3 cursor-pointer hover:border-white/[0.14] transition-colors ${locLoading ? 'opacity-50' : ''}`}>
+                    className={`flex items-center justify-between bg-[#09090b] border border-white/[0.07] rounded-md px-4 py-3 cursor-pointer hover:border-white/[0.14] transition-colors ${locLoading ? 'opacity-50' : ''}`}>
                     <div className="flex items-center gap-2">
                       <MapPin size={14} className="text-[#f5a623]" />
                       <span className="text-[14px] text-white">{profileData.city.split(', ')[0]}</span>
@@ -251,7 +251,7 @@ const Onboarding = () => {
           {step === 2 && (
             <div className="space-y-6">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-[#f5a623] rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-[#f5a623] rounded-md flex items-center justify-center">
                   <Video size={20} className="text-black" />
                 </div>
                 <h2 className="text-[17px] font-semibold text-white">{t('onboarding.performancePortfolio')}</h2>
@@ -265,14 +265,14 @@ const Onboarding = () => {
                   const newFiles = Array.from(e.dataTransfer.files);
                   if (newFiles.length > 0) setProfileData(prev => ({ ...prev, showreelFiles: [...(prev.showreelFiles || []), ...newFiles] }));
                 }}
-                className={`h-40 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors ${isDragging ? "border-[#f5a623] bg-[#f5a623]/[0.04]" : "border-white/[0.1] hover:border-[#f5a623]/30 hover:bg-[#f5a623]/[0.02]"}`}
+                className={`h-40 border-2 border-dashed rounded-md flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors ${isDragging ? "border-[#f5a623] bg-[#f5a623]/[0.04]" : "border-white/[0.1] hover:border-[#f5a623]/30 hover:bg-[#f5a623]/[0.02]"}`}
               >
                 <input ref={fileInputRef} type="file" className="hidden" multiple accept="video/*,image/*"
                   onChange={(e) => {
                     const newFiles = Array.from(e.target.files);
                     if (newFiles.length > 0) setProfileData(prev => ({ ...prev, showreelFiles: [...(prev.showreelFiles || []), ...newFiles] }));
                   }} />
-                <div className="w-10 h-10 rounded-xl bg-[#f5a623] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-md bg-[#f5a623] flex items-center justify-center">
                   <Video size={18} className="text-black" />
                 </div>
                 <div className="text-center">
@@ -286,7 +286,7 @@ const Onboarding = () => {
                   {profileData.showreelFiles.map((file, idx) => {
                     const isImg = file.type.startsWith('image/');
                     return (
-                      <div key={idx} className="relative aspect-square rounded-xl overflow-hidden border border-white/[0.07] group bg-[#111113]">
+                      <div key={idx} className="relative aspect-square rounded-md overflow-hidden border border-white/[0.07] group bg-[#111113]">
                         {isImg ? (
                           <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-full object-cover" />
                         ) : (
@@ -297,7 +297,7 @@ const Onboarding = () => {
                         )}
                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <Button onClick={(e) => { e.stopPropagation(); setProfileData(prev => ({ ...prev, showreelFiles: prev.showreelFiles.filter((_, i) => i !== idx) })); }}
-                            className="p-2 bg-red-500 rounded-lg text-white hover:bg-red-600 transition-colors h-auto">
+                            className="p-2 bg-red-500 rounded-md text-white hover:bg-red-600 transition-colors h-auto">
                             <Zap size={14} fill="currentColor" />
                           </Button>
                         </div>
@@ -315,7 +315,7 @@ const Onboarding = () => {
                 ].map(({ label, icon, key, placeholder }) => (
                   <div key={key} className="space-y-1.5">
                     <label className={labelCls}>{label}</label>
-                    <div className="flex items-center gap-2 bg-[#09090b] border border-white/[0.07] rounded-xl px-3 py-2.5 focus-within:border-white/[0.14] transition-colors">
+                    <div className="flex items-center gap-2 bg-[#09090b] border border-white/[0.07] rounded-md px-3 py-2.5 focus-within:border-white/[0.14] transition-colors">
                       <span className="text-[#f5a623]">{icon}</span>
                       <input type="text" className="bg-transparent border-none outline-none w-full text-[13px] text-white placeholder:text-zinc-700"
                         placeholder={placeholder} value={profileData.socialLinks[key]}
@@ -331,7 +331,7 @@ const Onboarding = () => {
           {step === 3 && (
             <div className="space-y-6">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-[#f5a623] rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-[#f5a623] rounded-md flex items-center justify-center">
                   <ShieldCheck size={20} className="text-black" />
                 </div>
                 <h2 className="text-[17px] font-semibold text-white">{t('onboarding.escrowVerification')}</h2>
@@ -358,15 +358,15 @@ const Onboarding = () => {
                     badgeCls: "text-zinc-500 bg-[#09090b] border-white/[0.06]",
                   },
                 ].map((card, i) => (
-                  <Card key={i} className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 hover:border-[#f5a623]/20 transition-colors group space-y-4 gap-0 shadow-none">
+                  <Card key={i} className="bg-[#111113] border border-white/[0.07] rounded-md p-6 hover:border-[#f5a623]/20 transition-colors group space-y-4 gap-0 shadow-none">
                     <h3 className="text-[14px] font-semibold text-white group-hover:text-[#f5a623] transition-colors flex items-center gap-2">
                       <span className="text-[#f5a623]">{card.icon}</span> {card.title}
                     </h3>
                     <p className="text-[13px] text-zinc-500 leading-relaxed">{card.desc}</p>
-                    <Button hoverScale={1} className="w-full py-2.5 rounded-xl border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] text-[13px] font-medium flex items-center justify-center gap-2 transition-colors h-auto">
+                    <Button hoverScale={1} className="w-full py-2.5 rounded-md border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] text-[13px] font-medium flex items-center justify-center gap-2 transition-colors h-auto">
                       {card.btnIcon} {card.btnLabel}
                     </Button>
-                    <div className={`flex items-center gap-1.5 text-[11px] font-medium px-3 py-1.5 rounded-lg border w-max ${card.badgeCls}`}>
+                    <div className={`flex items-center gap-1.5 text-[11px] font-medium px-3 py-1.5 rounded-md border w-max ${card.badgeCls}`}>
                       {card.badge}
                     </div>
                   </Card>
@@ -381,7 +381,7 @@ const Onboarding = () => {
           <div className="flex items-center gap-3">
             {step > 1 && (
               <Button onClick={() => setStep(step - 1)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] text-[13px] font-medium transition-colors h-auto">
+                className="flex items-center gap-2 px-4 py-2 rounded-md border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] text-[13px] font-medium transition-colors h-auto">
                 <ArrowLeft size={15} /> {t('common.back')}
               </Button>
             )}
@@ -393,12 +393,12 @@ const Onboarding = () => {
 
           {step < 3 ? (
             <Button onClick={() => { setStep(step + 1); trackOnboardingStepComplete(step); }}
-              className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] text-black text-[13px] font-semibold rounded-xl hover:bg-[#e09520] transition-colors h-auto">
+              className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] text-black text-[13px] font-semibold rounded-md hover:bg-[#e09520] transition-colors h-auto">
               {t('onboarding.continueStep')} {step} <ArrowRight size={15} />
             </Button>
           ) : (
             <Button onClick={handleComplete}
-              className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] text-black text-[13px] font-semibold rounded-xl hover:bg-[#e09520] transition-colors h-auto">
+              className="flex items-center gap-2 px-6 py-2.5 bg-[#f5a623] text-black text-[13px] font-semibold rounded-md hover:bg-[#e09520] transition-colors h-auto">
               {t('onboarding.finishDashboard')} <Zap size={15} />
             </Button>
           )}

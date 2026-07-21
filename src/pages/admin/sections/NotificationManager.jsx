@@ -100,8 +100,8 @@ a{color:#f5a623;text-decoration:none;}
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f0f0f2;padding:32px 16px;">
 <tr><td align="center">
 <table width="600" cellpadding="0" cellspacing="0" border="0"
-  style="max-width:600px;width:100%;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.12);">
-<tr><td style="background:linear-gradient(90deg,#f5a623,#fbbf24,#f5a623);height:4px;"></td></tr>
+  style="max-width:600px;width:100%;border-radius:6px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.12);">
+<tr><td style="background:#f5a623;height:4px;"></td></tr>
 <tr><td style="background:#09090b;padding:20px 32px 18px;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
     <td style="font-size:18px;font-weight:800;color:#fff;letter-spacing:-0.5px;">MC<span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:#f5a623;margin:0 3px 2px;vertical-align:middle;"></span>Hub</td>
@@ -109,16 +109,16 @@ a{color:#f5a623;text-decoration:none;}
   </tr></table>
 </td></tr>
 <tr><td style="padding:0;"><img src="/ảnh bìa.png" alt="The MC Hub" style="width:100%;max-width:600px;height:auto;display:block;" /></td></tr>
-<tr><td style="background:linear-gradient(135deg,#0c0c0f 0%,#1a1a1e 100%);padding:32px;">
+<tr><td style="background:#0c0c0f;padding:32px;">
   <p style="color:rgba(255,255,255,0.5);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;">${t("admin.notificationManager.emailPreview.notificationFrom")}</p>
   <h1 style="color:#fff;font-size:24px;font-weight:800;line-height:1.2;letter-spacing:-0.5px;">${t("admin.notificationManager.emailPreview.greeting")}, <span style="color:#f5a623;">{{name}}</span> 👋</h1>
 </td></tr>
-<tr><td style="background:linear-gradient(90deg,#f5a623,#fbbf24);height:2px;"></td></tr>
+<tr><td style="background:#f5a623;height:2px;"></td></tr>
 <tr><td style="background:#ffffff;padding:28px 32px 20px;">
   <div style="font-size:14px;line-height:1.8;color:#27272a;">${paras || `<p style="color:#a1a1aa;font-style:italic;">${t("admin.notificationManager.emailPreview.emptyContentHint")}</p>`}</div>
 </td></tr>
 <tr><td style="background:#ffffff;padding:8px 32px 32px;text-align:center;">
-  <a href="#" style="display:inline-block;background:#f5a623;color:#000;font-size:14px;font-weight:700;padding:14px 36px;border-radius:10px;text-decoration:none;">${t("admin.notificationManager.emailPreview.accessButton")} →</a>
+  <a href="#" style="display:inline-block;background:#f5a623;color:#000;font-size:14px;font-weight:700;padding:14px 36px;border-radius:6px;text-decoration:none;">${t("admin.notificationManager.emailPreview.accessButton")} →</a>
 </td></tr>
 <tr><td style="background:#09090b;padding:18px 32px 24px;border-top:1px solid #1f1f23;">
   <p style="color:#3f3f46;font-size:11px;line-height:1.7;text-align:center;">
@@ -126,7 +126,7 @@ a{color:#f5a623;text-decoration:none;}
     <a href="#" style="color:#71717a;">${t("admin.notificationManager.emailPreview.unsubscribe")}</a>
   </p>
 </td></tr>
-<tr><td style="background:linear-gradient(90deg,#f5a623,#fbbf24,#f5a623);height:4px;"></td></tr>
+<tr><td style="background:#f5a623;height:4px;"></td></tr>
 </table>
 </td></tr></table>
 </body></html>`;

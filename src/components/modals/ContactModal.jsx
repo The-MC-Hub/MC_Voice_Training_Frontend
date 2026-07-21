@@ -57,10 +57,10 @@ const ContactModal = ({ isOpen, onClose }) => {
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            className="bg-[#0f172a] border border-white/10 w-full max-w-5xl rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col md:flex-row relative"
+            className="bg-[#0f172a] border border-white/10 w-full max-w-5xl rounded-md overflow-hidden shadow-2xl flex flex-col md:flex-row relative"
           >
             {/* Sidebar Information */}
-            <div className="md:w-2/5 bg-gradient-to-br from-yellow-500 to-yellow-600 p-12 text-slate-950 flex flex-col justify-between relative overflow-hidden">
+            <div className="md:w-2/5 bg-yellow-600 p-12 text-slate-950 flex flex-col justify-between relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
 
               <div className="relative z-10">
@@ -73,7 +73,7 @@ const ContactModal = ({ isOpen, onClose }) => {
 
                 <div className="space-y-8">
                   <div className="flex items-start gap-4">
-                    <div className="bg-slate-950/10 p-3 rounded-xl">
+                    <div className="bg-slate-950/10 p-3 rounded-md">
                       <Mail size={20} />
                     </div>
                     <div>
@@ -83,7 +83,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="bg-slate-950/10 p-3 rounded-xl">
+                    <div className="bg-slate-950/10 p-3 rounded-md">
                       <MessageSquare size={20} />
                     </div>
                     <div>
@@ -93,7 +93,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="bg-slate-950/10 p-3 rounded-xl">
+                    <div className="bg-slate-950/10 p-3 rounded-md">
                       <User size={20} />
                     </div>
                     <div>
@@ -146,7 +146,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder={t('contact.namePlaceholder')}
-                        className="w-full bg-white/[0.03] border border-white/5 rounded-2xl p-5 pl-14 pr-6 focus:outline-none focus:border-yellow-500/30 focus:bg-white/[0.06] transition-all font-medium text-slate-200 placeholder:text-slate-700"
+                        className="w-full bg-white/[0.03] border border-white/5 rounded-md p-5 pl-14 pr-6 focus:outline-none focus:border-yellow-500/30 focus:bg-white/[0.06] transition-all font-medium text-slate-200 placeholder:text-slate-700"
                       />
                     </div>
                   </div>
@@ -161,7 +161,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder={t('contact.emailPlaceholder')}
-                        className="w-full bg-white/[0.03] border border-white/5 rounded-2xl p-5 pl-14 pr-6 focus:outline-none focus:border-yellow-500/30 focus:bg-white/[0.06] transition-all font-medium text-slate-200 placeholder:text-slate-700"
+                        className="w-full bg-white/[0.03] border border-white/5 rounded-md p-5 pl-14 pr-6 focus:outline-none focus:border-yellow-500/30 focus:bg-white/[0.06] transition-all font-medium text-slate-200 placeholder:text-slate-700"
                       />
                     </div>
                   </div>
@@ -176,7 +176,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         placeholder={t('contact.messagePlaceholder')}
-                        className="w-full bg-white/[0.03] border border-white/5 rounded-2xl p-5 pl-14 pr-6 focus:outline-none focus:border-yellow-500/30 focus:bg-white/[0.06] transition-all font-medium text-slate-200 placeholder:text-slate-700 resize-none"
+                        className="w-full bg-white/[0.03] border border-white/5 rounded-md p-5 pl-14 pr-6 focus:outline-none focus:border-yellow-500/30 focus:bg-white/[0.06] transition-all font-medium text-slate-200 placeholder:text-slate-700 resize-none"
                       ></textarea>
                     </div>
                   </div>
@@ -185,7 +185,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                     <motion.div
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      className="flex items-center gap-2 text-red-500 text-xs font-bold bg-red-500/10 p-5 rounded-2xl border border-red-500/20"
+                      className="flex items-center gap-2 text-red-500 text-xs font-bold bg-red-500/10 p-5 rounded-md border border-red-500/20"
                     >
                       <AlertCircle size={18} /> {t('contact.errorMsg')}
                     </motion.div>
@@ -196,7 +196,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                     whileTap={{ scale: 0.98 }}
                     disabled={status === 'sending'}
                     type="submit"
-                    className="w-full py-6 bg-yellow-500 text-slate-950 rounded-2xl font-black uppercase tracking-[0.3em] text-xs flex items-center justify-center gap-4 shadow-2xl shadow-yellow-500/20 hover:bg-yellow-400 transition-all disabled:opacity-50"
+                    className="w-full py-6 bg-yellow-500 text-slate-950 rounded-md font-black uppercase tracking-[0.3em] text-xs flex items-center justify-center gap-4 shadow-2xl shadow-yellow-500/20 hover:bg-yellow-400 transition-all disabled:opacity-50"
                   >
                     {status === 'sending' ? (
                       <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />

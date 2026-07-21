@@ -72,20 +72,20 @@ const NewbieQuest = () => {
         {voucherCode && (
           <DialogContent
             showCloseButton={false}
-            className="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl"
+            className="bg-white rounded-md p-8 max-w-sm w-full text-center shadow-2xl"
           >
-              <div className="w-16 h-16 rounded-2xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-md bg-amber-50 border-2 border-amber-200 flex items-center justify-center mx-auto mb-4">
                 <Gift size={30} className="text-amber-500" />
               </div>
               <h2 className="text-[20px] font-bold text-gray-900 mb-1">{t('newbieQuest.congratsTitle')}</h2>
               <p className="text-[13px] text-gray-500 mb-5 leading-relaxed">
                 {t('newbieQuest.congratsDescPrefix')} <span className="font-semibold text-amber-600">{t('newbieQuest.discountLabel')}</span> {t('newbieQuest.congratsDescSuffix')}
               </p>
-              <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-2">
+              <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-md px-4 py-3 mb-2">
                 <span className="flex-1 font-mono font-bold text-[15px] text-amber-700 tracking-widest">{voucherCode}</span>
                 <button
                   onClick={handleCopy}
-                  className="w-8 h-8 rounded-lg bg-amber-100 hover:bg-amber-200 flex items-center justify-center transition-colors"
+                  className="w-8 h-8 rounded-md bg-amber-100 hover:bg-amber-200 flex items-center justify-center transition-colors"
                 >
                   {copied ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} className="text-amber-600" />}
                 </button>
@@ -93,7 +93,7 @@ const NewbieQuest = () => {
               <p className="text-[11px] text-gray-400 mb-6">{t('newbieQuest.voucherTerms')}</p>
               <button
                 onClick={() => { setVoucherCode(null); navigate('/m/payment'); }}
-                className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-[14px] rounded-2xl transition-colors flex items-center justify-center gap-2"
+                className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-[14px] rounded-md transition-colors flex items-center justify-center gap-2"
               >
                 {t('newbieQuest.useNow')} <ChevronRight size={16} />
               </button>
@@ -112,9 +112,9 @@ const NewbieQuest = () => {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="rounded-2xl overflow-hidden shadow-sm border border-amber-200/60"
+        className="rounded-md overflow-hidden shadow-sm border border-amber-200/60"
         style={{
-          background: 'linear-gradient(135deg, #fffbeb 0%, #fff7e6 50%, #fef3c7 100%)',
+          background: '#fef3c7',
         }}
       >
         {/* Header — clickable toggle */}
@@ -123,7 +123,7 @@ const NewbieQuest = () => {
           className="w-full px-5 pt-4 py-3.5 flex items-center gap-3 text-left group"
         >
           {/* Icon */}
-          <div className="w-9 h-9 rounded-xl bg-amber-500 flex items-center justify-center shrink-0 shadow-sm shadow-amber-300">
+          <div className="w-9 h-9 rounded-md bg-amber-500 flex items-center justify-center shrink-0 shadow-sm shadow-amber-300">
             {allDone
               ? <Trophy size={17} className="text-white" />
               : <Sparkles size={17} className="text-white" />
@@ -197,7 +197,7 @@ const NewbieQuest = () => {
                 <div className="h-1.5 bg-amber-100 rounded-full overflow-hidden">
                   <motion.div
                     className="h-full rounded-full"
-                    style={{ background: 'linear-gradient(90deg, #f59e0b, #fbbf24)' }}
+                    style={{ background: '#f59e0b' }}
                     initial={{ width: 0 }}
                     animate={{ width: `${pct}%` }}
                     transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -219,7 +219,7 @@ const NewbieQuest = () => {
                       initial={{ opacity: 0, x: -6 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.04, duration: 0.25 }}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-all ${
                         done
                           ? 'opacity-60'
                           : 'hover:bg-amber-100/60 cursor-pointer active:scale-[0.99]'
@@ -259,8 +259,8 @@ const NewbieQuest = () => {
                     disabled={claiming}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full py-3 rounded-xl font-semibold text-[13px] text-white flex items-center justify-center gap-2 disabled:opacity-60 transition-opacity"
-                    style={{ background: 'linear-gradient(135deg, #f59e0b, #f97316)' }}
+                    className="w-full py-3 rounded-md font-semibold text-[13px] text-white flex items-center justify-center gap-2 disabled:opacity-60 transition-opacity"
+                    style={{ background: '#f59e0b' }}
                   >
                     <Gift size={15} />
                     {claiming ? t('newbieQuest.claiming') : t('newbieQuest.claimBtn')}

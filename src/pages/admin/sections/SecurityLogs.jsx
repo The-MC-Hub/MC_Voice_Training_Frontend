@@ -108,7 +108,7 @@ const LogRow = ({ log }) => {
 
               {/* User Info Panel */}
               {log.userId && (
-                <div className="p-3 bg-[--bg-base] border border-[--border-subtle] rounded-lg">
+                <div className="p-3 bg-[--bg-base] border border-[--border-subtle] rounded-md">
                   <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-2">{t('admin.securityLogs.userInfo')}</p>
                   {userLoading ? (
                     <p className="text-[--text-muted] text-[11px]">{t('admin.securityLogs.loading')}</p>
@@ -169,7 +169,7 @@ const LogRow = ({ log }) => {
                 {log.details && (
                   <div className="md:col-span-2">
                     <p className="text-[10px] text-[--text-muted] uppercase tracking-widest mb-1">{t('admin.securityLogs.details')}</p>
-                    <pre className="text-[--text-secondary] bg-[--bg-base] p-2 rounded-lg overflow-x-auto text-[11px]">
+                    <pre className="text-[--text-secondary] bg-[--bg-base] p-2 rounded-md overflow-x-auto text-[11px]">
                       {(() => { try { return JSON.stringify(JSON.parse(log.details), null, 2); } catch { return log.details; } })()}
                     </pre>
                   </div>

@@ -111,7 +111,7 @@ const CollaborativeEditor = ({ bookingId, user, onSave }) => {
 
   if (!editor) {
     return (
-      <div className="flex items-center justify-center h-[500px] bg-slate-900/50 rounded-3xl border border-white/5 backdrop-blur-sm">
+      <div className="flex items-center justify-center h-[500px] bg-slate-900/50 rounded-md border border-white/5 backdrop-blur-sm">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-yellow-500/20 border-t-yellow-500 rounded-full animate-spin" />
           <span className="text-slate-500 font-medium uppercase tracking-widest text-xs">Initializing editor...</span>
@@ -125,12 +125,12 @@ const CollaborativeEditor = ({ bookingId, user, onSave }) => {
       <motion.div 
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
-        className="flex-1 bg-slate-900/40 border border-white/5 rounded-3xl overflow-hidden backdrop-blur-md shadow-2xl"
+        className="flex-1 bg-slate-900/40 border border-white/5 rounded-md overflow-hidden backdrop-blur-md shadow-2xl"
       >
         {/* Editor Toolbar */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/5">
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-[10px] font-black uppercase tracking-wider">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-[10px] font-black uppercase tracking-wider">
               <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
               Live Script
             </div>
@@ -139,7 +139,7 @@ const CollaborativeEditor = ({ bookingId, user, onSave }) => {
           <div className="flex items-center gap-3">
             <button 
               onClick={() => setShowComments(!showComments)}
-              className={`p-2 rounded-xl transition-all ${showComments ? 'bg-yellow-500 text-slate-950' : 'hover:bg-white/5 text-slate-400'}`}
+              className={`p-2 rounded-md transition-all ${showComments ? 'bg-yellow-500 text-slate-950' : 'hover:bg-white/5 text-slate-400'}`}
             >
               <MessageSquare size={18} />
             </button>
@@ -148,7 +148,7 @@ const CollaborativeEditor = ({ bookingId, user, onSave }) => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleSave}
-              className="flex items-center gap-2 px-5 py-2 rounded-xl bg-yellow-500 text-slate-950 text-xs font-black uppercase tracking-wider shadow-lg shadow-yellow-500/20"
+              className="flex items-center gap-2 px-5 py-2 rounded-md bg-yellow-500 text-slate-950 text-xs font-black uppercase tracking-wider shadow-lg shadow-yellow-500/20"
             >
               <Save size={16} />
               Save Draft
@@ -178,7 +178,7 @@ const CollaborativeEditor = ({ bookingId, user, onSave }) => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl text-white text-sm font-black uppercase tracking-[0.2em] hover:bg-white/10 transition-all shadow-2xl"
+              className="flex items-center gap-3 px-8 py-4 rounded-md bg-white/5 border border-white/10 backdrop-blur-xl text-white text-sm font-black uppercase tracking-[0.2em] hover:bg-white/10 transition-all shadow-2xl"
             >
               <Lock size={18} className="text-yellow-500" />
               Approve Script
@@ -216,7 +216,7 @@ const CollaborativeEditor = ({ bookingId, user, onSave }) => {
                 key={comment.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`p-4 rounded-2xl border transition-all ${
+                className={`p-4 rounded-md border transition-all ${
                   comment.status === 'RESOLVED' 
                     ? 'bg-slate-900/20 border-white/5 opacity-50' 
                     : 'bg-slate-900/60 border-white/10 shadow-lg'
@@ -242,7 +242,7 @@ const CollaborativeEditor = ({ bookingId, user, onSave }) => {
               </motion.div>
             ))}
             {comments.length === 0 && (
-              <div className="text-center py-12 px-6 border border-dashed border-white/10 rounded-3xl">
+              <div className="text-center py-12 px-6 border border-dashed border-white/10 rounded-md">
                 <p className="text-xs text-slate-600 font-medium leading-relaxed">
                   No discussions yet. Highlight text to start.
                 </p>
@@ -257,12 +257,12 @@ const CollaborativeEditor = ({ bookingId, user, onSave }) => {
         .prose h2 { @apply text-2xl font-black mt-8 mb-4 uppercase tracking-tight text-yellow-500; }
         .prose p { @apply text-slate-400 leading-relaxed mb-4; }
         .prose strong { @apply text-white font-black; }
-        .prose blockquote { @apply border-l-4 border-yellow-500 pl-6 py-2 italic bg-white/5 rounded-r-xl; }
+        .prose blockquote { @apply border-l-4 border-yellow-500 pl-6 py-2 italic bg-white/5 rounded-r-md; }
         .prose ul { @apply list-disc list-inside mb-4 space-y-2; }
         .prose li { @apply text-slate-400; }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.05); border-radius: 6px; }
       `}</style>
     </div>
   );

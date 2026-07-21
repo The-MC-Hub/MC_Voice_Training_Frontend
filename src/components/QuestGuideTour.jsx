@@ -246,7 +246,7 @@ const QuestGuideTour = () => {
                 left: rect.left - 4,
                 width: rect.width + 8,
                 height: rect.height + 8,
-                borderRadius: 14,
+                borderRadius: 6,
                 border: `2px solid ${colors.accent}`,
                 zIndex: 9998,
                 pointerEvents: "none",
@@ -316,7 +316,7 @@ const QuestGuideTour = () => {
               </div>
             )}
 
-            <div className="rounded-2xl overflow-hidden" style={{ boxShadow: "0 20px 60px rgba(0,0,0,0.22), 0 4px 16px rgba(0,0,0,0.12)" }}>
+            <div className="rounded-md overflow-hidden" style={{ boxShadow: "0 20px 60px rgba(0,0,0,0.22), 0 4px 16px rgba(0,0,0,0.12)" }}>
               {/* Gradient header */}
               <div
                 className="px-4 pt-4 pb-3 relative"
@@ -368,7 +368,7 @@ const QuestGuideTour = () => {
                     {stepIdx > 0 && (
                       <button
                         onClick={prevStep}
-                        className="w-7 h-7 rounded-lg flex items-center justify-center border border-gray-200 text-gray-400 hover:text-gray-700 hover:border-gray-300 transition-all active:scale-95"
+                        className="w-7 h-7 rounded-md flex items-center justify-center border border-gray-200 text-gray-400 hover:text-gray-700 hover:border-gray-300 transition-all active:scale-95"
                       >
                         <ChevronLeft size={14} />
                       </button>
@@ -383,7 +383,7 @@ const QuestGuideTour = () => {
                     )}
                     <button
                       onClick={nextStep}
-                      className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-white text-[12px] font-bold transition-all active:scale-95 hover:opacity-90"
+                      className="flex items-center gap-1.5 px-4 py-1.5 rounded-md text-white text-[12px] font-bold transition-all active:scale-95 hover:opacity-90"
                       style={{ background: colors.accent }}
                     >
                       {isLast ? t('questGuide.finish') : t('questGuide.next')}

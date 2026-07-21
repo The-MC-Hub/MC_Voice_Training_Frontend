@@ -147,7 +147,7 @@ const VoicePractice = () => {
             </div>
             <div className="flex items-center gap-2">
               <a href="/login" className="text-[12px] text-zinc-400 hover:text-white transition-colors">{t_vp("guestLogin")}</a>
-              <a href="/register" className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-500 text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors">
+              <a href="/register" className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-amber-500 text-black text-[12px] font-semibold hover:bg-amber-400 transition-colors">
                 {t_vp("guestRegisterCta")}
               </a>
             </div>
@@ -191,7 +191,7 @@ const VoicePractice = () => {
 
               <div className="flex items-center gap-2 flex-wrap">
                 {/* Language toggle */}
-                <div className="flex items-center rounded-lg bg-[#111113] border border-white/[0.07] p-0.5">
+                <div className="flex items-center rounded-md bg-[#111113] border border-white/[0.07] p-0.5">
                   {["vi", "en"].map((lang) => (
                     <Button key={lang} onClick={() => i18nInstance.changeLanguage(lang)}
                       className={`px-3 py-1.5 text-[12px] font-medium rounded-md transition-colors h-auto ${evalLanguage === lang ? "bg-[#f5a623] text-black" : "text-zinc-400 hover:text-white"}`}
@@ -201,28 +201,28 @@ const VoicePractice = () => {
 
                 {audioBlob && !analyzing && !result && (
                   !user && cooldownLeft > 0 ? (
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-800 border border-white/10 text-zinc-400 text-[13px]">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-zinc-800 border border-white/10 text-zinc-400 text-[13px]">
                       <Clock size={13} className="shrink-0 text-amber-400" />
                       <span>{t_vp("guestTryAgainAfter")} <span className="font-semibold text-amber-400">{fmtCooldown(cooldownLeft)}</span></span>
                     </div>
                   ) : (
-                    <Button onClick={handleAnalyze} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors h-auto">
+                    <Button onClick={handleAnalyze} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors h-auto">
                       <Zap size={14} /> {t_vp("analyzeNow")}
                     </Button>
                   )
                 )}
                 {audioBlob && (
-                  <Button onClick={handleResetPractice} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-white/[0.1] text-zinc-300 text-[13px] font-medium hover:bg-white/[0.05] transition-colors h-auto">
+                  <Button onClick={handleResetPractice} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md border border-white/[0.1] text-zinc-300 text-[13px] font-medium hover:bg-white/[0.05] transition-colors h-auto">
                     <RefreshCw size={13} /> {t_vp("reRecord")}
                   </Button>
                 )}
                 <span data-quest="quest-record-btn">
                   {recording ? (
-                    <Button onClick={handleStopRecording} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-500 text-white text-[13px] font-semibold hover:bg-red-600 transition-colors h-auto">
+                    <Button onClick={handleStopRecording} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-red-500 text-white text-[13px] font-semibold hover:bg-red-600 transition-colors h-auto">
                       <Square size={13} /> {t_vp("stop")}
                     </Button>
                   ) : !audioBlob ? (
-                    <Button onClick={handleStartRecording} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors h-auto">
+                    <Button onClick={handleStartRecording} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors h-auto">
                       <Play size={13} /> {t_vp("startRecording")}
                     </Button>
                   ) : null}
@@ -232,7 +232,7 @@ const VoicePractice = () => {
 
             {/* Error */}
             {error && (
-              <div className="flex items-center gap-2.5 p-3 rounded-xl border border-red-500/20 bg-red-500/[0.06] text-red-400 text-[13px] mb-4">
+              <div className="flex items-center gap-2.5 p-3 rounded-md border border-red-500/20 bg-red-500/[0.06] text-red-400 text-[13px] mb-4">
                 <AlertCircle size={15} /> {error}
               </div>
             )}

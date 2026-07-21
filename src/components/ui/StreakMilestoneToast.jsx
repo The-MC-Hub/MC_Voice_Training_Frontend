@@ -24,7 +24,7 @@ const CONFETTI_COLORS = ['#f5a623', '#ff6b35', '#ffd700', '#00d4ff', '#7b2fff', 
 
 function MiniConfetti({ accent }) {
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-md">
       {Array.from({ length: 18 }).map((_, i) => (
         <motion.div
           key={i}
@@ -91,7 +91,7 @@ const StreakMilestoneToast = ({ streak, prevStreak }) => {
           className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9985] w-full max-w-sm px-4"
         >
           <div
-            className="relative rounded-2xl overflow-hidden shadow-2xl"
+            className="relative rounded-md overflow-hidden shadow-2xl"
             style={{
               background: '#111113',
               border: `1px solid ${accent}40`,
@@ -103,7 +103,7 @@ const StreakMilestoneToast = ({ streak, prevStreak }) => {
             <div className="relative px-5 py-4 flex items-start gap-3">
               {/* Icon */}
               <div
-                className="w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0"
+                className="w-11 h-11 rounded-md flex items-center justify-center text-xl shrink-0"
                 style={{ background: accent + '18', border: `1px solid ${accent}30` }}
               >
                 {frame.icon || '🔥'}

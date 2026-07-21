@@ -69,7 +69,7 @@ function LessonCard({ lesson, rank }) {
 
   return (
     <div className="w-full bg-white border border-black/8 overflow-hidden">
-      <div className="h-0.5" style={{ background: `linear-gradient(90deg,transparent,${accent},transparent)` }} />
+      <div className="h-0.5" style={{ background: accent }} />
 
       {/* Thumbnail */}
       {lesson.thumbnailUrl ? (

@@ -11,11 +11,11 @@ import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 
-const inputCls = "w-full bg-[#0d0d0f] border border-white/8 px-3 py-2.5 text-[13px] text-white focus:outline-none focus:border-white/[0.2] focus:bg-[#111114] placeholder:text-zinc-600 rounded-lg transition-colors";
+const inputCls = "w-full bg-[#0d0d0f] border border-white/8 px-3 py-2.5 text-[13px] text-white focus:outline-none focus:border-white/[0.2] focus:bg-[#111114] placeholder:text-zinc-600 rounded-md transition-colors";
 const inputClsShadcn = `${inputCls} h-auto rounded-none focus-visible:ring-0`;
 const labelCls = "block text-[11px] font-medium text-zinc-400 mb-1.5 tracking-wide";
 const sectionHead = "text-[11px] text-zinc-400 uppercase tracking-widest font-semibold px-4 py-2 border-b border-white/5";
-const fieldGroupCls = "bg-white/2 border border-white/5 rounded-xl p-4 space-y-4";
+const fieldGroupCls = "bg-white/2 border border-white/5 rounded-md p-4 space-y-4";
 
 function formatVnd(n) {
   return n ? n.toLocaleString("vi-VN") + "đ" : "0đ";
@@ -183,7 +183,7 @@ function PlanEditor({ plan, onSave }) {
             <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold">{t('admin.planManager.highlights')}</p>
             <div className="space-y-2">
               {(form.highlights || []).map((h, i) => (
-                <div key={i} className="flex items-center gap-2.5 bg-white/3 border border-white/6 px-3 py-2 rounded-lg">
+                <div key={i} className="flex items-center gap-2.5 bg-white/3 border border-white/6 px-3 py-2 rounded-md">
                   <Check size={12} className="text-emerald-500 shrink-0" />
                   <span className="flex-1 text-[13px] text-zinc-300">{h}</span>
                   <Button onClick={() => removeHighlight(i)} className="text-zinc-600 hover:text-red-400 transition-colors p-0.5 h-auto bg-transparent">
@@ -202,7 +202,7 @@ function PlanEditor({ plan, onSave }) {
               />
               <Button
                 onClick={addHighlight}
-                className="shrink-0 px-3.5 py-2 h-auto bg-white/5 border border-white/8 text-zinc-300 hover:text-white hover:border-white/18 transition-colors rounded-lg"
+                className="shrink-0 px-3.5 py-2 h-auto bg-white/5 border border-white/8 text-zinc-300 hover:text-white hover:border-white/18 transition-colors rounded-md"
               >
                 <Plus size={14} />
               </Button>
@@ -210,7 +210,7 @@ function PlanEditor({ plan, onSave }) {
           </div>
 
           {/* Section 4 — Discount */}
-          <div className="border border-white/7 rounded-xl overflow-hidden">
+          <div className="border border-white/7 rounded-md overflow-hidden">
             <div className="flex items-center justify-between px-4 py-3 bg-white/2 border-b border-white/5">
               <p className="text-[11px] font-semibold text-zinc-300 flex items-center gap-1.5">
                 <Percent size={12} className="text-red-400" />
@@ -259,7 +259,7 @@ function PlanEditor({ plan, onSave }) {
                 </div>
               </div>
               {discountActive && (
-                <p className="text-[11px] text-zinc-500 bg-red-500/5 border border-red-500/10 rounded-lg px-3 py-2">
+                <p className="text-[11px] text-zinc-500 bg-red-500/5 border border-red-500/10 rounded-md px-3 py-2">
                   {t('admin.planManager.userPreview')}:&nbsp;
                   <span className="line-through text-zinc-600">{formatVnd(form.priceVnd)}</span>
                   {" → "}
@@ -283,7 +283,7 @@ function PlanEditor({ plan, onSave }) {
             <Button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-2 px-5 py-2.5 h-auto bg-[#f5a623] text-black text-[13px] font-bold hover:bg-[#e09515] disabled:opacity-50 transition-colors rounded-xl"
+              className="flex items-center gap-2 px-5 py-2.5 h-auto bg-[#f5a623] text-black text-[13px] font-bold hover:bg-[#e09515] disabled:opacity-50 transition-colors rounded-md"
             >
               {saving ? <RefreshCw size={13} className="animate-spin" /> : <Save size={13} />}
               {t('admin.planManager.saveChanges')}
@@ -415,7 +415,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
   }
 
   return (
-    <div className="border border-amber-500/20 bg-[#0f0f11] rounded-xl mx-2 my-2 overflow-hidden">
+    <div className="border border-amber-500/20 bg-[#0f0f11] rounded-md mx-2 my-2 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-2.5 bg-amber-500/5 border-b border-amber-500/10">
         <div className="flex items-center gap-2">
@@ -477,7 +477,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
                 key={p}
                 type="button"
                 onClick={() => togglePlan(p)}
-                className={`px-3 py-1.5 h-auto text-[11px] font-semibold rounded-lg border transition-all ${
+                className={`px-3 py-1.5 h-auto text-[11px] font-semibold rounded-md border transition-all ${
                   (form.applicablePlans || []).includes(p)
                     ? "bg-amber-500/15 text-amber-400 border-amber-500/30 shadow-sm"
                     : "bg-white/2 text-zinc-500 border-white/6 hover:border-white/12 hover:text-zinc-300"
@@ -518,10 +518,10 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
           </div>
           <div className="flex items-center gap-2">
             {err && <span className="text-[11px] text-red-400">{err}</span>}
-            <Button type="button" onClick={() => setEditing(false)} className="px-3 py-1.5 h-auto text-[11px] text-zinc-400 hover:text-white border border-white/8 hover:border-white/16 rounded-lg transition-colors">
+            <Button type="button" onClick={() => setEditing(false)} className="px-3 py-1.5 h-auto text-[11px] text-zinc-400 hover:text-white border border-white/8 hover:border-white/16 rounded-md transition-colors">
               {t('admin.planManager.cancel')}
             </Button>
-            <Button type="button" onClick={handleSave} disabled={saving} className="flex items-center gap-1.5 px-4 py-1.5 h-auto bg-amber-500 text-black text-[11px] font-bold hover:bg-amber-400 disabled:opacity-50 rounded-lg transition-colors">
+            <Button type="button" onClick={handleSave} disabled={saving} className="flex items-center gap-1.5 px-4 py-1.5 h-auto bg-amber-500 text-black text-[11px] font-bold hover:bg-amber-400 disabled:opacity-50 rounded-md transition-colors">
               {saving ? <RefreshCw size={11} className="animate-spin" /> : <Check size={11} />}
               {t('admin.planManager.saveChanges')}
             </Button>
@@ -570,7 +570,7 @@ const [err, setErr] = useState(null);
     return (
       <Button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 px-4 py-2 h-auto bg-amber-500/8 border border-amber-500/20 text-amber-400 hover:bg-amber-500/15 hover:border-amber-500/35 text-[12px] font-semibold transition-all rounded-lg"
+        className="flex items-center gap-2 px-4 py-2 h-auto bg-amber-500/8 border border-amber-500/20 text-amber-400 hover:bg-amber-500/15 hover:border-amber-500/35 text-[12px] font-semibold transition-all rounded-md"
       >
         <Plus size={13} />
         {t('admin.planManager.createDiscountCode')}
@@ -579,7 +579,7 @@ const [err, setErr] = useState(null);
   }
 
   return (
-    <form onSubmit={handleCreate} className="border border-emerald-500/20 bg-[#0f0f11] rounded-xl overflow-hidden">
+    <form onSubmit={handleCreate} className="border border-emerald-500/20 bg-[#0f0f11] rounded-md overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-2.5 bg-emerald-500/5 border-b border-emerald-500/10">
         <div className="flex items-center gap-2">
@@ -643,7 +643,7 @@ const [err, setErr] = useState(null);
                 type="button"
                 key={p}
                 onClick={() => togglePlan(p)}
-                className={`px-3 py-1.5 h-auto text-[11px] font-semibold rounded-lg border transition-all ${
+                className={`px-3 py-1.5 h-auto text-[11px] font-semibold rounded-md border transition-all ${
                   (form.applicablePlans || []).includes(p)
                     ? "bg-amber-500/15 text-amber-400 border-amber-500/30"
                     : "bg-white/2 text-zinc-500 border-white/6 hover:border-white/12 hover:text-zinc-300"
@@ -684,10 +684,10 @@ const [err, setErr] = useState(null);
           </div>
           <div className="flex items-center gap-2">
             {err && <span className="text-[11px] text-red-400">{err}</span>}
-            <Button type="button" onClick={() => setOpen(false)} className="px-3 py-1.5 h-auto text-[11px] text-zinc-400 hover:text-white border border-white/8 hover:border-white/16 rounded-lg transition-colors">
+            <Button type="button" onClick={() => setOpen(false)} className="px-3 py-1.5 h-auto text-[11px] text-zinc-400 hover:text-white border border-white/8 hover:border-white/16 rounded-md transition-colors">
               {t('admin.planManager.cancel')}
             </Button>
-            <Button type="submit" disabled={saving} className="flex items-center gap-1.5 px-4 py-1.5 h-auto bg-emerald-500 text-black text-[11px] font-bold hover:bg-emerald-400 disabled:opacity-50 rounded-lg transition-colors">
+            <Button type="submit" disabled={saving} className="flex items-center gap-1.5 px-4 py-1.5 h-auto bg-emerald-500 text-black text-[11px] font-bold hover:bg-emerald-400 disabled:opacity-50 rounded-md transition-colors">
               {saving ? <RefreshCw size={11} className="animate-spin" /> : <Plus size={11} />}
               {t('admin.planManager.createCode')}
             </Button>
@@ -826,7 +826,7 @@ const PlanManager = () => {
       {tab === "settings" && (
         <div className="space-y-6 max-w-lg">
           {/* Guest cooldown card */}
-          <Card className="border border-white/7 rounded-xl overflow-hidden gap-0 shadow-none">
+          <Card className="border border-white/7 rounded-md overflow-hidden gap-0 shadow-none">
             <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-white/2">
               <Clock size={13} className="text-amber-400" />
               <span className="text-[12px] font-semibold text-white">{t('admin.planManager.guestCooldownTitle')}</span>
@@ -899,7 +899,7 @@ const PlanManager = () => {
                   { label: t('admin.planManager.statRemainingUses'), value: totalRemaining, sub: unlimited > 0 ? t('admin.planManager.statUnlimitedCodes', { count: unlimited }) : t('admin.planManager.statTotalLimited'), color: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/5" },
                   { label: t('admin.planManager.statUsed'), value: discounts.reduce((s, d) => s + (d.usedCount ?? 0), 0), sub: t('admin.planManager.statTotalUses'), color: "text-zinc-400", border: "border-white/10", bg: "bg-white/[0.02]" },
                 ].map(({ label, value, sub, color, border, bg }) => (
-                  <Card key={label} className={`rounded-xl border ${border} ${bg} px-4 py-3 gap-0 shadow-none`}>
+                  <Card key={label} className={`rounded-md border ${border} ${bg} px-4 py-3 gap-0 shadow-none`}>
                     <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1">{label}</p>
                     <p className={`text-[22px] font-bold tabular-nums ${color}`}>{value}</p>
                     <p className="text-[10px] text-zinc-600 mt-0.5">{sub}</p>

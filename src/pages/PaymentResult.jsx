@@ -54,7 +54,7 @@ const PaymentResult = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#09090b] px-4">
-      <Card className="bg-[#111113] border border-white/[0.07] rounded-2xl p-10 max-w-md w-full text-center space-y-6 gap-0 shadow-none">
+      <Card className="bg-[#111113] border border-white/[0.07] rounded-md p-10 max-w-md w-full text-center space-y-6 gap-0 shadow-none">
 
         {verified === null ? (
           <div className="flex flex-col items-center gap-4 py-8">
@@ -94,14 +94,14 @@ const PaymentResult = () => {
             </p>
             <Button
               onClick={() => navigate("/m/dashboard")}
-              className="flex items-center justify-center gap-2 mx-auto bg-[#09090b] border border-white/[0.07] text-white px-6 py-2.5 h-auto rounded-xl text-[13px] font-medium hover:border-white/[0.14] transition-colors"
+              className="flex items-center justify-center gap-2 mx-auto bg-[#09090b] border border-white/[0.07] text-white px-6 py-2.5 h-auto rounded-md text-[13px] font-medium hover:border-white/[0.14] transition-colors"
             >
               <ArrowLeft size={15} /> {t('payment.goToDashboard')}
             </Button>
             {!actualSuccess && (
               <Button
                 onClick={() => navigate("/m/payment")}
-                className="flex items-center justify-center gap-2 mx-auto text-[#f5a623] border border-[#f5a623]/20 bg-[#f5a623]/[0.05] px-6 py-2.5 h-auto rounded-xl text-[13px] font-medium hover:bg-[#f5a623]/[0.08] transition-colors"
+                className="flex items-center justify-center gap-2 mx-auto text-[#f5a623] border border-[#f5a623]/20 bg-[#f5a623]/[0.05] px-6 py-2.5 h-auto rounded-md text-[13px] font-medium hover:bg-[#f5a623]/[0.08] transition-colors"
               >
                 {t('payment.tryPaymentAgain')}
               </Button>

@@ -17,7 +17,7 @@ const BookingManagement = ({ bookings }) => {
         </Button>
       </div>
 
-      <div className="bg-[#0f172a] rounded-lg border border-slate-800 shadow-sm overflow-x-auto">
+      <div className="bg-[#0f172a] rounded-md border border-slate-800 shadow-sm overflow-x-auto">
         <Table className="w-full text-left border-collapse text-xs">
           <TableHeader>
             <TableRow className="bg-slate-900 border-b border-slate-800 text-slate-400 uppercase font-semibold hover:bg-slate-900">

@@ -246,7 +246,7 @@ const PaymentPage = () => {
   if (success) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="bg-white border border-emerald-200 rounded-2xl p-12 text-center space-y-5 max-w-md w-full shadow-lg">
+        <div className="bg-white border border-emerald-200 rounded-md p-12 text-center space-y-5 max-w-md w-full shadow-lg">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -297,7 +297,7 @@ const PaymentPage = () => {
 
             {/* FREE indicator — only if user is free */}
             {currentPlanOrder === 0 && (
-              <Card className="w-full text-left p-5 rounded-2xl border border-gray-200 bg-white opacity-60 gap-0 shadow-none">
+              <Card className="w-full text-left p-5 rounded-md border border-gray-200 bg-white opacity-60 gap-0 shadow-none">
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2 mb-1">
@@ -317,7 +317,7 @@ const PaymentPage = () => {
             )}
 
             {/* Course access note */}
-            <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 border border-amber-200">
+            <div className="flex items-start gap-3 p-4 rounded-md bg-amber-50 border border-amber-200">
               <span className="text-[18px] shrink-0">🎓</span>
               <p className="text-[12px] text-amber-800 leading-relaxed">
                 <span className="font-semibold">{t('payment.allCoursesIncluded')}</span> {t('payment.allCoursesIncludedDesc')} <span className="font-semibold">Basic+</span>.
@@ -327,7 +327,7 @@ const PaymentPage = () => {
 
             {plansLoading ? (
               [1,2,3].map(i => (
-                <div key={i} className="w-full p-5 rounded-2xl border border-gray-200 bg-white">
+                <div key={i} className="w-full p-5 rounded-md border border-gray-200 bg-white">
                   <div className="flex items-center justify-between">
                     <div className="space-y-2">
                       <Skeleton className="h-4 w-32 rounded" />
@@ -354,7 +354,7 @@ const PaymentPage = () => {
                   }}
                   whileHover={!isCurrentPlan && !isDowngrade ? { y: -1 } : {}}
                   transition={{ duration: 0.15 }}
-                  className={`w-full text-left rounded-2xl border transition-all duration-200 overflow-hidden ${
+                  className={`w-full text-left rounded-md border transition-all duration-200 overflow-hidden ${
                     isCurrentPlan
                       ? 'border-zinc-300 bg-zinc-50 cursor-default opacity-70'
                       : isDowngrade
@@ -522,7 +522,7 @@ const PaymentPage = () => {
           </div>
 
           {/* Right: Payment panel */}
-          <Card className="bg-white border border-gray-200 rounded-2xl overflow-hidden sticky top-20 gap-0 p-0">
+          <Card className="bg-white border border-gray-200 rounded-md overflow-hidden sticky top-20 gap-0 p-0">
 
             {/* Selected plan summary header */}
             {selectedPlanData && (
@@ -586,7 +586,7 @@ const PaymentPage = () => {
                                 setDiscountError(null);
                                 setShowVoucherList(false);
                               }}
-                              className={`flex items-center justify-between px-3 py-2.5 rounded-xl border cursor-pointer transition-all ${
+                              className={`flex items-center justify-between px-3 py-2.5 rounded-md border cursor-pointer transition-all ${
                                 isExpired
                                   ? "border-gray-100 bg-gray-50 opacity-50 cursor-not-allowed"
                                   : "border-amber-200 bg-amber-50 hover:border-amber-400 hover:bg-amber-100"
@@ -623,12 +623,12 @@ const PaymentPage = () => {
                     value={discountCode}
                     onChange={e => { setDiscountCode(e.target.value.toUpperCase()); setDiscountInfo(null); setDiscountError(null); }}
                     placeholder={t('payment.enterCodePlaceholder')}
-                    className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-[13px] font-mono uppercase placeholder:normal-case placeholder:text-gray-400 focus:outline-none focus:border-amber-400 transition-colors"
+                    className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-[13px] font-mono uppercase placeholder:normal-case placeholder:text-gray-400 focus:outline-none focus:border-amber-400 transition-colors"
                   />
                   <Button
                     onClick={handleApplyDiscount}
                     disabled={applyingDiscount || !discountCode.trim()}
-                    className="px-4 py-2 bg-amber-500 text-white text-[12px] font-semibold rounded-xl hover:bg-amber-600 disabled:opacity-40 transition-colors h-auto"
+                    className="px-4 py-2 bg-amber-500 text-white text-[12px] font-semibold rounded-md hover:bg-amber-600 disabled:opacity-40 transition-colors h-auto"
                   >
                     {applyingDiscount ? "..." : t('payment.apply')}
                   </Button>
@@ -655,7 +655,7 @@ const PaymentPage = () => {
                   <p className="text-[13px] text-gray-500">{error}</p>
                   <Button
                     onClick={() => fetchOrder(selectedPlan)}
-                    className="px-5 py-2 bg-white border border-gray-200 rounded-xl text-[12px] font-medium text-gray-900 hover:border-gray-300 transition-colors h-auto"
+                    className="px-5 py-2 bg-white border border-gray-200 rounded-md text-[12px] font-medium text-gray-900 hover:border-gray-300 transition-colors h-auto"
                   >
                     {t('payment.tryAgain')}
                   </Button>
@@ -663,7 +663,7 @@ const PaymentPage = () => {
               ) : orderData ? (
                 <div className="flex flex-col items-center gap-5 w-full">
                   {/* Amount */}
-                  <Card className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center gap-0 shadow-none">
+                  <Card className="w-full bg-gray-50 border border-gray-100 rounded-md p-4 text-center gap-0 shadow-none">
                     <p className="text-[11px] text-gray-400 uppercase tracking-wider mb-1">{t('payment.amountToPay')}</p>
                     <p className="text-3xl font-bold text-gray-900">{orderData.amount?.toLocaleString("vi-VN")}đ</p>
                     <p className="text-[12px] text-gray-400 mt-1">{t('payment.planLabel', { plan: orderData.plan })}</p>
@@ -674,7 +674,7 @@ const PaymentPage = () => {
                     onClick={() => { trackPaymentSubmit(orderData.plan, orderData.amount); window.location.href = orderData.checkoutUrl; }}
                     whileHover={{ scale: 1.01, boxShadow: '0 8px 24px rgba(245,166,35,0.3)' }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full py-4 bg-amber-500 hover:bg-amber-600 text-white font-bold text-[15px] rounded-2xl transition-colors flex items-center justify-center gap-3"
+                    className="w-full py-4 bg-amber-500 hover:bg-amber-600 text-white font-bold text-[15px] rounded-md transition-colors flex items-center justify-center gap-3"
                   >
                     <CreditCard size={18} />
                     {t('payment.payViaPayOS')}
@@ -706,7 +706,7 @@ const PaymentPage = () => {
         </div>
 
         {/* ── Comparison Table ── */}
-        <Card className="bg-white border border-gray-200 rounded-2xl overflow-hidden gap-0 p-0">
+        <Card className="bg-white border border-gray-200 rounded-md overflow-hidden gap-0 p-0">
           <div className="px-6 py-5 border-b border-gray-100">
             <p className="text-[16px] font-bold text-gray-900">{t('payment.compareBenefitsTitle')}</p>
             <p className="text-[12px] text-gray-400 mt-0.5">{t('payment.compareBenefitsDesc')}</p>
@@ -767,14 +767,14 @@ const PaymentPage = () => {
           </div>
 
           {/* Bottom CTA */}
-          <div className="px-6 py-5 bg-linear-to-r from-amber-50 to-orange-50 border-t border-amber-100 flex items-center justify-between gap-4">
+          <div className="px-6 py-5 bg-amber-50 border-t border-amber-100 flex items-center justify-between gap-4">
             <div>
               <p className="text-[14px] font-bold text-gray-900">{t('payment.bottomCtaTitle')}</p>
               <p className="text-[12px] text-gray-500 mt-0.5">{t('payment.bottomCtaDesc')}</p>
             </div>
             <Button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="shrink-0 px-5 py-2.5 bg-gold hover:bg-[#e09515] text-white text-[13px] font-semibold rounded-xl transition-colors h-auto"
+              className="shrink-0 px-5 py-2.5 bg-gold hover:bg-[#e09515] text-white text-[13px] font-semibold rounded-md transition-colors h-auto"
             >
               {t('payment.choosePlanNow')}
             </Button>
@@ -788,7 +788,7 @@ const PaymentPage = () => {
             { name: "Trần Thị Bảo Châu", role: t('payment.testimonial2Role'), quote: t('payment.testimonial2Quote'), plan: "ANNUAL" },
             { name: "Lê Đức Anh", role: t('payment.testimonial3Role'), quote: t('payment.testimonial3Quote'), plan: "FULL" },
           ].map((item, i) => (
-            <Card key={i} className="bg-white border border-gray-200 rounded-2xl p-5 gap-0 shadow-none">
+            <Card key={i} className="bg-white border border-gray-200 rounded-md p-5 gap-0 shadow-none">
               <div className="flex gap-0.5 mb-3">
                 {[...Array(5)].map((_, j) => <Star key={j} size={11} className="text-amber-400 fill-amber-400" />)}
               </div>

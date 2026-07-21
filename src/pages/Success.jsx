@@ -49,9 +49,9 @@ const Success = () => {
         </div>
 
         {/* Booking summary */}
-        <Card className="bg-[#111113] border border-white/[0.07] rounded-2xl p-6 mt-8 flex-col md:flex-row gap-8 items-center text-left flex shadow-none">
+        <Card className="bg-[#111113] border border-white/[0.07] rounded-md p-6 mt-8 flex-col md:flex-row gap-8 items-center text-left flex shadow-none">
           <div className="flex items-center gap-4 md:border-r md:border-white/[0.07] md:pr-8">
-            <div className="w-14 h-14 rounded-xl bg-[#09090b] border border-[#f5a623]/20 flex items-center justify-center text-[#f5a623] font-bold text-lg">
+            <div className="w-14 h-14 rounded-md bg-[#09090b] border border-[#f5a623]/20 flex items-center justify-center text-[#f5a623] font-bold text-lg">
               {mcInitial}
             </div>
             <div>
@@ -93,13 +93,13 @@ const Success = () => {
               if (bookingId) params.set("bookingId", bookingId);
               navigate(`/m/messaging${params.toString() ? `?${params.toString()}` : ""}`);
             }}
-            className="flex items-center justify-center gap-2 px-8 py-3 h-auto rounded-xl border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] text-[13px] font-medium transition-colors"
+            className="flex items-center justify-center gap-2 px-8 py-3 h-auto rounded-md border border-white/[0.07] text-zinc-400 hover:text-white hover:border-white/[0.14] text-[13px] font-medium transition-colors"
           >
             {t('payment.messageMc', { name: mc?.name || "MC" })} <MessageCircle size={16} className="text-[#f5a623]" />
           </Button>
           <Button
             onClick={() => navigate("/m/dashboard")}
-            className="flex items-center justify-center gap-2 px-8 py-3 h-auto rounded-xl bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors"
+            className="flex items-center justify-center gap-2 px-8 py-3 h-auto rounded-md bg-[#f5a623] text-black text-[13px] font-semibold hover:bg-[#e09520] transition-colors"
           >
             {t('payment.goToDashboard')} <Zap size={16} fill="currentColor" />
           </Button>

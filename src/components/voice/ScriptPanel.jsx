@@ -173,7 +173,7 @@ export function SimpleScriptPanel({
   };
 
   return (
-    <div data-quest="quest-script-panel" className="flex-1 rounded-2xl border border-white/[0.07] bg-[#111113] overflow-hidden flex flex-col min-w-0">
+    <div data-quest="quest-script-panel" className="flex-1 rounded-md border border-white/[0.07] bg-[#111113] overflow-hidden flex flex-col min-w-0">
       {/* Toolbar */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.07] bg-[#0d0d0f] gap-2 flex-wrap">
         <div className="flex items-center gap-1">
@@ -182,13 +182,13 @@ export function SimpleScriptPanel({
           <button onClick={() => setFSize(s => Math.min(48, s + 2))} className="w-6 h-6 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Plus size={12} /></button>
         </div>
 
-        <div className="flex items-center gap-0.5 bg-[#111113] border border-white/[0.07] rounded-lg p-0.5">
+        <div className="flex items-center gap-0.5 bg-[#111113] border border-white/[0.07] rounded-md p-0.5">
           {[["left", AlignLeft], ["center", AlignCenter], ["right", AlignRight]].map(([v, Icon]) => (
             <button key={v} onClick={() => setFAlign(v)} className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${fAlign === v ? "bg-gold/20 text-gold" : "text-zinc-500 hover:text-white"}`}><Icon size={12} /></button>
           ))}
         </div>
 
-        <div className="flex items-center gap-0.5 bg-[#111113] border border-white/[0.07] rounded-lg p-0.5">
+        <div className="flex items-center gap-0.5 bg-[#111113] border border-white/[0.07] rounded-md p-0.5">
           {[["serif", "S"], ["sans", "A"], ["mono", "M"]].map(([v, label]) => (
             <button key={v} onClick={() => setFFont(v)} className={`px-2 h-6 text-[11px] font-medium rounded transition-colors ${fFont === v ? "bg-gold/20 text-gold" : "text-zinc-500 hover:text-white"}`}>{label}</button>
           ))}
@@ -212,7 +212,7 @@ export function SimpleScriptPanel({
                   if (tpRunning) { setTpRunning(false); }
                   else { if (scrollRef.current) scrollRef.current.scrollTop = 0; setTpRunning(true); }
                 }}
-                className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium transition-colors ${tpRunning ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-gold/10 text-gold border border-gold/30 hover:bg-gold/20"}`}
+                className={`flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium transition-colors ${tpRunning ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-gold/10 text-gold border border-gold/30 hover:bg-gold/20"}`}
               >
                 {tpRunning ? <><Square size={10} /> {t_vp("teleprompterStop")}</> : <><Play size={10} /> {t_vp("teleprompterRun")}</>}
               </button>
@@ -220,7 +220,7 @@ export function SimpleScriptPanel({
           )}
           <button
             onClick={() => { setTp(v => !v); setTpRunning(false); }}
-            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium border transition-colors ${tp ? "bg-blue-500/10 text-blue-400 border-blue-500/30" : "text-zinc-500 border-white/[0.07] hover:text-white hover:border-white/20"}`}
+            className={`flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium border transition-colors ${tp ? "bg-blue-500/10 text-blue-400 border-blue-500/30" : "text-zinc-500 border-white/[0.07] hover:text-white hover:border-white/20"}`}
           >
             <Gauge size={11} /> {t_vp("teleprompter")}
           </button>
@@ -228,7 +228,7 @@ export function SimpleScriptPanel({
             <button
               onClick={() => setKaraoke(v => !v)}
               title={t_vp("karaokeTooltip")}
-              className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium border transition-colors ${karaoke ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" : "text-zinc-500 border-white/[0.07] hover:text-white hover:border-white/20"}`}
+              className={`flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium border transition-colors ${karaoke ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" : "text-zinc-500 border-white/[0.07] hover:text-white hover:border-white/20"}`}
             >
               <Mic size={11} /> {t_vp("karaoke")}
             </button>
@@ -462,7 +462,7 @@ export default function ScriptPanel({
         >
           {renderInlineMarkdown(seg.content)}
           {ann.type === "note" && hoveredAnnotation === ann.id && (
-            <span style={{ position: "absolute", bottom: "100%", left: "50%", transform: "translateX(-50%)", marginBottom: "6px", background: "#1a1a1e", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "10px", padding: "8px 10px", fontSize: "11px", color: "#d4d4d8", lineHeight: 1.5, whiteSpace: "pre-wrap", maxWidth: "220px", zIndex: 60, boxShadow: "0 8px 24px rgba(0,0,0,0.4)", pointerEvents: "none" }}>
+            <span style={{ position: "absolute", bottom: "100%", left: "50%", transform: "translateX(-50%)", marginBottom: "6px", background: "#1a1a1e", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "6px", padding: "8px 10px", fontSize: "11px", color: "#d4d4d8", lineHeight: 1.5, whiteSpace: "pre-wrap", maxWidth: "220px", zIndex: 60, boxShadow: "0 8px 24px rgba(0,0,0,0.4)", pointerEvents: "none" }}>
               <span style={{ display: "block", fontSize: "10px", fontWeight: 700, color: hlColor.border, marginBottom: "3px" }}>📝 Ghi chú</span>
               {ann.note}
             </span>
@@ -473,7 +473,7 @@ export default function ScriptPanel({
   };
 
   return (
-    <div className="rounded-2xl border border-white/[0.07] bg-[#111113] overflow-hidden">
+    <div className="rounded-md border border-white/[0.07] bg-[#111113] overflow-hidden">
       {/* Toolbar */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.07] bg-[#0d0d0f] gap-2 flex-wrap">
         {/* Font size */}
@@ -484,14 +484,14 @@ export default function ScriptPanel({
         </div>
 
         {/* Alignment */}
-        <div className="flex items-center gap-0.5 bg-[#111113] border border-white/[0.07] rounded-lg p-0.5">
+        <div className="flex items-center gap-0.5 bg-[#111113] border border-white/[0.07] rounded-md p-0.5">
           {[["left", AlignLeft], ["center", AlignCenter], ["right", AlignRight]].map(([v, Icon]) => (
             <button key={v} onClick={() => setScriptAlign(v)} className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${scriptAlign === v ? "bg-gold/20 text-gold" : "text-zinc-500 hover:text-white"}`}><Icon size={12} /></button>
           ))}
         </div>
 
         {/* Font family */}
-        <div className="flex items-center gap-0.5 bg-[#111113] border border-white/[0.07] rounded-lg p-0.5">
+        <div className="flex items-center gap-0.5 bg-[#111113] border border-white/[0.07] rounded-md p-0.5">
           {[["serif", "S"], ["sans", "A"], ["mono", "M"]].map(([v, label]) => (
             <button key={v} onClick={() => setScriptFont(v)} className={`px-2 h-6 text-[11px] font-medium rounded transition-colors ${scriptFont === v ? "bg-gold/20 text-gold" : "text-zinc-500 hover:text-white"}`}>{label}</button>
           ))}
@@ -517,7 +517,7 @@ export default function ScriptPanel({
                   if (teleprompterRunning) { setTeleprompterRunning(false); }
                   else { if (scriptScrollRef.current) scriptScrollRef.current.scrollTop = 0; setTeleprompterRunning(true); }
                 }}
-                className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium transition-colors ${teleprompterRunning ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-gold/10 text-gold border border-gold/30 hover:bg-gold/20"}`}
+                className={`flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium transition-colors ${teleprompterRunning ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-gold/10 text-gold border border-gold/30 hover:bg-gold/20"}`}
               >
                 {teleprompterRunning ? <><Square size={10} /> {t_vp("teleprompterStop")}</> : <><Play size={10} /> {t_vp("teleprompterRun")}</>}
               </button>
@@ -525,7 +525,7 @@ export default function ScriptPanel({
           )}
           <button
             onClick={() => { setTeleprompter((t) => !t); setTeleprompterRunning(false); }}
-            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium border transition-colors ${teleprompter ? "bg-blue-500/10 text-blue-400 border-blue-500/30" : "text-zinc-500 border-white/[0.07] hover:text-white hover:border-white/20"}`}
+            className={`flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium border transition-colors ${teleprompter ? "bg-blue-500/10 text-blue-400 border-blue-500/30" : "text-zinc-500 border-white/[0.07] hover:text-white hover:border-white/20"}`}
           >
             <Gauge size={11} /> {t_vp("teleprompter")}
           </button>
@@ -533,7 +533,7 @@ export default function ScriptPanel({
             <button
               onClick={() => setSyncPlayback((v) => !v)}
               title={t_vp("syncPlaybackTooltip")}
-              className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-medium border transition-colors ${syncPlayback ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" : "text-zinc-500 border-white/[0.07] hover:text-white hover:border-white/20"}`}
+              className={`flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium border transition-colors ${syncPlayback ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" : "text-zinc-500 border-white/[0.07] hover:text-white hover:border-white/20"}`}
             >
               <Mic size={11} /> {t_vp("syncPlaybackButton")}
             </button>
@@ -578,7 +578,7 @@ export default function ScriptPanel({
         {annotationPopup && (
           <div
             ref={annotationPopupRef}
-            style={{ position: "absolute", left: `${annotationPopup.x}px`, top: `${annotationPopup.y}px`, transform: "translate(-50%, -100%)", zIndex: 100, background: "#1a1a1e", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "12px", padding: "8px 10px", display: "flex", flexDirection: "column", gap: "6px", boxShadow: "0 12px 32px rgba(0,0,0,0.5)", minWidth: showNoteInput ? "220px" : "auto" }}
+            style={{ position: "absolute", left: `${annotationPopup.x}px`, top: `${annotationPopup.y}px`, transform: "translate(-50%, -100%)", zIndex: 100, background: "#1a1a1e", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "6px", padding: "8px 10px", display: "flex", flexDirection: "column", gap: "6px", boxShadow: "0 12px 32px rgba(0,0,0,0.5)", minWidth: showNoteInput ? "220px" : "auto" }}
             onMouseDown={(e) => e.preventDefault()}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>

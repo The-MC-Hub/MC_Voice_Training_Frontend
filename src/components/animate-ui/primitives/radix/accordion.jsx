@@ -71,10 +71,8 @@ function AccordionContent({
             }
             transition={transition}
             style={{
-              maskImage:
-                'linear-gradient(black var(--mask-stop), transparent var(--mask-stop))',
-              WebkitMaskImage:
-                'linear-gradient(black var(--mask-stop), transparent var(--mask-stop))',
+              maskImage: 'none',
+              WebkitMaskImage: 'none',
               overflow: 'hidden',
             }}
             {...props} />
@@ -95,10 +93,8 @@ function AccordionContent({
               exit={{ height: 0, opacity: 0, '--mask-stop': '0%', y: 20 }}
               transition={transition}
               style={{
-                maskImage:
-                  'linear-gradient(black var(--mask-stop), transparent var(--mask-stop))',
-                WebkitMaskImage:
-                  'linear-gradient(black var(--mask-stop), transparent var(--mask-stop))',
+                maskImage: 'none',
+                WebkitMaskImage: 'none',
                 overflow: 'hidden',
               }}
               {...props} />

@@ -52,7 +52,7 @@ const StreakWidget = ({ onOpenCard, onStreakLoaded }) => {
   }, []);
 
   if (loading) {
-    return <div className="rounded-2xl bg-white border border-gray-100 h-44 animate-pulse shadow-sm" />;
+    return <div className="rounded-md bg-white border border-gray-100 h-44 animate-pulse shadow-sm" />;
   }
   if (!streak) return null;
 
@@ -74,16 +74,16 @@ const StreakWidget = ({ onOpenCard, onStreakLoaded }) => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="rounded-2xl overflow-hidden bg-white shadow-sm relative"
+      className="rounded-md overflow-hidden bg-white shadow-sm relative"
       style={{ border: `1px solid ${accent}30` }}
     >
       {/* Subtle top accent line */}
-      <div className="h-0.5 w-full" style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }} />
+      <div className="h-0.5 w-full" style={{ background: accent }} />
 
       {/* Faint radial glow top-left */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: `radial-gradient(ellipse 50% 70% at 5% 50%, ${accent}0c 0%, transparent 65%)` }}
+        style={{ background: `${accent}0c` }}
       />
 
       <div className="relative flex items-stretch">
@@ -99,7 +99,7 @@ const StreakWidget = ({ onOpenCard, onStreakLoaded }) => {
             className="mb-2"
           >
             <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl"
+              className="w-14 h-14 rounded-md flex items-center justify-center text-2xl"
               style={{
                 background: `${accent}12`,
                 border: `1.5px solid ${accent}30`,
@@ -135,7 +135,7 @@ const StreakWidget = ({ onOpenCard, onStreakLoaded }) => {
 
             {/* Freeze */}
             <div
-              className="flex items-center gap-1 px-2 py-1 rounded-lg shrink-0"
+              className="flex items-center gap-1 px-2 py-1 rounded-md shrink-0"
               style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.2)' }}
               title={t('streakWidget.freezeTooltip')}
             >
@@ -156,13 +156,13 @@ const StreakWidget = ({ onOpenCard, onStreakLoaded }) => {
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                 className="h-full rounded-full relative overflow-hidden"
-                style={{ background: `linear-gradient(90deg, ${accent}90, ${accent})` }}
+                style={{ background: accent }}
               >
                 <motion.div
                   className="absolute inset-y-0 w-8"
                   animate={{ x: ['-200%', '400%'] }}
                   transition={{ duration: 2, repeat: Infinity, ease: 'linear', repeatDelay: 1.2 }}
-                  style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)' }}
+                  style={{ background: 'rgba(255,255,255,0.6)' }}
                 />
               </motion.div>
             </div>
@@ -208,11 +208,11 @@ const StreakWidget = ({ onOpenCard, onStreakLoaded }) => {
       {/* ── Next locked tier ─────────────────────────────────────────────────── */}
       {nextHero && (
         <div
-          className="mx-3 mb-3 px-3 py-2 rounded-xl flex items-center gap-2.5"
+          className="mx-3 mb-3 px-3 py-2 rounded-md flex items-center gap-2.5"
           style={{ background: `${nextAccent}08`, border: `1px solid ${nextAccent}20` }}
         >
           <div
-            className="w-8 h-8 rounded-xl flex items-center justify-center relative shrink-0"
+            className="w-8 h-8 rounded-md flex items-center justify-center relative shrink-0"
             style={{ background: `${nextAccent}10`, border: `1px solid ${nextAccent}20`, fontSize: 16 }}
           >
             <span style={{ filter: 'grayscale(0.5) brightness(0.85)' }}>{nextHero.emoji}</span>
@@ -233,7 +233,7 @@ const StreakWidget = ({ onOpenCard, onStreakLoaded }) => {
       )}
 
       {!nextHero && (
-        <div className="mx-3 mb-3 px-3 py-2 rounded-xl flex items-center gap-2"
+        <div className="mx-3 mb-3 px-3 py-2 rounded-md flex items-center gap-2"
           style={{ background: '#fef9c3', border: '1px solid #fde68a' }}>
           <span>✨</span>
           <p className="text-[11px] font-bold text-yellow-700">{t('streakWidget.maxTierReached')}</p>

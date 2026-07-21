@@ -212,7 +212,7 @@ const TransactionManagement = ({ transactions, revenueStats, onRefresh }) => {
 
       {/* Flash */}
       {flash && (
-        <div className="bg-emerald-950/50 border border-emerald-800/50 text-emerald-400 text-[12px] px-4 py-3 rounded-lg">
+        <div className="bg-emerald-950/50 border border-emerald-800/50 text-emerald-400 text-[12px] px-4 py-3 rounded-md">
           {flash}
         </div>
       )}

@@ -58,7 +58,7 @@ const NotesSidebar = ({ isOpen, onClose, highlights, onHighlightDeleted, onHighl
                 </div>
               ) : (
                 highlights.map((hl) => (
-                  <div key={hl.id} className="bg-[#111113] border border-white/[0.06] rounded-xl p-4 space-y-3 relative group">
+                  <div key={hl.id} className="bg-[#111113] border border-white/[0.06] rounded-md p-4 space-y-3 relative group">
                     <button 
                       onClick={() => handleDelete(hl.id)}
                       className="absolute top-3 right-3 text-zinc-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -76,7 +76,7 @@ const NotesSidebar = ({ isOpen, onClose, highlights, onHighlightDeleted, onHighl
                           value={editNote}
                           onChange={(e) => setEditNote(e.target.value)}
                           placeholder={t('notesSidebar.notePlaceholder')}
-                          className="w-full bg-[#09090b] border border-white/[0.1] rounded-lg p-2.5 text-[12px] text-white resize-none outline-none focus:border-[#f5a623]/50 min-h-[60px]"
+                          className="w-full bg-[#09090b] border border-white/[0.1] rounded-md p-2.5 text-[12px] text-white resize-none outline-none focus:border-[#f5a623]/50 min-h-[60px]"
                         />
                         <div className="flex justify-end gap-2">
                           <button onClick={() => setEditingId(null)} className="px-3 py-1.5 text-[11px] text-zinc-400 hover:text-white">{t('common.cancel')}</button>

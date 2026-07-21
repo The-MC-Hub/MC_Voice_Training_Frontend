@@ -136,10 +136,10 @@ const VoiceLibrary = () => {
                 <div
                   key={lesson.id}
                   onClick={() => { trackLessonClick(lesson.id, lesson.category); navigate(`/m/voice/practice/${lesson.id}`); }}
-                  className="relative flex items-center gap-3 px-4 py-3 bg-[#111113] border border-white/[0.07] rounded-xl hover:border-gold/30 hover:bg-[#141416] transition-all cursor-pointer group"
+                  className="relative flex items-center gap-3 px-4 py-3 bg-[#111113] border border-white/[0.07] rounded-md hover:border-gold/30 hover:bg-[#141416] transition-all cursor-pointer group"
                 >
                   {/* Rank badge */}
-                  <div className={`shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-bold ${
+                  <div className={`shrink-0 w-7 h-7 rounded-md flex items-center justify-center text-[11px] font-bold ${
                     i === 0 ? 'bg-gold text-black' : i === 1 ? 'bg-zinc-400/20 text-zinc-300' : 'bg-zinc-700/30 text-zinc-500'
                   }`}>
                     {i + 1}
@@ -202,7 +202,7 @@ const VoiceLibrary = () => {
             <Button
               hoverScale={1}
               onClick={() => setActiveCategory("All")}
-              className={`flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium transition-colors h-auto ${
+              className={`flex items-center justify-between px-3 py-2 rounded-md text-[13px] font-medium transition-colors h-auto ${
                 activeCategory === "All"
                   ? 'bg-gold/10 text-gold border border-gold/20'
                   : 'text-zinc-400 hover:text-white hover:bg-white/5'
@@ -221,7 +221,7 @@ const VoiceLibrary = () => {
                   key={cat}
                   hoverScale={1}
                   onClick={() => setActiveCategory(cat)}
-                  className={`flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium transition-colors h-auto ${
+                  className={`flex items-center justify-between px-3 py-2 rounded-md text-[13px] font-medium transition-colors h-auto ${
                     active
                       ? 'bg-gold/10 text-gold border border-gold/20'
                       : 'text-zinc-400 hover:text-white hover:bg-white/5'
@@ -251,7 +251,7 @@ const VoiceLibrary = () => {
                 );
               }
               return (
-                <div className="mt-6 p-4 bg-[#111113] border border-white/[0.07] rounded-xl">
+                <div className="mt-6 p-4 bg-[#111113] border border-white/[0.07] rounded-md">
                   <Zap size={18} className="text-gold mb-2.5" />
                   <p className="text-[13px] font-semibold text-white mb-1.5">{t('voiceLibrary.aiCoaching')}</p>
                   <p className="text-[12px] text-zinc-500 leading-relaxed">{t('voiceLibrary.aiCoachingDesc')}</p>
@@ -266,7 +266,7 @@ const VoiceLibrary = () => {
 
           {/* Search + filters */}
           <div className="flex flex-col sm:flex-row gap-3 mb-5">
-            <div className="flex-1 flex items-center gap-2.5 px-3 py-2 bg-[#111113] border border-white/[0.07] rounded-xl focus-within:border-white/[0.14] transition-colors">
+            <div className="flex-1 flex items-center gap-2.5 px-3 py-2 bg-[#111113] border border-white/[0.07] rounded-md focus-within:border-white/[0.14] transition-colors">
               <Search size={16} className="text-zinc-600 shrink-0" />
               <input
                 type="text"
@@ -301,7 +301,7 @@ const VoiceLibrary = () => {
                   key={i}
                   value={sel.value}
                   onChange={(e) => sel.onChange(e.target.value)}
-                  className="bg-[#111113] border border-white/10 text-zinc-300 text-[12px] py-2 px-3 rounded-xl focus:outline-none focus:border-gold/30 cursor-pointer"
+                  className="bg-[#111113] border border-white/10 text-zinc-300 text-[12px] py-2 px-3 rounded-md focus:outline-none focus:border-gold/30 cursor-pointer"
                 >
                   {sel.opts.map(o => <option key={o.v} value={o.v}>{o.l}</option>)}
                 </select>
@@ -314,16 +314,16 @@ const VoiceLibrary = () => {
               {t('voiceLibrary.showing')} <span className="text-white">{filteredLessons.length}</span> {t('voiceLibrary.results')}
             </p>
             {/* View toggle */}
-            <div className="flex items-center gap-1 bg-[#111113] border border-white/[0.07] rounded-xl p-1 shrink-0">
+            <div className="flex items-center gap-1 bg-[#111113] border border-white/[0.07] rounded-md p-1 shrink-0">
               <Button
                 onClick={() => setViewMode('list')}
-                className={`p-1.5 rounded-lg transition-colors h-auto ${viewMode === 'list' ? 'bg-gold/10 text-gold' : 'text-zinc-600 hover:text-zinc-300'}`}
+                className={`p-1.5 rounded-md transition-colors h-auto ${viewMode === 'list' ? 'bg-gold/10 text-gold' : 'text-zinc-600 hover:text-zinc-300'}`}
               >
                 <LayoutList size={15} />
               </Button>
               <Button
                 onClick={() => setViewMode('grid')}
-                className={`p-1.5 rounded-lg transition-colors h-auto ${viewMode === 'grid' ? 'bg-gold/10 text-gold' : 'text-zinc-600 hover:text-zinc-300'}`}
+                className={`p-1.5 rounded-md transition-colors h-auto ${viewMode === 'grid' ? 'bg-gold/10 text-gold' : 'text-zinc-600 hover:text-zinc-300'}`}
               >
                 <LayoutGrid size={15} />
               </Button>
@@ -334,7 +334,7 @@ const VoiceLibrary = () => {
           {loading ? (
             <div className={viewMode === 'grid' ? 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3' : 'flex flex-col gap-2'}>
               {[1, 2, 3, 4, 5, 6].map(i => (
-                <Skeleton key={i} className={`rounded-xl bg-white/3 ${viewMode === 'grid' ? 'aspect-[3/4]' : 'h-20'}`} />
+                <Skeleton key={i} className={`rounded-md bg-white/3 ${viewMode === 'grid' ? 'aspect-[3/4]' : 'h-20'}`} />
               ))}
             </div>
           ) : currentItems.length > 0 ? (
@@ -347,10 +347,10 @@ const VoiceLibrary = () => {
                     <div
                       key={lesson.id}
                       {...(lessonIdx === 0 ? { 'data-quest': 'quest-first-lesson' } : {})}
-                      className="flex items-center gap-4 px-4 py-3 bg-[#111113] border border-white/[0.07] rounded-xl hover:border-white/[0.14] hover:bg-[#141416] transition-all group cursor-pointer"
+                      className="flex items-center gap-4 px-4 py-3 bg-[#111113] border border-white/[0.07] rounded-md hover:border-white/[0.14] hover:bg-[#141416] transition-all group cursor-pointer"
                       onClick={() => { trackLessonClick(lesson.id, lesson.category); navigate(`/m/voice/practice/${lesson.id}`); }}
                     >
-                      <div className="relative w-16 h-16 rounded-xl bg-[#0d0d0f] border border-white/[0.06] overflow-hidden shrink-0 flex items-center justify-center">
+                      <div className="relative w-16 h-16 rounded-md bg-[#0d0d0f] border border-white/[0.06] overflow-hidden shrink-0 flex items-center justify-center">
                         {lesson.thumbnailUrl ? (
                           <img src={lesson.thumbnailUrl} alt={lesson.title} className="w-full h-full object-cover" />
                         ) : (
@@ -365,7 +365,7 @@ const VoiceLibrary = () => {
                           </div>
                         )}
                         {/* Hover mic overlay */}
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-xl">
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md">
                           <Mic size={20} className="text-gold" />
                         </div>
                       </div>
@@ -405,7 +405,7 @@ const VoiceLibrary = () => {
                     <div
                       key={lesson.id}
                       {...(lessonIdx === 0 ? { 'data-quest': 'quest-first-lesson' } : {})}
-                      className="group flex flex-col bg-[#111113] border border-white/[0.07] rounded-2xl overflow-hidden hover:border-gold/25 hover:shadow-[0_0_20px_rgba(245,166,35,0.06)] transition-all cursor-pointer"
+                      className="group flex flex-col bg-[#111113] border border-white/[0.07] rounded-md overflow-hidden hover:border-gold/25 hover:shadow-[0_0_20px_rgba(245,166,35,0.06)] transition-all cursor-pointer"
                       onClick={() => { trackLessonClick(lesson.id, lesson.category); navigate(`/m/voice/practice/${lesson.id}`); }}
                     >
                       {/* Thumbnail */}
@@ -414,7 +414,7 @@ const VoiceLibrary = () => {
                           <img src={lesson.thumbnailUrl} alt={lesson.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                         ) : (
                           <div className="flex flex-col items-center gap-2">
-                            <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-md bg-white/[0.04] border border-white/[0.06] flex items-center justify-center">
                               <Mic size={18} className="text-zinc-600" />
                             </div>
                             <span className="text-[9px] text-zinc-700 uppercase tracking-wider">MC Script</span>
@@ -510,7 +510,7 @@ const VoiceLibrary = () => {
               <Button
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                className="px-3 py-1.5 rounded-lg bg-[#111113] border border-white/[0.07] text-zinc-400 text-[12px] disabled:opacity-30 hover:bg-[#1a1a1e] transition-colors h-auto"
+                className="px-3 py-1.5 rounded-md bg-[#111113] border border-white/[0.07] text-zinc-400 text-[12px] disabled:opacity-30 hover:bg-[#1a1a1e] transition-colors h-auto"
               >
                 {t('common.prev')}
               </Button>
@@ -518,7 +518,7 @@ const VoiceLibrary = () => {
                 <Button
                   key={p}
                   onClick={() => setCurrentPage(p)}
-                  className={`w-8 h-8 rounded-lg text-[12px] font-medium transition-colors ${
+                  className={`w-8 h-8 rounded-md text-[12px] font-medium transition-colors ${
                     currentPage === p
                       ? 'bg-gold text-black'
                       : 'bg-[#111113] border border-white/10 text-zinc-400 hover:bg-[#1a1a1e]'
@@ -530,7 +530,7 @@ const VoiceLibrary = () => {
               <Button
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                className="px-3 py-1.5 rounded-lg bg-[#111113] border border-white/[0.07] text-zinc-400 text-[12px] disabled:opacity-30 hover:bg-[#1a1a1e] transition-colors h-auto"
+                className="px-3 py-1.5 rounded-md bg-[#111113] border border-white/[0.07] text-zinc-400 text-[12px] disabled:opacity-30 hover:bg-[#1a1a1e] transition-colors h-auto"
               >
                 {t('common.next')}
               </Button>

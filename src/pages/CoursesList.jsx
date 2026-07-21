@@ -28,8 +28,8 @@ const TYPE_THUMB_BG = {
 };
 
 const SkeletonCard = () => (
-  <div className="bg-[#111113] border border-white/[0.07] rounded-2xl p-5 space-y-4">
-    <Skeleton className="h-36 rounded-xl bg-white/[0.04]" />
+  <div className="bg-[#111113] border border-white/[0.07] rounded-md p-5 space-y-4">
+    <Skeleton className="h-36 rounded-md bg-white/[0.04]" />
     <Skeleton className="h-4 rounded bg-white/[0.04] w-3/4" />
     <Skeleton className="h-3 rounded bg-white/[0.04] w-full" />
     <div className="flex gap-2 pt-1">
@@ -60,7 +60,7 @@ const CourseCard = ({ course, index }) => {
       transition={{ delay: index * 0.06, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
       onClick={() => { trackCourseDetailView(course.id, course.title); navigate(`/m/courses/${course.id}`); }}
       {...(index === 0 ? { 'data-quest': 'quest-first-course' } : {})}
-      className="group cursor-pointer bg-[#111113] border border-white/[0.07] rounded-2xl overflow-hidden
+      className="group cursor-pointer bg-[#111113] border border-white/[0.07] rounded-md overflow-hidden
                  hover:border-[#f5a623]/30 hover:shadow-[0_8px_32px_rgba(245,166,35,0.10)]
                  transition-all duration-300 flex flex-col"
     >
@@ -76,7 +76,7 @@ const CourseCard = ({ course, index }) => {
           <GraduationCap size={48} className="text-white/[0.06]" />
         )}
         {/* gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-black/30" />
 
         {/* top badges */}
         <div className="absolute top-3 left-3 flex gap-1.5">
@@ -201,7 +201,7 @@ const CoursesList = () => {
       <div className="flex items-center gap-2 flex-wrap">
         {filters.map(f => (
           <Button key={f.value ?? 'all'} onClick={() => setActiveFilter(f.value)}
-            className={`px-4 py-1.5 rounded-lg text-[12px] font-medium border transition-colors h-auto ${
+            className={`px-4 py-1.5 rounded-md text-[12px] font-medium border transition-colors h-auto ${
               activeFilter === f.value
                 ? 'bg-[#f5a623] text-black border-[#f5a623]'
                 : 'text-zinc-500 border-white/[0.07] hover:text-white hover:border-white/[0.14]'
@@ -218,7 +218,7 @@ const CoursesList = () => {
         </div>
       ) : filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 gap-3">
-          <div className="w-14 h-14 rounded-xl bg-[#111113] border border-white/[0.07] flex items-center justify-center">
+          <div className="w-14 h-14 rounded-md bg-[#111113] border border-white/[0.07] flex items-center justify-center">
             <BookOpen size={24} className="text-zinc-700" />
           </div>
           <p className="text-zinc-600 text-[13px]">{t('courses.noCourses')}</p>

@@ -59,7 +59,7 @@ const Badge = ({ cls, children }) => (
 );
 
 const StatCard = ({ label, value, sub, color = "text-gray-900" }) => (
-  <div className="bg-white border border-gray-100 rounded-xl p-4">
+  <div className="bg-white border border-gray-100 rounded-md p-4">
     <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">{label}</p>
     <p className={`text-[22px] font-bold tabular-nums leading-none ${color}`}>{value}</p>
     {sub && <p className="text-[10px] text-gray-400 mt-1">{sub}</p>}
@@ -243,7 +243,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
             <p className="text-[11px] text-gray-400 font-mono">{user.email}</p>
           </div>
         </div>
-        <Button onClick={onClose} className="h-auto p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+        <Button onClick={onClose} className="h-auto p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors">
           <X size={16} />
         </Button>
       </div>
@@ -298,7 +298,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                 [t("admin.userManagement.aiSessionsUsed"), user.aiSessionsUsed || 0, true],
                 [t("admin.userManagement.planExpiresAt"), fmtDate(user.planExpiresAt), false],
               ].map(([label, value, mono]) => (
-                <div key={label} className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-2.5">
+                <div key={label} className="bg-gray-50 border border-gray-100 rounded-md px-3 py-2.5">
                   <p className="text-[9px] text-gray-400 uppercase tracking-wider mb-0.5">{label}</p>
                   <p className={`text-gray-900 text-[12px] font-medium ${mono ? "font-mono text-[11px]" : ""}`}>{value || "—"}</p>
                 </div>
@@ -319,13 +319,13 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                       [t("admin.userManagement.experience"), mcProfile.experience ? t("admin.userManagement.yearsUnit", { count: mcProfile.experience }) : null],
                       [t("admin.userManagement.rate"), mcProfile.rates?.min ? `${mcProfile.rates.min.toLocaleString("vi-VN")} VND` : null],
                     ].map(([l, v]) => v ? (
-                      <div key={l} className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-2.5">
+                      <div key={l} className="bg-gray-50 border border-gray-100 rounded-md px-3 py-2.5">
                         <p className="text-[9px] text-gray-400 uppercase tracking-wider mb-0.5">{l}</p>
                         <p className="text-gray-900 text-[12px] font-medium">{v}</p>
                       </div>
                     ) : null)}
                     {mcProfile.specialties?.length > 0 && (
-                      <div className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-2.5">
+                      <div className="bg-gray-50 border border-gray-100 rounded-md px-3 py-2.5">
                         <p className="text-[9px] text-gray-400 uppercase tracking-wider mb-1.5">{t("admin.userManagement.specialties")}</p>
                         <div className="flex flex-wrap gap-1">
                           {mcProfile.specialties.map(s => (
@@ -344,13 +344,13 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
               <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-2">{t("admin.userManagement.quickActions")}</p>
               {user.role?.toLowerCase() === "mc" && (
                 <Button onClick={() => handleVerify(user._id, user.isVerified)} hoverScale={1}
-                  className="h-auto w-full flex items-center justify-between px-3 py-2.5 text-[12px] font-medium border border-gray-200 hover:border-amber-300 hover:bg-amber-50 rounded-lg transition-colors text-gray-700">
+                  className="h-auto w-full flex items-center justify-between px-3 py-2.5 text-[12px] font-medium border border-gray-200 hover:border-amber-300 hover:bg-amber-50 rounded-md transition-colors text-gray-700">
                   <span className="flex items-center gap-2"><ShieldAlert size={13} />{user.isVerified ? t("admin.userManagement.revokeCertification") : t("admin.userManagement.grantCertification")}</span>
                   <ChevronRight size={12} className="text-gray-400" />
                 </Button>
               )}
               <Button onClick={() => handleSuspend(user._id, user.isActive)} hoverScale={1}
-                className="h-auto w-full flex items-center justify-between px-3 py-2.5 text-[12px] font-medium border border-gray-200 hover:border-gray-400 rounded-lg transition-colors text-gray-700">
+                className="h-auto w-full flex items-center justify-between px-3 py-2.5 text-[12px] font-medium border border-gray-200 hover:border-gray-400 rounded-md transition-colors text-gray-700">
                 <span className="flex items-center gap-2">{user.isActive ? <XCircle size={13} /> : <CheckCircle size={13} />}{user.isActive ? t("admin.userManagement.lockAccount") : t("admin.userManagement.unlockAccount")}</span>
                 <ChevronRight size={12} className="text-gray-400" />
               </Button>
@@ -370,7 +370,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
               <div className="flex flex-col items-center justify-center py-16 gap-3">
                 <BarChart2 size={32} className="text-gray-200" />
                 <p className="text-[12px] text-gray-400">{t("admin.userManagement.noStatsData")}</p>
-                <Button onClick={loadStats} className="h-auto px-4 py-2 bg-amber-500 text-white text-[11px] font-semibold rounded-lg hover:bg-amber-600">{t("admin.userManagement.reload")}</Button>
+                <Button onClick={loadStats} className="h-auto px-4 py-2 bg-amber-500 text-white text-[11px] font-semibold rounded-md hover:bg-amber-600">{t("admin.userManagement.reload")}</Button>
               </div>
             ) : (
               <div className="space-y-5">
@@ -395,7 +395,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                 </div>
 
                 {/* Last practice */}
-                <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
+                <div className="bg-gray-50 border border-gray-100 rounded-md px-4 py-3 flex items-center gap-3">
                   <Clock size={14} className="text-gray-400 shrink-0" />
                   <div>
                     <p className="text-[10px] text-gray-400 uppercase tracking-wider">{t("admin.userManagement.lastPractice")}</p>
@@ -404,7 +404,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                 </div>
 
                 {/* Practice hours */}
-                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100 rounded-xl px-4 py-3 flex items-center gap-3">
+                <div className="bg-amber-50 border border-amber-100 rounded-md px-4 py-3 flex items-center gap-3">
                   <TrendingUp size={14} className="text-amber-500 shrink-0" />
                   <div>
                     <p className="text-[10px] text-amber-600 uppercase tracking-wider">{t("admin.userManagement.totalPracticeHours")}</p>
@@ -418,7 +418,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                     <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-2">{t("admin.userManagement.last5Sessions")}</p>
                     <div className="space-y-2">
                       {stats.recentSessions.map((s, i) => (
-                        <div key={i} className="bg-white border border-gray-100 rounded-lg px-3 py-2.5 flex items-center justify-between">
+                        <div key={i} className="bg-white border border-gray-100 rounded-md px-3 py-2.5 flex items-center justify-between">
                           <div>
                             <p className="text-[11px] text-gray-500 font-mono">{s.lessonId?.slice(-8) || "—"}</p>
                             <p className="text-[10px] text-gray-400">{fmtDate(s.createdAt)}</p>
@@ -444,7 +444,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
           <div className="p-5 space-y-4">
             {/* Load stats if needed for suggestions */}
             {!stats && !statsLoading && (
-              <Button onClick={loadStats} hoverScale={1} className="h-auto w-full py-2 text-[11px] text-amber-600 border border-dashed border-amber-200 rounded-lg hover:bg-amber-50 transition-colors flex items-center justify-center gap-1.5">
+              <Button onClick={loadStats} hoverScale={1} className="h-auto w-full py-2 text-[11px] text-amber-600 border border-dashed border-amber-200 rounded-md hover:bg-amber-50 transition-colors flex items-center justify-center gap-1.5">
                 <Sparkles size={11} /> {t("admin.userManagement.loadStatsForSuggestions")}
               </Button>
             )}
@@ -459,7 +459,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                       key={s.id}
                       onClick={() => applySuggestion(s)}
                       hoverScale={1}
-                      className="h-auto w-full flex items-center gap-2.5 px-3 py-2.5 bg-white border border-gray-100 hover:border-amber-300 hover:bg-amber-50 rounded-lg transition-all text-left group"
+                      className="h-auto w-full flex items-center gap-2.5 px-3 py-2.5 bg-white border border-gray-100 hover:border-amber-300 hover:bg-amber-50 rounded-md transition-all text-left group"
                     >
                       <span className="text-base shrink-0">{s.icon}</span>
                       <span className="text-[11px] text-gray-600 group-hover:text-amber-700 flex-1 leading-snug">{s.label}</span>
@@ -486,7 +486,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                   <Input
                     type="text" value={notifySubject} onChange={e => setNotifySubject(e.target.value)}
                     placeholder={t("admin.userManagement.emailSubjectPlaceholder")}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[12px] focus:outline-none focus:border-amber-400 text-gray-900 placeholder:text-gray-400 h-auto focus-visible:ring-0"
+                    className="w-full border border-gray-200 rounded-md px-3 py-2.5 text-[12px] focus:outline-none focus:border-amber-400 text-gray-900 placeholder:text-gray-400 h-auto focus-visible:ring-0"
                     required
                   />
                 </div>
@@ -496,18 +496,18 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                     value={notifyContent} onChange={e => setNotifyContent(e.target.value)}
                     placeholder={t("admin.userManagement.emailContentPlaceholder")}
                     rows={8}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[12px] focus:outline-none focus:border-amber-400 text-gray-900 placeholder:text-gray-400 resize-none leading-relaxed"
+                    className="w-full border border-gray-200 rounded-md px-3 py-2.5 text-[12px] focus:outline-none focus:border-amber-400 text-gray-900 placeholder:text-gray-400 resize-none leading-relaxed"
                     required
                   />
                 </div>
 
                 {notifyMsg && (
-                  <div className={`text-[12px] px-3 py-2 rounded-lg border ${notifyMsg.startsWith("✓") ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-red-50 text-red-600 border-red-200"}`}>
+                  <div className={`text-[12px] px-3 py-2 rounded-md border ${notifyMsg.startsWith("✓") ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-red-50 text-red-600 border-red-200"}`}>
                     {notifyMsg}
                   </div>
                 )}
 
-                <div className="bg-amber-50 border border-amber-100 rounded-lg px-3 py-2.5 flex items-start gap-2">
+                <div className="bg-amber-50 border border-amber-100 rounded-md px-3 py-2.5 flex items-start gap-2">
                   <Mail size={12} className="text-amber-500 mt-0.5 shrink-0" />
                   <p className="text-[10px] text-amber-700 leading-relaxed">
                     {t("admin.userManagement.draftHintPrefix")} <strong>{user.email}</strong> · {t("admin.userManagement.draftHintSuffix")}
@@ -517,7 +517,7 @@ const UserPanel = ({ user, onClose, onRefresh, handleVerify, handleSuspend }) =>
                 <Button
                   type="submit" disabled={notifyLoading || !notifySubject.trim() || !notifyContent.trim()}
                   hoverScale={1}
-                  className="h-auto w-full flex items-center justify-center gap-2 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg disabled:opacity-50 transition-colors"
+                  className="h-auto w-full flex items-center justify-center gap-2 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-md disabled:opacity-50 transition-colors"
                 >
                   {notifyLoading ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
                   {notifyLoading ? t("admin.userManagement.creating") : t("admin.userManagement.createDraft")}
@@ -721,7 +721,7 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
 
         {/* Flash */}
         {actionMsg && (
-          <div className="mb-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-[13px] px-4 py-3 rounded-xl shrink-0">
+          <div className="mb-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-[13px] px-4 py-3 rounded-md shrink-0">
             {actionMsg}
           </div>
         )}
@@ -743,16 +743,16 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
               <Input
                 type="text" placeholder={t("admin.userManagement.searchPlaceholder")}
                 value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-white border border-gray-200 rounded-xl py-2.5 pl-9 pr-4 text-[13px] focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 placeholder:text-gray-400 shadow-sm h-auto focus-visible:ring-0"
+                className="w-full bg-white border border-gray-200 rounded-md py-2.5 pl-9 pr-4 text-[13px] focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 placeholder:text-gray-400 shadow-sm h-auto focus-visible:ring-0"
               />
             </div>
             <Button onClick={handleRefresh} disabled={refreshing}
-              className="h-auto flex items-center gap-1.5 px-3 py-2.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-500 text-[12px] font-medium rounded-lg transition-colors shrink-0 disabled:opacity-50"
+              className="h-auto flex items-center gap-1.5 px-3 py-2.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-500 text-[12px] font-medium rounded-md transition-colors shrink-0 disabled:opacity-50"
               title={t("admin.userManagement.refreshList")}>
               <RefreshCw size={13} className={refreshing ? 'animate-spin' : ''} />
             </Button>
             <Button onClick={openAddModal}
-              className="h-auto flex items-center gap-1.5 px-3.5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg transition-colors shrink-0">
+              className="h-auto flex items-center gap-1.5 px-3.5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-md transition-colors shrink-0">
               <UserPlus size={13} /> {t("admin.userManagement.add")}
             </Button>
           </div>
@@ -767,7 +767,7 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
             { key: "CLIENT", label: "Client", count: counts.client ?? 0 },
           ].map(({ key, label, count }) => (
             <Button key={key} onClick={() => setFilterRole(key)}
-              className={`h-auto px-3.5 py-1.5 text-[12px] font-semibold border transition-all rounded-lg ${
+              className={`h-auto px-3.5 py-1.5 text-[12px] font-semibold border transition-all rounded-md ${
                 filterRole === key ? "bg-amber-500 text-white border-amber-500" : "bg-white text-gray-500 border-gray-200 hover:border-amber-300"
               }`}>
               {label} <span className={`ml-1 text-[11px] ${filterRole === key ? "opacity-80" : "text-gray-400"}`}>({count})</span>
@@ -796,7 +796,7 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
             ))}
           </div>
           <select value={sortBy} onChange={e => setSortBy(e.target.value)}
-            className="px-3 py-1.5 text-[12px] border border-gray-200 rounded-lg bg-white text-gray-600 focus:outline-none focus:border-amber-400 cursor-pointer shrink-0">
+            className="px-3 py-1.5 text-[12px] border border-gray-200 rounded-md bg-white text-gray-600 focus:outline-none focus:border-amber-400 cursor-pointer shrink-0">
             <option value="newest">{t("admin.userManagement.sortNewest")}</option>
             <option value="name">{t("admin.userManagement.sortNameAZ")}</option>
             <option value="sessions">{t("admin.userManagement.sortSessions")}</option>
@@ -805,7 +805,7 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
         </div>
 
         {/* Table */}
-        <div className="bg-white border border-gray-200 overflow-auto rounded-xl shadow-sm flex-1">
+        <div className="bg-white border border-gray-200 overflow-auto rounded-md shadow-sm flex-1">
           <Table className="w-full text-left border-collapse text-[12px]">
             <TableHeader>
               <TableRow className="bg-gray-50 border-b border-gray-200 text-gray-500 uppercase text-[10px] font-bold tracking-wider sticky top-0 hover:bg-gray-50">
@@ -929,24 +929,24 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
 
       {/* ── Add User Modal ────────────────────────────────────────── */}
       <Dialog open={showAddModal} onOpenChange={(open) => { if (!open) setShowAddModal(false); }}>
-        <DialogContent showCloseButton={false} className="bg-white border border-gray-200 w-full max-w-md shadow-xl rounded-xl overflow-hidden p-0 gap-0">
+        <DialogContent showCloseButton={false} className="bg-white border border-gray-200 w-full max-w-md shadow-xl rounded-md overflow-hidden p-0 gap-0">
             <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
               <h2 className="text-[15px] font-semibold text-gray-900">{t("admin.userManagement.addNewAccount")}</h2>
-              <Button onClick={() => setShowAddModal(false)} className="h-auto text-gray-400 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100"><X size={16} /></Button>
+              <Button onClick={() => setShowAddModal(false)} className="h-auto text-gray-400 hover:text-gray-700 p-1.5 rounded-md hover:bg-gray-100"><X size={16} /></Button>
             </div>
             <form onSubmit={handleAddUser} className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto">
-              {addError && <div className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-lg p-3">{addError}</div>}
+              {addError && <div className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-md p-3">{addError}</div>}
               {[[t("admin.userManagement.displayName"), "name", "text", t("admin.userManagement.displayNamePlaceholder"), true], ["Email", "email", "email", "user@example.com", true], [t("admin.userManagement.password"), "password", "password", t("admin.userManagement.passwordMinPlaceholder"), true], [t("admin.userManagement.phoneNumber"), "phoneNumber", "tel", "0901234567", false]].map(([label, key, type, ph, req]) => (
                 <div key={key} className="space-y-1">
                   <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{label}</label>
                   <Input type={type} value={addForm[key]} onChange={e => setAddForm(p => ({ ...p, [key]: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 h-auto focus-visible:ring-0" placeholder={ph} required={req} />
+                    className="w-full border border-gray-200 rounded-md px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 h-auto focus-visible:ring-0" placeholder={ph} required={req} />
                 </div>
               ))}
               <div className="space-y-1">
                 <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t("admin.userManagement.role")}</label>
                 <select value={addForm.role} onChange={e => setAddForm(p => ({ ...p, role: e.target.value }))}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 bg-white">
+                  className="w-full border border-gray-200 rounded-md px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 bg-white">
                   <option value="CLIENT">Client</option>
                   <option value="MC">MC</option>
                   <option value="ADMIN">Admin</option>
@@ -956,13 +956,13 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                 <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t("admin.userManagement.internalNote")}</label>
                 <textarea value={addForm.adminNote} onChange={e => setAddForm(p => ({ ...p, adminNote: e.target.value }))}
                   rows={2} placeholder={t("admin.userManagement.internalNotePlaceholder")}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 resize-none" />
+                  className="w-full border border-gray-200 rounded-md px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 resize-none" />
               </div>
               {/* Plan activation */}
-              <div className="border border-amber-100 rounded-xl p-4 bg-amber-50/50 space-y-3">
+              <div className="border border-amber-100 rounded-md p-4 bg-amber-50/50 space-y-3">
                 <p className="text-[11px] font-semibold text-amber-700 uppercase tracking-wider">{t("admin.userManagement.activatePlanNow")}</p>
                 <select value={addForm.plan} onChange={e => setAddForm(p => ({ ...p, plan: e.target.value }))}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 bg-white">
+                  className="w-full border border-gray-200 rounded-md px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 bg-white">
                   <option value="">{t("admin.userManagement.noPlanActivation")}</option>
                   <option value="BASIC">{t("admin.userManagement.basic30Days")}</option>
                   <option value="FULL">{t("admin.userManagement.full30Days")}</option>
@@ -971,10 +971,10 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                 {addForm.plan && <p className="text-[11px] text-amber-600">{t("admin.userManagement.bypassPayosHint")}</p>}
               </div>
               {/* Coupon */}
-              <div className="border border-sky-100 rounded-xl p-4 bg-sky-50/50 space-y-3">
+              <div className="border border-sky-100 rounded-md p-4 bg-sky-50/50 space-y-3">
                 <p className="text-[11px] font-semibold text-sky-700 uppercase tracking-wider">{t("admin.userManagement.giftDiscountCode")}</p>
                 <select value={addForm.couponId} onChange={e => setAddForm(p => ({ ...p, couponId: e.target.value }))}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-sky-400 bg-white">
+                  className="w-full border border-gray-200 rounded-md px-3 py-2.5 text-[13px] focus:outline-none focus:border-sky-400 bg-white">
                   <option value="">{t("admin.userManagement.noCoupon")}</option>
                   {discounts.map(d => (
                     <option key={d.id} value={d.id}>
@@ -985,8 +985,8 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
                 <p className="text-[11px] text-sky-600">{t("admin.userManagement.couponUseOnceHint")}</p>
               </div>
               <div className="flex justify-end gap-3 pt-2 border-t border-gray-100 sticky bottom-0 bg-white pb-1">
-                <Button type="button" onClick={() => setShowAddModal(false)} className="h-auto px-4 py-2 text-[12px] text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">{t("admin.userManagement.cancel")}</Button>
-                <Button type="submit" disabled={addLoading} className="h-auto px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg disabled:opacity-50">
+                <Button type="button" onClick={() => setShowAddModal(false)} className="h-auto px-4 py-2 text-[12px] text-gray-600 border border-gray-200 rounded-md hover:bg-gray-50">{t("admin.userManagement.cancel")}</Button>
+                <Button type="submit" disabled={addLoading} className="h-auto px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-md disabled:opacity-50">
                   {addLoading ? t("admin.userManagement.creating") : t("admin.userManagement.createAccount")}
                 </Button>
               </div>
@@ -996,21 +996,21 @@ const UserManagement = ({ users, handleVerify, handleSuspend, onRefresh }) => {
 
       {/* ── Change Password Modal ─────────────────────────────────── */}
       <Dialog open={!!pwdModal} onOpenChange={(open) => { if (!open) setPwdModal(null); }}>
-        <DialogContent showCloseButton={false} className="bg-white border border-gray-200 w-full max-w-sm shadow-xl rounded-xl overflow-hidden p-0 gap-0">
+        <DialogContent showCloseButton={false} className="bg-white border border-gray-200 w-full max-w-sm shadow-xl rounded-md overflow-hidden p-0 gap-0">
             <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
               <h2 className="text-[15px] font-semibold text-gray-900">{t("admin.userManagement.changePassword")}</h2>
-              <Button onClick={() => setPwdModal(null)} className="h-auto text-gray-400 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100"><X size={16} /></Button>
+              <Button onClick={() => setPwdModal(null)} className="h-auto text-gray-400 hover:text-gray-700 p-1.5 rounded-md hover:bg-gray-100"><X size={16} /></Button>
             </div>
             <form onSubmit={handleChangePassword} className="px-6 py-5 space-y-4">
-              {pwdError && <div className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-lg p-3">{pwdError}</div>}
+              {pwdError && <div className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-md p-3">{pwdError}</div>}
               <div className="space-y-1">
                 <label className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t("admin.userManagement.newPassword")}</label>
                 <Input type="password" value={newPwd} onChange={e => setNewPwd(e.target.value)}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 h-auto focus-visible:ring-0" placeholder={t("admin.userManagement.passwordMinPlaceholder")} required />
+                  className="w-full border border-gray-200 rounded-md px-3 py-2.5 text-[13px] focus:outline-none focus:border-amber-400 h-auto focus-visible:ring-0" placeholder={t("admin.userManagement.passwordMinPlaceholder")} required />
               </div>
               <div className="flex justify-end gap-3 pt-2 border-t border-gray-100">
-                <Button type="button" onClick={() => setPwdModal(null)} className="h-auto px-4 py-2 text-[12px] text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">{t("admin.userManagement.cancel")}</Button>
-                <Button type="submit" disabled={pwdLoading} className="h-auto px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-lg disabled:opacity-50">
+                <Button type="button" onClick={() => setPwdModal(null)} className="h-auto px-4 py-2 text-[12px] text-gray-600 border border-gray-200 rounded-md hover:bg-gray-50">{t("admin.userManagement.cancel")}</Button>
+                <Button type="submit" disabled={pwdLoading} className="h-auto px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white text-[12px] font-semibold rounded-md disabled:opacity-50">
                   {pwdLoading ? t("admin.userManagement.saving") : t("admin.userManagement.update")}
                 </Button>
               </div>

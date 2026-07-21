@@ -34,7 +34,7 @@ const LeftPanel = () => {
       />
       {/* Strong overlay: dark on bottom 60% so text is always readable */}
       <div className="absolute inset-0 bg-black/55" />
-      <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/30 to-transparent" />
+      <div className="absolute inset-0 bg-black/60" />
 
       {/* Top: Logo */}
       <div className="relative z-10">
@@ -58,7 +58,7 @@ const LeftPanel = () => {
         </div>
 
         {/* Testimonial card */}
-        <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-5 shadow-xl">
+        <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-md p-5 shadow-xl">
           <div className="flex gap-0.5 mb-3">
             {[...Array(5)].map((_, i) => <Star key={i} size={11} className="text-amber-400 fill-amber-400" />)}
           </div>
@@ -183,7 +183,7 @@ const AdminOtpModal = ({ adminEmail, rememberMe, onSuccess, onCancel }) => {
     <Dialog open onOpenChange={(open) => { if (!open) onCancel(); }}>
       <DialogContent
         showCloseButton={false}
-        className="w-full max-w-sm mx-4 bg-white rounded-2xl shadow-2xl overflow-hidden p-0"
+        className="w-full max-w-sm mx-4 bg-white rounded-md shadow-2xl overflow-hidden p-0"
       >
         {/* Header */}
         <div className="bg-amber-500 px-6 py-5 text-center">
@@ -206,7 +206,7 @@ const AdminOtpModal = ({ adminEmail, rememberMe, onSuccess, onCancel }) => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="bg-red-50 border border-red-200 text-red-600 text-[12px] rounded-xl p-2.5 text-center mb-4 overflow-hidden"
+                className="bg-red-50 border border-red-200 text-red-600 text-[12px] rounded-md p-2.5 text-center mb-4 overflow-hidden"
               >
                 {error}
               </motion.div>
@@ -229,7 +229,7 @@ const AdminOtpModal = ({ adminEmail, rememberMe, onSuccess, onCancel }) => {
                 value={d}
                 onChange={e => handleDigit(i, e.target.value)}
                 onKeyDown={e => handleKeyDown(i, e)}
-                className={`w-11 h-13 text-center text-[20px] font-bold border-2 rounded-xl outline-none transition-all
+                className={`w-11 h-13 text-center text-[20px] font-bold border-2 rounded-md outline-none transition-all
                   ${d ? 'border-amber-400 bg-amber-50 text-amber-700' : 'border-gray-200 bg-gray-50 text-gray-900'}
                   focus:border-amber-400 focus:bg-white focus:shadow-[0_0_0_3px_rgba(245,166,35,0.15)]`}
               />
@@ -239,7 +239,7 @@ const AdminOtpModal = ({ adminEmail, rememberMe, onSuccess, onCancel }) => {
           <Button
             onClick={() => submitOtp(digits.join(""))}
             disabled={loading || digits.some(d => !d)}
-            className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 disabled:opacity-50 flex items-center justify-center gap-2 transition-all h-auto"
+            className="w-full py-3 rounded-md bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 disabled:opacity-50 flex items-center justify-center gap-2 transition-all h-auto"
           >
             {loading
               ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -345,7 +345,7 @@ const Login = () => {
                 initial={{ opacity: 0, height: 0, marginBottom: 0 }}
                 animate={{ opacity: 1, height: 'auto', marginBottom: 20 }}
                 exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-                className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-xl p-3 text-center overflow-hidden"
+                className="bg-red-50 border border-red-200 text-red-600 text-[13px] rounded-md p-3 text-center overflow-hidden"
               >
                 {error?.startsWith?.("EMAIL_NOT_VERIFIED:")
                   ? "Email chưa được xác thực. Đang chuyển đến trang xác thực..."
@@ -363,7 +363,7 @@ const Login = () => {
             {/* Email */}
             <div className="flex flex-col gap-1.5">
               <label className="text-[13px] font-semibold text-gray-700">{t('auth.email')}</label>
-              <div className="flex items-center gap-2.5 px-3.5 py-3 bg-gray-50 border border-gray-200 rounded-xl focus-within:border-amber-400 focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(245,166,35,0.12)] transition-all">
+              <div className="flex items-center gap-2.5 px-3.5 py-3 bg-gray-50 border border-gray-200 rounded-md focus-within:border-amber-400 focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(245,166,35,0.12)] transition-all">
                 <Mail size={15} className="text-gray-400 shrink-0" />
                 <input
                   type="email" placeholder="you@mchub.com" autoComplete="email" required
@@ -381,7 +381,7 @@ const Login = () => {
                   {t('auth.forgotPassword')}
                 </Link>
               </div>
-              <div className="flex items-center gap-2.5 px-3.5 py-3 bg-gray-50 border border-gray-200 rounded-xl focus-within:border-amber-400 focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(245,166,35,0.12)] transition-all">
+              <div className="flex items-center gap-2.5 px-3.5 py-3 bg-gray-50 border border-gray-200 rounded-md focus-within:border-amber-400 focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgba(245,166,35,0.12)] transition-all">
                 <Lock size={15} className="text-gray-400 shrink-0" />
                 <input
                   type={showPass ? "text" : "password"} placeholder="••••••••"
@@ -410,7 +410,7 @@ const Login = () => {
               type="submit" disabled={loading}
               whileHover={{ scale: loading ? 1 : 1.01, boxShadow: loading ? 'none' : '0 4px 20px rgba(245,166,35,0.3)' }}
               whileTap={{ scale: 0.98 }}
-              className="w-full py-3 rounded-xl bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 disabled:opacity-50 flex items-center justify-center gap-2 transition-all mt-1"
+              className="w-full py-3 rounded-md bg-amber-500 text-white text-[14px] font-semibold hover:bg-amber-600 disabled:opacity-50 flex items-center justify-center gap-2 transition-all mt-1"
             >
               {loading
                 ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

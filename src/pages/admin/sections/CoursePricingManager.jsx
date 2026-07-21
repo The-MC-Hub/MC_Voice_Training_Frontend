@@ -55,7 +55,7 @@ const CoursePricingManager = () => {
           </p>
         </div>
         <Button onClick={load}
-          className="h-auto flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[--border-subtle] text-[12px] text-[--text-secondary] hover:border-amber-500/40 transition-colors">
+          className="h-auto flex items-center gap-1.5 px-3 py-2 rounded-md border border-[--border-subtle] text-[12px] text-[--text-secondary] hover:border-amber-500/40 transition-colors">
           <RefreshCw size={13} /> {t('admin.coursePricingManager.reload')}
         </Button>
       </div>
@@ -70,7 +70,7 @@ const CoursePricingManager = () => {
               ? Math.round(Number(form.priceVnd || 0) * (100 - Number(form.discountPercent || 0)) / 100)
               : (c.finalPriceVnd ?? c.priceVnd ?? 199000);
             return (
-              <Card key={c.id} className="p-4 rounded-xl bg-[--bg-surface] border border-[--border-subtle] flex flex-col lg:flex-row lg:items-center gap-4 shadow-none">
+              <Card key={c.id} className="p-4 rounded-md bg-[--bg-surface] border border-[--border-subtle] flex flex-col lg:flex-row lg:items-center gap-4 shadow-none">
                 <div className="flex-1 min-w-0">
                   <p className="text-[14px] font-semibold text-[--text-primary] truncate">{c.title}</p>
                   <div className="flex items-center gap-3 mt-1 text-[11px] text-[--text-muted]">
@@ -87,24 +87,24 @@ const CoursePricingManager = () => {
                       <label className="block text-[10px] text-[--text-muted] uppercase mb-1">{t('admin.coursePricingManager.priceLabel')}</label>
                       <Input type="number" min="0" step="1000" value={form.priceVnd}
                         onChange={e => setForm(f => ({ ...f, priceVnd: e.target.value }))}
-                        className="w-32 px-3 py-2 rounded-lg bg-[--bg-base] border border-[--border-subtle] text-[13px] text-[--text-primary] focus:border-amber-500 outline-none h-auto focus-visible:ring-0" />
+                        className="w-32 px-3 py-2 rounded-md bg-[--bg-base] border border-[--border-subtle] text-[13px] text-[--text-primary] focus:border-amber-500 outline-none h-auto focus-visible:ring-0" />
                     </div>
                     <div>
                       <label className="block text-[10px] text-[--text-muted] uppercase mb-1">{t('admin.coursePricingManager.discountLabel')}</label>
                       <Input type="number" min="0" max="100" value={form.discountPercent}
                         onChange={e => setForm(f => ({ ...f, discountPercent: e.target.value }))}
-                        className="w-20 px-3 py-2 rounded-lg bg-[--bg-base] border border-[--border-subtle] text-[13px] text-[--text-primary] focus:border-amber-500 outline-none h-auto focus-visible:ring-0" />
+                        className="w-20 px-3 py-2 rounded-md bg-[--bg-base] border border-[--border-subtle] text-[13px] text-[--text-primary] focus:border-amber-500 outline-none h-auto focus-visible:ring-0" />
                     </div>
                     <div className="text-right mr-1">
                       <p className="text-[10px] text-[--text-muted] uppercase mb-1">{t('admin.coursePricingManager.finalPriceLabel')}</p>
                       <p className="text-[14px] font-bold text-amber-500">{fmt(finalPrice)}đ</p>
                     </div>
                     <Button onClick={() => save(c.id)} disabled={saving}
-                      className="w-9 h-9 rounded-lg bg-emerald-500 text-white flex items-center justify-center hover:bg-emerald-600 transition-colors disabled:opacity-50">
+                      className="w-9 h-9 rounded-md bg-emerald-500 text-white flex items-center justify-center hover:bg-emerald-600 transition-colors disabled:opacity-50">
                       <Check size={15} />
                     </Button>
                     <Button onClick={() => setEditId(null)}
-                      className="w-9 h-9 rounded-lg border border-[--border-subtle] text-[--text-muted] flex items-center justify-center hover:text-[--text-primary] transition-colors">
+                      className="w-9 h-9 rounded-md border border-[--border-subtle] text-[--text-muted] flex items-center justify-center hover:text-[--text-primary] transition-colors">
                       <X size={15} />
                     </Button>
                   </div>
@@ -122,7 +122,7 @@ const CoursePricingManager = () => {
                       </span>
                     )}
                     <Button onClick={() => startEdit(c)}
-                      className="h-auto flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-[--border-subtle] text-[12px] text-[--text-secondary] hover:border-amber-500/40 hover:text-amber-500 transition-colors">
+                      className="h-auto flex items-center gap-1.5 px-3.5 py-2 rounded-md border border-[--border-subtle] text-[12px] text-[--text-secondary] hover:border-amber-500/40 hover:text-amber-500 transition-colors">
                       <Pencil size={12} /> {t('admin.coursePricingManager.editPrice')}
                     </Button>
                   </div>

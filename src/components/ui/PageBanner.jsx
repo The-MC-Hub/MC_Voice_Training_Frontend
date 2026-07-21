@@ -7,17 +7,17 @@ const PageBanner = ({ icon, eyebrow, title, highlight, description, stats = [], 
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-      className="relative bg-[#111113] border border-white/[0.08] rounded-2xl overflow-hidden mb-8"
+      className="relative bg-[#111113] border border-white/[0.08] rounded-md overflow-hidden mb-8"
     >
       {/* Top accent line */}
       <div
         className="absolute top-0 inset-x-0 h-px"
-        style={{ background: `linear-gradient(90deg, transparent 5%, ${accentColor}66 35%, ${accentColor}66 65%, transparent 95%)` }}
+        style={{ background: `${accentColor}66` }}
       />
       {/* Glow left */}
       <div
         className="absolute top-0 left-0 w-[400px] h-[160px] pointer-events-none"
-        style={{ background: `radial-gradient(ellipse at 0% 0%, ${accentColor}12 0%, transparent 65%)` }}
+        style={{ background: `${accentColor}12` }}
       />
 
       <div className="relative z-10 px-4 sm:px-8 py-4 sm:py-6 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-10">
@@ -28,7 +28,7 @@ const PageBanner = ({ icon, eyebrow, title, highlight, description, stats = [], 
             initial={{ opacity: 0, scale: 0.7 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center"
+            className="shrink-0 w-12 h-12 rounded-md flex items-center justify-center"
             style={{
               background: `${accentColor}15`,
               border: `1px solid ${accentColor}28`,

@@ -43,7 +43,7 @@ export default function SampleComparisonCard({ userAudioUrl, sampleAudioUrl }) {
   if (!sampleAudioUrl) return null;
 
   return (
-    <div className="rounded-2xl border border-white/[0.07] bg-[#111113] p-5">
+    <div className="rounded-md border border-white/[0.07] bg-[#111113] p-5">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-[13px] font-semibold text-white">{t("voicePractice.sampleComparisonTitle")}</h3>
         <div className="flex items-center gap-3 text-[10px]">
