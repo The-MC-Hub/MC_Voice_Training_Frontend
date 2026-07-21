@@ -7,7 +7,7 @@ import {
   BarChart, Bar, Cell,
   PieChart, Pie
 } from "recharts";
-import { Zap, TrendingUp, Mic, Award, BarChart3, PieChart as PieIcon, ChevronRight, Target, Flame, Clock } from "lucide-react";
+import { Zap, TrendingUp, Mic, Award, BarChart3, PieChart as PieIcon, ChevronRight, Target, Flame, Clock, Medal } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import SessionCard from "./SessionCard";
@@ -20,9 +20,29 @@ const fadeUp = {
   transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
 };
 
+const TIER_LABEL = {
+  BRONZE: 'Đồng', SILVER: 'Bạc', GOLD: 'Vàng',
+  PLATINUM: 'Bạch kim', DIAMOND: 'Kim cương', ELITE_LEGEND: 'Huyền thoại',
+};
+const TIER_COLOR = {
+  BRONZE: '#b45309', SILVER: '#a1a1aa', GOLD: '#f5a623',
+  PLATINUM: '#22d3ee', DIAMOND: '#818cf8', ELITE_LEGEND: '#ec4899',
+};
+
+// Mirrors GamificationServiceImpl.awardBadgeIfEligible slugs — keep in sync if backend adds new ones.
+const BADGE_DEFS = [
+  { slug: 'SESSIONS_10', label: '10 buổi luyện tập', color: '#3b82f6' },
+  { slug: 'SESSIONS_50', label: '50 buổi luyện tập', color: '#6366f1' },
+  { slug: 'SESSIONS_100', label: '100 buổi luyện tập', color: '#8b5cf6' },
+  { slug: 'STREAK_7', label: 'Chuỗi 7 ngày', color: '#f97316' },
+  { slug: 'STREAK_30', label: 'Chuỗi 30 ngày', color: '#ef4444' },
+  { slug: 'HIGH_SCORE_STREAK_5', label: '5 phiên điểm cao liên tiếp', color: '#10b981' },
+  { slug: 'HIGH_SCORE_STREAK_10', label: '10 phiên điểm cao liên tiếp', color: '#f5a623' },
+];
+
 const OverviewTab = ({
   dashboard, emptyMonthlyData, practiceHistory,
-  timeFrame, setTimeFrame, skillsData, categoryStats, accuracyDistribution
+  timeFrame, setTimeFrame, skillsData, categoryStats, accuracyDistribution, userStats
 }) => {
   const { t, i18n: i18nInstance } = useTranslation();
   const { theme } = useTheme();
@@ -118,8 +138,22 @@ const OverviewTab = ({
           <div className="absolute top-0 left-6 right-6 h-px"
             style={{ background: 'rgba(245,166,35,0.3)' }} />
 
-          <div className="w-10 h-10 rounded-md bg-[#f5a623]/[0.1] border border-[#f5a623]/20 flex items-center justify-center mb-4">
-            <Zap size={18} className="text-[#f5a623]" />
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-10 h-10 rounded-md bg-[#f5a623]/[0.1] border border-[#f5a623]/20 flex items-center justify-center">
+              <Zap size={18} className="text-[#f5a623]" />
+            </div>
+            {userStats?.currentTier && (
+              <span
+                className="text-[10px] font-semibold px-2 py-1 rounded-md border"
+                style={{
+                  color: TIER_COLOR[userStats.currentTier] || '#a1a1aa',
+                  backgroundColor: `${TIER_COLOR[userStats.currentTier] || '#a1a1aa'}14`,
+                  borderColor: `${TIER_COLOR[userStats.currentTier] || '#a1a1aa'}30`,
+                }}
+              >
+                {TIER_LABEL[userStats.currentTier] || userStats.currentTier}
+              </span>
+            )}
           </div>
           <h3 className="text-[14px] font-semibold text-white mb-1 tracking-tight">{t('dashboard.voiceMasteryRoadmap')}</h3>
           <p className="text-[12px] text-zinc-500 mb-6 leading-relaxed">
@@ -128,8 +162,7 @@ const OverviewTab = ({
 
           <div className="space-y-4 flex-1">
             {[
-              { label: t('dashboard.articulation'), val: 85, color: '#f5a623' },
-              { label: t('dashboard.rhythm'), val: parseFloat(avgRhy) || 72, color: '#6366f1' },
+              { label: t('dashboard.rhythm'), val: parseFloat(avgRhy) || 0, color: '#6366f1' },
               { label: 'Độ chính xác', val: parseFloat(avgAcc) || 0, color: '#10b981' },
             ].map(p => (
               <div key={p.label}>
@@ -155,9 +188,9 @@ const OverviewTab = ({
       {/* Row 2: Quick metrics */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { icon: Flame, label: 'Streak hiện tại', value: `${streak}`, unit: 'ngày', color: 'text-orange-400', bg: 'bg-orange-500/[0.08] border-orange-500/20', bar: streak / 30 * 100, barColor: '#f97316' },
+          { icon: Flame, label: 'Chuỗi luyện tập', value: `${userStats?.currentStreak ?? 0}`, unit: 'ngày', color: 'text-orange-400', bg: 'bg-orange-500/[0.08] border-orange-500/20', bar: Math.min((userStats?.currentStreak ?? 0) / 30 * 100, 100), barColor: '#f97316' },
           { icon: Target, label: 'Mục tiêu tuần', value: `${Math.min(n, 5)}/5`, unit: 'phiên', color: 'text-blue-400', bg: 'bg-blue-500/[0.08] border-blue-500/20', bar: Math.min(n, 5) / 5 * 100, barColor: '#3b82f6' },
-          { icon: Clock, label: 'Thời gian luyện tập', value: `${(n * 12).toFixed(0)}`, unit: 'phút', color: 'text-violet-400', bg: 'bg-violet-500/[0.08] border-violet-500/20', bar: Math.min((n * 12) / 300 * 100, 100), barColor: '#8b5cf6' },
+          { icon: Clock, label: 'Tổng thời gian luyện tập', value: `${(userStats?.totalPracticeHours ?? 0).toFixed(1)}`, unit: 'giờ', color: 'text-violet-400', bg: 'bg-violet-500/[0.08] border-violet-500/20', bar: Math.min((userStats?.totalPracticeHours ?? 0) / 20 * 100, 100), barColor: '#8b5cf6' },
         ].map(({ icon: Icon, label, value, unit, color, bg, bar, barColor }, i) => (
           <motion.div
             key={label}
@@ -183,6 +216,28 @@ const OverviewTab = ({
           </motion.div>
         ))}
       </div>
+
+      {/* Badges earned */}
+      {userStats?.earnedBadges?.length > 0 && (
+        <motion.div {...fadeUp}>
+          <SpotlightCard spotlightColor="rgba(245,166,35,0.10)" spotlightSize={300} className="bg-[#111113] border border-white/[0.07] rounded-md p-6">
+            <h3 className="text-[13px] font-semibold text-white flex items-center gap-2 mb-4">
+              <Medal size={14} className="text-[#f5a623]" /> Huy hiệu đã đạt được
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {BADGE_DEFS.filter(b => userStats.earnedBadges.includes(b.slug)).map(b => (
+                <span
+                  key={b.slug}
+                  className="inline-flex items-center gap-1.5 text-[11px] font-medium px-3 py-1.5 rounded-md border"
+                  style={{ color: b.color, backgroundColor: `${b.color}14`, borderColor: `${b.color}30` }}
+                >
+                  <Medal size={11} /> {b.label}
+                </span>
+              ))}
+            </div>
+          </SpotlightCard>
+        </motion.div>
+      )}
 
       {/* Row 3: Analytics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">

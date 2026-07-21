@@ -151,6 +151,8 @@ const VoiceReport = () => {
                     pitch_contour:     data.pitch_contour     ?? null,
                     filler_words:      data.filler_words      ?? null,
                     emotion_breakdown: data.emotion_breakdown ?? null,
+                    sentence_feedback: data.sentence_feedback ?? data.sentenceFeedback ?? null,
+                    duration_seconds:  data.duration_seconds  ?? data.durationSeconds  ?? 0,
                 };
                 setSession(n);
                 if (n.lessonId) setLesson(await fetchLessonById(n.lessonId));
@@ -188,6 +190,12 @@ const VoiceReport = () => {
     }, [session, isVi]);
 
     const report = useMemo(() => isVi ? session?.report_vi : session?.report_en, [session, isVi]);
+
+    const sentenceFeedback = useMemo(() => {
+        return Array.isArray(session?.sentence_feedback) ? session.sentence_feedback : [];
+    }, [session]);
+
+    const ISSUE_LABEL_VI = { too_fast: 'Quá nhanh', too_slow: 'Quá chậm', flat_pitch: 'Giọng đều, thiếu nhấn nhá' };
 
     const criteriaEntries = useMemo(() => {
         const c = session?.criteria_scores;
@@ -471,6 +479,41 @@ const VoiceReport = () => {
                                                     <CheckCircle2 size={10} className="text-[#f5a623]" />
                                                 </div>
                                                 <p className="text-[13px] text-zinc-400 leading-relaxed">{item}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Sentence-by-sentence breakdown */}
+                            {sentenceFeedback.length > 0 && (
+                                <div>
+                                    <h3 className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5 mb-4">
+                                        <Target size={12} className="text-red-400" /> Câu cần đọc lại
+                                    </h3>
+                                    <div className="space-y-2">
+                                        {sentenceFeedback.map((s, i) => (
+                                            <div
+                                                key={i}
+                                                className={`rounded-md p-4 border transition-colors ${
+                                                    s.needs_rework
+                                                        ? 'bg-red-500/[0.04] border-red-500/15'
+                                                        : 'bg-[#0e0e10] border-white/[0.06]'
+                                                }`}
+                                            >
+                                                <div className="flex items-start justify-between gap-3 mb-1.5">
+                                                    <p className="text-[13px] text-zinc-300 leading-relaxed flex-1">"{s.text}"</p>
+                                                    <span className="text-[11px] text-zinc-600 shrink-0 tabular-nums">{s.wpm?.toFixed(0)} WPM</span>
+                                                </div>
+                                                {s.needs_rework && Array.isArray(s.issues) && s.issues.length > 0 && (
+                                                    <div className="flex flex-wrap gap-1.5 mt-2">
+                                                        {s.issues.map((iss, ii) => (
+                                                            <span key={ii} className="text-[10px] px-2 py-0.5 rounded-md bg-red-500/10 text-red-400 border border-red-500/15">
+                                                                {ISSUE_LABEL_VI[iss] || iss}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                )}
                                             </div>
                                         ))}
                                     </div>

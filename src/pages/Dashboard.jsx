@@ -9,6 +9,7 @@ import i18n from "../i18n";
 import { useApi } from "../hooks/useApi";
 import { fetchDashboard } from "../controllers/mcController";
 import { fetchPracticeHistory } from "../controllers/voiceController";
+import { getPracticeStats } from "../services/userStatsService";
 import { useAuthStore } from "../store/useAuthStore";
 import { trackDashboardView, trackDashboardTabSwitch, trackDashboardChartFilter, trackUpgradeBannerView } from '@/utils/analytics';
 import OverviewTab from "../components/dashboard/OverviewTab";
@@ -50,7 +51,8 @@ const Dashboard = () => {
     () => fetchPracticeHistory(user?.id),
     [user?.id]
   );
-  const loading = dashLoading || practiceLoading;
+  const { data: userStats, loading: statsLoading } = useApi(getPracticeStats);
+  const loading = dashLoading || practiceLoading || statsLoading;
 
   // Plan usage for warning banner
   const plan = user?.plan || 'FREE';
@@ -129,13 +131,25 @@ const Dashboard = () => {
     const avgAcc = practiceHistory.reduce((a, p) => a + (p.accuracy_score || 0), 0) / n;
     const avgRhy = practiceHistory.reduce((a, p) => a + (p.rhythm_score || 0), 0) / n;
     const avgW   = practiceHistory.reduce((a, p) => a + (p.speaking_rate_wpm || 0), 0) / n;
-    return [
+
+    // Stability/tone come from Phase 2/3 AI fields — only present on sessions that ran the fuller analysis.
+    const withSpectral = practiceHistory.filter(p => p.spectral_features ?? p.spectralFeatures);
+    const avgStability = withSpectral.length
+      ? withSpectral.reduce((a, p) => a + ((p.spectral_features ?? p.spectralFeatures)?.mfcc_stability_score ?? 0), 0) / withSpectral.length
+      : null;
+    const withEmotion = practiceHistory.filter(p => p.emotion_breakdown ?? p.emotionBreakdown);
+    const avgTone = withEmotion.length
+      ? withEmotion.reduce((a, p) => a + ((p.emotion_breakdown ?? p.emotionBreakdown)?.emotion_score ?? 0), 0) / withEmotion.length
+      : null;
+
+    const skills = [
       { subject: t('dashboard.accuracy'),  A: avgAcc, fullMark: 100 },
       { subject: t('dashboard.rhythm'),    A: avgRhy, fullMark: 100 },
       { subject: t('dashboard.speed'),     A: Math.min(100, (avgW / 130) * 100), fullMark: 100 },
-      { subject: t('dashboard.stability'), A: 85, fullMark: 100 },
-      { subject: t('dashboard.tone'),      A: 78, fullMark: 100 },
     ];
+    if (avgStability !== null) skills.push({ subject: t('dashboard.stability'), A: avgStability, fullMark: 100 });
+    if (avgTone !== null) skills.push({ subject: t('dashboard.tone'), A: avgTone, fullMark: 100 });
+    return skills;
   }, [practiceHistory]);
 
   const categoryStats = useMemo(() => {
@@ -379,6 +393,7 @@ const Dashboard = () => {
             skillsData={skillsData}
             categoryStats={categoryStats}
             accuracyDistribution={accuracyDistribution}
+            userStats={userStats}
           />
         )}
 
