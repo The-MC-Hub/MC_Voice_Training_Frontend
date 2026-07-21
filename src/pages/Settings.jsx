@@ -55,7 +55,7 @@ import { Card } from "@/components/ui/card";
 
 const inputCls = "flex-1 bg-transparent text-[13px] text-gray-800 placeholder:text-gray-400 focus:outline-none min-w-0";
 const inputWrapCls = "flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2.5 focus-within:border-amber-400 transition-colors";
-const labelCls = "text-[10px] font-medium text-gray-400 uppercase tracking-wider";
+const labelCls = "text-[10px] font-medium text-gray-500 uppercase tracking-wider";
 
 const EMOJI_CATEGORIES = [
   {
@@ -605,44 +605,44 @@ const Settings = () => {
                 </div>
               </Card>
 
-                {false && (
+                {isMC && (
                   <>
-                    {/* Professional Profile — removed */}
-                    <div className={`bg-[#111113] border border-white/10 rounded-2xl shadow-sm ${expandedSections.professional ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300`}>
+                    {/* Professional Profile */}
+                    <Card className={`bg-white border border-gray-200 rounded-2xl shadow-sm ${expandedSections.professional ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300 gap-0 p-0`}>
                       <button
                         type="button"
                         onClick={() => toggleSection('professional')}
-                        className="w-full flex items-center justify-between px-5 py-4 hover:bg-white/[0.02] transition-colors"
+                        className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors"
                       >
-                        <h2 className="text-[14px] font-semibold text-white flex items-center gap-2.5">
+                        <h2 className="text-[14px] font-semibold text-gray-900 flex items-center gap-2.5">
                           <Briefcase size={16} className="text-[#f5a623]" /> {t('settings.professionalProfile')}
                         </h2>
                         {expandedSections.professional
-                          ? <ChevronDown size={16} className="text-zinc-500" />
-                          : <ChevronRight size={16} className="text-zinc-600" />}
+                          ? <ChevronDown size={16} className="text-gray-400" />
+                          : <ChevronRight size={16} className="text-gray-400" />}
                       </button>
 
                       {expandedSections.professional && (
-                        <div className="px-5 pb-5 space-y-4 border-t border-white/[0.06]">
+                        <div className="px-5 pb-5 space-y-4 border-t border-gray-100">
                           <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-1.5">
                               <label className={labelCls}>{t('settings.yearsExperience')}</label>
                               <div className={inputWrapCls}>
-                                <Award size={15} className="text-zinc-600 flex-shrink-0" />
+                                <Award size={15} className="text-gray-400 shrink-0" />
                                 <input type="number" name="experience" className={inputCls} value={mcProfileData.experience} onChange={handleMCChange} />
                               </div>
                             </div>
                             <div className="space-y-1.5">
                               <label className={labelCls}>{t('settings.baseLocation')}</label>
                               <div className={inputWrapCls}>
-                                <MapPin size={15} className="text-zinc-600 flex-shrink-0" />
+                                <MapPin size={15} className="text-gray-400 shrink-0" />
                                 <input type="text" name="regions" className={inputCls} value={mcProfileData.regions} onChange={handleMCChange} placeholder="Ho Chi Minh City, Hanoi" />
                               </div>
                             </div>
                             <div className="space-y-1.5">
                               <label className={labelCls}>{t('settings.hostingStyle')}</label>
                               <div className={inputWrapCls}>
-                                <Award size={15} className="text-zinc-600 flex-shrink-0" />
+                                <Award size={15} className="text-gray-400 shrink-0" />
                                 <input type="text" name="hostingStyle" className={inputCls} value={mcProfileData.hostingStyle} onChange={handleMCChange} placeholder="e.g. Energetic, Professional" />
                               </div>
                             </div>
@@ -654,19 +654,19 @@ const Settings = () => {
                               <button
                                 type="button"
                                 onClick={() => setShowBioPreview(!showBioPreview)}
-                                className={`text-[10px] font-medium px-2 py-0.5 rounded-md border transition-colors ${showBioPreview ? 'bg-[#f5a623] text-black border-[#f5a623]' : 'text-zinc-500 border-white/[0.07] hover:border-white/[0.14]'}`}
+                                className={`text-[10px] font-medium px-2 py-0.5 rounded-md border transition-colors ${showBioPreview ? 'bg-[#f5a623] text-black border-[#f5a623]' : 'text-gray-500 border-gray-200 hover:border-gray-300'}`}
                               >
                                 {showBioPreview ? 'Edit' : 'Preview'}
                               </button>
                             </div>
-                            <div className="bg-[#09090b] border border-white/[0.07] rounded-xl p-3 flex items-start gap-2.5 focus-within:border-white/[0.14] transition-colors">
-                              <User size={15} className="text-zinc-600 mt-0.5 flex-shrink-0" />
+                            <div className="bg-gray-50 border border-gray-200 rounded-xl p-3 flex items-start gap-2.5 focus-within:border-amber-400 transition-colors">
+                              <User size={15} className="text-gray-400 mt-0.5 shrink-0" />
                               {showBioPreview ? (
-                                <div className="w-full min-h-[120px] text-zinc-300 prose prose-invert prose-xs max-w-none overflow-y-auto">
+                                <div className="w-full min-h-[120px] text-gray-700 prose prose-xs max-w-none overflow-y-auto">
                                   <ReactMarkdown remarkPlugins={[remarkGfm]}>{mcProfileData.biography || "*No biography provided yet.*"}</ReactMarkdown>
                                 </div>
                               ) : (
-                                <textarea name="biography" className="flex-1 bg-transparent text-[13px] text-white placeholder:text-zinc-600 focus:outline-none resize-y min-h-[120px]" value={mcProfileData.biography} onChange={handleMCChange} placeholder="Tell clients about yourself using markdown..." />
+                                <textarea name="biography" className="flex-1 bg-transparent text-[13px] text-gray-800 placeholder:text-gray-400 focus:outline-none resize-y min-h-[120px]" value={mcProfileData.biography} onChange={handleMCChange} placeholder="Tell clients about yourself using markdown..." />
                               )}
                             </div>
                           </div>
@@ -677,47 +677,47 @@ const Settings = () => {
                               <button
                                 type="button"
                                 onClick={() => setShowPersonalityPreview(!showPersonalityPreview)}
-                                className={`text-[10px] font-medium px-2 py-0.5 rounded-md border transition-colors ${showPersonalityPreview ? 'bg-[#f5a623] text-black border-[#f5a623]' : 'text-zinc-500 border-white/[0.07] hover:border-white/[0.14]'}`}
+                                className={`text-[10px] font-medium px-2 py-0.5 rounded-md border transition-colors ${showPersonalityPreview ? 'bg-[#f5a623] text-black border-[#f5a623]' : 'text-gray-500 border-gray-200 hover:border-gray-300'}`}
                               >
                                 {showPersonalityPreview ? 'Edit' : 'Preview'}
                               </button>
                             </div>
-                            <div className="bg-[#09090b] border border-white/[0.07] rounded-xl p-3 flex items-start gap-2.5 focus-within:border-white/[0.14] transition-colors">
-                              <Zap size={15} className="text-zinc-600 mt-0.5 flex-shrink-0" />
+                            <div className="bg-gray-50 border border-gray-200 rounded-xl p-3 flex items-start gap-2.5 focus-within:border-amber-400 transition-colors">
+                              <Zap size={15} className="text-gray-400 mt-0.5 shrink-0" />
                               {showPersonalityPreview ? (
-                                <div className="w-full min-h-[80px] text-zinc-300 prose prose-invert prose-xs max-w-none overflow-y-auto">
+                                <div className="w-full min-h-[80px] text-gray-700 prose prose-xs max-w-none overflow-y-auto">
                                   <ReactMarkdown remarkPlugins={[remarkGfm]}>{mcProfileData.personality || "*No personality description provided.*"}</ReactMarkdown>
                                 </div>
                               ) : (
-                                <textarea name="personality" className="flex-1 bg-transparent text-[13px] text-white placeholder:text-zinc-600 focus:outline-none resize-y min-h-[80px]" value={mcProfileData.personality} onChange={handleMCChange} placeholder="Describe your personality using markdown..." />
+                                <textarea name="personality" className="flex-1 bg-transparent text-[13px] text-gray-800 placeholder:text-gray-400 focus:outline-none resize-y min-h-[80px]" value={mcProfileData.personality} onChange={handleMCChange} placeholder="Describe your personality using markdown..." />
                               )}
                             </div>
                           </div>
                         </div>
                       )}
-                    </div>
+                    </Card>
 
                     {/* Attributes */}
-                    <div className={`bg-[#111113] border border-white/10 rounded-2xl shadow-sm ${expandedSections.attributes ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300`}>
+                    <Card className={`bg-white border border-gray-200 rounded-2xl shadow-sm ${expandedSections.attributes ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300 gap-0 p-0`}>
                       <button
                         type="button"
                         onClick={() => toggleSection('attributes')}
-                        className="w-full flex items-center justify-between px-5 py-4 hover:bg-white/[0.02] transition-colors"
+                        className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors"
                       >
-                        <h2 className="text-[14px] font-semibold text-white flex items-center gap-2.5">
+                        <h2 className="text-[14px] font-semibold text-gray-900 flex items-center gap-2.5">
                           <Tag size={16} className="text-[#f5a623]" /> {t('settings.skillsAttributes')}
                         </h2>
                         {expandedSections.attributes
-                          ? <ChevronDown size={16} className="text-zinc-500" />
-                          : <ChevronRight size={16} className="text-zinc-600" />}
+                          ? <ChevronDown size={16} className="text-gray-400" />
+                          : <ChevronRight size={16} className="text-gray-400" />}
                       </button>
 
                       {expandedSections.attributes && (
-                        <div className="px-5 pb-5 space-y-4 border-t border-white/[0.06]">
+                        <div className="px-5 pb-5 space-y-4 border-t border-gray-100">
                           <div className="pt-4 space-y-1.5">
                             <label className={labelCls}>{t('settings.languagesComma')}</label>
                             <div className={inputWrapCls}>
-                              <Globe size={15} className="text-zinc-600 flex-shrink-0" />
+                              <Globe size={15} className="text-gray-400 shrink-0" />
                               <input type="text" name="languages" className={inputCls} value={mcProfileData.languages} onChange={handleMCChange} placeholder="English, Vietnamese" />
                             </div>
                           </div>
@@ -726,46 +726,46 @@ const Settings = () => {
                             <div className="space-y-1.5">
                               <label className={labelCls}>{t('settings.stylesComma')}</label>
                               <div className={inputWrapCls}>
-                                <CheckCircle2 size={15} className="text-zinc-600 flex-shrink-0" />
+                                <CheckCircle2 size={15} className="text-gray-400 shrink-0" />
                                 <input type="text" name="styles" className={inputCls} value={mcProfileData.styles} onChange={handleMCChange} placeholder="Humorous, Formal" />
                               </div>
                             </div>
                           </div>
                         </div>
                       )}
-                    </div>
+                    </Card>
 
                     {/* Pricing */}
-                    <div className={`bg-[#111113] border border-white/10 rounded-2xl shadow-sm ${expandedSections.pricing ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300`}>
+                    <Card className={`bg-white border border-gray-200 rounded-2xl shadow-sm ${expandedSections.pricing ? 'overflow-visible' : 'overflow-hidden'} transition-all duration-300 gap-0 p-0`}>
                       <button
                         type="button"
                         onClick={() => toggleSection('pricing')}
-                        className="w-full flex items-center justify-between px-5 py-4 hover:bg-white/[0.02] transition-colors"
+                        className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors"
                       >
-                        <h2 className="text-[14px] font-semibold text-white flex items-center gap-2.5">
+                        <h2 className="text-[14px] font-semibold text-gray-900 flex items-center gap-2.5">
                           <DollarSign size={16} className="text-[#f5a623]" /> {t('settings.ratesPricing')}
                         </h2>
                         {expandedSections.pricing
-                          ? <ChevronDown size={16} className="text-zinc-500" />
-                          : <ChevronRight size={16} className="text-zinc-600" />}
+                          ? <ChevronDown size={16} className="text-gray-400" />
+                          : <ChevronRight size={16} className="text-gray-400" />}
                       </button>
 
                       {expandedSections.pricing && (
-                        <div className="px-5 pb-5 space-y-5 border-t border-white/[0.06]">
+                        <div className="px-5 pb-5 space-y-5 border-t border-gray-100">
                           <div className="pt-4 space-y-4">
                             <div className="flex justify-between items-center">
                               <label className={labelCls}>{t('settings.rangeVnd')}</label>
-                              <div className="text-[#f5a623] text-[13px] font-semibold flex gap-2">
+                              <div className="text-amber-600 text-[13px] font-semibold flex gap-2">
                                 <span>{(mcProfileData.rates.min || 0).toLocaleString('vi-VN')}đ</span>
-                                <span className="text-zinc-600">–</span>
+                                <span className="text-gray-300">–</span>
                                 <span>{(mcProfileData.rates.max || 0).toLocaleString('vi-VN')}đ</span>
                               </div>
                             </div>
 
                             <div className="relative h-10 flex items-center">
-                              <div className="absolute w-full h-1.5 bg-white/[0.07] rounded-full"></div>
+                              <div className="absolute w-full h-1.5 bg-gray-200 rounded-full"></div>
                               <div
-                                className="absolute h-1.5 bg-[#f5a623] rounded-full"
+                                className="absolute h-1.5 bg-amber-400 rounded-full"
                                 style={{
                                   left: `${((mcProfileData.rates.min || 0) / 100000000) * 100}%`,
                                   right: `${100 - ((mcProfileData.rates.max || 0) / 100000000) * 100}%`
@@ -797,10 +797,10 @@ const Settings = () => {
                                   width: 20px;
                                   height: 20px;
                                   background: #f5a623;
-                                  border: 3px solid #09090b;
+                                  border: 3px solid #ffffff;
                                   border-radius: 50%;
                                   cursor: pointer;
-                                  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+                                  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
                                   transition: transform 0.15s;
                                 }
                                 .mchub-range-slider::-webkit-slider-thumb:hover {
@@ -811,10 +811,10 @@ const Settings = () => {
                                   width: 20px;
                                   height: 20px;
                                   background: #f5a623;
-                                  border: 3px solid #09090b;
+                                  border: 3px solid #ffffff;
                                   border-radius: 50%;
                                   cursor: pointer;
-                                  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+                                  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
                                 }
                               `}} />
                             </div>
@@ -824,59 +824,59 @@ const Settings = () => {
                             <div className="space-y-1.5">
                               <label className={labelCls}>{t('settings.minRate')}</label>
                               <div className={inputWrapCls}>
-                                <DollarSign size={15} className="text-zinc-600 flex-shrink-0" />
+                                <DollarSign size={15} className="text-gray-400 shrink-0" />
                                 <input type="number" name="ratesMin" className={inputCls} value={mcProfileData.rates.min} onChange={handleMCChange} />
                               </div>
                             </div>
                             <div className="space-y-1.5">
                               <label className={labelCls}>{t('settings.maxRate')}</label>
                               <div className={inputWrapCls}>
-                                <DollarSign size={15} className="text-zinc-600 flex-shrink-0" />
+                                <DollarSign size={15} className="text-gray-400 shrink-0" />
                                 <input type="number" name="ratesMax" className={inputCls} value={mcProfileData.rates.max} onChange={handleMCChange} />
                               </div>
                             </div>
                           </div>
                         </div>
                       )}
-                    </div>
+                    </Card>
 
                     {/* Event Portfolio */}
-                    <div className="bg-[#111113] border border-white/10 rounded-2xl overflow-hidden shadow-sm">
+                    <Card className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm gap-0 p-0">
                       <button
                         type="button"
                         onClick={() => toggleSection('portfolio')}
-                        className="w-full flex items-center justify-between px-5 py-4 hover:bg-white/[0.02] transition-colors"
+                        className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors"
                       >
-                        <h2 className="text-[14px] font-semibold text-white flex items-center gap-2.5">
+                        <h2 className="text-[14px] font-semibold text-gray-900 flex items-center gap-2.5">
                           <Camera size={16} className="text-[#f5a623]" /> {t('settings.eventPortfolio')}
                         </h2>
                         {expandedSections.portfolio
-                          ? <ChevronDown size={16} className="text-zinc-500" />
-                          : <ChevronRight size={16} className="text-zinc-600" />}
+                          ? <ChevronDown size={16} className="text-gray-400" />
+                          : <ChevronRight size={16} className="text-gray-400" />}
                       </button>
 
                       {expandedSections.portfolio && (
-                        <div className="px-5 pb-5 space-y-4 border-t border-white/[0.06]">
+                        <div className="px-5 pb-5 space-y-4 border-t border-gray-100">
                           <div className="pt-4">
-                            <label className={`${labelCls} block mb-3`}>Portfolio Highlights</label>
+                            <label className={`${labelCls} block mb-3`}>{t('settings.portfolioHighlights')}</label>
                             <label className={`
                               flex flex-col items-center justify-center w-full min-h-[140px]
-                              rounded-xl border border-dashed border-white/[0.07] transition-colors cursor-pointer
-                              ${portfolioLoading ? 'bg-[#f5a623]/[0.04]' : 'bg-[#09090b] hover:border-white/[0.14] hover:bg-white/[0.02]'}
+                              rounded-xl border border-dashed border-gray-200 transition-colors cursor-pointer
+                              ${portfolioLoading ? 'bg-amber-50' : 'bg-gray-50 hover:border-gray-300 hover:bg-gray-100'}
                             `}>
                               <div className="flex flex-col items-center text-center px-6 py-4">
                                 {portfolioLoading ? (
                                   <>
-                                    <Loader2 size={32} className="text-[#f5a623] animate-spin mb-3" />
-                                    <p className="text-[12px] font-medium text-[#f5a623]">Uploading to Cloudinary...</p>
+                                    <Loader2 size={32} className="text-amber-500 animate-spin mb-3" />
+                                    <p className="text-[12px] font-medium text-amber-600">{t('settings.uploading')}</p>
                                   </>
                                 ) : (
                                   <>
-                                    <div className="w-12 h-12 rounded-xl bg-[#f5a623]/[0.08] flex items-center justify-center mb-3 text-[#f5a623]">
+                                    <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center mb-3 text-amber-600">
                                       <Upload size={22} />
                                     </div>
-                                    <p className="text-[13px] font-medium text-white mb-1">Upload Event Photos</p>
-                                    <p className="text-[11px] text-zinc-500">Drag & drop or click to select (JPG, PNG)</p>
+                                    <p className="text-[13px] font-medium text-gray-800 mb-1">{t('settings.uploadEventPhotos')}</p>
+                                    <p className="text-[11px] text-gray-400">{t('settings.dragDropPhotos')}</p>
                                   </>
                                 )}
                               </div>
@@ -894,7 +894,7 @@ const Settings = () => {
                           {mcProfileData.eventPhotos.length > 0 && (
                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                               {mcProfileData.eventPhotos.map((photo, index) => (
-                                <div key={index} className="group relative aspect-square rounded-xl overflow-hidden border border-white/[0.07]">
+                                <div key={index} className="group relative aspect-square rounded-xl overflow-hidden border border-gray-200">
                                   <img src={photo} alt={`Event ${index}`} className="w-full h-full object-cover" />
                                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <button
@@ -911,7 +911,7 @@ const Settings = () => {
                           )}
                         </div>
                       )}
-                    </div>
+                    </Card>
                   </>
                 )}
 
@@ -997,9 +997,6 @@ const Settings = () => {
                         JA
                       </Button>
                     </div>
-                    {(i18nInstance.language === 'en' || i18nInstance.language === 'ja') && (
-                      <span className="text-[10px] font-medium text-amber-400/80">⚠ {t('settings.inDevelopment')}</span>
-                    )}
                   </div>
                 </div>
             </Card>
@@ -1064,7 +1061,7 @@ const Settings = () => {
                   <p className="text-[11px] font-semibold text-red-600 uppercase tracking-wide">{t('settings.sessionLabel')}</p>
                 </div>
                 {/* Logout row */}
-                <div className="p-5  items-center justify-between gap-4">
+                <div className="p-5 flex flex-col items-start gap-3">
                   <div>
                     <p className="text-[13px] font-semibold text-gray-800">{t('settings.logoutFromAccount')}</p>
                     <p className="text-[11px] text-gray-500 mt-1">{t('settings.logoutDesc')}</p>
@@ -1072,7 +1069,7 @@ const Settings = () => {
                   <Button
                     type="button"
                     onClick={() => { trackLogoutClick(); logout(); navigate('/'); }}
-                    className="h-auto mt-4 shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-[12px] font-semibold transition-all duration-150"
+                    className="h-auto shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-[12px] font-semibold transition-all duration-150"
                   >
                     <LogOut size={13} /> {t('navbar.logout')}
                   </Button>
