@@ -1054,22 +1054,27 @@ const Settings = () => {
               </form>
 
               {/* Session + Danger Zone */}
-              <Card className="bg-white border border-red-100 rounded-md overflow-hidden shadow-sm gap-0">
+              <Card className="bg-white border border-red-100 rounded-md overflow-hidden shadow-sm gap-0 flex flex-col">
                 {/* Header */}
                 <div className="px-5 py-3 bg-red-50 border-b border-red-100 flex items-center gap-2">
                   <LogOut size={13} className="text-red-500" />
                   <p className="text-[11px] font-semibold text-red-600 uppercase tracking-wide">{t('settings.sessionLabel')}</p>
                 </div>
                 {/* Logout row */}
-                <div className="p-5 flex flex-col items-start gap-3">
-                  <div>
-                    <p className="text-[13px] font-semibold text-gray-800">{t('settings.logoutFromAccount')}</p>
-                    <p className="text-[11px] text-gray-500 mt-1">{t('settings.logoutDesc')}</p>
+                <div className="p-5 flex-1 flex flex-col justify-between gap-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-9 h-9 rounded-md bg-red-50 border border-red-100 flex items-center justify-center text-red-500 shrink-0">
+                      <LogOut size={16} />
+                    </div>
+                    <div>
+                      <p className="text-[13px] font-semibold text-gray-800">{t('settings.logoutFromAccount')}</p>
+                      <p className="text-[11px] text-gray-500 mt-1">{t('settings.logoutDesc')}</p>
+                    </div>
                   </div>
                   <Button
                     type="button"
                     onClick={() => { trackLogoutClick(); logout(); navigate('/'); }}
-                    className="h-auto shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-md bg-red-500 hover:bg-red-600 text-white text-[12px] font-semibold transition-all duration-150"
+                    className="h-auto w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-md bg-red-500 hover:bg-red-600 text-white text-[12px] font-semibold transition-all duration-150"
                   >
                     <LogOut size={13} /> {t('navbar.logout')}
                   </Button>
