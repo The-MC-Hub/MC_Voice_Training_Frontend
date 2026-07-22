@@ -91,8 +91,8 @@ const SessionCard = ({ session, index, total, locale = "vi-VN" }) => {
 
           {/* Date + chevron */}
           <div className="flex items-center gap-2 shrink-0 pt-0.5">
-            <span className="text-[11px] text-zinc-600 hidden sm:block whitespace-nowrap">{date}</span>
-            <div className="w-7 h-7 rounded-md border border-white/[0.05] flex items-center justify-center text-zinc-700 group-hover:text-zinc-300 group-hover:border-white/[0.12] transition-colors">
+            <span className="text-[11px] text-zinc-500 hidden sm:block whitespace-nowrap">{date}</span>
+            <div className="w-7 h-7 rounded-md border border-white/[0.05] flex items-center justify-center text-zinc-500 group-hover:text-zinc-300 group-hover:border-white/[0.12] transition-colors">
               <ChevronRight size={13} />
             </div>
           </div>
@@ -101,7 +101,7 @@ const SessionCard = ({ session, index, total, locale = "vi-VN" }) => {
         {/* Row 2: Script preview */}
         {scriptPreview && (
           <div className="mt-3 ml-12 p-3 rounded-md bg-[#09090b] border border-white/[0.05] flex items-start gap-2">
-            <BookOpen size={11} className="text-zinc-600 mt-0.5 shrink-0" />
+            <BookOpen size={11} className="text-zinc-500 mt-0.5 shrink-0" />
             <p className="text-[11px] text-zinc-500 leading-relaxed line-clamp-2 italic">
               "{scriptPreview}"
             </p>
@@ -113,11 +113,11 @@ const SessionCard = ({ session, index, total, locale = "vi-VN" }) => {
           <span className={`text-[11px] font-medium px-2.5 py-1 rounded-md border ${scoreColor(parseFloat(acc))}`}>
             {acc}{t('sessionCard.accuracySuffix')}
           </span>
-          <span className="text-[11px] text-zinc-600 px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/[0.05]">
+          <span className="text-[11px] text-zinc-500 px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/[0.05]">
             {rhy}{t('sessionCard.rhythmSuffix')}
           </span>
-          <span className="text-[11px] text-zinc-600 flex items-center gap-1 px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/[0.05]">
-            <Zap size={10} className="text-zinc-600" />{wpm} WPM
+          <span className="text-[11px] text-zinc-500 flex items-center gap-1 px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/[0.05]">
+            <Zap size={10} className="text-zinc-500" />{wpm} WPM
           </span>
         </div>
 

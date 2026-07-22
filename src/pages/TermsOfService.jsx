@@ -94,7 +94,7 @@ const TermsOfService = () => {
           <p className="text-zinc-500 text-[14px] max-w-lg mx-auto leading-relaxed">
             Vui lòng đọc kỹ các điều khoản này trước khi sử dụng nền tảng MC Hub. Bằng cách truy cập dịch vụ, bạn đồng ý bị ràng buộc bởi các điều khoản sau.
           </p>
-          <div className="flex items-center justify-center gap-6 mt-6 text-[12px] text-zinc-600">
+          <div className="flex items-center justify-center gap-6 mt-6 text-[12px] text-zinc-500">
             <span>Có hiệu lực: <span className="text-zinc-400">16 tháng 5, 2026</span></span>
             <span className="w-1 h-1 rounded-full bg-zinc-700" />
             <span>Phiên bản: <span className="text-zinc-400">1.0</span></span>
@@ -110,7 +110,7 @@ const TermsOfService = () => {
           {/* Sticky TOC sidebar */}
           <aside className="hidden lg:block w-64 shrink-0 sticky top-24 self-start">
             <Card className="bg-[#111113] border border-white/[0.07] rounded-md p-4 overflow-hidden gap-0 shadow-none">
-              <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-wider px-2 mb-3">Mục lục</p>
+              <p className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider px-2 mb-3">Mục lục</p>
               <nav className="space-y-0.5">
                 {SECTIONS.map(({ id, icon: Icon, title }) => (
                   <button
@@ -122,14 +122,14 @@ const TermsOfService = () => {
                         : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04]'
                     }`}
                   >
-                    <Icon size={13} className={activeId === id ? 'text-[#f5a623]' : 'text-zinc-600'} />
+                    <Icon size={13} className={activeId === id ? 'text-[#f5a623]' : 'text-zinc-500'} />
                     <span className="leading-snug">{title}</span>
                     {activeId === id && <ChevronRight size={11} className="ml-auto shrink-0 text-[#f5a623]" />}
                   </button>
                 ))}
               </nav>
               <div className="mt-4 pt-4 border-t border-white/[0.06] px-2">
-                <Link to="/privacy" className="text-[11px] text-zinc-600 hover:text-[#f5a623] transition-colors flex items-center gap-1.5">
+                <Link to="/privacy" className="text-[11px] text-zinc-500 hover:text-[#f5a623] transition-colors flex items-center gap-1.5">
                   <Shield size={11} /> Chính sách bảo mật →
                 </Link>
               </div>
@@ -183,7 +183,7 @@ const TermsOfService = () => {
             </SectionBlock>
 
             <SectionBlock id="content" icon={FileText} title="4. Nội dung & Bản quyền">
-              <p>Tất cả nội dung trên MC Hub — bao gồm kịch bản, tài liệu luyện tập, âm thanh mẫu, giao diện, logo và thương hiệu — là tài sản của MC Hub hoặc các đối tác có giấy phép.</p>
+              <p>Tất cả nội dung trên MC Hub, bao gồm kịch bản, tài liệu luyện tập, âm thanh mẫu, giao diện, logo và thương hiệu, là tài sản của MC Hub hoặc các đối tác có giấy phép.</p>
               <Ul items={[
                 'Bạn được cấp quyền sử dụng cá nhân, không độc quyền, không thể chuyển nhượng để sử dụng nội dung cho mục đích luyện tập.',
                 'Nghiêm cấm sao chép, phân phối, bán lại hoặc tạo sản phẩm phái sinh từ nội dung nền tảng.',
@@ -200,11 +200,11 @@ const TermsOfService = () => {
                 'Gói Basic: 20 AI sessions/tháng, thư viện kịch bản, trắc nghiệm lý thuyết.',
                 'Gói Full: AI sessions không giới hạn, phân tích nâng cao (WER, CER, Jitter, HNR), biểu đồ tiến độ.',
                 'Gói Annual: toàn bộ quyền lợi Full + huy hiệu Annual Elite, ưu tiên hỗ trợ 24/7, truy cập tính năng Beta.',
-                'Giá chính thức hiển thị trên trang Thanh toán; có thể thay đổi — người dùng đã đăng ký không bị ảnh hưởng trong chu kỳ hiện tại.',
+                'Giá chính thức hiển thị trên trang Thanh toán; có thể thay đổi, người dùng đã đăng ký không bị ảnh hưởng trong chu kỳ hiện tại.',
                 'Thanh toán qua cổng thanh toán tích hợp PayOS; gói được kích hoạt tự động sau khi xác nhận giao dịch.',
                 'Không hoàn tiền sau khi gói đã được kích hoạt và bạn đã sử dụng tính năng AI phân tích.',
                 'Lỗi kỹ thuật khiến gói không kích hoạt dù đã thanh toán: liên hệ hỗ trợ trong 48 giờ.',
-                'Gói Ngày hết hạn sau 24 giờ; gói tháng/năm hết hạn theo chu kỳ đã chọn — không tự động gia hạn.',
+                'Gói Ngày hết hạn sau 24 giờ; gói tháng/năm hết hạn theo chu kỳ đã chọn, không tự động gia hạn.',
               ]} />
             </SectionBlock>
 
@@ -279,7 +279,7 @@ const TermsOfService = () => {
                 {[
                   { label: 'Email hỗ trợ', value: 'themchubforwork@gmail.com', icon: Mail },
                   { label: 'Nền tảng', value: 'MC Hub Voice Training', icon: Globe },
-                  { label: 'Phản hồi', value: 'Trong vòng 24–48 giờ làm việc', icon: RefreshCw },
+                  { label: 'Phản hồi', value: 'Trong vòng 24-48 giờ làm việc', icon: RefreshCw },
                   { label: 'Ngôn ngữ hỗ trợ', value: 'Tiếng Việt & English', icon: CheckCircle2 },
                 ].map(({ label, value, icon: Icon }) => (
                   <Card key={label} className="flex-row items-start gap-3 p-4 bg-[#111113] border border-white/[0.07] rounded-md shadow-none">
@@ -287,7 +287,7 @@ const TermsOfService = () => {
                       <Icon size={14} className="text-zinc-500" />
                     </div>
                     <div>
-                      <p className="text-[11px] text-zinc-600 mb-0.5">{label}</p>
+                      <p className="text-[11px] text-zinc-500 mb-0.5">{label}</p>
                       <p className="text-[13px] text-zinc-300 font-medium">{value}</p>
                     </div>
                   </Card>
@@ -299,7 +299,7 @@ const TermsOfService = () => {
             <motion.div {...fadeUp} className="flex items-center justify-between p-5 rounded-md bg-[#111113] border border-white/[0.07]">
               <div>
                 <p className="text-[13px] font-medium text-white mb-0.5">Chính sách Bảo mật</p>
-                <p className="text-[12px] text-zinc-600">Tìm hiểu cách chúng tôi xử lý dữ liệu của bạn</p>
+                <p className="text-[12px] text-zinc-500">Tìm hiểu cách chúng tôi xử lý dữ liệu của bạn</p>
               </div>
               <Link to="/privacy"
                 className="flex items-center gap-1.5 px-4 py-2 rounded-md bg-white/[0.04] border border-white/[0.07] hover:border-white/[0.14] text-[13px] text-zinc-300 hover:text-white transition-all">

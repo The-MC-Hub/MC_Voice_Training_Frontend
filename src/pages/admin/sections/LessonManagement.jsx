@@ -8,7 +8,7 @@ import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent } from "@/components/animate-ui/components/radix/dialog";
 
-const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
+const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-500";
 const inputClsShadcn = `${inputCls} h-auto rounded-none focus-visible:ring-0`;
 
 const LessonManagement = () => {

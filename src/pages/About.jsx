@@ -108,7 +108,7 @@ const About = () => {
         <div className="absolute inset-x-0 top-0 h-px bg-amber-300/50" />
         <div className="absolute inset-x-0 bottom-0 h-px bg-amber-300/50" />
         <div className="max-w-4xl mx-auto relative z-10">
-          <div className="grid grid-cols-3 gap-3 sm:gap-8 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-8 text-center">
             {[
               { value: '500+', label: 'MCs' },
               { value: '10K+', label: 'Sessions' },

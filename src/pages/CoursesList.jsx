@@ -117,7 +117,7 @@ const CourseCard = ({ course, index }) => {
                 {icon}
                 <span className="text-[13px] font-bold tabular-nums">{val}</span>
               </div>
-              <span className="text-[9px] text-zinc-700 uppercase tracking-wider">{label}</span>
+              <span className="text-[9px] text-zinc-500 uppercase tracking-wider">{label}</span>
             </div>
           ))}
         </div>
@@ -139,8 +139,8 @@ const CourseCard = ({ course, index }) => {
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-1">
-          <span className="text-[11px] text-zinc-600">{typeLabel}</span>
-          <span className="flex items-center gap-1 text-[11px] text-zinc-600 group-hover:text-[#f5a623] transition-colors">
+          <span className="text-[11px] text-zinc-500">{typeLabel}</span>
+          <span className="flex items-center gap-1 text-[11px] text-zinc-500 group-hover:text-[#f5a623] transition-colors">
             {t('courses.viewCourse')} <ChevronRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
           </span>
         </div>
@@ -209,7 +209,7 @@ const CoursesList = () => {
             {f.label}
           </Button>
         ))}
-        <span className="ml-auto text-[11px] text-zinc-600">{filtered.length} {t('courses.coursesCount').toLowerCase()}</span>
+        <span className="ml-auto text-[11px] text-zinc-500">{filtered.length} {t('courses.coursesCount').toLowerCase()}</span>
       </div>
 
       {loading ? (
@@ -219,9 +219,9 @@ const CoursesList = () => {
       ) : filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 gap-3">
           <div className="w-14 h-14 rounded-md bg-[#111113] border border-white/[0.07] flex items-center justify-center">
-            <BookOpen size={24} className="text-zinc-700" />
+            <BookOpen size={24} className="text-zinc-500" />
           </div>
-          <p className="text-zinc-600 text-[13px]">{t('courses.noCourses')}</p>
+          <p className="text-zinc-500 text-[13px]">{t('courses.noCourses')}</p>
         </div>
       ) : (
         <AnimatePresence mode="wait">

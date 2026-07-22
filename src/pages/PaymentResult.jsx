@@ -89,7 +89,7 @@ const PaymentResult = () => {
 
         {verified !== null && (
           <div className="pt-4 space-y-3">
-            <p className="text-[11px] text-zinc-600 uppercase tracking-widest">
+            <p className="text-[11px] text-zinc-500 uppercase tracking-widest">
               {t('payment.redirectingIn', { seconds: countdown })}
             </p>
             <Button

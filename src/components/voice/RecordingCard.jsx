@@ -11,7 +11,7 @@ function PitchContour({ pitchHistory, pitchHz, t_vp }) {
   if (!pitchHistory.length) {
     return (
       <div className="h-8 flex items-center justify-center">
-        <p className="text-[10px] text-zinc-600">{t_vp("pitchContourWaiting")}</p>
+        <p className="text-[10px] text-zinc-500">{t_vp("pitchContourWaiting")}</p>
       </div>
     );
   }
@@ -28,7 +28,7 @@ function PitchContour({ pitchHistory, pitchHz, t_vp }) {
         <polyline points={pts} fill="none" stroke="#a78bfa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.85" />
       </svg>
       <p className="text-[10px] text-center text-violet-400 font-mono mt-0.5">
-        {pitchHz > 0 ? `${pitchHz} Hz` : "—"} <span className="text-zinc-600">· {t_vp("pitchContourLive")}</span>
+        {pitchHz > 0 ? `${pitchHz} Hz` : "—"} <span className="text-zinc-500">· {t_vp("pitchContourLive")}</span>
       </p>
     </div>
   );
@@ -65,7 +65,7 @@ export default function RecordingCard({
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium border transition-all ${
                 cameraOn
                   ? "bg-[#f5a623]/10 border-[#f5a623]/30 text-[#f5a623]"
-                  : "border-white/[0.07] text-zinc-600 hover:text-zinc-300 hover:border-white/[0.14]"
+                  : "border-white/[0.07] text-zinc-500 hover:text-zinc-300 hover:border-white/[0.14]"
               }`}
             >
               {cameraOn ? <Camera size={12} /> : <CameraOff size={12} />}
@@ -137,7 +137,7 @@ export default function RecordingCard({
                       className="text-[13px] font-semibold text-white truncate"
                     >{analyzePhase}</motion.p>
                   </AnimatePresence>
-                  <p className="text-[11px] text-zinc-600 mt-0.5">{t_vp("voiceAnalysis")}</p>
+                  <p className="text-[11px] text-zinc-500 mt-0.5">{t_vp("voiceAnalysis")}</p>
                 </div>
                 <span className="text-[14px] font-bold text-[#f5a623] tabular-nums shrink-0">{analyzeProgress}%</span>
               </div>
@@ -158,7 +158,7 @@ export default function RecordingCard({
                   return (
                     <div key={i} className="flex items-center gap-2">
                       <div className={`w-1.5 h-1.5 rounded-full shrink-0 transition-all duration-300 ${done ? "bg-emerald-500" : active ? "bg-[#f5a623] animate-pulse" : "bg-zinc-700"}`} />
-                      <span className={`text-[11px] transition-colors duration-300 ${done ? "text-emerald-500/60 line-through" : active ? "text-white font-medium" : "text-zinc-600"}`}>{p.label}</span>
+                      <span className={`text-[11px] transition-colors duration-300 ${done ? "text-emerald-500/60 line-through" : active ? "text-white font-medium" : "text-zinc-500"}`}>{p.label}</span>
                       {done && <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="ml-auto text-[10px] text-emerald-500">✓</motion.span>}
                     </div>
                   );
@@ -326,7 +326,7 @@ export default function RecordingCard({
           <AnimatePresence>
             {audioBlob && !analyzing && !recording && (
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} transition={{ duration: 0.25 }} className="w-full max-w-[280px] mt-2 px-4">
-                <p className="text-[10px] text-zinc-600 mb-1.5 text-center uppercase tracking-wider">{t_vp("listenBeforeSubmit")}</p>
+                <p className="text-[10px] text-zinc-500 mb-1.5 text-center uppercase tracking-wider">{t_vp("listenBeforeSubmit")}</p>
                 <audio controls src={audioUrl} className="w-full h-8"
                   style={{ filter: "invert(1) hue-rotate(180deg) brightness(0.8)", borderRadius: "6px" }}
                 />

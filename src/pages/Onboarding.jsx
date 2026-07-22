@@ -12,7 +12,7 @@ import { trackOnboardingStepComplete, trackOnboardingSubmit } from '@/utils/anal
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Card } from "@/components/ui/card";
 
-const inputCls = "w-full bg-[#09090b] border border-white/[0.07] rounded-md py-3 px-4 text-[14px] text-white placeholder:text-zinc-600 outline-none focus:border-white/[0.14] transition-colors";
+const inputCls = "w-full bg-[#09090b] border border-white/[0.07] rounded-md py-3 px-4 text-[14px] text-white placeholder:text-zinc-500 outline-none focus:border-white/[0.14] transition-colors";
 
 const Onboarding = () => {
   const { t } = useTranslation();
@@ -90,8 +90,8 @@ const Onboarding = () => {
     <div className="absolute top-full left-0 right-0 mt-1.5 bg-[#111113] border border-white/[0.08] rounded-md shadow-[0_8px_32px_rgba(0,0,0,0.4)] z-[100] overflow-hidden">
       <div className="p-2 border-b border-white/[0.06]">
         <div className="flex items-center gap-2 bg-[#09090b] rounded-md px-3 py-1.5 border border-white/[0.06] focus-within:border-white/[0.14] transition-colors">
-          <Search size={13} className="text-zinc-600" />
-          <input type="text" className="bg-transparent border-none outline-none w-full text-[13px] text-white placeholder:text-zinc-700"
+          <Search size={13} className="text-zinc-500" />
+          <input type="text" className="bg-transparent border-none outline-none w-full text-[13px] text-white placeholder:text-zinc-500"
             placeholder={placeholder} value={searchVal} onChange={(e) => onSearchChange(e.target.value)}
             onClick={(e) => e.stopPropagation()} autoFocus />
         </div>
@@ -123,7 +123,7 @@ const Onboarding = () => {
               <div key={num} className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-semibold border transition-all ${
                 step === num ? "bg-[#f5a623] text-black border-[#f5a623]" :
                 step > num ? "bg-emerald-500 text-white border-emerald-500" :
-                "bg-[#111113] text-zinc-600 border-white/[0.07]"
+                "bg-[#111113] text-zinc-500 border-white/[0.07]"
               }`}>
                 {step > num ? <CheckCircle2 size={13} /> : num}
               </div>
@@ -149,7 +149,7 @@ const Onboarding = () => {
                     {profileData.avatar ? (
                       <img src={profileData.avatar} alt="Avatar" className="w-full h-full object-cover" />
                     ) : (
-                      <div className="flex flex-col items-center gap-1 text-zinc-600 group-hover:text-[#f5a623] transition-colors">
+                      <div className="flex flex-col items-center gap-1 text-zinc-500 group-hover:text-[#f5a623] transition-colors">
                         <Camera size={24} />
                         <span className="text-[9px] uppercase tracking-wider">{t('onboarding.addPhoto')}</span>
                       </div>
@@ -164,7 +164,7 @@ const Onboarding = () => {
                       }
                     }} />
                 </div>
-                <p className="text-[11px] text-zinc-600">{t('onboarding.profilePhoto')} — PNG, JPG, WebP (Max 5MB)</p>
+                <p className="text-[11px] text-zinc-500">{t('onboarding.profilePhoto')} — PNG, JPG, WebP (Max 5MB)</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -193,7 +193,7 @@ const Onboarding = () => {
                       <Globe size={14} className="text-[#f5a623]" />
                       <span className="text-[14px] text-white">{selectedCountry}</span>
                     </div>
-                    <ChevronDown size={15} className={`text-zinc-600 transition-transform ${openDropdown === 'country' ? 'rotate-180' : ''}`} />
+                    <ChevronDown size={15} className={`text-zinc-500 transition-transform ${openDropdown === 'country' ? 'rotate-180' : ''}`} />
                   </div>
                   {openDropdown === 'country' && (
                     <DropdownMenu
@@ -218,7 +218,7 @@ const Onboarding = () => {
                     </div>
                     {locLoading
                       ? <div className="w-4 h-4 border-2 border-[#f5a623]/30 border-t-[#f5a623] rounded-full animate-spin" />
-                      : <ChevronDown size={15} className={`text-zinc-600 transition-transform ${openDropdown === 'city' ? 'rotate-180' : ''}`} />
+                      : <ChevronDown size={15} className={`text-zinc-500 transition-transform ${openDropdown === 'city' ? 'rotate-180' : ''}`} />
                     }
                   </div>
                   {openDropdown === 'city' && (
@@ -277,7 +277,7 @@ const Onboarding = () => {
                 </div>
                 <div className="text-center">
                   <p className="text-[13px] font-medium text-white">{t('onboarding.addToPortfolio')}</p>
-                  <p className="text-[11px] text-zinc-600">{t('onboarding.dragDropClips')}</p>
+                  <p className="text-[11px] text-zinc-500">{t('onboarding.dragDropClips')}</p>
                 </div>
               </div>
 
@@ -292,7 +292,7 @@ const Onboarding = () => {
                         ) : (
                           <div className="w-full h-full flex flex-col items-center justify-center gap-1.5">
                             <Video size={24} className="text-[#f5a623]" />
-                            <span className="text-[10px] text-zinc-600 px-2 truncate w-full text-center">{file.name}</span>
+                            <span className="text-[10px] text-zinc-500 px-2 truncate w-full text-center">{file.name}</span>
                           </div>
                         )}
                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -317,7 +317,7 @@ const Onboarding = () => {
                     <label className={labelCls}>{label}</label>
                     <div className="flex items-center gap-2 bg-[#09090b] border border-white/[0.07] rounded-md px-3 py-2.5 focus-within:border-white/[0.14] transition-colors">
                       <span className="text-[#f5a623]">{icon}</span>
-                      <input type="text" className="bg-transparent border-none outline-none w-full text-[13px] text-white placeholder:text-zinc-700"
+                      <input type="text" className="bg-transparent border-none outline-none w-full text-[13px] text-white placeholder:text-zinc-500"
                         placeholder={placeholder} value={profileData.socialLinks[key]}
                         onChange={(e) => setProfileData(prev => ({ ...prev, socialLinks: { ...prev.socialLinks, [key]: e.target.value } }))} />
                     </div>
@@ -386,7 +386,7 @@ const Onboarding = () => {
               </Button>
             )}
             <Button onClick={() => { if (step < 3) { setStep(step + 1); trackOnboardingStepComplete(step); } else handleComplete(); }}
-              className="text-zinc-600 hover:text-zinc-400 text-[13px] transition-colors px-2 h-auto">
+              className="text-zinc-500 hover:text-zinc-400 text-[13px] transition-colors px-2 h-auto">
               {t('onboarding.skip')}
             </Button>
           </div>

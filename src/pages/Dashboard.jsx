@@ -198,7 +198,7 @@ const Dashboard = () => {
       tag: 'AVG',
       tagColor: 'text-emerald-400 bg-emerald-500/[0.08] border border-emerald-500/20',
       sub: avgAccuracy >= 80 ? t('dashboard.statAccuracyExcellent') : avgAccuracy >= 60 ? t('dashboard.statAccuracyGood') : t('dashboard.statAccuracyNeedsWork'),
-      subColor: avgAccuracy >= 80 ? 'text-emerald-500' : avgAccuracy >= 60 ? 'text-blue-400' : 'text-zinc-600',
+      subColor: avgAccuracy >= 80 ? 'text-emerald-500' : avgAccuracy >= 60 ? 'text-blue-400' : 'text-zinc-500',
       bar: parseFloat(avgAccuracy),
       barColor: '#10b981',
       iconBg: 'bg-emerald-500/10 border-emerald-500/20',
@@ -211,7 +211,7 @@ const Dashboard = () => {
       tag: t('dashboard.sessions'),
       tagColor: 'text-blue-400 bg-blue-500/[0.08] border border-blue-500/20',
       sub: t('dashboard.sessionsToNextLevel', { count: Math.max(0, 20 - totalPractices) }),
-      subColor: 'text-zinc-600',
+      subColor: 'text-zinc-500',
       bar: Math.min(100, (totalPractices / 20) * 100),
       barColor: '#3b82f6',
       iconBg: 'bg-blue-500/10 border-blue-500/20',
@@ -224,7 +224,7 @@ const Dashboard = () => {
       tag: `Lv ${level}`,
       tagColor: 'text-[#f5a623] bg-[#f5a623]/[0.08] border border-[#f5a623]/20',
       sub: t('dashboard.sessionsCompletedSub', { count: totalPractices }),
-      subColor: 'text-zinc-600',
+      subColor: 'text-zinc-500',
       bar: ((totalPractices % 5) / 5) * 100,
       barColor: '#f5a623',
       iconBg: 'bg-amber-500/10 border-amber-500/20',
@@ -237,7 +237,7 @@ const Dashboard = () => {
       tag: 'WPM',
       tagColor: 'text-violet-400 bg-violet-500/[0.08] border border-violet-500/20',
       sub: avgWpm >= 120 ? t('dashboard.paceRateProfessional') : t('dashboard.paceRateAverage'),
-      subColor: avgWpm >= 120 ? 'text-violet-400' : 'text-zinc-600',
+      subColor: avgWpm >= 120 ? 'text-violet-400' : 'text-zinc-500',
       bar: Math.min(100, (avgWpm / 150) * 100),
       barColor: '#8b5cf6',
       iconBg: 'bg-violet-500/10 border-violet-500/20',
@@ -279,7 +279,7 @@ const Dashboard = () => {
               <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${s.tagColor}`}>{s.tag}</span>
             </div>
             <p className="text-[28px] font-bold text-white leading-none mb-1">{s.value}</p>
-            <p className="text-[11px] text-zinc-600 mb-3">{s.label}</p>
+            <p className="text-[11px] text-zinc-500 mb-3">{s.label}</p>
             <div className="h-1 w-full bg-white/[0.04] rounded-full mb-2">
               <div className="h-full rounded-full transition-all" style={{ width: `${s.bar}%`, backgroundColor: s.barColor }} />
             </div>
@@ -464,7 +464,7 @@ const Dashboard = () => {
             ) : (
               <div className="py-16 text-center border border-dashed border-white/[0.06] rounded-md">
                 <Mic size={28} className="mx-auto text-zinc-800 mb-3" />
-                <p className="text-[13px] text-zinc-600 mb-4">{t('dashboard.noSessions')}</p>
+                <p className="text-[13px] text-zinc-500 mb-4">{t('dashboard.noSessions')}</p>
                 {plan === 'FREE' && (
                   <Link
                     to="/m/payment"

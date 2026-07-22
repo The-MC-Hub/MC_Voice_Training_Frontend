@@ -46,7 +46,7 @@ export default function LessonInfoPanel({ lesson }) {
               <div className="flex items-start gap-2">
                 <Target size={14} className="text-[#f5a623] mt-0.5 shrink-0" />
                 <div>
-                  <p className="text-[11px] text-zinc-600 uppercase tracking-wider">{t("voicePractice.lessonInfoTargetPace")}</p>
+                  <p className="text-[11px] text-zinc-500 uppercase tracking-wider">{t("voicePractice.lessonInfoTargetPace")}</p>
                   <p className="text-[14px] font-semibold text-white">
                     {lesson.targetWpmMin}–{lesson.targetWpmMax}{" "}
                     <span className="text-zinc-500 font-normal text-[12px]">wpm</span>
@@ -58,7 +58,7 @@ export default function LessonInfoPanel({ lesson }) {
               <div className="flex items-start gap-2">
                 <Award size={14} className="text-emerald-400 mt-0.5 shrink-0" />
                 <div>
-                  <p className="text-[11px] text-zinc-600 uppercase tracking-wider">{t("voicePractice.lessonInfoPassingScore")}</p>
+                  <p className="text-[11px] text-zinc-500 uppercase tracking-wider">{t("voicePractice.lessonInfoPassingScore")}</p>
                   <p className="text-[14px] font-semibold text-white">
                     {lesson.passingScore}<span className="text-zinc-500 font-normal text-[12px]">%</span>
                   </p>

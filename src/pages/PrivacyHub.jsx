@@ -55,10 +55,10 @@ const Ul = ({ items }) => (
 const DataTable = ({ rows }) => (
   <div className="mt-3 rounded-md overflow-hidden border border-white/[0.07]">
     {rows.map(([cat, data, purpose], i) => (
-      <div key={i} className={`grid grid-cols-3 gap-4 p-3.5 text-[12px] ${i % 2 === 0 ? 'bg-white/[0.02]' : 'bg-transparent'} ${i > 0 ? 'border-t border-white/[0.05]' : ''}`}>
+      <div key={i} className={`grid grid-cols-1 md:grid-cols-3 gap-1.5 md:gap-4 p-3.5 text-[12px] ${i % 2 === 0 ? 'bg-white/[0.02]' : 'bg-transparent'} ${i > 0 ? 'border-t border-white/[0.05]' : ''}`}>
         <span className="text-zinc-300 font-medium">{cat}</span>
         <span className="text-zinc-500">{data}</span>
-        <span className="text-zinc-600">{purpose}</span>
+        <span className="text-zinc-500">{purpose}</span>
       </div>
     ))}
   </div>
@@ -104,7 +104,7 @@ const PrivacyHub = () => {
           <p className="text-zinc-500 text-[14px] max-w-lg mx-auto leading-relaxed">
             MC Hub cam kết bảo vệ quyền riêng tư của bạn. Chính sách này mô tả cách chúng tôi thu thập, sử dụng và bảo vệ thông tin cá nhân của bạn.
           </p>
-          <div className="flex items-center justify-center gap-6 mt-6 text-[12px] text-zinc-600">
+          <div className="flex items-center justify-center gap-6 mt-6 text-[12px] text-zinc-500">
             <span>Cập nhật: <span className="text-zinc-400">16 tháng 5, 2026</span></span>
             <span className="w-1 h-1 rounded-full bg-zinc-700" />
             <span>GDPR: <span className="text-zinc-400">Tuân thủ</span></span>
@@ -120,7 +120,7 @@ const PrivacyHub = () => {
           {/* Sticky TOC */}
           <aside className="hidden lg:block w-64 shrink-0 sticky top-24 self-start">
             <Card className="bg-[#111113] border border-white/[0.07] rounded-md p-4 gap-0 shadow-none">
-              <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-wider px-2 mb-3">Mục lục</p>
+              <p className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider px-2 mb-3">Mục lục</p>
               <nav className="space-y-0.5">
                 {SECTIONS.map(({ id, icon: Icon, title }) => (
                   <button key={id} onClick={() => scrollTo(id)}
@@ -128,14 +128,14 @@ const PrivacyHub = () => {
                       activeId === id ? 'bg-[#f5a623]/[0.08] text-[#f5a623] font-medium' : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04]'
                     }`}
                   >
-                    <Icon size={13} className={activeId === id ? 'text-[#f5a623]' : 'text-zinc-600'} />
+                    <Icon size={13} className={activeId === id ? 'text-[#f5a623]' : 'text-zinc-500'} />
                     <span className="leading-snug">{title}</span>
                     {activeId === id && <ChevronRight size={11} className="ml-auto shrink-0 text-[#f5a623]" />}
                   </button>
                 ))}
               </nav>
               <div className="mt-4 pt-4 border-t border-white/[0.06] px-2">
-                <Link to="/terms" className="text-[11px] text-zinc-600 hover:text-[#f5a623] transition-colors flex items-center gap-1.5">
+                <Link to="/terms" className="text-[11px] text-zinc-500 hover:text-[#f5a623] transition-colors flex items-center gap-1.5">
                   <FileText size={11} /> Điều khoản dịch vụ →
                 </Link>
               </div>
@@ -157,7 +157,7 @@ const PrivacyHub = () => {
                     <Icon size={16} className="text-[#f5a623]" />
                   </div>
                   <p className="text-[13px] font-semibold text-white mb-1">{label}</p>
-                  <p className="text-[11px] text-zinc-600 leading-relaxed">{desc}</p>
+                  <p className="text-[11px] text-zinc-500 leading-relaxed">{desc}</p>
                 </div>
               ))}
             </motion.div>
@@ -187,7 +187,7 @@ const PrivacyHub = () => {
               <p>Chúng tôi hiểu rằng dữ liệu giọng nói là thông tin nhạy cảm. Đây là cách chúng tôi xử lý:</p>
               <Ul items={[
                 'File âm thanh được gửi đến AI (Google Speech-to-Text hoặc Whisper) để chuyển đổi thành văn bản và phân tích.',
-                'File âm thanh thô KHÔNG được lưu trữ vĩnh viễn — chỉ tồn tại trong bộ nhớ tạm thời trong quá trình xử lý.',
+                'File âm thanh thô KHÔNG được lưu trữ vĩnh viễn, chỉ tồn tại trong bộ nhớ tạm thời trong quá trình xử lý.',
                 'Kết quả phân tích (điểm số, phản hồi văn bản) được lưu trữ liên kết với tài khoản của bạn.',
                 'Chúng tôi không sử dụng giọng nói của bạn để huấn luyện mô hình AI thương mại mà không có sự đồng ý rõ ràng.',
                 'Bạn có thể xóa lịch sử luyện tập bất kỳ lúc nào từ trang Dashboard.',
@@ -215,7 +215,7 @@ const PrivacyHub = () => {
             <SectionBlock id="share" icon={Share2} title="5. Chia sẻ dữ liệu">
               <p>Chúng tôi không bán, cho thuê hoặc trao đổi thông tin cá nhân của bạn. Chúng tôi chỉ chia sẻ trong các trường hợp sau:</p>
               <Ul items={[
-                'Nhà cung cấp dịch vụ: Cloudinary (lưu trữ media), MongoDB Atlas (database), Google/OpenAI (phân tích AI) — tất cả đều ký NDA và chỉ xử lý dữ liệu theo hướng dẫn của chúng tôi.',
+                'Nhà cung cấp dịch vụ: Cloudinary (lưu trữ media), MongoDB Atlas (database), Google/OpenAI (phân tích AI), tất cả đều ký NDA và chỉ xử lý dữ liệu theo hướng dẫn của chúng tôi.',
                 'Yêu cầu pháp lý: Khi được yêu cầu bởi cơ quan pháp luật có thẩm quyền tại Việt Nam.',
                 'Bảo vệ quyền lợi: Để ngăn chặn gian lận hoặc bảo vệ an toàn người dùng.',
                 'Chuyển nhượng doanh nghiệp: Nếu MC Hub được mua lại, dữ liệu người dùng có thể được chuyển với thông báo trước 30 ngày.',
@@ -250,9 +250,9 @@ const PrivacyHub = () => {
             <SectionBlock id="cookies" icon={Cookie} title="8. Cookies & Tracking">
               <p>Chúng tôi sử dụng cookies và công nghệ tương tự:</p>
               <Ul items={[
-                'Cookie phiên (Session): Duy trì trạng thái đăng nhập — bắt buộc, không thể tắt.',
-                'Cookie tùy chọn: Lưu cài đặt ngôn ngữ, giao diện — có thể xóa.',
-                'Cookie phân tích: Đo lường hiệu suất trang (nếu áp dụng) — có thể từ chối.',
+                'Cookie phiên (Session): Duy trì trạng thái đăng nhập, bắt buộc, không thể tắt.',
+                'Cookie tùy chọn: Lưu cài đặt ngôn ngữ, giao diện, có thể xóa.',
+                'Cookie phân tích: Đo lường hiệu suất trang (nếu áp dụng), có thể từ chối.',
                 'Chúng tôi không dùng cookie theo dõi quảng cáo hoặc cookie của mạng xã hội.',
               ]} />
               <p>Bạn có thể kiểm soát cookie qua cài đặt trình duyệt. Xóa cookie phiên sẽ đăng xuất bạn khỏi tài khoản.</p>
@@ -273,7 +273,7 @@ const PrivacyHub = () => {
             </SectionBlock>
 
             <SectionBlock id="children" icon={Shield} title="10. Trẻ em & Vị thành niên">
-              <p>Dịch vụ MC Hub không hướng đến trẻ em dưới 13 tuổi. Đối với người dùng từ 13–17 tuổi:</p>
+              <p>Dịch vụ MC Hub không hướng đến trẻ em dưới 13 tuổi. Đối với người dùng từ 13-17 tuổi:</p>
               <Ul items={[
                 'Cần có sự đồng ý của phụ huynh hoặc người giám hộ hợp pháp.',
                 'Phụ huynh có thể liên hệ chúng tôi để xem xét và xóa dữ liệu của trẻ.',
@@ -315,7 +315,7 @@ const PrivacyHub = () => {
                       <Icon size={14} className="text-zinc-500" />
                     </div>
                     <div>
-                      <p className="text-[11px] text-zinc-600 mb-0.5">{label}</p>
+                      <p className="text-[11px] text-zinc-500 mb-0.5">{label}</p>
                       <p className="text-[13px] text-zinc-300 font-medium">{value}</p>
                     </div>
                   </Card>
@@ -327,7 +327,7 @@ const PrivacyHub = () => {
             <motion.div {...fadeUp} className="flex items-center justify-between p-5 rounded-md bg-[#111113] border border-white/[0.07]">
               <div>
                 <p className="text-[13px] font-medium text-white mb-0.5">Điều khoản Dịch vụ</p>
-                <p className="text-[12px] text-zinc-600">Xem thêm quyền và nghĩa vụ của bạn</p>
+                <p className="text-[12px] text-zinc-500">Xem thêm quyền và nghĩa vụ của bạn</p>
               </div>
               <Link to="/terms"
                 className="flex items-center gap-1.5 px-4 py-2 rounded-md bg-white/[0.04] border border-white/[0.07] hover:border-white/[0.14] text-[13px] text-zinc-300 hover:text-white transition-all">

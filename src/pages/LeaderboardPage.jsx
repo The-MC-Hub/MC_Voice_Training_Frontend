@@ -227,7 +227,7 @@ const ShareModal = ({ myEntry, typeMeta, onClose }) => {
               <span className="text-[14px] font-bold text-white">MC</span>
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
               <span className="text-[14px] font-bold text-white">Hub</span>
-              <span className="ml-2 text-[10px] text-zinc-600">Voice Training</span>
+              <span className="ml-2 text-[10px] text-zinc-500">Voice Training</span>
             </div>
 
             {/* Rank display */}
@@ -252,7 +252,7 @@ const ShareModal = ({ myEntry, typeMeta, onClose }) => {
                 <div key={s.label} className="bg-white/4 rounded-md p-2 text-center">
                   <p className="text-[14px]">{s.icon}</p>
                   <p className="text-[12px] font-bold text-white">{s.value}</p>
-                  <p className="text-[9px] text-zinc-600">{s.label}</p>
+                  <p className="text-[9px] text-zinc-500">{s.label}</p>
                 </div>
               ))}
             </div>
@@ -277,7 +277,7 @@ const ShareModal = ({ myEntry, typeMeta, onClose }) => {
           </div>
         </div>
 
-        <p className="text-center text-[11px] text-zinc-600">{t('leaderboard.shareFooter')}</p>
+        <p className="text-center text-[11px] text-zinc-500">{t('leaderboard.shareFooter')}</p>
       </DialogContent>
     </Dialog>
   );

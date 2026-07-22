@@ -64,19 +64,19 @@ const Success = () => {
 
           <div className="flex flex-1 flex-wrap gap-6 justify-center md:justify-start">
             <div>
-              <span className="text-[10px] text-zinc-600 uppercase tracking-wider block mb-1">{t('payment.sessionDate')}</span>
+              <span className="text-[10px] text-zinc-500 uppercase tracking-wider block mb-1">{t('payment.sessionDate')}</span>
               <div className="flex items-center gap-1.5 text-white text-[13px] font-medium">
                 <Calendar size={13} className="text-[#f5a623]" /> Mar 21, 2026
               </div>
             </div>
             <div>
-              <span className="text-[10px] text-zinc-600 uppercase tracking-wider block mb-1">{t('payment.status')}</span>
+              <span className="text-[10px] text-zinc-500 uppercase tracking-wider block mb-1">{t('payment.status')}</span>
               <div className="flex items-center gap-1.5 text-emerald-400 text-[13px] font-medium">
                 <ShieldCheck size={13} /> {t('payment.fundsSecured')}
               </div>
             </div>
             <div>
-              <span className="text-[10px] text-zinc-600 uppercase tracking-wider block mb-1">{t('payment.trackingId')}</span>
+              <span className="text-[10px] text-zinc-500 uppercase tracking-wider block mb-1">{t('payment.trackingId')}</span>
               <div className="text-zinc-500 text-[13px] font-medium font-mono">
                 #{bookingId ? bookingId.slice(-8).toUpperCase() : "HUB-S7-88219"}
               </div>
@@ -106,7 +106,7 @@ const Success = () => {
         </div>
 
         {/* Footer badges */}
-        <div className="flex justify-center gap-8 pt-8 text-zinc-700">
+        <div className="flex justify-center gap-8 pt-8 text-zinc-500">
           {[
             { icon: ShieldCheck, text: t('payment.secureCheckout') },
             { icon: Lock, text: t('payment.escrowProtected') },

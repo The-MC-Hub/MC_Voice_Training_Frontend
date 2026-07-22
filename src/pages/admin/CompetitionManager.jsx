@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent } from "@/components/animate-ui/components/radix/dialog";
 
-const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
+const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-500";
 const inputClsShadcn = `${inputCls} h-auto rounded-none focus-visible:ring-0`;
 
 const CompetitionManager = () => {
@@ -112,7 +112,7 @@ const CompetitionManager = () => {
                   <p className="text-[12px] text-zinc-500 line-clamp-3 leading-relaxed">{comp.description}</p>
                 </div>
                 <div className="bg-[#09090b] border border-white/[0.06] p-3">
-                  <span className="text-[9px] text-zinc-600 uppercase tracking-wider flex items-center gap-1 mb-1">
+                  <span className="text-[9px] text-zinc-500 uppercase tracking-wider flex items-center gap-1 mb-1">
                     <BookOpen size={9} /> {t('admin.competitionManager.scriptReference')}
                   </span>
                   <span className="text-[12px] text-zinc-300 font-medium block truncate">{getLessonTitle(comp.challengeScriptId)}</span>
@@ -137,7 +137,7 @@ const CompetitionManager = () => {
           ))
         ) : (
           <Card className="col-span-full text-center py-14 bg-[#111113] border border-white/[0.07] gap-0 rounded-none shadow-none">
-            <Trophy size={32} className="text-zinc-700 mx-auto mb-3" />
+            <Trophy size={32} className="text-zinc-500 mx-auto mb-3" />
             <p className="text-zinc-500 text-[12px]">{t('admin.competitionManager.noArenas')}</p>
           </Card>
         )}
@@ -186,7 +186,7 @@ const CompetitionManager = () => {
                 <div className="flex items-end justify-between pb-0.5">
                   <span className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">{t('admin.competitionManager.active')}</span>
                   <Button type="button" onClick={() => setActive(!active)}
-                    className={`transition-colors h-auto p-0 bg-transparent ${active ? "text-[gold]" : "text-zinc-600"}`}>
+                    className={`transition-colors h-auto p-0 bg-transparent ${active ? "text-[gold]" : "text-zinc-500"}`}>
                     {active ? <ToggleRight size={28} /> : <ToggleLeft size={28} />}
                   </Button>
                 </div>

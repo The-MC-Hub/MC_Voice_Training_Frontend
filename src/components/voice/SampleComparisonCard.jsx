@@ -63,7 +63,7 @@ export default function SampleComparisonCard({ userAudioUrl, sampleAudioUrl }) {
         </svg>
       )}
 
-      <p className="text-[10px] text-zinc-600 mt-2">
+      <p className="text-[10px] text-zinc-500 mt-2">
         {t("voicePractice.sampleComparisonNote")}
       </p>
     </div>

@@ -5,7 +5,7 @@ import TypewriterMarkdown from '../components/TypewriterMarkdown';
 import {
     ChevronLeft, Zap, TrendingUp, AudioLines, BarChart3,
     Lightbulb, Clock, Sparkles, Info, Calendar, CheckCircle2,
-    Mic, BookOpen, Target
+    Mic, BookOpen, Target, AlertTriangle
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { fetchPracticeById, fetchLessonById } from '../controllers/voiceController';
@@ -38,7 +38,7 @@ const MetricBar = ({ label, value, maxValue = 100, color, tooltip }) => {
                     <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">{label}</span>
                     {tooltip && (
                         <div className="relative group/tt cursor-help">
-                            <Info size={10} className="text-zinc-700" />
+                            <Info size={10} className="text-zinc-500" />
                             <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-48 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
                                 {tooltip}
                             </div>
@@ -66,10 +66,10 @@ const CriteriaBar = ({ label, value, tooltip }) => {
     return (
         <div className="flex items-center gap-3">
             <div className="flex items-center gap-1 w-24 shrink-0">
-                <span className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider">{label}</span>
+                <span className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider">{label}</span>
                 {tooltip && (
                     <div className="relative group/tt cursor-help">
-                        <Info size={9} className="text-zinc-700" />
+                        <Info size={9} className="text-zinc-500" />
                         <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-44 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
                             {tooltip}
                         </div>
@@ -212,7 +212,7 @@ const VoiceReport = () => {
         <div className="flex min-h-[60vh] items-center justify-center">
             <div className="text-center">
                 <Sparkles className="mx-auto mb-3 h-7 w-7 animate-pulse text-[#f5a623]" />
-                <p className="text-[12px] text-zinc-600 uppercase tracking-widest">{t('voiceReport.loadingReport')}</p>
+                <p className="text-[12px] text-zinc-500 uppercase tracking-widest">{t('voiceReport.loadingReport')}</p>
             </div>
         </div>
     );
@@ -236,7 +236,7 @@ const VoiceReport = () => {
 
             {/* Demo disclaimer */}
             <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-md bg-amber-500/[0.06] border border-amber-500/20 text-[11px] text-amber-400/80">
-                <span className="shrink-0">⚠</span>
+                <AlertTriangle size={13} className="shrink-0" />
                 <span>Đây là phiên bản demo — đôi khi chấm điểm chưa sát với năng lực thực tế của bạn.</span>
             </div>
 
@@ -247,11 +247,11 @@ const VoiceReport = () => {
                     <ChevronLeft size={18} />
                 </Button>
                 <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider mb-0.5">Báo cáo luyện tập</p>
+                    <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-0.5">Báo cáo luyện tập</p>
                     <h1 className="text-[18px] font-bold text-white truncate">{lesson?.title || t('voiceReport.practiceReportDetail')}</h1>
                 </div>
-                <div className="flex items-center gap-2 shrink-0 text-[11px] text-zinc-600">
-                    <Calendar size={11} className="text-zinc-700" />
+                <div className="flex items-center gap-2 shrink-0 text-[11px] text-zinc-500">
+                    <Calendar size={11} className="text-zinc-500" />
                     <span>{dateStr}</span>
                 </div>
             </motion.div>
@@ -268,8 +268,8 @@ const VoiceReport = () => {
 
                         <div className="flex items-start justify-between mb-4">
                             <div>
-                                <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-wider mb-2">{t('voiceReport.overallScore')}</p>
-                                <p className={`text-5xl font-bold leading-none ${sc.text}`}>{overall.toFixed(1)}<span className="text-2xl text-zinc-600 ml-1">%</span></p>
+                                <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-2">{t('voiceReport.overallScore')}</p>
+                                <p className={`text-5xl font-bold leading-none ${sc.text}`}>{overall.toFixed(1)}<span className="text-2xl text-zinc-500 ml-1">%</span></p>
                             </div>
                             <div className={`px-3 py-1.5 rounded-md border text-[11px] font-semibold ${sc.ring} ${sc.text}`}>
                                 {levelTextVi}
@@ -290,9 +290,9 @@ const VoiceReport = () => {
                                 <div key={label} className="bg-[#09090b] border border-white/[0.06] rounded-md p-3">
                                     <Icon size={13} className={`${color} mb-1.5`} />
                                     <div className="flex items-center gap-1 mb-1">
-                                        <p className="text-[10px] text-zinc-600 uppercase tracking-wider">{label}</p>
+                                        <p className="text-[10px] text-zinc-500 uppercase tracking-wider">{label}</p>
                                         <div className="relative group/tt cursor-help">
-                                            <Info size={9} className="text-zinc-700" />
+                                            <Info size={9} className="text-zinc-500" />
                                             <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-44 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
                                                 {tooltip}
                                             </div>
@@ -338,7 +338,7 @@ const VoiceReport = () => {
                             </h3>
                             <div className="space-y-3">
                                 {session.voice_quality && (
-                                    <div className="grid grid-cols-3 gap-2">
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                                         {[
                                             { label: 'Jitter', value: session.voice_quality.jitter_pct, unit: '%', color: v => v < 1.0 ? 'text-emerald-400' : v < 2.0 ? 'text-amber-400' : 'text-red-400', tooltip: 'Độ rung tần số cơ bản. < 1% = ổn định, 1-2% = chấp nhận được, > 2% = giọng run/không đều' },
                                             { label: 'Shimmer', value: session.voice_quality.shimmer_pct, unit: '%', color: v => v < 3.0 ? 'text-emerald-400' : v < 5.0 ? 'text-amber-400' : 'text-red-400', tooltip: 'Độ biến động biên độ. < 3% = tốt, 3-5% = bình thường, > 5% = giọng yếu hoặc mệt' },
@@ -346,16 +346,16 @@ const VoiceReport = () => {
                                         ].map(m => (
                                             <div key={m.label} className="p-3 rounded-md bg-[#09090b] border border-white/[0.05] text-center">
                                                 <div className="flex items-center justify-center gap-1 mb-1">
-                                                    <span className="text-[10px] text-zinc-600">{m.label}</span>
+                                                    <span className="text-[10px] text-zinc-500">{m.label}</span>
                                                     <div className="relative group/tt cursor-help">
-                                                        <Info size={9} className="text-zinc-700" />
+                                                        <Info size={9} className="text-zinc-500" />
                                                         <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-left">
                                                             {m.tooltip}
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <p className={`text-[15px] font-bold tabular-nums ${m.color(m.value ?? 0)}`}>
-                                                    {(m.value ?? 0).toFixed(1)}<span className="text-[10px] text-zinc-600">{m.unit}</span>
+                                                    {(m.value ?? 0).toFixed(1)}<span className="text-[10px] text-zinc-500">{m.unit}</span>
                                                 </p>
                                             </div>
                                         ))}
@@ -365,30 +365,30 @@ const VoiceReport = () => {
                                     <div className="grid grid-cols-2 gap-2">
                                         <div className="p-3 rounded-md bg-[#09090b] border border-white/[0.05]">
                                             <div className="flex items-center gap-1 mb-1">
-                                                <span className="text-[10px] text-zinc-600">Spectral Centroid</span>
+                                                <span className="text-[10px] text-zinc-500">Spectral Centroid</span>
                                                 <div className="relative group/tt cursor-help">
-                                                    <Info size={9} className="text-zinc-700" />
+                                                    <Info size={9} className="text-zinc-500" />
                                                     <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-52 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
                                                         Trọng tâm phổ tần số. Giá trị cao hơn = giọng sáng, rõ hơn. Lý tưởng cho MC: ≥ 1500 Hz.
                                                     </div>
                                                 </div>
                                             </div>
                                             <p className={`text-[14px] font-bold tabular-nums ${(session.spectral_features.spectral_centroid_hz ?? 0) < 1500 ? 'text-amber-400' : 'text-emerald-400'}`}>
-                                                {Math.round(session.spectral_features.spectral_centroid_hz ?? 0)}<span className="text-[10px] text-zinc-600"> Hz</span>
+                                                {Math.round(session.spectral_features.spectral_centroid_hz ?? 0)}<span className="text-[10px] text-zinc-500"> Hz</span>
                                             </p>
                                         </div>
                                         <div className="p-3 rounded-md bg-[#09090b] border border-white/[0.05]">
                                             <div className="flex items-center gap-1 mb-1">
-                                                <span className="text-[10px] text-zinc-600">MFCC Stability</span>
+                                                <span className="text-[10px] text-zinc-500">MFCC Stability</span>
                                                 <div className="relative group/tt cursor-help">
-                                                    <Info size={9} className="text-zinc-700" />
+                                                    <Info size={9} className="text-zinc-500" />
                                                     <div className="pointer-events-none absolute bottom-full right-0 mb-2 w-52 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
                                                         Độ ổn định cấu trúc âm thanh (MFCC). ≥ 50/100 = phát âm nhất quán, ổn định.
                                                     </div>
                                                 </div>
                                             </div>
                                             <p className={`text-[14px] font-bold tabular-nums ${(session.spectral_features.mfcc_stability_score ?? 0) >= 50 ? 'text-emerald-400' : 'text-amber-400'}`}>
-                                                {(session.spectral_features.mfcc_stability_score ?? 0).toFixed(1)}<span className="text-[10px] text-zinc-600">/100</span>
+                                                {(session.spectral_features.mfcc_stability_score ?? 0).toFixed(1)}<span className="text-[10px] text-zinc-500">/100</span>
                                             </p>
                                         </div>
                                     </div>
@@ -398,7 +398,7 @@ const VoiceReport = () => {
                                         <div className="flex items-center gap-1 w-24 shrink-0">
                                             <span className="text-[11px] text-zinc-500">Pitch Contour</span>
                                             <div className="relative group/tt cursor-help">
-                                                <Info size={9} className="text-zinc-700" />
+                                                <Info size={9} className="text-zinc-500" />
                                                 <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-52 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
                                                     Xu hướng cao độ giọng. Rising (↗) = giọng lên. Falling (↘) = giọng xuống. Flat (→) = đều đặn.
                                                 </div>
@@ -412,7 +412,7 @@ const VoiceReport = () => {
                                             {session.pitch_contour.pitch_contour === 'rising' ? '↗ Rising' :
                                              session.pitch_contour.pitch_contour === 'falling' ? '↘ Falling' : '→ Flat'}
                                         </span>
-                                        <span className="text-[11px] text-zinc-600 ml-auto tabular-nums">{(session.pitch_contour.pitch_slope ?? 0).toFixed(2)} st/s</span>
+                                        <span className="text-[11px] text-zinc-500 ml-auto tabular-nums">{(session.pitch_contour.pitch_slope ?? 0).toFixed(2)} st/s</span>
                                     </div>
                                 )}
                                 {session.filler_words && session.filler_words.filler_count > 0 && (
@@ -421,7 +421,7 @@ const VoiceReport = () => {
                                             <div className="flex items-center gap-1">
                                                 <span className="text-[11px] text-zinc-500">Filler Words</span>
                                                 <div className="relative group/tt cursor-help">
-                                                    <Info size={9} className="text-zinc-700" />
+                                                    <Info size={9} className="text-zinc-500" />
                                                     <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-52 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
                                                         Từ đệm không cần thiết (ừm, ờ, thì là…). MC nên giảm xuống ≤ 2% tổng số từ.
                                                     </div>
@@ -503,7 +503,7 @@ const VoiceReport = () => {
                                             >
                                                 <div className="flex items-start justify-between gap-3 mb-1.5">
                                                     <p className="text-[13px] text-zinc-300 leading-relaxed flex-1">"{s.text}"</p>
-                                                    <span className="text-[11px] text-zinc-600 shrink-0 tabular-nums">{s.wpm?.toFixed(0)} WPM</span>
+                                                    <span className="text-[11px] text-zinc-500 shrink-0 tabular-nums">{s.wpm?.toFixed(0)} WPM</span>
                                                 </div>
                                                 {s.needs_rework && Array.isArray(s.issues) && s.issues.length > 0 && (
                                                     <div className="flex flex-wrap gap-1.5 mt-2">

@@ -52,7 +52,7 @@ const LeftPanel = () => {
             <Mic size={11} /> AI Voice Training Platform
           </span>
           <h2 className="text-[28px] lg:text-[36px] font-bold text-white leading-[1.2] tracking-tight drop-shadow-lg">
-            Luyện giọng MC<br />chuyên nghiệp —<br />
+            Luyện giọng MC<br />chuyên nghiệp,<br />
             <span className="text-amber-400">mọi lúc, mọi nơi.</span>
           </h2>
         </div>

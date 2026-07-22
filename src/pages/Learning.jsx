@@ -77,12 +77,12 @@ const Learning = () => {
                         <div className="flex items-center gap-2">
                             <div className="flex -space-x-1.5">
                                 {[1, 2, 3].map(i => (
-                                    <div key={i} className="w-7 h-7 rounded-full border-2 border-[#09090b] bg-[#111113] border-[#111113] flex items-center justify-center text-zinc-600">
+                                    <div key={i} className="w-7 h-7 rounded-full border-2 border-[#09090b] bg-[#111113] border-[#111113] flex items-center justify-center text-zinc-500">
                                         <User size={11} />
                                     </div>
                                 ))}
                             </div>
-                            <span className="text-[11px] text-zinc-600">+{roadmapSteps.length}k {t('learning.activeUsers')}</span>
+                            <span className="text-[11px] text-zinc-500">+{roadmapSteps.length}k {t('learning.activeUsers')}</span>
                         </div>
                     </div>
 
@@ -109,7 +109,7 @@ const Learning = () => {
                                         <div className={`w-14 h-14 rounded-md flex items-center justify-center shrink-0 ${
                                             step.status === 'Completed' ? 'bg-emerald-500/[0.08] text-emerald-400 border border-emerald-500/20' :
                                             step.status === 'In Progress' ? 'bg-[#f5a623]/[0.08] text-[#f5a623] border border-[#f5a623]/20' :
-                                            'bg-[#09090b] text-zinc-600 border border-white/[0.06]'
+                                            'bg-[#09090b] text-zinc-500 border border-white/[0.06]'
                                         }`}>
                                             {i === 0 ? <Flag size={24} /> : i === 1 ? <Sparkles size={24} /> : <Trophy size={24} />}
                                         </div>
@@ -121,12 +121,12 @@ const Learning = () => {
                                                         <h3 className="text-[16px] font-semibold text-white">{step.title}</h3>
                                                         {step.status === 'Completed' && <CheckCircle2 size={15} className="text-emerald-400" />}
                                                     </div>
-                                                    <span className="text-[11px] text-zinc-600 uppercase tracking-wider">{step.level} Stage</span>
+                                                    <span className="text-[11px] text-zinc-500 uppercase tracking-wider">{step.level} Stage</span>
                                                 </div>
                                                 <span className={`px-3 py-1 rounded-md text-[11px] font-medium border shrink-0 ${
                                                     step.status === 'Completed' ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/[0.06]' :
                                                     step.status === 'In Progress' ? 'text-[#f5a623] border-[#f5a623]/20 bg-[#f5a623]/[0.06]' :
-                                                    'text-zinc-600 border-white/[0.06] bg-[#09090b]'
+                                                    'text-zinc-500 border-white/[0.06] bg-[#09090b]'
                                                 }`}>
                                                     {step.status === 'Completed' ? t('common.completed') :
                                                      step.status === 'In Progress' ? t('common.inProgress') :
@@ -140,7 +140,7 @@ const Learning = () => {
 
                                             {step.status === 'In Progress' && (
                                                 <div className="space-y-1.5">
-                                                    <div className="flex justify-between text-[11px] text-zinc-600 uppercase tracking-wider">
+                                                    <div className="flex justify-between text-[11px] text-zinc-500 uppercase tracking-wider">
                                                         <span>{t('learning.progress')}</span>
                                                         <span>{step.progress || 0}%</span>
                                                     </div>
@@ -164,7 +164,7 @@ const Learning = () => {
                                                     <ArrowRight size={14} />
                                                 </button>
                                             ) : (
-                                                <div className="flex items-center gap-2 text-[12px] text-zinc-600">
+                                                <div className="flex items-center gap-2 text-[12px] text-zinc-500">
                                                     <Lock size={13} /> {t('learning.finishPrevious')}
                                                 </div>
                                             )}
@@ -204,12 +204,12 @@ const Learning = () => {
                                     <div className="flex-1 min-w-0">
                                         <h4 className="text-[13px] font-medium text-white group-hover:text-[#f5a623] transition-colors leading-tight">{res.title}</h4>
                                         <div className="flex items-center gap-1.5 mt-0.5">
-                                            <span className="text-[11px] text-zinc-600">{res.type}</span>
+                                            <span className="text-[11px] text-zinc-500">{res.type}</span>
                                             <span className="w-0.5 h-0.5 rounded-full bg-zinc-700" />
-                                            <span className="text-[11px] text-zinc-600">{res.time}</span>
+                                            <span className="text-[11px] text-zinc-500">{res.time}</span>
                                         </div>
                                     </div>
-                                    <ArrowRight size={13} className="text-zinc-700 group-hover:text-[#f5a623] transition-colors shrink-0" />
+                                    <ArrowRight size={13} className="text-zinc-500 group-hover:text-[#f5a623] transition-colors shrink-0" />
                                 </motion.div>
                             ))}
                         </div>

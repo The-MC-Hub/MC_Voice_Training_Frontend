@@ -194,7 +194,7 @@ const faqs = [
     icon: Mic,
     q: 'Tôi cần thiết bị gì để sử dụng?',
     short: 'Trình duyệt Chrome/Firefox/Edge + microphone. Không cần cài phần mềm.',
-    full: 'Chỉ cần trình duyệt Chrome/Firefox/Edge phiên bản mới nhất và microphone — laptop tích hợp hoặc USB mic đều hoạt động. Không cần cài phần mềm.',
+    full: 'Chỉ cần trình duyệt Chrome/Firefox/Edge phiên bản mới nhất và microphone, laptop tích hợp hoặc USB mic đều hoạt động. Không cần cài phần mềm.',
   },
   {
     icon: BarChart3,
@@ -205,8 +205,8 @@ const faqs = [
   {
     icon: TrendingUp,
     q: 'Các gói dịch vụ thanh toán như thế nào?',
-    short: 'Thanh toán qua PayOS — kích hoạt tự động. 4 gói: Ngày / Basic / Full / Annual.',
-    full: 'Thanh toán qua cổng PayOS tích hợp sẵn trên trang. Hệ thống kích hoạt gói tự động ngay sau khi xác nhận. Có 4 gói: Gói Ngày (24h), Basic (tháng), Full (tháng), Annual (năm) — không tự gia hạn.',
+    short: 'Thanh toán qua PayOS, kích hoạt tự động. 4 gói: Ngày / Basic / Full / Annual.',
+    full: 'Thanh toán qua cổng PayOS tích hợp sẵn trên trang. Hệ thống kích hoạt gói tự động ngay sau khi xác nhận. Có 4 gói: Gói Ngày (24h), Basic (tháng), Full (tháng), Annual (năm), không tự gia hạn.',
   },
   {
     icon: CheckCircle2,
@@ -277,15 +277,15 @@ const FaqItem = ({ icon: Icon, q, short, full, index }) => {
 const testimonials = [
   {
     name: 'Nguyễn Minh Khoa',
-    role: 'MC Đám cưới — 3 năm kinh nghiệm',
+    role: 'MC Đám cưới, 3 năm kinh nghiệm',
     score: 91,
-    quote: 'Sau 2 tuần luyện với MC Hub, điểm phát âm tăng từ 64 lên 91. Feedback AI chỉ ra đúng âm nào sai, ngắt nghỉ chỗ nào — cụ thể hơn thầy giáo thật.',
+    quote: 'Sau 2 tuần luyện với MC Hub, điểm phát âm tăng từ 64 lên 91. Feedback AI chỉ ra đúng âm nào sai, ngắt nghỉ chỗ nào, cụ thể hơn thầy giáo thật.',
     avatar: 'https://i.pravatar.cc/96?img=11',
     fallback: 'https://i.pravatar.cc/96?img=11',
   },
   {
     name: 'Trần Thị Bảo Châu',
-    role: 'Dẫn chương trình TV — Freelance',
+    role: 'Dẫn chương trình TV, Freelance',
     score: 88,
     quote: 'Luyện lúc 11 giờ đêm mà không cần ai chấm điểm. Báo cáo chi tiết giúp biết chính xác cần sửa gì trước sự kiện.',
     avatar: 'https://i.pravatar.cc/96?img=47',
@@ -432,13 +432,13 @@ const SampleReportCard = () => {
           </div>
           <div>
             <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider">Báo cáo AI</p>
-            <p className="text-[13px] font-semibold text-white leading-tight">Kịch bản đám cưới — Nâng cao</p>
+            <p className="text-[13px] font-semibold text-white leading-tight">Kịch bản đám cưới, Nâng cao</p>
           </div>
         </div>
         <div className="text-right" ref={scoreRef}>
-          <p className="text-[10px] text-zinc-600 uppercase tracking-wider mb-0.5">Tổng điểm</p>
+          <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-0.5">Tổng điểm</p>
           <p className="text-3xl font-bold text-emerald-400 tabular-nums leading-none">
-            {inView ? scoreCount : 0}<span className="text-base text-zinc-600 font-normal">/100</span>
+            {inView ? scoreCount : 0}<span className="text-base text-zinc-500 font-normal">/100</span>
           </p>
         </div>
       </div>
@@ -456,7 +456,7 @@ const SampleReportCard = () => {
             hoverScale={1}
             onClick={() => setTab(id)}
             className={`flex-1 py-2.5 text-[11px] font-medium transition-colors relative h-auto rounded-none bg-transparent hover:bg-transparent ${
-              tab === id ? 'text-[#f5a623]' : 'text-zinc-600 hover:text-zinc-400'
+              tab === id ? 'text-[#f5a623]' : 'text-zinc-500 hover:text-zinc-400'
             }`}
           >
             {label}
@@ -514,7 +514,7 @@ const SampleReportCard = () => {
             >
               {/* Overall arc-like progress */}
               <div className="mb-5">
-                <div className="flex justify-between text-[10px] text-zinc-600 mb-1.5">
+                <div className="flex justify-between text-[10px] text-zinc-500 mb-1.5">
                   <span>Tổng thể</span><span className="text-emerald-400 font-medium">Xuất sắc</span>
                 </div>
                 <div className="h-2 rounded-full bg-white/[0.05] relative overflow-hidden">
@@ -529,7 +529,7 @@ const SampleReportCard = () => {
               </div>
               {criteria.map((c, i) => (
                 <div key={c.label} className="flex items-center gap-3">
-                  <span className="text-[10px] text-zinc-600 w-16 shrink-0">{c.label}</span>
+                  <span className="text-[10px] text-zinc-500 w-16 shrink-0">{c.label}</span>
                   <div className="flex-1 h-1.5 rounded-full bg-white/[0.05] overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
@@ -556,7 +556,7 @@ const SampleReportCard = () => {
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <p className="text-[11px] text-zinc-500">Phân tích sóng âm</p>
-                  <p className="text-[13px] font-semibold text-white mt-0.5">118 WPM — Nhịp điệu ổn định</p>
+                  <p className="text-[13px] font-semibold text-white mt-0.5">118 WPM, nhịp điệu ổn định</p>
                 </div>
                 <span className="px-2 py-0.5 rounded-md bg-emerald-500/[0.1] border border-emerald-500/20 text-[10px] text-emerald-400 font-medium">Live</span>
               </div>
@@ -566,7 +566,7 @@ const SampleReportCard = () => {
                     <WaveformBar key={i} height={h} delay={i * 0.06} active={inView} />
                   ))}
                 </div>
-                <div className="mt-3 flex justify-between text-[9px] text-zinc-700">
+                <div className="mt-3 flex justify-between text-[9px] text-zinc-500">
                   <span>0:00</span><span>0:15</span><span>0:30</span><span>0:45</span><span>1:00</span>
                 </div>
               </div>
@@ -578,7 +578,7 @@ const SampleReportCard = () => {
                 ].map((m, i) => (
                   <div key={i} className="bg-[#0e0e10] rounded-md p-3 border border-white/[0.05] text-center">
                     <p className={`text-[14px] font-bold ${m.color}`}>{m.value}</p>
-                    <p className="text-[9px] text-zinc-600 mt-0.5">{m.sub}</p>
+                    <p className="text-[9px] text-zinc-500 mt-0.5">{m.sub}</p>
                   </div>
                 ))}
               </div>
@@ -591,7 +591,7 @@ const SampleReportCard = () => {
       <div className="px-5 pb-5 border-t border-white/[0.05] pt-4 space-y-2">
         {[
           { icon: CheckCircle2, text: 'Ngắt nghỉ đúng nhịp (0.82s trung bình)', color: 'text-emerald-400' },
-          { icon: TrendingUp,   text: 'Tốc độ 118 WPM — trong ngưỡng mục tiêu', color: 'text-blue-400' },
+          { icon: TrendingUp,   text: 'Tốc độ 118 WPM, trong ngưỡng mục tiêu', color: 'text-blue-400' },
           { icon: AudioLines,   text: 'Nhấn mạnh từ khóa cần tăng cường', color: 'text-amber-400' },
         ].map(({ icon: Icon, text, color }, i) => (
           <motion.div
@@ -924,14 +924,11 @@ const Home = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <ScrollReveal direction="left">
             <div>
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#f5a623]/20 bg-[#f5a623]/[0.05] text-[#f5a623] text-[11px] font-semibold uppercase tracking-widest mb-5">
-                <BarChart3 size={10} /> Báo cáo AI
-              </span>
               <h2 className="text-3xl lg:text-4xl font-bold tracking-tight mb-4 leading-snug text-gray-900">
                 Phân tích chi tiết <span className="text-amber-500">từng tiêu chí</span>
               </h2>
               <p className="text-gray-500 text-[15px] leading-relaxed mb-6">
-                Sau mỗi buổi luyện, AI trả về báo cáo gồm điểm 5 tiêu chí, feedback cụ thể và gợi ý cải thiện — không phải nhận xét chung chung.
+                Sau mỗi buổi luyện, AI trả về báo cáo gồm điểm 5 tiêu chí, feedback cụ thể và gợi ý cải thiện, không phải nhận xét chung chung.
               </p>
               <ul className="space-y-3">
                 {[
@@ -1064,7 +1061,7 @@ const Home = () => {
           {[
             {
               step: '01', title: t('home.step1Title'), icon: <Zap size={14} />,
-              caption: 'Ghi âm — nhận điểm AI trong 30 giây',
+              caption: 'Ghi âm, nhận điểm AI trong 30 giây',
               img: '/images/step-record.png',
               fallback: 'https://picsum.photos/seed/step-record/480/320',
               offset: 'md:mt-0',
@@ -1123,10 +1120,7 @@ const Home = () => {
           {/* Right (visually, via order-2): sticky header + contact CTA + rotating highlight cards */}
           <div className="lg:order-2">
             <ScrollReveal direction="up">
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gray-200 bg-gray-50 text-gray-500 text-[11px] font-semibold uppercase tracking-widest mb-5">
-                Câu hỏi thường gặp
-              </span>
-              <h2 className="text-3xl font-bold tracking-tight text-gray-900 mt-4 mb-4">
+              <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-4">
                 Bạn còn <span className="text-amber-500">thắc mắc?</span>
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-8">
@@ -1270,13 +1264,13 @@ const Home = () => {
                   { label: i18n.language === 'vi' ? 'Giờ tập' : 'Hours', value: `${selectedMCForCert.totalPracticeHours?.toFixed(1)}h`, color: 'text-emerald-400' },
                 ].map((stat, i) => (
                   <div key={i} className="p-4 bg-[#09090b] rounded-md border border-white/[0.05] text-center">
-                    <p className="text-[10px] text-zinc-600 uppercase tracking-wider mb-1.5">{stat.label}</p>
+                    <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1.5">{stat.label}</p>
                     <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="flex items-center justify-between text-[11px] text-zinc-600 mb-5 pt-4 border-t border-white/[0.06]">
+              <div className="flex items-center justify-between text-[11px] text-zinc-500 mb-5 pt-4 border-t border-white/[0.06]">
                 <span>ID: MCHUB-{selectedMCForCert.mcId?.substring(0, 10)?.toUpperCase() || 'ELITE'}</span>
                 <span className="italic">MCHub Academy Board</span>
               </div>

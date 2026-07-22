@@ -1194,7 +1194,7 @@ export default function AdminGuide() {
             placeholder="Tìm quy trình, từ khoá..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full h-auto bg-[--bg-surface] border border-[--border-subtle] rounded-none pl-9 pr-4 py-2 text-[12px] text-[--text-primary] placeholder:text-zinc-600 focus-visible:ring-0 focus:border-[--text-muted]"
+            className="w-full h-auto bg-[--bg-surface] border border-[--border-subtle] rounded-none pl-9 pr-4 py-2 text-[12px] text-[--text-primary] placeholder:text-zinc-500 focus-visible:ring-0 focus:border-[--text-muted]"
           />
         </div>
         <div className="flex items-center gap-2.5 shrink-0">

@@ -15,7 +15,7 @@ const fadeUp = {
 
 const FloatingInput = ({ label, error, textarea, ...props }) => {
   const [focused, setFocused] = useState(false);
-  const base = `w-full bg-[#09090b] border rounded-md text-[14px] text-white placeholder:text-zinc-700 outline-none transition-all duration-200 ${
+  const base = `w-full bg-[#09090b] border rounded-md text-[14px] text-white placeholder:text-zinc-500 outline-none transition-all duration-200 ${
     focused ? 'border-[#f5a623]/50 shadow-[0_0_0_3px_rgba(245,166,35,0.08)]' : 'border-white/[0.07] hover:border-white/[0.12]'
   }`;
   return (
@@ -59,10 +59,10 @@ const ContactUs = () => {
   };
 
   const contacts = [
-    { icon: Mail,   label: 'Email hỗ trợ',  value: 'themchubforwork@gmail.com', sub: 'Phản hồi trong 24–48 giờ' },
-    { icon: Phone,  label: 'Điện thoại',     value: '0912 158 715',             sub: 'Thứ 2 – Thứ 6, 8:00–22:00' },
+    { icon: Mail,   label: 'Email hỗ trợ',  value: 'themchubforwork@gmail.com', sub: 'Phản hồi trong 24-48 giờ' },
+    { icon: Phone,  label: 'Điện thoại',     value: '0912 158 715',             sub: 'Thứ 2 - Thứ 6, 8:00-22:00' },
     { icon: MapPin, label: 'Địa chỉ',        value: 'Đà Nẵng, Việt Nam',        sub: 'Văn phòng chính' },
-    { icon: Clock,  label: 'Giờ hỗ trợ',     value: '8:00 – 22:00 hằng ngày',  sub: 'Kể cả cuối tuần' },
+    { icon: Clock,  label: 'Giờ hỗ trợ',     value: '8:00 - 22:00 hằng ngày',  sub: 'Kể cả cuối tuần' },
   ];
 
   return (
@@ -98,9 +98,9 @@ const ContactUs = () => {
                 <div className="w-9 h-9 rounded-md bg-[#f5a623]/[0.08] border border-[#f5a623]/15 flex items-center justify-center mb-3">
                   <Icon size={16} className="text-[#f5a623]" />
                 </div>
-                <p className="text-[11px] text-zinc-600 uppercase tracking-wider mb-1">{label}</p>
+                <p className="text-[11px] text-zinc-500 uppercase tracking-wider mb-1">{label}</p>
                 <p className="text-[13px] font-semibold text-white leading-snug">{value}</p>
-                <p className="text-[11px] text-zinc-600 mt-0.5">{sub}</p>
+                <p className="text-[11px] text-zinc-500 mt-0.5">{sub}</p>
               </Card>
             ))}
           </motion.div>
@@ -113,8 +113,8 @@ const ContactUs = () => {
               <Card className="p-6 bg-[#111113] border border-white/[0.07] rounded-md space-y-4 gap-0 shadow-none">
                 <p className="text-[13px] font-semibold text-white mb-1">Thời gian phản hồi dự kiến</p>
                 {[
-                  { type: 'Email',   time: '24–48 giờ làm việc', dot: 'bg-emerald-400' },
-                  { type: 'Hỗ trợ kỹ thuật', time: '2–4 giờ (8:00–22:00)', dot: 'bg-[#f5a623]' },
+                  { type: 'Email',   time: '24-48 giờ làm việc', dot: 'bg-emerald-400' },
+                  { type: 'Hỗ trợ kỹ thuật', time: '2-4 giờ (8:00-22:00)', dot: 'bg-[#f5a623]' },
                   { type: 'Khiếu nại thanh toán', time: '48 giờ', dot: 'bg-blue-400' },
                 ].map(({ type, time, dot }) => (
                   <div key={type} className="flex items-center justify-between py-2.5 border-t border-white/[0.05]">
@@ -122,7 +122,7 @@ const ContactUs = () => {
                       <span className={`w-2 h-2 rounded-full ${dot}`} />
                       <span className="text-[13px] text-zinc-400">{type}</span>
                     </div>
-                    <span className="text-[12px] text-zinc-600">{time}</span>
+                    <span className="text-[12px] text-zinc-500">{time}</span>
                   </div>
                 ))}
               </Card>
@@ -139,9 +139,9 @@ const ContactUs = () => {
                       className="flex items-center justify-between p-3 rounded-md bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.1] hover:bg-white/[0.04] transition-all group">
                       <div>
                         <p className="text-[13px] text-zinc-300 group-hover:text-white transition-colors">{label}</p>
-                        <p className="text-[11px] text-zinc-600">{desc}</p>
+                        <p className="text-[11px] text-zinc-500">{desc}</p>
                       </div>
-                      <span className="text-zinc-600 group-hover:text-[#f5a623] transition-colors text-sm">→</span>
+                      <span className="text-zinc-500 group-hover:text-[#f5a623] transition-colors text-sm">→</span>
                     </Link>
                   ))}
                 </div>

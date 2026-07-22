@@ -173,13 +173,13 @@ const ReadingView = () => {
             <div className="p-5 border-b border-white/[0.06]">
               <Button
                 onClick={() => navigate(`/m/learning/milestone/${mId}`)}
-                className="flex items-center gap-2 text-zinc-600 hover:text-white transition-colors text-[12px] mb-4 group h-auto"
+                className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-[12px] mb-4 group h-auto"
               >
                 <ArrowLeft size={13} className="group-hover:-translate-x-0.5 transition-transform" /> {t('readingView.roadmap')}
               </Button>
               <h2 className="text-[14px] font-semibold text-white leading-snug line-clamp-2">{milestone?.title}</h2>
               <div className="flex items-center justify-between mt-2">
-                <span className="text-[10px] text-zinc-600 uppercase tracking-wider">{t('readingView.progress')}</span>
+                <span className="text-[10px] text-zinc-500 uppercase tracking-wider">{t('readingView.progress')}</span>
                 <span className="text-[10px] font-medium text-[#f5a623]">{milestone?.progress || 0}%</span>
               </div>
             </div>
@@ -233,7 +233,7 @@ const ReadingView = () => {
                 <span className="px-3 py-1 rounded-md bg-[#f5a623]/[0.08] border border-[#f5a623]/20 text-[#f5a623] text-[11px] font-medium">
                   {guide.category || t('readingView.academyGuide')}
                 </span>
-                <span className="text-zinc-600 text-[11px] flex items-center gap-1">
+                <span className="text-zinc-500 text-[11px] flex items-center gap-1">
                   <Clock size={11} /> {t('readingView.readTime', { minutes: 15 })}
                 </span>
               </div>

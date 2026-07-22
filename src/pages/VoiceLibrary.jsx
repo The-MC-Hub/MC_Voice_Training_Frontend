@@ -127,7 +127,7 @@ const VoiceLibrary = () => {
           <div className="flex items-center gap-2 mb-4">
             <Flame size={15} className="text-gold" />
             <span className="text-[13px] font-semibold text-white">{t('voiceLibrary.featuredLessons')}</span>
-            <span className="text-[11px] text-zinc-600 ml-1">{t('voiceLibrary.mostPracticed')}</span>
+            <span className="text-[11px] text-zinc-500 ml-1">{t('voiceLibrary.mostPracticed')}</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {featuredLessons.map((lesson, i) => {
@@ -148,8 +148,8 @@ const VoiceLibrary = () => {
                   <div className="flex-1 min-w-0">
                     <p className="text-[13px] font-semibold text-white truncate leading-snug">{lesson.title}</p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-[10px] text-zinc-600">{CATEGORY_LABEL[lesson.category] || lesson.category}</span>
-                      <span className="text-[10px] text-zinc-600">·</span>
+                      <span className="text-[10px] text-zinc-500">{CATEGORY_LABEL[lesson.category] || lesson.category}</span>
+                      <span className="text-[10px] text-zinc-500">·</span>
                       <span className={`text-[10px] font-medium ${lesson.difficulty === 'Hard' ? 'text-red-400' : lesson.difficulty === 'Medium' ? 'text-gold' : 'text-emerald-400'}`}>
                         {lesson.difficulty}
                       </span>
@@ -159,7 +159,7 @@ const VoiceLibrary = () => {
                   <div className="shrink-0 flex items-center gap-1 text-gold">
                     <TrendingUp size={11} />
                     <span className="text-[12px] font-bold tabular-nums">{lesson.practiceCount}</span>
-                    <span className="text-[10px] text-zinc-600">{t('voiceLibrary.usesUnit')}</span>
+                    <span className="text-[10px] text-zinc-500">{t('voiceLibrary.usesUnit')}</span>
                   </div>
                 </div>
               );
@@ -172,7 +172,7 @@ const VoiceLibrary = () => {
 
         {/* Sidebar — vertical on lg+, horizontal scroll on mobile */}
         <aside className="md:w-56 shrink-0">
-          <p className="text-[11px] font-semibold text-zinc-600 uppercase tracking-wider mb-3">
+          <p className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider mb-3">
             {t('voiceLibrary.practiceCategories')}
           </p>
 
@@ -191,7 +191,7 @@ const VoiceLibrary = () => {
                   }`}
                 >
                   {label}
-                  <span className={`text-[10px] px-1 rounded ${active ? 'text-gold' : 'text-zinc-600'}`}>{count}</span>
+                  <span className={`text-[10px] px-1 rounded ${active ? 'text-gold' : 'text-zinc-500'}`}>{count}</span>
                 </Button>
               );
             })}
@@ -209,7 +209,7 @@ const VoiceLibrary = () => {
               }`}
             >
               <span>{t('voiceLibrary.allScripts')}</span>
-              <span className={`text-[11px] px-1.5 py-0.5 rounded ${activeCategory === "All" ? 'bg-gold/20 text-gold' : 'bg-white/6 text-zinc-600'}`}>
+              <span className={`text-[11px] px-1.5 py-0.5 rounded ${activeCategory === "All" ? 'bg-gold/20 text-gold' : 'bg-white/6 text-zinc-500'}`}>
                 {lessons.length}
               </span>
             </Button>
@@ -228,7 +228,7 @@ const VoiceLibrary = () => {
                   }`}
                 >
                   <span>{CATEGORY_LABEL[cat] || cat.replace(/_/g, ' ')}</span>
-                  <span className={`text-[11px] px-1.5 py-0.5 rounded ${active ? 'bg-gold/20 text-gold' : 'bg-white/6 text-zinc-600'}`}>
+                  <span className={`text-[11px] px-1.5 py-0.5 rounded ${active ? 'bg-gold/20 text-gold' : 'bg-white/6 text-zinc-500'}`}>
                     {count}
                   </span>
                 </Button>
@@ -267,11 +267,11 @@ const VoiceLibrary = () => {
           {/* Search + filters */}
           <div className="flex flex-col sm:flex-row gap-3 mb-5">
             <div className="flex-1 flex items-center gap-2.5 px-3 py-2 bg-[#111113] border border-white/[0.07] rounded-md focus-within:border-white/[0.14] transition-colors">
-              <Search size={16} className="text-zinc-600 shrink-0" />
+              <Search size={16} className="text-zinc-500 shrink-0" />
               <input
                 type="text"
                 placeholder={t('voiceLibrary.searchPlaceholder')}
-                className="bg-transparent border-none outline-none flex-1 text-[14px] text-white placeholder:text-zinc-600"
+                className="bg-transparent border-none outline-none flex-1 text-[14px] text-white placeholder:text-zinc-500"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -310,20 +310,20 @@ const VoiceLibrary = () => {
           </div>
 
           <div className="flex items-center justify-between mb-4">
-            <p className="text-[12px] text-zinc-600">
+            <p className="text-[12px] text-zinc-500">
               {t('voiceLibrary.showing')} <span className="text-white">{filteredLessons.length}</span> {t('voiceLibrary.results')}
             </p>
             {/* View toggle */}
             <div className="flex items-center gap-1 bg-[#111113] border border-white/[0.07] rounded-md p-1 shrink-0">
               <Button
                 onClick={() => setViewMode('list')}
-                className={`p-1.5 rounded-md transition-colors h-auto ${viewMode === 'list' ? 'bg-gold/10 text-gold' : 'text-zinc-600 hover:text-zinc-300'}`}
+                className={`p-1.5 rounded-md transition-colors h-auto ${viewMode === 'list' ? 'bg-gold/10 text-gold' : 'text-zinc-500 hover:text-zinc-300'}`}
               >
                 <LayoutList size={15} />
               </Button>
               <Button
                 onClick={() => setViewMode('grid')}
-                className={`p-1.5 rounded-md transition-colors h-auto ${viewMode === 'grid' ? 'bg-gold/10 text-gold' : 'text-zinc-600 hover:text-zinc-300'}`}
+                className={`p-1.5 rounded-md transition-colors h-auto ${viewMode === 'grid' ? 'bg-gold/10 text-gold' : 'text-zinc-500 hover:text-zinc-300'}`}
               >
                 <LayoutGrid size={15} />
               </Button>
@@ -355,8 +355,8 @@ const VoiceLibrary = () => {
                           <img src={lesson.thumbnailUrl} alt={lesson.title} className="w-full h-full object-cover" />
                         ) : (
                           <div className="flex flex-col items-center gap-1">
-                            <Mic size={18} className="text-zinc-600" />
-                            <span className="text-[9px] text-zinc-700 uppercase tracking-wide">MC</span>
+                            <Mic size={18} className="text-zinc-500" />
+                            <span className="text-[9px] text-zinc-500 uppercase tracking-wide">MC</span>
                           </div>
                         )}
                         {lesson.videoUrl && (
@@ -376,8 +376,8 @@ const VoiceLibrary = () => {
                             {lesson.difficulty}
                           </Badge>
                           <span className="text-[11px] text-zinc-500">{CATEGORY_LABEL[lesson.category] || lesson.category}</span>
-                          <span className="text-[11px] text-zinc-600">·</span>
-                          <span className="text-[11px] text-zinc-600">{wordCount} {t('voiceLibrary.words')}</span>
+                          <span className="text-[11px] text-zinc-500">·</span>
+                          <span className="text-[11px] text-zinc-500">{wordCount} {t('voiceLibrary.words')}</span>
                           {stats.total > 0 && (
                             <span className="text-[11px] text-gold/70 ml-auto hidden sm:block">{t('voiceLibrary.timesPracticed', { count: stats.total })}</span>
                           )}
@@ -387,7 +387,7 @@ const VoiceLibrary = () => {
                         {stats.total > 0 && (
                           <div className="text-right hidden sm:block">
                             <p className="text-[17px] font-bold text-emerald-400 tabular-nums leading-none">{stats.best.toFixed(0)}%</p>
-                            <p className="text-[10px] text-zinc-600 mt-0.5">{t('voiceLibrary.bestScore')}</p>
+                            <p className="text-[10px] text-zinc-500 mt-0.5">{t('voiceLibrary.bestScore')}</p>
                           </div>
                         )}
                       </div>
@@ -415,9 +415,9 @@ const VoiceLibrary = () => {
                         ) : (
                           <div className="flex flex-col items-center gap-2">
                             <div className="w-10 h-10 rounded-md bg-white/[0.04] border border-white/[0.06] flex items-center justify-center">
-                              <Mic size={18} className="text-zinc-600" />
+                              <Mic size={18} className="text-zinc-500" />
                             </div>
-                            <span className="text-[9px] text-zinc-700 uppercase tracking-wider">MC Script</span>
+                            <span className="text-[9px] text-zinc-500 uppercase tracking-wider">MC Script</span>
                           </div>
                         )}
                         {lesson.videoUrl && (
@@ -445,7 +445,7 @@ const VoiceLibrary = () => {
                         <h3 className="text-[13px] font-semibold text-white leading-snug line-clamp-2">{lesson.title}</h3>
 
                         {/* Category + read time */}
-                        <div className="flex items-center gap-1.5 text-[10px] text-zinc-600">
+                        <div className="flex items-center gap-1.5 text-[10px] text-zinc-500">
                           <Tag size={9} className="shrink-0" />
                           <span className="truncate">{CATEGORY_LABEL[lesson.category] || lesson.category}</span>
                           <span>·</span>
@@ -455,8 +455,8 @@ const VoiceLibrary = () => {
                         {/* Progress bar */}
                         <div className="mt-1">
                           <div className="flex justify-between text-[9px] mb-1">
-                            <span className="text-zinc-700">{t('voiceLibrary.highestScore')}</span>
-                            <span className={stats.total > 0 ? 'text-emerald-400 font-bold tabular-nums' : 'text-zinc-700'}>
+                            <span className="text-zinc-500">{t('voiceLibrary.highestScore')}</span>
+                            <span className={stats.total > 0 ? 'text-emerald-400 font-bold tabular-nums' : 'text-zinc-500'}>
                               {stats.total > 0 ? `${stats.best.toFixed(0)}%` : '—'}
                             </span>
                           </div>
@@ -475,7 +475,7 @@ const VoiceLibrary = () => {
                         <div className="flex items-center justify-between mt-auto pt-1">
                           {(() => {
                             if (stats.total === 0) return (
-                              <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.06] text-zinc-600">{t('voiceLibrary.statusNotPracticed')}</span>
+                              <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.06] text-zinc-500">{t('voiceLibrary.statusNotPracticed')}</span>
                             );
                             if (stats.best < 60) return (
                               <span className="text-[9px] px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400">{t('voiceLibrary.statusLearning')}</span>
@@ -488,7 +488,7 @@ const VoiceLibrary = () => {
                             );
                           })()}
                           {stats.total > 0 && (
-                            <span className="text-[10px] text-zinc-600">{t('voiceLibrary.timesPracticed', { count: stats.total })}</span>
+                            <span className="text-[10px] text-zinc-500">{t('voiceLibrary.timesPracticed', { count: stats.total })}</span>
                           )}
                         </div>
                       </div>
@@ -500,7 +500,7 @@ const VoiceLibrary = () => {
           ) : (
             <div className="py-20 text-center">
               <Mic size={28} className="mx-auto text-zinc-800 mb-3" />
-              <p className="text-zinc-600 text-[14px]">{t('voiceLibrary.noLessonsFound')}</p>
+              <p className="text-zinc-500 text-[14px]">{t('voiceLibrary.noLessonsFound')}</p>
             </div>
           )}
 

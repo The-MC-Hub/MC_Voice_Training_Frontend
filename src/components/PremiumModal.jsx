@@ -135,10 +135,10 @@ const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
                   </div>
                 </div>
                 <div className="mt-6 pt-5 border-t border-white/[0.06]">
-                  <p className="text-[11px] text-zinc-600 uppercase tracking-wider mb-1">{t('premiumModal.promoOffer')}</p>
+                  <p className="text-[11px] text-zinc-500 uppercase tracking-wider mb-1">{t('premiumModal.promoOffer')}</p>
                   <div className="flex items-baseline gap-2">
                     <span className="text-2xl font-bold text-white">20,000đ</span>
-                    <span className="text-[13px] text-zinc-600 line-through">100,000đ</span>
+                    <span className="text-[13px] text-zinc-500 line-through">100,000đ</span>
                     <span className="rounded-md bg-red-500/[0.08] border border-red-500/20 px-2 py-0.5 text-[11px] text-red-400">-80%</span>
                   </div>
                 </div>
@@ -149,7 +149,7 @@ const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
                 {loading ? (
                   <div className="flex flex-col items-center gap-3 py-10">
                     <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#f5a623] border-t-transparent" />
-                    <p className="text-[12px] text-zinc-600 uppercase tracking-wider">{t('premiumModal.generatingQr')}</p>
+                    <p className="text-[12px] text-zinc-500 uppercase tracking-wider">{t('premiumModal.generatingQr')}</p>
                   </div>
                 ) : error ? (
                   <div className="text-center py-10">
@@ -172,7 +172,7 @@ const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
                         { label: t('premiumModal.accountNo'), val: orderData.accountNumber },
                       ].map(({ label, val }) => (
                         <div key={label} className="flex justify-between text-[12px]">
-                          <span className="text-zinc-600">{label}:</span>
+                          <span className="text-zinc-500">{label}:</span>
                           <span className="font-medium text-zinc-300">{val}</span>
                         </div>
                       ))}
@@ -180,7 +180,7 @@ const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
                         <p className="text-[11px] text-[#f5a623] uppercase tracking-wider mb-1">{t('premiumModal.transferMemo')}</p>
                         <div className="flex items-center justify-between rounded-md bg-[#f5a623]/[0.06] border border-[#f5a623]/20 px-3 py-1.5">
                           <code className="text-[12px] font-medium text-[#f5a623] select-all">{orderData.memo}</code>
-                          <span className="text-[10px] text-zinc-600">{t('premiumModal.doubleClickCopy')}</span>
+                          <span className="text-[10px] text-zinc-500">{t('premiumModal.doubleClickCopy')}</span>
                         </div>
                       </div>
                     </div>
@@ -194,7 +194,7 @@ const PremiumModal = ({ isOpen, onClose, onUpgradeSuccess }) => {
                     </button>
                     <div className="mt-2.5 flex items-center justify-center gap-1.5">
                       {polling && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />}
-                      <p className="text-[11px] text-zinc-600 text-center">
+                      <p className="text-[11px] text-zinc-500 text-center">
                         {polling ? t('premiumModal.waitingPayment') : t('premiumModal.autoDetected')}
                       </p>
                     </div>

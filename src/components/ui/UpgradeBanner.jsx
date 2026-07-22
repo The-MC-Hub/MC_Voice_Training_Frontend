@@ -105,7 +105,7 @@ export default function UpgradeBanner({ variant = 'warning', plan = 'FREE', used
                         />
                     </div>
                     <div className="flex justify-between mt-1">
-                        <span className="text-[10px] text-zinc-600">{t('upgradeBanner.usedLabel', { count: used })}</span>
+                        <span className="text-[10px] text-zinc-500">{t('upgradeBanner.usedLabel', { count: used })}</span>
                         <span className={`text-[10px] font-semibold ${pct >= 100 ? 'text-red-400' : 'text-[#f5a623]'}`}>{t('upgradeBanner.totalLabel', { count: limit })}</span>
                     </div>
                 </div>

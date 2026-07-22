@@ -82,7 +82,7 @@ const OverviewTab = ({
                 <TrendingUp size={14} className="text-[#f5a623]" />
                 {t('dashboard.trainingProgress')}
               </h3>
-              <p className="text-[11px] text-zinc-600 mt-0.5">
+              <p className="text-[11px] text-zinc-500 mt-0.5">
                 {timeFrame === "Daily" ? t('dashboard.last7Days') : timeFrame === "Weekly" ? t('dashboard.last4Weeks') : t('dashboard.last6Months')}
               </p>
             </div>
@@ -186,7 +186,7 @@ const OverviewTab = ({
       </div>
 
       {/* Row 2: Quick metrics */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
           { icon: Flame, label: 'Chuỗi luyện tập', value: `${userStats?.currentStreak ?? 0}`, unit: 'ngày', color: 'text-orange-400', bg: 'bg-orange-500/[0.08] border-orange-500/20', bar: Math.min((userStats?.currentStreak ?? 0) / 30 * 100, 100), barColor: '#f97316' },
           { icon: Target, label: 'Mục tiêu tuần', value: `${Math.min(n, 5)}/5`, unit: 'phiên', color: 'text-blue-400', bg: 'bg-blue-500/[0.08] border-blue-500/20', bar: Math.min(n, 5) / 5 * 100, barColor: '#3b82f6' },
@@ -208,7 +208,7 @@ const OverviewTab = ({
                 <span className="text-[28px] font-bold text-white leading-none">{value}</span>
                 <span className={`text-[13px] font-medium ${color}`}>{unit}</span>
               </div>
-              <p className="text-[11px] text-zinc-600 mb-3">{label}</p>
+              <p className="text-[11px] text-zinc-500 mb-3">{label}</p>
               <div className="h-1 w-full bg-white/[0.04] rounded-full">
                 <div className="h-full rounded-full transition-all" style={{ width: `${bar}%`, backgroundColor: barColor }} />
               </div>
@@ -261,7 +261,7 @@ const OverviewTab = ({
               </RadarChart>
             </ResponsiveContainer>
           </div>
-          <p className="text-[11px] text-zinc-600 text-center mt-2 leading-relaxed bg-[#09090b] border border-white/[0.05] py-2 px-3 rounded-md w-full">
+          <p className="text-[11px] text-zinc-500 text-center mt-2 leading-relaxed bg-[#09090b] border border-white/[0.05] py-2 px-3 rounded-md w-full">
             {t('dashboard.speedExcellent')}
           </p>
           </SpotlightCard>
@@ -277,7 +277,7 @@ const OverviewTab = ({
               </div>
               <h4 className="text-[13px] font-semibold text-white">Lịch luyện tập</h4>
             </div>
-            <span className="text-[11px] text-zinc-600">28 ngày qua</span>
+            <span className="text-[11px] text-zinc-500">28 ngày qua</span>
           </div>
           {(() => {
             const DAY_LABELS = ['T2','T3','T4','T5','T6','T7','CN'];
@@ -308,7 +308,7 @@ const OverviewTab = ({
               <div>
                 <div className="grid grid-cols-7 gap-1 mb-1">
                   {DAY_LABELS.map(d => (
-                    <span key={d} className="text-[9px] text-zinc-700 text-center uppercase tracking-wider">{d}</span>
+                    <span key={d} className="text-[9px] text-zinc-500 text-center uppercase tracking-wider">{d}</span>
                   ))}
                 </div>
                 <div className="grid grid-cols-7 gap-1">
@@ -322,13 +322,13 @@ const OverviewTab = ({
                   ))}
                 </div>
                 <div className="flex items-center justify-between mt-3">
-                  <span className="text-[10px] text-zinc-700">Ít hơn</span>
+                  <span className="text-[10px] text-zinc-500">Ít hơn</span>
                   <div className="flex gap-1">
                     {['rgba(255,255,255,0.04)','rgba(245,166,35,0.25)','rgba(245,166,35,0.55)','#f5a623'].map((c,i) => (
                       <div key={i} className="w-3 h-3 rounded-sm" style={{ backgroundColor: c }} />
                     ))}
                   </div>
-                  <span className="text-[10px] text-zinc-700">Nhiều hơn</span>
+                  <span className="text-[10px] text-zinc-500">Nhiều hơn</span>
                 </div>
               </div>
             );
@@ -363,20 +363,26 @@ const OverviewTab = ({
             </ResponsiveContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
               <span className="text-2xl font-bold text-white leading-none">{n}</span>
-              <span className="text-[10px] text-zinc-600 uppercase tracking-wider mt-0.5">{t('dashboard.sessions')}</span>
+              <span className="text-[10px] text-zinc-500 uppercase tracking-wider mt-0.5">{t('dashboard.sessions')}</span>
             </div>
           </div>
           <div className="flex gap-4 mt-2">
             {[
-              { label: t('dashboard.high'), color: "#10b981" },
-              { label: t('dashboard.mid'), color: "#3b82f6" },
-              { label: t('dashboard.low'), color: "#3f3f46" }
-            ].map(d => (
+              { key: 'high', label: t('dashboard.high'), color: "#10b981" },
+              { key: 'mid', label: t('dashboard.mid'), color: "#3b82f6" },
+              { key: 'low', label: t('dashboard.low'), color: "#3f3f46" }
+            ].map(d => {
+              const entry = accuracyDistribution.find(a => a.name?.includes('Advanced') ? d.key === 'high' : a.name?.includes('Intermediate') ? d.key === 'mid' : d.key === 'low');
+              const count = entry?.value ?? 0;
+              const pct = n > 0 ? Math.round((count / n) * 100) : 0;
+              return (
               <div key={d.label} className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color }} />
-                <span className="text-[10px] text-zinc-600 uppercase tracking-wider">{d.label}</span>
+                <span className="text-[10px] text-zinc-500 uppercase tracking-wider">{d.label}</span>
+                <span className="text-[10px] text-zinc-400 font-semibold tabular-nums">{pct}%</span>
               </div>
-            ))}
+              );
+            })}
           </div>
           </SpotlightCard>
         </motion.div>
@@ -414,7 +420,7 @@ const OverviewTab = ({
         ) : (
           <div className="py-14 text-center border border-dashed border-white/[0.06] rounded-md">
             <Mic size={28} className="text-zinc-800 mx-auto my-3" />
-            <p className="text-[13px] text-zinc-600 mb-4">{t('dashboard.noSessionsYet')}</p>
+            <p className="text-[13px] text-zinc-500 mb-4">{t('dashboard.noSessionsYet')}</p>
             <Link to="/m/voice/library"
               className="inline-flex mb-3 items-center gap-2 px-5 py-2 bg-[#f5a623] text-black text-[13px] font-semibold rounded-md hover:bg-[#e09520] transition-colors">
               {t('dashboard.startFirstPractice')}

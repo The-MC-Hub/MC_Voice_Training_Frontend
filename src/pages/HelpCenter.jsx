@@ -44,7 +44,7 @@ const FaqItem = ({ q, a, index }) => {
         <motion.div
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ duration: 0.2 }}
-          className={`shrink-0 transition-colors ${open ? 'text-[#f5a623]' : 'text-zinc-600'}`}
+          className={`shrink-0 transition-colors ${open ? 'text-[#f5a623]' : 'text-zinc-500'}`}
         >
           <ChevronDown size={16} />
         </motion.div>
@@ -106,15 +106,15 @@ const categories = [
 const faqs = {
   start: [
     { q: 'Làm thế nào để tạo tài khoản trên MC Hub?', a: 'Truy cập trang đăng ký, điền email và mật khẩu, sau đó xác nhận qua email. Sau khi xác thực, bạn có thể bắt đầu sử dụng ngay.' },
-    { q: 'Tôi cần thiết bị gì để luyện tập?', a: 'Bạn chỉ cần trình duyệt hiện đại (Chrome, Firefox, Edge) và microphone — laptop tích hợp hoặc USB mic đều dùng được. Không cần cài thêm phần mềm.' },
+    { q: 'Tôi cần thiết bị gì để luyện tập?', a: 'Bạn chỉ cần trình duyệt hiện đại (Chrome, Firefox, Edge) và microphone, laptop tích hợp hoặc USB mic đều dùng được. Không cần cài thêm phần mềm.' },
     { q: 'Làm thế nào để bắt đầu buổi luyện tập đầu tiên?', a: 'Vào mục "Luyện tập", chọn kịch bản từ thư viện hoặc dùng kịch bản mẫu, nhấn "Bắt đầu" và cho phép trình duyệt truy cập microphone.' },
     { q: 'Tôi có thể dùng MC Hub trên điện thoại không?', a: 'MC Hub hiện là nền tảng web, hoạt động tốt trên cả desktop và mobile browser. App native đang trong quá trình phát triển.' },
   ],
   voice: [
     { q: 'AI phân tích giọng nói như thế nào?', a: 'Hệ thống AI phân tích nhiều chiều: phát âm (so sánh với chuẩn phát âm MC chuyên nghiệp), nhịp điệu (tốc độ đọc, ngắt nghỉ), ngữ điệu (lên xuống âm thanh), và độ rõ ràng của từng âm tiết.' },
-    { q: 'Điểm số của tôi được tính như thế nào?', a: 'Điểm tổng được tổng hợp từ 4 chỉ số: Phát âm (35%), Nhịp điệu (25%), Ngữ điệu (25%), và Độ tự nhiên (15%). Mỗi chỉ số được AI chấm trên thang 0–100.' },
+    { q: 'Điểm số của tôi được tính như thế nào?', a: 'Điểm tổng được tổng hợp từ 4 chỉ số: Phát âm (35%), Nhịp điệu (25%), Ngữ điệu (25%), và Độ tự nhiên (15%). Mỗi chỉ số được AI chấm trên thang 0-100.' },
     { q: 'Tôi có thể tải kịch bản của riêng mình lên không?', a: 'Hiện tại bạn sử dụng kịch bản từ thư viện có sẵn. Tính năng tải kịch bản tùy chỉnh đang được phát triển và sẽ ra mắt trong bản cập nhật tới.' },
-    { q: 'Làm thế nào để cải thiện điểm phát âm?', a: 'Tập trung luyện các âm khó trước (ch/tr/x/s, hỏi/ngã), nghe lại bản ghi âm của mình và so sánh với mẫu chuẩn trong thư viện. Luyện đều đặn 15–30 phút/ngày cho kết quả tốt nhất.' },
+    { q: 'Làm thế nào để cải thiện điểm phát âm?', a: 'Tập trung luyện các âm khó trước (ch/tr/x/s, hỏi/ngã), nghe lại bản ghi âm của mình và so sánh với mẫu chuẩn trong thư viện. Luyện đều đặn 15-30 phút/ngày cho kết quả tốt nhất.' },
     { q: 'Tại sao microphone không hoạt động?', a: 'Kiểm tra: (1) Trình duyệt đã được cấp quyền microphone chưa (biểu tượng khóa trên thanh địa chỉ), (2) Không có app nào khác đang dùng mic, (3) Thử làm mới trang và cho phép lại.' },
   ],
   result: [
@@ -125,7 +125,7 @@ const faqs = {
   billing: [
     { q: 'Các gói dịch vụ có những gì?', a: 'MC Hub có 4 gói: Gói Ngày (10 AI sessions/24h, tất cả chủ đề), Basic (20 sessions/tháng, thư viện kịch bản), Full (sessions không giới hạn, phân tích nâng cao WER/CER/Jitter/HNR, biểu đồ tiến độ), Annual (toàn bộ Full + huy hiệu Elite, hỗ trợ 24/7, truy cập Beta). Xem giá chi tiết tại trang Thanh toán.' },
     { q: 'Thanh toán bằng cách nào?', a: 'Thanh toán qua cổng PayOS tích hợp trực tiếp trên trang. Gói được kích hoạt tự động ngay sau khi xác nhận giao dịch thành công.' },
-    { q: 'Tôi có thể hủy gói không?', a: 'Các gói không tự động gia hạn. Gói Ngày hết sau 24h, gói tháng/năm hết sau chu kỳ đã chọn. Khi hết hạn tài khoản về Free — bạn có thể mua lại bất kỳ lúc nào.' },
+    { q: 'Tôi có thể hủy gói không?', a: 'Các gói không tự động gia hạn. Gói Ngày hết sau 24h, gói tháng/năm hết sau chu kỳ đã chọn. Khi hết hạn tài khoản về Free, bạn có thể mua lại bất kỳ lúc nào.' },
     { q: 'Chính sách hoàn tiền như thế nào?', a: 'Hoàn tiền trong 7 ngày nếu gặp lỗi kỹ thuật nghiêm trọng từ phía chúng tôi. Liên hệ support qua email để được hỗ trợ.' },
   ],
   account: [
@@ -196,16 +196,16 @@ const HelpCenter = () => {
               value={query}
               onChange={e => setQuery(e.target.value)}
               placeholder="Tìm kiếm câu hỏi, hướng dẫn..."
-              className="w-full bg-[#0f0f11] border border-white/[0.09] rounded-md py-4 pl-[44px] pr-10 text-[14px] text-white placeholder:text-zinc-600 outline-none focus:border-[#f5a623]/40 focus:bg-[#111113] focus:shadow-[0_0_0_3px_rgba(245,166,35,0.07)] transition-all"
+              className="w-full bg-[#0f0f11] border border-white/[0.09] rounded-md py-4 pl-[44px] pr-10 text-[14px] text-white placeholder:text-zinc-500 outline-none focus:border-[#f5a623]/40 focus:bg-[#111113] focus:shadow-[0_0_0_3px_rgba(245,166,35,0.07)] transition-all"
             />
             {query ? (
               <button onClick={() => setQuery('')}
-                className="absolute inset-y-0 right-4 flex items-center text-zinc-600 hover:text-zinc-300 transition-colors text-sm">
+                className="absolute inset-y-0 right-4 flex items-center text-zinc-500 hover:text-zinc-300 transition-colors text-sm">
                 ✕
               </button>
             ) : (
               <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
-                <span className="text-[11px] text-zinc-700 border border-white/[0.06] rounded px-1.5 py-0.5">⌘K</span>
+                <span className="text-[11px] text-zinc-500 border border-white/[0.06] rounded px-1.5 py-0.5">⌘K</span>
               </div>
             )}
           </div>
@@ -234,8 +234,8 @@ const HelpCenter = () => {
                     <Icon size={16} />
                   </div>
                   <p className="text-[12px] font-semibold text-white mb-0.5">{title}</p>
-                  <p className="text-[11px] text-zinc-600 leading-snug">{desc}</p>
-                  <p className="text-[11px] text-zinc-700 mt-2">{count} bài viết</p>
+                  <p className="text-[11px] text-zinc-500 leading-snug">{desc}</p>
+                  <p className="text-[11px] text-zinc-500 mt-2">{count} bài viết</p>
                 </button>
               ))}
             </motion.div>
@@ -252,7 +252,7 @@ const HelpCenter = () => {
                     ? 'Câu hỏi thường gặp'
                     : categories.find(c => c.value === activeCategory)?.title}
                 </h2>
-                <p className="text-[12px] text-zinc-600 mt-0.5">{currentFaqs.length} câu hỏi</p>
+                <p className="text-[12px] text-zinc-500 mt-0.5">{currentFaqs.length} câu hỏi</p>
               </div>
               {activeCategory !== 'all' && !query && (
                 <button onClick={() => setActiveCategory('all')}
@@ -269,7 +269,7 @@ const HelpCenter = () => {
                 ))}
               </div>
             ) : (
-              <motion.div {...fadeUp} className="text-center py-16 text-zinc-600">
+              <motion.div {...fadeUp} className="text-center py-16 text-zinc-500">
                 <Search size={32} className="mx-auto mb-3 opacity-30" />
                 <p className="text-[14px]">Không tìm thấy kết quả cho "{query}"</p>
                 <p className="text-[12px] mt-1">Thử từ khóa khác hoặc <Link to="/contact" className="text-[#f5a623] hover:underline">liên hệ hỗ trợ</Link></p>
@@ -290,10 +290,10 @@ const HelpCenter = () => {
                     </div>
                     <div>
                       <p className="text-[13px] text-zinc-300 group-hover:text-white transition-colors">{label}</p>
-                      <p className="text-[11px] text-zinc-600">{desc}</p>
+                      <p className="text-[11px] text-zinc-500">{desc}</p>
                     </div>
                   </div>
-                  <span className="text-zinc-600 group-hover:text-[#f5a623] transition-colors text-sm">→</span>
+                  <span className="text-zinc-500 group-hover:text-[#f5a623] transition-colors text-sm">→</span>
                 </Link>
               ))}
             </motion.div>
@@ -317,15 +317,15 @@ const HelpCenter = () => {
                 </p>
                 <div className="space-y-2.5">
                   {[
-                    { dot: 'bg-emerald-400', label: 'Email hỗ trợ', time: '24–48 giờ làm việc' },
-                    { dot: 'bg-[#f5a623]', label: 'Hỗ trợ kỹ thuật', time: '2–4 giờ (8:00–22:00)' },
+                    { dot: 'bg-emerald-400', label: 'Email hỗ trợ', time: '24-48 giờ làm việc' },
+                    { dot: 'bg-[#f5a623]', label: 'Hỗ trợ kỹ thuật', time: '2-4 giờ (8:00-22:00)' },
                   ].map(({ dot, label, time }) => (
                     <div key={label} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className={`w-1.5 h-1.5 rounded-full ${dot}`} />
                         <span className="text-[12px] text-zinc-400">{label}</span>
                       </div>
-                      <span className="text-[11px] text-zinc-600">{time}</span>
+                      <span className="text-[11px] text-zinc-500">{time}</span>
                     </div>
                   ))}
                 </div>

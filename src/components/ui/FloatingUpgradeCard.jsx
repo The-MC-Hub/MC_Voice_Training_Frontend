@@ -116,7 +116,7 @@ export default function FloatingUpgradeCard({ plan = 'FREE' }) {
               </div>
               <button
                 onClick={dismiss}
-                className="text-zinc-600 hover:text-zinc-300 transition-colors ml-2 mt-0.5 shrink-0"
+                className="text-zinc-500 hover:text-zinc-300 transition-colors ml-2 mt-0.5 shrink-0"
               >
                 <X size={14} />
               </button>
@@ -131,10 +131,10 @@ export default function FloatingUpgradeCard({ plan = 'FREE' }) {
               {/* Price tag */}
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] text-zinc-600 uppercase tracking-wider">
+                  <span className="text-[10px] text-zinc-500 uppercase tracking-wider">
                     {PLAN_LABELS[nextPlan] || nextPlan}
                   </span>
-                  <span className="text-[10px] text-zinc-600">·</span>
+                  <span className="text-[10px] text-zinc-500">·</span>
                   <span className="text-[11px] font-semibold" style={{ color: card.accent }}>
                     {price}
                   </span>
@@ -175,7 +175,7 @@ export default function FloatingUpgradeCard({ plan = 'FREE' }) {
               {/* Dismiss link */}
               <button
                 onClick={dismiss}
-                className="w-full text-center text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors mt-2"
+                className="w-full text-center text-[10px] text-zinc-500 hover:text-zinc-400 transition-colors mt-2"
               >
                 {t('floatingUpgradeCard.later')}
               </button>

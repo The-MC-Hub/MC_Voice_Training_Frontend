@@ -63,7 +63,7 @@ const MilestoneDetail = () => {
       {/* Header */}
       <div className="pb-8 mb-8 border-b border-white/[0.07]">
         <button onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-zinc-600 hover:text-white transition-colors text-[13px] mb-6 group">
+          className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-[13px] mb-6 group">
           <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" /> {t('milestone.backToRoadmap')}
         </button>
 
@@ -78,7 +78,7 @@ const MilestoneDetail = () => {
 
           <Card className="w-full lg:w-80 bg-[#111113] border border-white/[0.07] rounded-md p-5 shrink-0 gap-0 shadow-none">
             <div className="flex justify-between items-end mb-3">
-              <span className="text-[11px] text-zinc-600 uppercase tracking-wider">{t('milestone.overallProgress')}</span>
+              <span className="text-[11px] text-zinc-500 uppercase tracking-wider">{t('milestone.overallProgress')}</span>
               <span className="text-2xl font-bold text-[#f5a623]">{Math.round(progress)}%</span>
             </div>
             <div className="h-2 w-full bg-white/[0.06] rounded-full overflow-hidden">
@@ -100,7 +100,7 @@ const MilestoneDetail = () => {
           <div className="flex items-center gap-3">
             <BookOpen size={16} className="text-[#f5a623]" />
             <h2 className="text-[16px] font-semibold text-white">{t('milestone.curriculum')}</h2>
-            <span className="text-[11px] text-zinc-600 bg-[#09090b] border border-white/[0.06] px-2.5 py-0.5 rounded-md">
+            <span className="text-[11px] text-zinc-500 bg-[#09090b] border border-white/[0.06] px-2.5 py-0.5 rounded-md">
               {items.length} {t('common.units')}
             </span>
           </div>
@@ -120,7 +120,7 @@ const MilestoneDetail = () => {
                     <div className={`w-11 h-11 rounded-md flex items-center justify-center shrink-0 transition-colors ${
                       item.status === 'completed' ? 'bg-emerald-500 text-black' :
                       item.status === 'in-progress' ? 'bg-[#f5a623] text-black' :
-                      'bg-[#09090b] border border-white/[0.07] text-zinc-600 group-hover:text-[#f5a623]'
+                      'bg-[#09090b] border border-white/[0.07] text-zinc-500 group-hover:text-[#f5a623]'
                     }`}>
                       {item.status === 'completed' ? <CheckCircle2 size={20} /> : isLocked ? <Lock size={18} /> : <Play size={20} />}
                     </div>
@@ -128,10 +128,10 @@ const MilestoneDetail = () => {
                     <div className="flex-1 min-w-0">
                       <h3 className="text-[14px] font-medium text-white group-hover:text-[#f5a623] transition-colors truncate">{item.title}</h3>
                       <div className="flex items-center gap-3 mt-1">
-                        <span className="flex items-center gap-1 text-[11px] text-zinc-600">
+                        <span className="flex items-center gap-1 text-[11px] text-zinc-500">
                           <Clock size={10} className="text-[#f5a623]" /> {item.duration}
                         </span>
-                        <span className="flex items-center gap-1 text-[11px] text-zinc-600">
+                        <span className="flex items-center gap-1 text-[11px] text-zinc-500">
                           <Zap size={10} className="text-[#f5a623]" /> {item.type.replace('_', ' ')}
                         </span>
                         {item.status === 'in-progress' && (
@@ -141,7 +141,7 @@ const MilestoneDetail = () => {
                     </div>
 
                     {!isLocked && (
-                      <div className="w-8 h-8 rounded-md bg-[#09090b] border border-white/[0.06] flex items-center justify-center text-zinc-600 group-hover:text-white group-hover:border-white/[0.14] transition-colors shrink-0">
+                      <div className="w-8 h-8 rounded-md bg-[#09090b] border border-white/[0.06] flex items-center justify-center text-zinc-500 group-hover:text-white group-hover:border-white/[0.14] transition-colors shrink-0">
                         <ChevronRight size={15} />
                       </div>
                     )}
@@ -159,10 +159,10 @@ const MilestoneDetail = () => {
                     className={`w-8 h-8 rounded-md text-[12px] font-medium border transition-colors ${
                       currentPage === idx + 1
                         ? 'bg-[#f5a623] border-[#f5a623] text-black'
-                        : 'border-white/[0.07] text-zinc-600 hover:border-white/[0.14] hover:text-white'
+                        : 'border-white/[0.07] text-zinc-500 hover:border-white/[0.14] hover:text-white'
                     }`}>{idx + 1}</button>
                 ))}
-                <span className="text-[11px] text-zinc-600 ml-2">
+                <span className="text-[11px] text-zinc-500 ml-2">
                   {(currentPage - 1) * itemsPerPage + 1}–{Math.min(currentPage * itemsPerPage, items.length)} / {items.length}
                 </span>
               </div>
@@ -187,7 +187,7 @@ const MilestoneDetail = () => {
               <Trophy size={20} className="text-black" />
             </div>
             <h3 className="text-[15px] font-semibold text-white mb-1">{t('milestone.rewards')}</h3>
-            <p className="text-zinc-600 text-[12px] mb-5">{t('milestone.elitePerks')}</p>
+            <p className="text-zinc-500 text-[12px] mb-5">{t('milestone.elitePerks')}</p>
 
             <ul className="space-y-3 mb-6">
               {[
