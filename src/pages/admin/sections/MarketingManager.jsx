@@ -154,7 +154,7 @@ function SocialFeedTab() {
               {form.image ? (
                 <div className="relative w-32 h-20 overflow-hidden shrink-0">
                   <img src={form.image} alt="" className="w-full h-full object-cover" />
-                  <Button onClick={() => setForm(f => ({ ...f, image: '' }))} className="w-5 h-5 absolute top-1 right-1 bg-black/70 text-white flex items-center justify-center"><X size={10} /></Button>
+                  <Button onClick={() => setForm(f => ({ ...f, image: '' }))} className="w-8 h-8 absolute top-1 right-1 bg-black/70 text-white flex items-center justify-center"><X size={12} /></Button>
                 </div>
               ) : (
                 <Button onClick={() => fileRef.current?.click()} className="w-32 h-20 bg-[--bg-elevated] border border-dashed border-[--border-subtle] flex flex-col items-center justify-center gap-1 text-[--text-muted] hover:text-[--text-primary] hover:border-[--text-muted] transition-colors shrink-0">
@@ -170,13 +170,13 @@ function SocialFeedTab() {
           </div>
           <div>
             <p className="text-[11px] text-[--text-muted] mb-1.5 uppercase tracking-wider">{t('admin.marketingManager.descriptionRequired')}</p>
-            <textarea rows={3} placeholder={t('admin.marketingManager.shortDescPlaceholder')} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className="w-full bg-[--bg-elevated] border border-[--border-subtle] px-3 py-2 text-[12px] text-[--text-primary] placeholder:text-zinc-600 outline-none focus:border-[--text-muted] resize-none" />
+            <textarea rows={3} placeholder={t('admin.marketingManager.shortDescPlaceholder')} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className="w-full bg-[--bg-elevated] border border-[--border-subtle] px-3 py-2 text-[12px] text-[--text-primary] placeholder:text-zinc-500 outline-none focus:border-[--text-muted] resize-none" />
           </div>
           <div>
             <p className="text-[11px] text-[--text-muted] mb-1.5 uppercase tracking-wider">{t('admin.marketingManager.fbLinkRequired')}</p>
             <div className="flex items-center gap-2">
               <Facebook size={14} className="text-blue-400 shrink-0" />
-              <Input type="url" placeholder="https://www.facebook.com/..." value={form.fbLink} onChange={e => setForm(f => ({ ...f, fbLink: e.target.value }))} className="flex-1 bg-[--bg-elevated] border border-[--border-subtle] px-3 py-2 text-[12px] text-[--text-primary] placeholder:text-zinc-600 outline-none focus:border-[--text-muted] h-auto rounded-none focus-visible:ring-0" />
+              <Input type="url" placeholder="https://www.facebook.com/..." value={form.fbLink} onChange={e => setForm(f => ({ ...f, fbLink: e.target.value }))} className="flex-1 bg-[--bg-elevated] border border-[--border-subtle] px-3 py-2 text-[12px] text-[--text-primary] placeholder:text-zinc-500 outline-none focus:border-[--text-muted] h-auto rounded-none focus-visible:ring-0" />
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -393,12 +393,12 @@ function EmailTemplatesTab() {
             <Button onClick={() => setShowForm(false)} className="h-auto text-[--text-muted] hover:text-[--text-primary]"><X size={15} /></Button>
           </div>
 
-          {/* 2-col: form left, preview right */}
-          <div className="flex gap-0 min-h-[600px]">
+          {/* 2-col: form left, preview right (stacks on mobile/tablet) */}
+          <div className="flex flex-col lg:flex-row gap-0 lg:min-h-[600px]">
 
             {/* LEFT — form */}
-            <div className="flex-1 p-5 space-y-4 border-r border-[--border-subtle] overflow-y-auto">
-              <div className="grid grid-cols-2 gap-4">
+            <div className="flex-1 p-5 space-y-4 border-r-0 lg:border-r border-b lg:border-b-0 border-[--border-subtle] overflow-y-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[['name', t('admin.marketingManager.templateName')], ['subject', t('admin.marketingManager.emailSubject')]].map(([k, label]) => (
                   <div key={k}>
                     <p className="text-[11px] text-[--text-muted] mb-1.5 uppercase tracking-wider">{label} *</p>
@@ -436,7 +436,7 @@ function EmailTemplatesTab() {
                 </div>
               ) : (
                 <>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {[['title', t('admin.marketingManager.contentTitle')], ['buttonText', t('admin.marketingManager.ctaButtonText')], ['buttonLink', t('admin.marketingManager.ctaButtonLink')], ['logoUrl', t('admin.marketingManager.logoUrl')], ['bannerUrl', t('admin.marketingManager.bannerUrl')]].map(([k, label]) => (
                       <div key={k}>
                         <p className="text-[11px] text-[--text-muted] mb-1.5 uppercase tracking-wider">{label}</p>
@@ -461,7 +461,7 @@ function EmailTemplatesTab() {
             </div>
 
             {/* RIGHT — live preview */}
-            <div className="w-[480px] shrink-0 p-4 flex flex-col">
+            <div className="w-full lg:w-[480px] shrink-0 p-4 flex flex-col">
               <EmailPreviewPanel
                 htmlContent={form.htmlContent}
                 designData={form.designData}

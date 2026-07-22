@@ -576,7 +576,7 @@ function DetailPanel({ log, bookmarks, notes, onToggleBookmark, onSaveNote, onCl
   };
 
   return (
-    <div className="w-[400px] shrink-0 border-l border-gray-200 flex flex-col bg-white">
+    <div className="fixed inset-0 z-[130] lg:z-auto lg:static w-full sm:w-[85vw] lg:w-[400px] shrink-0 border-l border-gray-200 flex flex-col bg-white">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-200 bg-gray-50">
         <div className="flex items-center gap-2">
@@ -1026,7 +1026,7 @@ const ServerLogs = () => {
           { key: "watchlist", icon: Eye,         title: t("admin.serverLogs.sidebar.watchlist") },
         ].map(({ key, icon: Icon, title }) => (
           <Button key={key} onClick={() => setView(key)} title={title}
-            className={`w-8 h-8 flex items-center justify-center rounded transition-all ${
+            className={`w-10 h-10 flex items-center justify-center rounded transition-all ${
               view === key ? "bg-amber-400 text-black" : "text-gray-400 hover:bg-gray-200"
             }`}>
             <Icon size={15} />
@@ -1034,12 +1034,12 @@ const ServerLogs = () => {
         ))}
 
         <div className="mt-auto flex flex-col items-center gap-1 pb-1">
-          <label title={t("admin.serverLogs.sidebar.loadLogFile")} className="w-8 h-8 flex items-center justify-center rounded text-gray-400 hover:bg-gray-200 cursor-pointer">
+          <label title={t("admin.serverLogs.sidebar.loadLogFile")} className="w-10 h-10 flex items-center justify-center rounded text-gray-400 hover:bg-gray-200 cursor-pointer">
             <Upload size={14} />
             <input type="file" accept=".txt,.log" onChange={loadFile} className="hidden" />
           </label>
           <Button onClick={enableNotif} title={notifOn ? t("admin.serverLogs.sidebar.disableNotifications") : t("admin.serverLogs.sidebar.enableNotifications")}
-            className={`w-8 h-8 flex items-center justify-center rounded transition-all ${
+            className={`w-10 h-10 flex items-center justify-center rounded transition-all ${
               notifOn ? "bg-red-100 text-red-500" : "text-gray-400 hover:bg-gray-200"
             }`}>
             {notifOn ? <Bell size={14} /> : <BellOff size={14} />}

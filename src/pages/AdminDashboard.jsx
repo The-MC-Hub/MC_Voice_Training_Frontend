@@ -6,6 +6,7 @@ import { useAdminData } from "../hooks/useAdminData";
 import {
   Users, ShieldCheck, BookOpen, LayoutGrid, CreditCard,
   BarChart2, Award, Trophy, Settings, Terminal, LogOut, Megaphone, Package, Bell, HelpCircle, GraduationCap, Shield,
+  Menu, X,
 } from "lucide-react";
 
 import DashboardSection, { DASHBOARD_NAV } from "./admin/sections/DashboardSection";
@@ -45,6 +46,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const { logout, user } = useAuthStore();
   const [activeDashboardSection, setActiveDashboardSection] = useState("tong-quan");
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   const {
     users, transactions, revenueStats, dashStats, analytics, growthAnalytics,
@@ -98,13 +100,27 @@ const AdminDashboard = () => {
   // redirect legacy URLs
   const resolvedSection = (section === "overview" || section === "analytics") ? "dashboard" : section;
 
+  const goTo = (id) => { navigate(`/m/admin/${id}`); setIsMobileNavOpen(false); };
+
   return (
     <div className="fixed inset-0 z-[100] flex overflow-hidden bg-[--bg-base] text-[--text-primary]">
 
+      {/* ── Mobile scrim ────────────────────────────────────────────────── */}
+      {isMobileNavOpen && (
+        <div
+          className="fixed inset-0 z-[110] bg-black/50 lg:hidden"
+          onClick={() => setIsMobileNavOpen(false)}
+        />
+      )}
+
       {/* ── Sidebar ─────────────────────────────────────────────────────── */}
-      <aside className="w-[220px] shrink-0 flex flex-col border-r border-[--border-subtle] bg-[--bg-surface]">
+      <aside
+        className={`fixed inset-y-0 left-0 z-[120] w-[240px] shrink-0 flex flex-col border-r border-[--border-subtle] bg-[--bg-surface] transition-transform duration-200 lg:static lg:z-auto lg:w-[220px] lg:translate-x-0 ${
+          isMobileNavOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
         {/* Logo */}
-        <div className="px-5 py-5 border-b border-[--border-subtle]">
+        <div className="px-5 py-5 border-b border-[--border-subtle] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 bg-[#f5a623] flex items-center justify-center">
               <Settings size={14} className="text-black" />
@@ -114,6 +130,12 @@ const AdminDashboard = () => {
               <p className="text-[10px] text-[--text-muted] mt-0.5">{t('admin.dashboard.adminControl')}</p>
             </div>
           </div>
+          <button
+            onClick={() => setIsMobileNavOpen(false)}
+            className="lg:hidden w-9 h-9 flex items-center justify-center text-[--text-muted] hover:text-[--text-primary]"
+          >
+            <X size={18} />
+          </button>
         </div>
 
         {/* Nav */}
@@ -124,7 +146,7 @@ const AdminDashboard = () => {
             return (
               <div key={id} className="w-full mt-4">
                 <button
-                  onClick={() => navigate(`/m/admin/${id}`)}
+                  onClick={() => goTo(id)}
                   className={` w-full flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium transition-all text-left ${isActive
                     ? "bg-[#f5a623]/[0.12] text-[#f5a623] border border-[#f5a623]/20"
                     : "text-[--text-secondary] hover:text-[--text-primary] hover:bg-[--bg-elevated] border border-transparent"
@@ -140,7 +162,7 @@ const AdminDashboard = () => {
                       return (
                         <button
                           key={subId}
-                          onClick={() => document.getElementById(subId)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                          onClick={() => { document.getElementById(subId)?.scrollIntoView({ behavior: "smooth", block: "start" }); setIsMobileNavOpen(false); }}
                           className={`w-full text-left text-[11px] py-1.5 px-2 transition-colors ${isSubActive ? "text-[#f5a623] font-medium bg-[#f5a623]/10" : "text-[--text-muted] hover:text-[--text-primary]"
                             }`}
                         >
@@ -180,14 +202,20 @@ const AdminDashboard = () => {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
         {/* Top bar */}
-        <header className=" mx-4 shrink-0 h-14 flex items-center justify-between px-7 border-b border-[--border-subtle] bg-[--bg-base]/95 backdrop-blur-sm">
-          <div className="flex items-center gap-3">
-            {currentItem && <currentItem.icon size={17} className="text-[--text-muted]" />}
-            <h1 className="text-[15px] font-semibold text-[--text-primary]">{currentItem?.label || t('admin.dashboard.navDashboard')}</h1>
-            <span className="h-4 w-px bg-[--border-subtle]" />
-            <span className="text-[12px] text-[--text-muted]">{t('admin.dashboard.realDataFromMongo')}</span>
+        <header className="mx-2 sm:mx-4 shrink-0 h-14 flex items-center justify-between px-3 sm:px-7 border-b border-[--border-subtle] bg-[--bg-base]/95 backdrop-blur-sm">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <button
+              onClick={() => setIsMobileNavOpen(true)}
+              className="lg:hidden w-9 h-9 shrink-0 flex items-center justify-center text-[--text-muted] hover:text-[--text-primary]"
+            >
+              <Menu size={18} />
+            </button>
+            {currentItem && <currentItem.icon size={17} className="text-[--text-muted] shrink-0 hidden sm:block" />}
+            <h1 className="text-[15px] font-semibold text-[--text-primary] truncate">{currentItem?.label || t('admin.dashboard.navDashboard')}</h1>
+            <span className="h-4 w-px bg-[--border-subtle] hidden sm:block shrink-0" />
+            <span className="text-[12px] text-[--text-muted] hidden sm:block truncate">{t('admin.dashboard.realDataFromMongo')}</span>
           </div>
-          <div className="px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-[11px] text-emerald-700 font-medium">
+          <div className="px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-[11px] text-emerald-700 font-medium shrink-0">
             {t('admin.dashboard.live')}
             </div>
         </header>
@@ -208,7 +236,7 @@ const AdminDashboard = () => {
           )}
           {resolvedSection === "logs" && <ServerLogs />}
           {resolvedSection !== "dashboard" && resolvedSection !== "logs" && (
-            <div className="p-7 space-y-6">
+            <div className="p-4 sm:p-7 space-y-6">
               {resolvedSection === "users" && <UserManagement users={users} handleVerify={handleVerify} handleSuspend={handleSuspend} onRefresh={refetchAll} />}
               {resolvedSection === "lessons" && <LessonManagement />}
               {resolvedSection === "transactions" && <TransactionManagement transactions={transactions} revenueStats={revenueStats} onRefresh={refetchAll} />}
