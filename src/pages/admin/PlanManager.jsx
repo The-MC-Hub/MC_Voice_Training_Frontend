@@ -11,7 +11,7 @@ import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 
-const inputCls = "w-full bg-[#0d0d0f] border border-white/8 px-3 py-2.5 text-[13px] text-white focus:outline-none focus:border-white/[0.2] focus:bg-[#111114] placeholder:text-zinc-600 rounded-md transition-colors";
+const inputCls = "w-full bg-[#0d0d0f] border border-white/8 px-3 py-2.5 text-[13px] text-white focus:outline-none focus:border-white/[0.2] focus:bg-[#111114] placeholder:text-zinc-500 rounded-md transition-colors";
 const inputClsShadcn = `${inputCls} h-auto rounded-none focus-visible:ring-0`;
 const labelCls = "block text-[11px] font-medium text-zinc-400 mb-1.5 tracking-wide";
 const sectionHead = "text-[11px] text-zinc-400 uppercase tracking-widest font-semibold px-4 py-2 border-b border-white/5";
@@ -112,7 +112,7 @@ function PlanEditor({ plan, onSave }) {
 
           {/* Section 1 — Core info */}
           <div className={fieldGroupCls}>
-            <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold">{t('admin.planManager.basicInfo')}</p>
+            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold">{t('admin.planManager.basicInfo')}</p>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className={labelCls}>{t('admin.planManager.displayName')}</label>
@@ -127,7 +127,7 @@ function PlanEditor({ plan, onSave }) {
               <div>
                 <label className={labelCls}>
                   {t('admin.planManager.durationDays')}&nbsp;
-                  <span className="text-zinc-600 normal-case font-normal">
+                  <span className="text-zinc-500 normal-case font-normal">
                     ({form.durationDays === 0 ? t('admin.planManager.forever') : t('admin.planManager.daysCount', { count: form.durationDays })})
                   </span>
                 </label>
@@ -136,7 +136,7 @@ function PlanEditor({ plan, onSave }) {
               <div>
                 <label className={labelCls}>
                   {t('admin.planManager.aiSessionPerMonth')}&nbsp;
-                  <span className="text-zinc-600 normal-case font-normal">
+                  <span className="text-zinc-500 normal-case font-normal">
                     ({form.aiSessionLimit >= 999 ? t('admin.planManager.unlimited') : form.aiSessionLimit})
                   </span>
                 </label>
@@ -161,8 +161,8 @@ function PlanEditor({ plan, onSave }) {
 
           {/* Section 2 — Marketing copy */}
           <div className={fieldGroupCls}>
-            <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold">{t('admin.planManager.marketing')}</p>
-            <div className="grid grid-cols-3 gap-4">
+            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold">{t('admin.planManager.marketing')}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className={labelCls}>{t('admin.planManager.badge')}</label>
                 <Input className={inputClsShadcn} value={form.badge || ""} placeholder={t('admin.planManager.badgePlaceholder')} onChange={e => set("badge", e.target.value)} />
@@ -180,13 +180,13 @@ function PlanEditor({ plan, onSave }) {
 
           {/* Section 3 — Highlights */}
           <div className={fieldGroupCls}>
-            <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold">{t('admin.planManager.highlights')}</p>
+            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold">{t('admin.planManager.highlights')}</p>
             <div className="space-y-2">
               {(form.highlights || []).map((h, i) => (
                 <div key={i} className="flex items-center gap-2.5 bg-white/3 border border-white/6 px-3 py-2 rounded-md">
                   <Check size={12} className="text-emerald-500 shrink-0" />
                   <span className="flex-1 text-[13px] text-zinc-300">{h}</span>
-                  <Button onClick={() => removeHighlight(i)} className="text-zinc-600 hover:text-red-400 transition-colors p-0.5 h-auto bg-transparent">
+                  <Button onClick={() => removeHighlight(i)} className="text-zinc-500 hover:text-red-400 transition-colors p-0.5 h-auto bg-transparent">
                     <X size={13} />
                   </Button>
                 </div>
@@ -223,7 +223,7 @@ function PlanEditor({ plan, onSave }) {
               )}
             </div>
             <div className="p-4 space-y-3">
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className={labelCls}>{t('admin.planManager.discountPercent')}</label>
                   <Input
@@ -253,7 +253,7 @@ function PlanEditor({ plan, onSave }) {
                         <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/15 text-red-400 border border-red-500/20">-{form.discountPercent}%</span>
                       </>
                     ) : (
-                      <span className="text-zinc-600">{t('admin.planManager.noDiscountYet')}</span>
+                      <span className="text-zinc-500">{t('admin.planManager.noDiscountYet')}</span>
                     )}
                   </div>
                 </div>
@@ -261,7 +261,7 @@ function PlanEditor({ plan, onSave }) {
               {discountActive && (
                 <p className="text-[11px] text-zinc-500 bg-red-500/5 border border-red-500/10 rounded-md px-3 py-2">
                   {t('admin.planManager.userPreview')}:&nbsp;
-                  <span className="line-through text-zinc-600">{formatVnd(form.priceVnd)}</span>
+                  <span className="line-through text-zinc-500">{formatVnd(form.priceVnd)}</span>
                   {" → "}
                   <span className="text-red-400 font-semibold">{formatVnd(form.discountedPriceVnd)}</span>
                   {" · "}
@@ -377,12 +377,12 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
             );
           })()}
           {discount.applicablePlans?.length > 0 && (
-            <span className="text-[11px] text-zinc-600 bg-white/3 px-2 py-0.5 rounded">
+            <span className="text-[11px] text-zinc-500 bg-white/3 px-2 py-0.5 rounded">
               {discount.applicablePlans.join(" · ")}
             </span>
           )}
           {(discount.startsAt || discount.expiresAt) && (
-            <span className={`text-[10px] tabular-nums flex items-center gap-1 ${isExpired ? "text-red-400" : isNotStarted ? "text-amber-400" : "text-zinc-600"}`}>
+            <span className={`text-[10px] tabular-nums flex items-center gap-1 ${isExpired ? "text-red-400" : isNotStarted ? "text-amber-400" : "text-zinc-500"}`}>
               <Calendar size={9} />
               {discount.startsAt && !discount.expiresAt && t('admin.planManager.fromDate', { date: new Date(discount.startsAt).toLocaleDateString("vi-VN") })}
               {!discount.startsAt && discount.expiresAt && (isExpired ? t('admin.planManager.statusExpired') : `→ ${new Date(discount.expiresAt).toLocaleDateString("vi-VN")}`)}
@@ -403,10 +403,10 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
           }`}>
             {statusLabel}
           </span>
-          <Button onClick={() => setEditing(true)} className="p-1.5 h-auto text-zinc-600 hover:text-white transition-colors opacity-0 group-hover:opacity-100">
+          <Button onClick={() => setEditing(true)} className="p-1.5 h-auto text-zinc-500 hover:text-white transition-colors opacity-0 group-hover:opacity-100">
             <Edit2 size={13} />
           </Button>
-          <Button onClick={handleDelete} className="p-1.5 h-auto text-zinc-600 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100">
+          <Button onClick={handleDelete} className="p-1.5 h-auto text-zinc-500 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100">
             <Trash2 size={13} />
           </Button>
         </div>
@@ -429,7 +429,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
 
       <div className="p-4 space-y-4">
         {/* Row 1: code + type + value */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
             <label className={labelCls}>{t('admin.planManager.discountCode')}</label>
             <Input className={inputClsShadcn + " font-mono uppercase tracking-widest"} value={form.code} onChange={e => set("code", e.target.value.toUpperCase())} />
@@ -449,14 +449,14 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
 
         {/* Row 2: time window + quota */}
         <div>
-          <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold mb-2">{t('admin.planManager.effectiveTime')}</p>
+          <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold mb-2">{t('admin.planManager.effectiveTime')}</p>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls}>{t('admin.planManager.startsAt')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansNow')}</span></label>
+              <label className={labelCls}>{t('admin.planManager.startsAt')} <span className="text-zinc-500 font-normal">{t('admin.planManager.emptyMeansNow')}</span></label>
               <Input className={inputClsShadcn} type="datetime-local" value={form.startsAt ? form.startsAt.slice(0, 16) : ""} onChange={e => set("startsAt", e.target.value || null)} />
             </div>
             <div>
-              <label className={labelCls}>{t('admin.planManager.expiresAt')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansNoExpiry')}</span></label>
+              <label className={labelCls}>{t('admin.planManager.expiresAt')} <span className="text-zinc-500 font-normal">{t('admin.planManager.emptyMeansNoExpiry')}</span></label>
               <Input className={inputClsShadcn} type="datetime-local" value={form.expiresAt ? form.expiresAt.slice(0, 16) : ""} onChange={e => set("expiresAt", e.target.value || null)} />
             </div>
           </div>
@@ -464,13 +464,13 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
 
         {/* Row 3: max uses */}
         <div>
-          <label className={labelCls}>{t('admin.planManager.maxUses')} <span className="text-zinc-600 font-normal">{t('admin.planManager.zeroMeansUnlimited')}</span></label>
+          <label className={labelCls}>{t('admin.planManager.maxUses')} <span className="text-zinc-500 font-normal">{t('admin.planManager.zeroMeansUnlimited')}</span></label>
           <Input className={inputClsShadcn + " max-w-[200px]"} type="number" min="0" value={form.maxUses} onChange={e => set("maxUses", Number(e.target.value))} />
         </div>
 
         {/* Row 4: applicable plans */}
         <div>
-          <label className={labelCls}>{t('admin.planManager.applicablePlans')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansAll')}</span></label>
+          <label className={labelCls}>{t('admin.planManager.applicablePlans')} <span className="text-zinc-500 font-normal">{t('admin.planManager.emptyMeansAll')}</span></label>
           <div className="flex gap-2 mt-1.5">
             {ALL_PLANS.map(p => (
               <Button
@@ -506,7 +506,7 @@ function DiscountRow({ discount, onUpdate, onDelete }) {
               {form.active ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
               {form.active ? t('admin.planManager.statusActive') : t('admin.planManager.statusOff')}
             </Button>
-            <span className="text-zinc-700">·</span>
+            <span className="text-zinc-500">·</span>
             <Button
               type="button"
               onClick={() => set("showInSidebar", !form.showInSidebar)}
@@ -593,7 +593,7 @@ const [err, setErr] = useState(null);
 
       <div className="p-4 space-y-4">
         {/* Row 1: code + type + value */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
             <label className={labelCls}>{t('admin.planManager.discountCode')} <span className="text-red-400">*</span></label>
             <Input className={inputClsShadcn + " font-mono uppercase tracking-widest"} value={form.code} onChange={e => set("code", e.target.value.toUpperCase())} placeholder="LUCKY8PM" required />
@@ -613,16 +613,16 @@ const [err, setErr] = useState(null);
 
         {/* Row 2: time window */}
         <div>
-          <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-semibold mb-2 flex items-center gap-1.5">
+          <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold mb-2 flex items-center gap-1.5">
             <Clock size={9} /> {t('admin.planManager.flashDealEffectiveTime')}
           </p>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={labelCls}>{t('admin.planManager.startsAt')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansNow')}</span></label>
+              <label className={labelCls}>{t('admin.planManager.startsAt')} <span className="text-zinc-500 font-normal">{t('admin.planManager.emptyMeansNow')}</span></label>
               <Input className={inputClsShadcn} type="datetime-local" value={form.startsAt} onChange={e => set("startsAt", e.target.value)} />
             </div>
             <div>
-              <label className={labelCls}>{t('admin.planManager.expiresAt')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansNoExpiry')}</span></label>
+              <label className={labelCls}>{t('admin.planManager.expiresAt')} <span className="text-zinc-500 font-normal">{t('admin.planManager.emptyMeansNoExpiry')}</span></label>
               <Input className={inputClsShadcn} type="datetime-local" value={form.expiresAt} onChange={e => set("expiresAt", e.target.value)} />
             </div>
           </div>
@@ -630,13 +630,13 @@ const [err, setErr] = useState(null);
 
         {/* Row 3: quota */}
         <div>
-          <label className={labelCls}>{t('admin.planManager.maxUses')} <span className="text-zinc-600 font-normal">{t('admin.planManager.zeroMeansUnlimited')}</span></label>
+          <label className={labelCls}>{t('admin.planManager.maxUses')} <span className="text-zinc-500 font-normal">{t('admin.planManager.zeroMeansUnlimited')}</span></label>
           <Input className={inputClsShadcn + " max-w-[200px]"} type="number" min="0" value={form.maxUses} onChange={e => set("maxUses", Number(e.target.value))} />
         </div>
 
         {/* Row 4: applicable plans */}
         <div>
-          <label className={labelCls}>{t('admin.planManager.applicablePlans')} <span className="text-zinc-600 font-normal">{t('admin.planManager.emptyMeansAll')}</span></label>
+          <label className={labelCls}>{t('admin.planManager.applicablePlans')} <span className="text-zinc-500 font-normal">{t('admin.planManager.emptyMeansAll')}</span></label>
           <div className="flex gap-2 mt-1.5">
             {ALL_PLANS.map(p => (
               <Button
@@ -672,7 +672,7 @@ const [err, setErr] = useState(null);
               {form.active ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
               {form.active ? t('admin.planManager.activate') : t('admin.planManager.draft')}
             </Button>
-            <span className="text-zinc-700">·</span>
+            <span className="text-zinc-500">·</span>
             <Button
               type="button"
               onClick={() => set("showInSidebar", !form.showInSidebar)}
@@ -802,12 +802,12 @@ const PlanManager = () => {
           </div>
 
           {loadingPlans ? (
-            <div className="flex flex-col items-center justify-center py-16 text-zinc-600">
+            <div className="flex flex-col items-center justify-center py-16 text-zinc-500">
               <RefreshCw size={20} className="animate-spin mb-3" />
               <p className="text-[12px]">{t('admin.planManager.loading')}</p>
             </div>
           ) : sortedPlans.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-zinc-600">
+            <div className="flex flex-col items-center justify-center py-16 text-zinc-500">
               <AlertCircle size={20} className="mb-3" />
               <p className="text-[12px]">{t('admin.planManager.noPlansInDb')}</p>
               <p className="text-[11px] mt-1">{t('admin.planManager.restartBackendHint')}</p>
@@ -865,7 +865,7 @@ const PlanManager = () => {
                   {cooldownMsg.text}
                 </p>
               )}
-              <p className="text-[10px] text-zinc-600">{t('admin.planManager.cooldownRangeHint')}</p>
+              <p className="text-[10px] text-zinc-500">{t('admin.planManager.cooldownRangeHint')}</p>
             </div>
           </Card>
         </div>
@@ -893,7 +893,7 @@ const PlanManager = () => {
             const totalRemaining = discounts.filter(d => d.maxUses > 0).reduce((sum, d) => sum + Math.max(0, d.maxUses - (d.usedCount ?? 0)), 0);
             const unlimited = discounts.filter(d => d.active && d.maxUses === 0).length;
             return (
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {[
                   { label: t('admin.planManager.statActive'), value: active.length, sub: t('admin.planManager.statOfCodes', { count: discounts.length }), color: "text-emerald-400", border: "border-emerald-500/20", bg: "bg-emerald-500/5" },
                   { label: t('admin.planManager.statRemainingUses'), value: totalRemaining, sub: unlimited > 0 ? t('admin.planManager.statUnlimitedCodes', { count: unlimited }) : t('admin.planManager.statTotalLimited'), color: "text-amber-400", border: "border-amber-500/20", bg: "bg-amber-500/5" },
@@ -902,7 +902,7 @@ const PlanManager = () => {
                   <Card key={label} className={`rounded-md border ${border} ${bg} px-4 py-3 gap-0 shadow-none`}>
                     <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1">{label}</p>
                     <p className={`text-[22px] font-bold tabular-nums ${color}`}>{value}</p>
-                    <p className="text-[10px] text-zinc-600 mt-0.5">{sub}</p>
+                    <p className="text-[10px] text-zinc-500 mt-0.5">{sub}</p>
                   </Card>
                 ))}
               </div>
@@ -912,12 +912,12 @@ const PlanManager = () => {
           <NewDiscountForm onCreated={fetchDiscounts} />
 
           {loadingDiscounts ? (
-            <div className="flex items-center justify-center py-12 text-zinc-600">
+            <div className="flex items-center justify-center py-12 text-zinc-500">
               <RefreshCw size={18} className="animate-spin mr-2" />
               <span className="text-[12px]">{t('admin.planManager.loading')}</span>
             </div>
           ) : discounts.length === 0 ? (
-            <div className="text-center py-12 text-zinc-600">
+            <div className="text-center py-12 text-zinc-500">
               <Tag size={24} className="mx-auto mb-3 opacity-30" />
               <p className="text-[12px]">{t('admin.planManager.noDiscountsYet')}</p>
             </div>

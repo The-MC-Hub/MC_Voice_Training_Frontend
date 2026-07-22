@@ -136,7 +136,7 @@ const Stat = ({ label, value, icon: Icon, color, sub }) => (
 const KpiCardsSection = ({ stats }) => {
   const { t } = useTranslation();
   return (
-  <div className="grid grid-cols-4 gap-4">
+  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
     <KPI label={t("admin.dashboardSection.totalUsers")}   value={stats[0]?.value} icon={stats[0]?.icon ?? Users}        color={stats[0]?.color ?? "text-[--text-primary]"}    sub={stats[0]?.trend} />
     <KPI label={t("admin.dashboardSection.successfulTransactions")}     value={stats[1]?.value} icon={stats[1]?.icon ?? CheckCircle2}  color={stats[1]?.color ?? "text-emerald-400"}  sub={stats[1]?.trend} />
     <KPI label={t("admin.dashboardSection.totalTransactions")}    value={stats[2]?.value} icon={stats[2]?.icon ?? CreditCard}    color={stats[2]?.color ?? "text-amber-400"}    sub={stats[2]?.trend} />

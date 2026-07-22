@@ -16,16 +16,16 @@ function CompareBar({ selected, onClear, calcScore, t_vp }) {
       <div className="mb-3 p-4 rounded-md bg-violet-500/[0.05] border border-violet-500/20">
         <div className="flex items-center justify-between mb-3">
           <p className="text-[12px] font-semibold text-violet-300 flex items-center gap-1.5"><GitCompare size={13} /> {t_vp("compareTwoAttempts")}</p>
-          <button onClick={onClear} className="w-5 h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white"><X size={12} /></button>
+          <button onClick={onClear} className="w-9 h-9 flex items-center justify-center rounded text-zinc-500 hover:text-white"><X size={12} /></button>
         </div>
         <div className="grid grid-cols-2 gap-3">
           {[older, newer].map((h, i) => (
             <div key={h.id} className="p-3 rounded-md bg-[#111113] border border-white/[0.07]">
-              <p className="text-[10px] text-zinc-600 mb-1">{i === 0 ? t_vp("previousAttempt") : t_vp("thisAttempt")} · {fmtDate(h.createdAt)}</p>
+              <p className="text-[10px] text-zinc-500 mb-1">{i === 0 ? t_vp("previousAttempt") : t_vp("thisAttempt")} · {fmtDate(h.createdAt)}</p>
               <p className="text-[15px] font-bold text-white mb-1.5">{calcScore(h).toFixed(1)}%</p>
               {h.audioUrl
                 ? <audio controls src={h.audioUrl} className="w-full h-8" style={{ filter: "invert(0.9)" }} />
-                : <p className="text-[10px] text-zinc-700 italic">{t_vp("noRecording")}</p>}
+                : <p className="text-[10px] text-zinc-500 italic">{t_vp("noRecording")}</p>}
             </div>
           ))}
         </div>
@@ -82,7 +82,7 @@ export default function PracticeHistory({
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-[13px] font-semibold text-white">
           {t_vp("pastAttempts")}
-          <span className="ml-2 text-[11px] text-zinc-600">({history.length})</span>
+          <span className="ml-2 text-[11px] text-zinc-500">({history.length})</span>
         </h3>
         {history.length >= 2 && (
           <div className="flex items-center gap-2">
@@ -108,7 +108,7 @@ export default function PracticeHistory({
       </AnimatePresence>
 
       {history.length >= 2 && (
-        <p className="text-[10px] text-zinc-600 mb-2">
+        <p className="text-[10px] text-zinc-500 mb-2">
           {compareIds.length === 0 ? t_vp("selectTwoToCompare") : compareIds.length === 1 ? t_vp("selectOneMoreToCompare") : ""}
         </p>
       )}
@@ -132,7 +132,7 @@ export default function PracticeHistory({
                 <GitCompare size={11} />
               </button>
               <div className="flex justify-between items-start mb-3 pr-7">
-                <p className="text-[11px] text-zinc-600">
+                <p className="text-[11px] text-zinc-500">
                   {(() => {
                     const d = new Date(h.createdAt);
                     return isNaN(d.getTime()) ? t_vp("recentSession") : d.toLocaleString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
@@ -143,9 +143,9 @@ export default function PracticeHistory({
               <div className="flex justify-between items-end">
                 <div>
                   <div className="flex items-center gap-1 mb-0.5">
-                    <span className="text-[10px] text-zinc-600">{t("overallScore")}</span>
+                    <span className="text-[10px] text-zinc-500">{t("overallScore")}</span>
                     <div className="relative group/tt cursor-help">
-                      <Info size={9} className="text-zinc-700" />
+                      <Info size={9} className="text-zinc-500" />
                       <div className="pointer-events-none absolute bottom-full left-0 mb-2 w-48 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl">
                         {t_vp("overallScoreCardTooltip")}
                       </div>
@@ -155,9 +155,9 @@ export default function PracticeHistory({
                 </div>
                 <div className="text-right">
                   <div className="flex items-center gap-1 mb-0.5">
-                    <span className="text-[10px] text-zinc-600">WPM</span>
+                    <span className="text-[10px] text-zinc-500">WPM</span>
                     <div className="relative group/tt cursor-help">
-                      <Info size={9} className="text-zinc-700" />
+                      <Info size={9} className="text-zinc-500" />
                       <div className="pointer-events-none absolute bottom-full right-0 mb-2 w-48 rounded-md bg-[#1a1a1e] border border-white/[0.08] p-3 text-[11px] text-zinc-400 leading-relaxed opacity-0 group-hover/tt:opacity-100 transition-opacity z-50 shadow-xl text-right">
                         {t_vp("wpmCardTooltip")}
                       </div>
@@ -177,11 +177,11 @@ export default function PracticeHistory({
 
       {history.length > itemsPerPage && (
         <div className="flex justify-center items-center gap-2 mt-4">
-          <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1} className="w-7 h-7 flex items-center justify-center rounded-md bg-[#111113] border border-white/[0.07] text-zinc-500 disabled:opacity-30 hover:text-white transition-colors">
+          <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1} className="w-11 h-11 flex items-center justify-center rounded-md bg-[#111113] border border-white/[0.07] text-zinc-500 disabled:opacity-30 hover:text-white transition-colors">
             <ChevronLeft size={14} />
           </button>
-          <span className="text-[12px] text-zinc-600">{currentPage}/{Math.ceil(history.length / itemsPerPage)}</span>
-          <button onClick={() => setCurrentPage((p) => Math.min(Math.ceil(history.length / itemsPerPage), p + 1))} disabled={currentPage === Math.ceil(history.length / itemsPerPage)} className="w-7 h-7 flex items-center justify-center rounded-md bg-[#111113] border border-white/[0.07] text-zinc-500 disabled:opacity-30 hover:text-white transition-colors rotate-180">
+          <span className="text-[12px] text-zinc-500">{currentPage}/{Math.ceil(history.length / itemsPerPage)}</span>
+          <button onClick={() => setCurrentPage((p) => Math.min(Math.ceil(history.length / itemsPerPage), p + 1))} disabled={currentPage === Math.ceil(history.length / itemsPerPage)} className="w-11 h-11 flex items-center justify-center rounded-md bg-[#111113] border border-white/[0.07] text-zinc-500 disabled:opacity-30 hover:text-white transition-colors rotate-180">
             <ChevronLeft size={14} />
           </button>
         </div>

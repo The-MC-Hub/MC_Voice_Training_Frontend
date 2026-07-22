@@ -34,7 +34,7 @@ const getRankMedal = (rank) => {
   if (rank === 1) return <Trophy size={16} className="text-[#f5a623]" />;
   if (rank === 2) return <Medal size={16} className="text-zinc-400" />;
   if (rank === 3) return <Award size={16} className="text-amber-600" />;
-  return <span className="font-mono text-[11px] text-zinc-600">#{rank}</span>;
+  return <span className="font-mono text-[11px] text-zinc-500">#{rank}</span>;
 };
 
 const Community = () => {
@@ -109,7 +109,7 @@ const Community = () => {
               </div>
               <div>
                 <h2 className="text-[16px] font-semibold text-white">{t('community.arenaHeadline')}</h2>
-                <p className="text-[12px] text-zinc-600">{t('community.arenaDescription')}</p>
+                <p className="text-[12px] text-zinc-500">{t('community.arenaDescription')}</p>
               </div>
             </div>
 
@@ -117,7 +117,7 @@ const Community = () => {
               <div className="flex items-center gap-2">
                 <Button
                   onClick={() => { setDirection(-1); setCurrentSlideIndex((prev) => (prev - 1 + allSlides.length) % allSlides.length); }}
-                  className="w-8 h-8 rounded-md bg-[#111113] border border-white/[0.07] flex items-center justify-center text-zinc-500 hover:text-white hover:border-white/[0.14] transition-colors"
+                  className="w-11 h-11 rounded-md bg-[#111113] border border-white/[0.07] flex items-center justify-center text-zinc-500 hover:text-white hover:border-white/[0.14] transition-colors"
                 >
                   <ChevronLeft size={16} />
                 </Button>
@@ -131,7 +131,7 @@ const Community = () => {
                 </div>
                 <Button
                   onClick={() => { setDirection(1); setCurrentSlideIndex((prev) => (prev + 1) % allSlides.length); }}
-                  className="w-8 h-8 rounded-md bg-[#111113] border border-white/[0.07] flex items-center justify-center text-zinc-500 hover:text-white hover:border-white/[0.14] transition-colors"
+                  className="w-11 h-11 rounded-md bg-[#111113] border border-white/[0.07] flex items-center justify-center text-zinc-500 hover:text-white hover:border-white/[0.14] transition-colors"
                 >
                   <ChevronRight size={16} />
                 </Button>
@@ -152,7 +152,7 @@ const Community = () => {
                             <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
                             {slide.competition.type} {t('community.challengeSuffix')}
                           </span>
-                          <span className="text-[11px] text-zinc-600 flex items-center gap-1.5 bg-[#09090b] px-3 py-1 rounded-md border border-white/[0.06]">
+                          <span className="text-[11px] text-zinc-500 flex items-center gap-1.5 bg-[#09090b] px-3 py-1 rounded-md border border-white/[0.06]">
                             <Clock size={11} className="text-[#f5a623]" />
                             {t('community.deadline')}{new Date(slide.competition.endDate).toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'vi-VN')}
                           </span>
@@ -166,7 +166,7 @@ const Community = () => {
                         <div className="bg-[#09090b] border border-white/[0.06] rounded-md p-4 relative">
                           <div className="flex items-center gap-1.5 mb-2">
                             <BookOpen size={11} className="text-[#f5a623]" />
-                            <span className="text-[10px] text-zinc-600 uppercase tracking-wider">{t('community.challengeScript')}</span>
+                            <span className="text-[10px] text-zinc-500 uppercase tracking-wider">{t('community.challengeScript')}</span>
                           </div>
                           <p className="text-[12px] text-[#f5a623] font-medium mb-2">{slide.challengeScriptTitle}</p>
                           <div className="text-zinc-500 text-[12px] leading-relaxed line-clamp-3">
@@ -193,7 +193,7 @@ const Community = () => {
                             </div>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-2 text-zinc-600 text-[12px] bg-[#09090b] px-3 py-2.5 rounded-md border border-white/[0.06]">
+                          <div className="flex items-center gap-2 text-zinc-500 text-[12px] bg-[#09090b] px-3 py-2.5 rounded-md border border-white/[0.06]">
                             <Zap size={13} className="text-[#f5a623]" />
                             {t('community.noAttemptText')}
                           </div>
@@ -219,7 +219,7 @@ const Community = () => {
                         <span className="text-[12px] font-medium text-white flex items-center gap-2">
                           <TrendingUp size={14} className="text-[#f5a623]" /> {t('community.arenaLeaderboard')}
                         </span>
-                        <span className="text-[11px] text-zinc-600 bg-[#09090b] px-2 py-0.5 rounded-md border border-white/[0.06]">
+                        <span className="text-[11px] text-zinc-500 bg-[#09090b] px-2 py-0.5 rounded-md border border-white/[0.06]">
                           {slide.leaderboard.length} {t('community.participants')}
                         </span>
                       </div>
@@ -241,25 +241,25 @@ const Community = () => {
                               </div>
                               <div>
                                 <span className="text-[12px] font-medium text-white max-w-[90px] truncate block">{record.userName}</span>
-                                <span className="text-[10px] text-zinc-600">{record.attemptCount} {t('community.attempts')}</span>
+                                <span className="text-[10px] text-zinc-500">{record.attemptCount} {t('community.attempts')}</span>
                               </div>
                             </div>
                             <div className="text-right">
                               <span className="text-[13px] font-semibold text-[#f5a623] block">
                                 {((record.bestAccuracy + record.bestRhythm) / 2).toFixed(1)}%
                               </span>
-                              <span className="text-[10px] text-zinc-600">+{record.pointsEarned.toFixed(0)} XP</span>
+                              <span className="text-[10px] text-zinc-500">+{record.pointsEarned.toFixed(0)} XP</span>
                             </div>
                           </div>
                         )) : (
                           <div className="text-center py-10">
                             <Award size={24} className="text-zinc-800 mx-auto mb-2" />
-                            <p className="text-[12px] text-zinc-600">{t('community.noSubmissions')}</p>
+                            <p className="text-[12px] text-zinc-500">{t('community.noSubmissions')}</p>
                           </div>
                         )}
                       </div>
 
-                      <div className="border-t border-white/[0.06] pt-3 mt-4 flex justify-between items-center text-[11px] text-zinc-600">
+                      <div className="border-t border-white/[0.06] pt-3 mt-4 flex justify-between items-center text-[11px] text-zinc-500">
                         <span>{t('community.rank1XpBonus')}</span>
                         <Trophy size={11} className="text-[#f5a623]" />
                       </div>
@@ -273,21 +273,21 @@ const Community = () => {
       ) : (
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-[#111113] border border-white/[0.07] rounded-md flex items-center justify-center text-zinc-600">
+            <div className="w-9 h-9 bg-[#111113] border border-white/[0.07] rounded-md flex items-center justify-center text-zinc-500">
               <Trophy size={18} />
             </div>
             <div>
               <h2 className="text-[16px] font-semibold text-white">{t('community.arenaHeadline')}</h2>
-              <p className="text-[12px] text-zinc-600">{t('community.arenaDescription')}</p>
+              <p className="text-[12px] text-zinc-500">{t('community.arenaDescription')}</p>
             </div>
           </div>
           <Card className="bg-[#111113] border border-white/[0.07] rounded-md p-12 flex flex-col items-center text-center gap-4 shadow-none">
-            <div className="w-12 h-12 bg-[#09090b] border border-white/[0.07] rounded-md flex items-center justify-center text-zinc-700">
+            <div className="w-12 h-12 bg-[#09090b] border border-white/[0.07] rounded-md flex items-center justify-center text-zinc-500">
               <Gamepad2 size={24} />
             </div>
             <div>
               <h3 className="text-[15px] font-semibold text-zinc-400 mb-1">{t('community.noActiveArenaTitle') || "Đấu trường đang chuẩn bị"}</h3>
-              <p className="text-[13px] text-zinc-600 max-w-sm">{t('community.noActiveArenaDesc') || "Không có giải đấu nào đang diễn ra. Tiếp tục luyện tập!"}</p>
+              <p className="text-[13px] text-zinc-500 max-w-sm">{t('community.noActiveArenaDesc') || "Không có giải đấu nào đang diễn ra. Tiếp tục luyện tập!"}</p>
             </div>
             <Button onClick={() => navigate("/m/voice/library")}
               className="flex items-center gap-2 px-5 py-2 bg-[#111113] border border-white/[0.07] hover:border-[#f5a623]/30 text-zinc-400 hover:text-white text-[13px] rounded-md transition-colors h-auto">
@@ -306,7 +306,7 @@ const Community = () => {
             </div>
             <div>
               <h2 className="text-[16px] font-semibold text-white">{t('community.heroLeaderboard')}</h2>
-              <p className="text-[12px] text-zinc-600">{t('community.heroLeaderboardDesc')}</p>
+              <p className="text-[12px] text-zinc-500">{t('community.heroLeaderboardDesc')}</p>
             </div>
           </div>
 
@@ -333,7 +333,7 @@ const Community = () => {
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
             {/* Top 3 Podiums */}
             <div className="xl:col-span-1 flex flex-col justify-center items-center py-4 gap-4">
-              <p className="text-[10px] text-zinc-600 uppercase tracking-wider">{t('community.crownOfGlory')}</p>
+              <p className="text-[10px] text-zinc-500 uppercase tracking-wider">{t('community.crownOfGlory')}</p>
 
               <div className="flex items-end justify-center gap-3 mt-4 w-full min-h-[200px]">
                 {/* 2nd */}
@@ -345,7 +345,7 @@ const Community = () => {
                         <AvatarFallback><img src="/default-avatar.png" alt="2nd" className="w-full h-full object-cover" /></AvatarFallback>
                       </Avatar>
                       <span className="text-[11px] font-medium text-zinc-300 mt-2 max-w-[70px] truncate text-center">{leaderboards[activeTab][1].userName}</span>
-                      <span className="text-[10px] text-zinc-600 font-mono">
+                      <span className="text-[10px] text-zinc-500 font-mono">
                         {activeTab === "precision" && `${leaderboards[activeTab][1].cumulativeXP.toFixed(0)} XP`}
                         {activeTab === "diligent" && `${leaderboards[activeTab][1].totalPracticeHours.toFixed(1)}h`}
                         {activeTab === "streak" && `${leaderboards[activeTab][1].currentStreak}d 🔥`}
@@ -388,7 +388,7 @@ const Community = () => {
                         <AvatarFallback><img src="/default-avatar.png" alt="3rd" className="w-full h-full object-cover" /></AvatarFallback>
                       </Avatar>
                       <span className="text-[11px] font-medium text-zinc-400 mt-2 max-w-[65px] truncate text-center">{leaderboards[activeTab][2].userName}</span>
-                      <span className="text-[10px] text-zinc-600 font-mono">
+                      <span className="text-[10px] text-zinc-500 font-mono">
                         {activeTab === "precision" && `${leaderboards[activeTab][2].cumulativeXP.toFixed(0)} XP`}
                         {activeTab === "diligent" && `${leaderboards[activeTab][2].totalPracticeHours.toFixed(1)}h`}
                         {activeTab === "streak" && `${leaderboards[activeTab][2].currentStreak}d 🔥`}
@@ -404,7 +404,7 @@ const Community = () => {
 
             {/* Full list */}
             <div className="xl:col-span-2 space-y-3">
-              <p className="text-[11px] font-medium text-zinc-600 uppercase tracking-wider pb-3 border-b border-white/[0.06]">
+              <p className="text-[11px] font-medium text-zinc-500 uppercase tracking-wider pb-3 border-b border-white/[0.06]">
                 {t('community.leaderboardList')}
               </p>
               <div className="space-y-2 max-h-[360px] overflow-y-auto">
@@ -423,7 +423,7 @@ const Community = () => {
                     return (
                       <div key={entry.userId}
                         className="flex items-center gap-3 p-3 rounded-md bg-[#09090b] border border-white/[0.04] hover:border-[#f5a623]/20 hover:bg-[#f5a623]/[0.02] transition-colors">
-                        <span className="font-mono text-[12px] text-zinc-600 w-5 shrink-0">#{index + 1}</span>
+                        <span className="font-mono text-[12px] text-zinc-500 w-5 shrink-0">#{index + 1}</span>
                         <Avatar className={`w-10 h-10 rounded-md border shrink-0 ${index === 0 ? 'border-[#f5a623]/50' : 'border-white/[0.08]'}`}>
                           <AvatarImage src={entry.userAvatar || "/default-avatar.png"} alt={entry.userName} className="object-cover" />
                           <AvatarFallback className="rounded-md"><img src="/default-avatar.png" alt={entry.userName} className="w-full h-full object-cover" /></AvatarFallback>
@@ -447,7 +447,7 @@ const Community = () => {
                 })() : (
                   <div className="text-center py-16">
                     <Compass size={24} className="text-zinc-800 mx-auto mb-2" />
-                    <p className="text-[12px] text-zinc-600">{t('community.noLeaderboardData')}</p>
+                    <p className="text-[12px] text-zinc-500">{t('community.noLeaderboardData')}</p>
                   </div>
                 )}
               </div>

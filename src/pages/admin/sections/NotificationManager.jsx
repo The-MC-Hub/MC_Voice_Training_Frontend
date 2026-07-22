@@ -227,7 +227,7 @@ function RecipientPicker({ selectedIds, onChange }) {
             <div className="relative flex-1">
               <Search size={11} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[--text-muted]" />
               <Input
-                className="w-full bg-[--bg-elevated] border border-[--border-subtle] pl-7 pr-3 py-1.5 text-[11px] text-[--text-primary] outline-none focus:border-[--text-muted] placeholder:text-zinc-600 h-auto rounded-none focus-visible:ring-0"
+                className="w-full bg-[--bg-elevated] border border-[--border-subtle] pl-7 pr-3 py-1.5 text-[11px] text-[--text-primary] outline-none focus:border-[--text-muted] placeholder:text-zinc-500 h-auto rounded-none focus-visible:ring-0"
                 placeholder={t("admin.notificationManager.recipientPicker.searchPlaceholder")}
                 value={search}
                 onChange={e => setSearch(e.target.value)}
@@ -582,7 +582,7 @@ function TriggerPanel({ onRefresh }) {
       <p className="text-[11px] text-[--text-muted] flex items-center gap-1.5">
         <Info size={11} /> {t("admin.notificationManager.triggerPanel.autoDraftHint")}
       </p>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
         {TRIGGERS.map(tr => {
           const Icon = tr.icon;
           const isActive = active === tr.key;
@@ -672,7 +672,7 @@ const NotificationManager = () => {
   return (
     <div className="space-y-6">
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
           { label: t("admin.notificationManager.stats.total"), value: announcements.length, icon: Bell,  color: "text-[--text-muted]",  sub: t("admin.notificationManager.stats.totalSub", { count: sentCount }) },
           { label: t("admin.notificationManager.stats.pending"), value: draftCount,           icon: Clock, color: "text-amber-400",        sub: t("admin.notificationManager.stats.pendingSub") },

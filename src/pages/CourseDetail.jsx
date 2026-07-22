@@ -33,9 +33,9 @@ const DEFAULT_OUTCOME_KEYS = [
 const EmptyState = ({ icon: Icon, label }) => (
   <div className="flex flex-col items-center py-16 gap-3">
     <div className="w-12 h-12 rounded-md bg-[#09090b] border border-white/[0.07] flex items-center justify-center">
-      <Icon size={22} className="text-zinc-700" />
+      <Icon size={22} className="text-zinc-500" />
     </div>
-    <p className="text-zinc-600 text-[12px] uppercase tracking-wider">{label}</p>
+    <p className="text-zinc-500 text-[12px] uppercase tracking-wider">{label}</p>
   </div>
 );
 
@@ -288,11 +288,11 @@ const QuizTab = ({ questions, courseId }) => {
         <Card className={`p-6 rounded-md border text-center space-y-2 gap-0 shadow-none ${passed ? 'bg-emerald-500/[0.04] border-emerald-500/20' : 'bg-red-500/[0.04] border-red-500/20'}`}>
           <div className={`text-5xl font-bold ${passed ? 'text-emerald-400' : 'text-red-400'}`}>{Math.round(score)}%</div>
           <div className={`text-[11px] font-medium uppercase tracking-wider ${passed ? 'text-emerald-400' : 'text-red-400'}`}>{passed ? t('courses.passed') : t('courses.failed')}</div>
-          {!passed && <p className="text-zinc-600 text-[12px]">{t('courses.reviewAndRetry')}</p>}
+          {!passed && <p className="text-zinc-500 text-[12px]">{t('courses.reviewAndRetry')}</p>}
         </Card>
         {feedback.length > 0 && (
           <div className="space-y-2">
-            <p className="text-[11px] text-zinc-600 uppercase tracking-wider">{t('courses.resultPerQuestion')}</p>
+            <p className="text-[11px] text-zinc-500 uppercase tracking-wider">{t('courses.resultPerQuestion')}</p>
             {feedback.map((fb, i) => (
               <Card key={i} className={`p-3.5 rounded-md border flex items-start gap-3 shadow-none ${fb.correct ? 'bg-emerald-500/[0.04] border-emerald-500/20' : 'bg-red-500/[0.04] border-red-500/20'}`}>
                 <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 mt-0.5 ${fb.correct ? 'bg-emerald-500/[0.08] text-emerald-400' : 'bg-red-500/[0.08] text-red-400'}`}>
@@ -316,7 +316,7 @@ const QuizTab = ({ questions, courseId }) => {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between text-[11px] text-zinc-600">
+      <div className="flex items-center justify-between text-[11px] text-zinc-500">
         <span>{t('courses.question')} {current + 1} / {total}</span>
         <span className="text-[#f5a623]">{answered} / {total} {t('courses.answered')}</span>
       </div>
@@ -327,7 +327,7 @@ const QuizTab = ({ questions, courseId }) => {
         <motion.div key={current} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} transition={{ duration: 0.2 }} className="space-y-4">
           <div className="p-5 rounded-md bg-[#09090b] border border-white/[0.06]">
             <p className="text-[14px] font-medium text-white leading-relaxed">{q.question}</p>
-            {q.category && <span className="inline-block mt-1.5 text-[10px] text-zinc-700 uppercase tracking-wider">{q.category}</span>}
+            {q.category && <span className="inline-block mt-1.5 text-[10px] text-zinc-500 uppercase tracking-wider">{q.category}</span>}
           </div>
           <div className="space-y-2">
             {(q.options || []).map((opt, oi) => {
@@ -365,10 +365,10 @@ const QuizTab = ({ questions, courseId }) => {
       <div className="flex gap-1.5 flex-wrap justify-center">
         {questions.map((_, qi) => (
           <button key={qi} onClick={() => setCurrent(qi)}
-            className={`w-7 h-7 rounded-md text-[11px] font-medium transition-colors ${
+            className={`w-9 h-9 rounded-md text-[11px] font-medium transition-colors ${
               qi === current ? 'bg-[#f5a623] text-black' :
               answers[qi] !== undefined ? 'bg-emerald-500/[0.08] text-emerald-400 border border-emerald-500/20' :
-              'bg-[#09090b] text-zinc-600 border border-white/[0.06] hover:border-white/[0.12]'
+              'bg-[#09090b] text-zinc-500 border border-white/[0.06] hover:border-white/[0.12]'
             }`}>{qi + 1}</button>
         ))}
       </div>
@@ -484,8 +484,8 @@ const CourseDetail = () => {
           <div className="flex-1 space-y-4">
             <div className="flex items-center gap-2 flex-wrap">
               <span className={`px-2.5 py-0.5 rounded-md border text-[11px] font-medium ${diff.color}`}>{t(diff.labelKey)}</span>
-              <span className="flex items-center gap-1 text-[11px] text-zinc-600"><Clock size={11} /> {course.estimatedHours}h</span>
-              <span className="flex items-center gap-1 text-[11px] text-zinc-600"><Users size={11} /> {learners.toLocaleString('vi-VN')} {t('courses.learners')}</span>
+              <span className="flex items-center gap-1 text-[11px] text-zinc-500"><Clock size={11} /> {course.estimatedHours}h</span>
+              <span className="flex items-center gap-1 text-[11px] text-zinc-500"><Users size={11} /> {learners.toLocaleString('vi-VN')} {t('courses.learners')}</span>
               {isCompleted && <span className="flex items-center gap-1 text-[11px] text-emerald-400"><ShieldCheck size={11} /> {t('courses.completed')}</span>}
             </div>
             <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">{course.title}</h1>
@@ -536,13 +536,13 @@ const CourseDetail = () => {
                 <div key={label} className="text-center p-2.5 rounded-md bg-[#111113] border border-white/[0.06]">
                   <div className={`flex justify-center mb-0.5 ${color}`}>{icon}</div>
                   <div className="text-[15px] font-bold text-white">{val}</div>
-                  <div className="text-[9px] text-zinc-700 uppercase">{label}</div>
+                  <div className="text-[9px] text-zinc-500 uppercase">{label}</div>
                 </div>
               ))}
             </div>
 
             <div className="space-y-1.5">
-              <div className="flex justify-between text-[11px] text-zinc-600">
+              <div className="flex justify-between text-[11px] text-zinc-500">
                 <span>{t('courses.progress')}</span>
                 <span className="text-[#f5a623]">{Math.round(progress)}% · {doneSteps}/{pathItems.length} {t('courses.steps')}</span>
               </div>
@@ -552,7 +552,7 @@ const CourseDetail = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-1.5 text-[11px] text-zinc-600">
+            <div className="flex items-center gap-1.5 text-[11px] text-zinc-500">
               <Star size={11} className="text-[#f5a623]" />
               <span>{t('courses.sequentialPathHint')}</span>
             </div>
@@ -571,7 +571,7 @@ const CourseDetail = () => {
                 {/* price */}
                 <div className="flex items-baseline justify-center gap-2">
                   {course.discountPercent > 0 && (
-                    <span className="text-[13px] text-zinc-600 line-through">
+                    <span className="text-[13px] text-zinc-500 line-through">
                       {(course.priceVnd || 199000).toLocaleString('vi-VN')}đ
                     </span>
                   )}
@@ -594,7 +594,7 @@ const CourseDetail = () => {
                   className="w-full py-2.5 rounded-md border border-[#f5a623]/30 text-[#f5a623] text-[12px] font-semibold hover:bg-[#f5a623]/[0.08] transition-colors h-auto">
                   {t('courses.upgradeBasicPlan')}
                 </Button>
-                <p className="text-[10px] text-zinc-600 text-center leading-relaxed">
+                <p className="text-[10px] text-zinc-500 text-center leading-relaxed">
                   {t('courses.basicPlanDesc')}
                 </p>
               </div>

@@ -35,7 +35,7 @@ const NotesSidebar = ({ isOpen, onClose, highlights, onHighlightDeleted, onHighl
       <SheetContent
         side="right"
         showCloseButton={false}
-        className="h-full w-[360px] bg-[#09090b] border-l border-white/[0.08] shadow-2xl gap-0 p-0"
+        className="h-full w-[85vw] max-w-[360px] bg-[#09090b] border-l border-white/[0.08] shadow-2xl gap-0 p-0"
       >
             <div className="flex items-center justify-between p-5 border-b border-white/[0.08]">
               <div className="flex items-center gap-2 text-white">
@@ -51,17 +51,17 @@ const NotesSidebar = ({ isOpen, onClose, highlights, onHighlightDeleted, onHighl
               {highlights.length === 0 ? (
                 <div className="text-center py-10">
                   <div className="w-12 h-12 rounded-full bg-white/[0.04] mx-auto flex items-center justify-center mb-3">
-                    <MessageSquare size={20} className="text-zinc-600" />
+                    <MessageSquare size={20} className="text-zinc-500" />
                   </div>
                   <p className="text-zinc-500 text-[13px]">{t('notesSidebar.empty')}</p>
-                  <p className="text-zinc-600 text-[11px] mt-1">{t('notesSidebar.emptyHint')}</p>
+                  <p className="text-zinc-500 text-[11px] mt-1">{t('notesSidebar.emptyHint')}</p>
                 </div>
               ) : (
                 highlights.map((hl) => (
                   <div key={hl.id} className="bg-[#111113] border border-white/[0.06] rounded-md p-4 space-y-3 relative group">
                     <button 
                       onClick={() => handleDelete(hl.id)}
-                      className="absolute top-3 right-3 text-zinc-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-3 right-3 text-zinc-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <Trash2 size={13} />
                     </button>
@@ -86,12 +86,12 @@ const NotesSidebar = ({ isOpen, onClose, highlights, onHighlightDeleted, onHighl
                     ) : (
                       <div className="mt-2 group/note">
                         <div className="flex items-center justify-between">
-                          <p className={`text-[13px] ${hl.noteContent ? 'text-white' : 'text-zinc-600 italic'}`}>
+                          <p className={`text-[13px] ${hl.noteContent ? 'text-white' : 'text-zinc-500 italic'}`}>
                             {hl.noteContent || t('notesSidebar.noNote')}
                           </p>
                           <button 
                             onClick={() => { setEditingId(hl.id); setEditNote(hl.noteContent || ''); }}
-                            className="text-zinc-600 hover:text-[#f5a623] opacity-0 group-hover/note:opacity-100 transition-opacity p-1"
+                            className="text-zinc-500 hover:text-[#f5a623] opacity-0 group-hover/note:opacity-100 transition-opacity p-1"
                           >
                             <Edit2 size={12} />
                           </button>

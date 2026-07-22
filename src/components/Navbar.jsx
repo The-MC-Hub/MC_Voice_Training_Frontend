@@ -171,7 +171,7 @@ const Navbar = () => {
             {/* Mobile hamburger */}
             <button
               onClick={() => setIsMobileMenuOpen(v => !v)}
-              className={`flex md:hidden w-8 h-8 items-center justify-center rounded-md transition-colors ${isDark ? 'text-zinc-500 hover:text-white hover:bg-white/[0.07]' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'}`}
+              className={`flex md:hidden w-11 h-11 items-center justify-center rounded-md transition-colors ${isDark ? 'text-zinc-500 hover:text-white hover:bg-white/[0.07]' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'}`}
             >
               {isMobileMenuOpen ? <X size={16} /> : <Menu size={16} />}
             </button>

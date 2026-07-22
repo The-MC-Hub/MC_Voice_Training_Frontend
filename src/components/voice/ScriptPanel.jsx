@@ -177,14 +177,14 @@ export function SimpleScriptPanel({
       {/* Toolbar */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.07] bg-[#0d0d0f] gap-2 flex-wrap">
         <div className="flex items-center gap-1">
-          <button onClick={() => setFSize(s => Math.max(14, s - 2))} className="w-6 h-6 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Minus size={12} /></button>
+          <button onClick={() => setFSize(s => Math.max(14, s - 2))} className="w-8 h-8 sm:w-6 sm:h-6 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Minus size={12} /></button>
           <span className="text-[11px] text-zinc-500 w-8 text-center font-mono">{fSize}px</span>
-          <button onClick={() => setFSize(s => Math.min(48, s + 2))} className="w-6 h-6 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Plus size={12} /></button>
+          <button onClick={() => setFSize(s => Math.min(48, s + 2))} className="w-8 h-8 sm:w-6 sm:h-6 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Plus size={12} /></button>
         </div>
 
         <div className="flex items-center gap-0.5 bg-[#111113] border border-white/[0.07] rounded-md p-0.5">
           {[["left", AlignLeft], ["center", AlignCenter], ["right", AlignRight]].map(([v, Icon]) => (
-            <button key={v} onClick={() => setFAlign(v)} className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${fAlign === v ? "bg-gold/20 text-gold" : "text-zinc-500 hover:text-white"}`}><Icon size={12} /></button>
+            <button key={v} onClick={() => setFAlign(v)} className={`w-8 h-8 sm:w-6 sm:h-6 flex items-center justify-center rounded transition-colors ${fAlign === v ? "bg-gold/20 text-gold" : "text-zinc-500 hover:text-white"}`}><Icon size={12} /></button>
           ))}
         </div>
 
@@ -196,17 +196,19 @@ export function SimpleScriptPanel({
 
         <div className="flex items-center gap-1">
           {[{ v: "cream", bg: "#faf8f3", ring: "ring-amber-400" }, { v: "white", bg: "#ffffff", ring: "ring-zinc-300" }, { v: "sepia", bg: "#f5ecd7", ring: "ring-amber-600" }, { v: "dark", bg: "#1a1a1e", ring: "ring-zinc-600" }].map(({ v, bg: btnBg, ring }) => (
-            <button key={v} onClick={() => setFBg(v)} style={{ background: btnBg }} className={`w-5 h-5 rounded-full border border-white/20 transition-all ${fBg === v ? `ring-2 ring-offset-1 ring-offset-[#0d0d0f] ${ring}` : ""}`} />
+            <button key={v} onClick={() => setFBg(v)} className="w-7 h-7 sm:w-5 sm:h-5 flex items-center justify-center shrink-0">
+              <span style={{ background: btnBg }} className={`block w-5 h-5 sm:w-full sm:h-full rounded-full border border-white/20 transition-all ${fBg === v ? `ring-2 ring-offset-1 ring-offset-[#0d0d0f] ${ring}` : ""}`} />
+            </button>
           ))}
         </div>
 
         <div className="flex items-center gap-1.5 ml-auto">
           {tp && (
             <div className="flex items-center gap-1">
-              <Gauge size={11} className="text-zinc-600" />
-              <button onClick={() => setTpWpm(w => Math.max(60, w - 10))} className="w-5 h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Minus size={10} /></button>
+              <Gauge size={11} className="text-zinc-500" />
+              <button onClick={() => setTpWpm(w => Math.max(60, w - 10))} className="w-8 h-8 sm:w-5 sm:h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Minus size={10} /></button>
               <span className="text-[11px] text-zinc-500 w-10 text-center font-mono">{tpWpm}</span>
-              <button onClick={() => setTpWpm(w => Math.min(250, w + 10))} className="w-5 h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Plus size={10} /></button>
+              <button onClick={() => setTpWpm(w => Math.min(250, w + 10))} className="w-8 h-8 sm:w-5 sm:h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Plus size={10} /></button>
               <button
                 onClick={() => {
                   if (tpRunning) { setTpRunning(false); }
@@ -478,15 +480,15 @@ export default function ScriptPanel({
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.07] bg-[#0d0d0f] gap-2 flex-wrap">
         {/* Font size */}
         <div className="flex items-center gap-1">
-          <button onClick={() => setScriptFontSize((s) => Math.max(16, s - 2))} className="w-6 h-6 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Minus size={12} /></button>
+          <button onClick={() => setScriptFontSize((s) => Math.max(16, s - 2))} className="w-8 h-8 sm:w-6 sm:h-6 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Minus size={12} /></button>
           <span className="text-[11px] text-zinc-500 w-8 text-center font-mono">{scriptFontSize}px</span>
-          <button onClick={() => setScriptFontSize((s) => Math.min(48, s + 2))} className="w-6 h-6 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Plus size={12} /></button>
+          <button onClick={() => setScriptFontSize((s) => Math.min(48, s + 2))} className="w-8 h-8 sm:w-6 sm:h-6 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Plus size={12} /></button>
         </div>
 
         {/* Alignment */}
         <div className="flex items-center gap-0.5 bg-[#111113] border border-white/[0.07] rounded-md p-0.5">
           {[["left", AlignLeft], ["center", AlignCenter], ["right", AlignRight]].map(([v, Icon]) => (
-            <button key={v} onClick={() => setScriptAlign(v)} className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${scriptAlign === v ? "bg-gold/20 text-gold" : "text-zinc-500 hover:text-white"}`}><Icon size={12} /></button>
+            <button key={v} onClick={() => setScriptAlign(v)} className={`w-8 h-8 sm:w-6 sm:h-6 flex items-center justify-center rounded transition-colors ${scriptAlign === v ? "bg-gold/20 text-gold" : "text-zinc-500 hover:text-white"}`}><Icon size={12} /></button>
           ))}
         </div>
 
@@ -500,7 +502,9 @@ export default function ScriptPanel({
         {/* Background */}
         <div className="flex items-center gap-1">
           {[{ v: "cream", bg: "#faf8f3", ring: "ring-amber-400" }, { v: "white", bg: "#ffffff", ring: "ring-zinc-300" }, { v: "sepia", bg: "#f5ecd7", ring: "ring-amber-600" }, { v: "dark", bg: "#1a1a1e", ring: "ring-zinc-600" }].map(({ v, bg: btnBg, ring }) => (
-            <button key={v} onClick={() => setScriptBg(v)} style={{ background: btnBg }} className={`w-5 h-5 rounded-full border border-white/20 transition-all ${scriptBg === v ? `ring-2 ring-offset-1 ring-offset-[#0d0d0f] ${ring}` : ""}`} />
+            <button key={v} onClick={() => setScriptBg(v)} className="w-7 h-7 sm:w-5 sm:h-5 flex items-center justify-center shrink-0">
+              <span style={{ background: btnBg }} className={`block w-5 h-5 sm:w-full sm:h-full rounded-full border border-white/20 transition-all ${scriptBg === v ? `ring-2 ring-offset-1 ring-offset-[#0d0d0f] ${ring}` : ""}`} />
+            </button>
           ))}
         </div>
 
@@ -508,10 +512,10 @@ export default function ScriptPanel({
         <div className="flex items-center gap-1.5 ml-auto">
           {teleprompter && (
             <div className="flex items-center gap-1">
-              <Gauge size={11} className="text-zinc-600" />
-              <button onClick={() => setTeleprompterWpm((w) => Math.max(60, w - 10))} className="w-5 h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Minus size={10} /></button>
+              <Gauge size={11} className="text-zinc-500" />
+              <button onClick={() => setTeleprompterWpm((w) => Math.max(60, w - 10))} className="w-8 h-8 sm:w-5 sm:h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Minus size={10} /></button>
               <span className="text-[11px] text-zinc-500 w-10 text-center font-mono">{teleprompterWpm}</span>
-              <button onClick={() => setTeleprompterWpm((w) => Math.min(250, w + 10))} className="w-5 h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Plus size={10} /></button>
+              <button onClick={() => setTeleprompterWpm((w) => Math.min(250, w + 10))} className="w-8 h-8 sm:w-5 sm:h-5 flex items-center justify-center rounded text-zinc-500 hover:text-white hover:bg-white/[0.07] transition-colors"><Plus size={10} /></button>
               <button
                 onClick={() => {
                   if (teleprompterRunning) { setTeleprompterRunning(false); }

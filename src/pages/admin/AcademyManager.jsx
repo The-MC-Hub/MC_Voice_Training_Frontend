@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent } from "@/components/animate-ui/components/radix/dialog";
 import { Card } from "@/components/ui/card";
 
-const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-600";
+const inputCls = "w-full bg-[#09090b] border border-white/[0.07] px-3 py-2 text-[12px] text-white focus:outline-none focus:border-white/[0.14] placeholder:text-zinc-500";
 const inputClsShadcn = `${inputCls} h-auto rounded-none focus-visible:ring-0`;
 
 const AcademyManager = () => {
@@ -216,7 +216,7 @@ const AcademyManager = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <Button onClick={(e) => handleDeleteMilestone(m.id, e)}
-                    className="p-1.5 h-auto text-zinc-600 hover:text-[--text-primary] border border-transparent hover:border-[--border-subtle] transition-colors">
+                    className="w-9 h-9 flex items-center justify-center text-zinc-500 hover:text-[--text-primary] border border-transparent hover:border-[--border-subtle] transition-colors">
                     <Trash2 size={12} />
                   </Button>
                   <ChevronDown size={14} className={`text-zinc-500 transition-transform duration-200 ${isExpanded ? 'rotate-180 text-[gold]' : ''}`} />
@@ -226,7 +226,7 @@ const AcademyManager = () => {
               {isExpanded && (
                 <div className="px-4 pb-4 border-t border-white/[0.06] pt-4 space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-[10px] text-zinc-600 uppercase tracking-wider font-medium">{t("admin.academyManager.syllabusItems")}</span>
+                    <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-medium">{t("admin.academyManager.syllabusItems")}</span>
                     <Button onClick={() => handleAddContent(m.id)}
                       className="flex items-center gap-1.5 px-2.5 py-1.5 h-auto bg-[#09090b] border border-white/[0.07] hover:border-white/[0.14] text-white text-[11px] font-medium transition-colors">
                       <Plus size={10} /> {t("admin.academyManager.assignContent")}
@@ -256,21 +256,21 @@ const AcademyManager = () => {
                                 </div>
                               </div>
                             </div>
-                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity" onClick={e => e.stopPropagation()}>
+                            <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity" onClick={e => e.stopPropagation()}>
                               {idx > 0 && (
                                 <button onClick={() => handleMoveContent(m.id, content.id, 'up')}
-                                  className="p-1 border border-white/[0.06] hover:text-[gold] transition-colors">
+                                  className="w-8 h-8 flex items-center justify-center border border-white/[0.06] hover:text-[gold] transition-colors">
                                   <ChevronUp size={11} />
                                 </button>
                               )}
                               {idx < contents.length - 1 && (
                                 <button onClick={() => handleMoveContent(m.id, content.id, 'down')}
-                                  className="p-1 border border-white/[0.06] hover:text-[gold] transition-colors">
+                                  className="w-8 h-8 flex items-center justify-center border border-white/[0.06] hover:text-[gold] transition-colors">
                                   <ChevronDown size={11} />
                                 </button>
                               )}
                               <button onClick={() => handleDeleteContent(content.id)}
-                                className="p-1 border border-white/[0.06] hover:text-[--text-primary] hover:border-[--border-subtle] transition-colors">
+                                className="w-8 h-8 flex items-center justify-center border border-white/[0.06] hover:text-[--text-primary] hover:border-[--border-subtle] transition-colors">
                                 <Trash2 size={11} />
                               </button>
                             </div>
@@ -280,7 +280,7 @@ const AcademyManager = () => {
                     </div>
                   ) : (
                     <div className="text-center py-6 border border-dashed border-white/[0.06]">
-                      <p className="text-[11px] text-zinc-600 italic">{t("admin.academyManager.noSyllabusModules")}</p>
+                      <p className="text-[11px] text-zinc-500 italic">{t("admin.academyManager.noSyllabusModules")}</p>
                     </div>
                   )}
                 </div>
@@ -357,7 +357,7 @@ const AcademyManager = () => {
                         className={`p-3 border cursor-pointer transition-colors ${contentFormData.type === ct ? 'bg-[gold]/[0.08] border-[gold]/20 text-white' : 'bg-[#09090b] border-white/[0.07] text-zinc-500 hover:border-white/[0.14]'}`}>
                         <Icon size={13} className="mb-1.5" />
                         <p className="text-[11px] font-semibold uppercase tracking-wide">{label}</p>
-                        <p className="text-[10px] text-zinc-600 mt-0.5">{desc}</p>
+                        <p className="text-[10px] text-zinc-500 mt-0.5">{desc}</p>
                       </div>
                     ))}
                   </div>
@@ -420,7 +420,7 @@ const AcademyManager = () => {
 
               {/* Live preview */}
               <div className="lg:col-span-5 p-5 bg-[#09090b]/60 max-h-[500px] overflow-y-auto">
-                <h4 className="text-[10px] font-medium text-zinc-600 uppercase tracking-wider mb-4">{t("admin.academyManager.modal.resourceOverview")}</h4>
+                <h4 className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider mb-4">{t("admin.academyManager.modal.resourceOverview")}</h4>
                 {livePreviewData ? (
                   <div className="space-y-4">
                     <div>
@@ -431,11 +431,11 @@ const AcademyManager = () => {
                     </div>
                     <div className="grid grid-cols-2 gap-3 border-t border-b border-white/[0.06] py-3 text-[12px]">
                       <div>
-                        <p className="text-[9px] text-zinc-600 uppercase mb-0.5">{t("admin.academyManager.modal.category")}</p>
+                        <p className="text-[9px] text-zinc-500 uppercase mb-0.5">{t("admin.academyManager.modal.category")}</p>
                         <p className="text-zinc-300 font-medium">{livePreviewData.category || t("admin.academyManager.modal.general")}</p>
                       </div>
                       <div>
-                        <p className="text-[9px] text-zinc-600 uppercase mb-0.5">
+                        <p className="text-[9px] text-zinc-500 uppercase mb-0.5">
                           {livePreviewData.displayType === 'VOICE_PRACTICE' ? t("admin.academyManager.modal.language") : t("admin.academyManager.modal.author")}
                         </p>
                         <p className="text-zinc-300 font-medium">
@@ -444,7 +444,7 @@ const AcademyManager = () => {
                       </div>
                     </div>
                     <div>
-                      <label className="text-[9px] text-zinc-600 uppercase flex items-center gap-1 mb-1.5"><FileText size={9} /> {t("admin.academyManager.modal.scriptContent")}</label>
+                      <label className="text-[9px] text-zinc-500 uppercase flex items-center gap-1 mb-1.5"><FileText size={9} /> {t("admin.academyManager.modal.scriptContent")}</label>
                       <div className="bg-[#111113] border border-white/[0.06] p-3 text-[11px] text-zinc-400 leading-relaxed max-h-36 overflow-y-auto whitespace-pre-wrap">
                         {livePreviewData.content || t("admin.academyManager.modal.emptyContent")}
                       </div>
@@ -452,7 +452,7 @@ const AcademyManager = () => {
                   </div>
                 ) : (
                   <div className="text-center py-10">
-                    <p className="text-[11px] text-zinc-600 italic">{t("admin.academyManager.modal.chooseScriptOrGuide")}</p>
+                    <p className="text-[11px] text-zinc-500 italic">{t("admin.academyManager.modal.chooseScriptOrGuide")}</p>
                   </div>
                 )}
               </div>
@@ -470,7 +470,7 @@ const AcademyManager = () => {
                   {selectedContentDetails.type === 'VOICE_PRACTICE' ? <Play size={13} /> : <BookOpen size={13} />}
                 </div>
                 <div>
-                  <span className="text-[9px] text-zinc-600 uppercase tracking-wider block">
+                  <span className="text-[9px] text-zinc-500 uppercase tracking-wider block">
                     {selectedContentDetails.type === 'VOICE_PRACTICE' ? t("admin.academyManager.modal.voiceScript") : t("admin.academyManager.modal.studyGuide")}
                   </span>
                   <h3 className="font-semibold text-white text-[14px]">{selectedContentDetails.title}</h3>
@@ -480,17 +480,17 @@ const AcademyManager = () => {
             </div>
 
             <div className="p-5 space-y-4">
-              <div className="grid grid-cols-3 gap-3 bg-[#09090b] border border-white/[0.06] p-3 text-[12px]">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-[#09090b] border border-white/[0.06] p-3 text-[12px]">
                 <div>
-                  <span className="text-[9px] text-zinc-600 uppercase flex items-center gap-1"><Tag size={9} /> {t("admin.academyManager.modal.category")}</span>
+                  <span className="text-[9px] text-zinc-500 uppercase flex items-center gap-1"><Tag size={9} /> {t("admin.academyManager.modal.category")}</span>
                   <p className="text-zinc-300 font-medium mt-0.5">{selectedContentDetails.category || t("admin.academyManager.modal.general")}</p>
                 </div>
                 <div>
-                  <span className="text-[9px] text-zinc-600 uppercase flex items-center gap-1"><Clock size={9} /> {t("admin.academyManager.modal.duration")}</span>
+                  <span className="text-[9px] text-zinc-500 uppercase flex items-center gap-1"><Clock size={9} /> {t("admin.academyManager.modal.duration")}</span>
                   <p className="text-zinc-300 font-medium mt-0.5">{selectedContentDetails.duration || t("admin.academyManager.modal.durationNA")}</p>
                 </div>
                 <div>
-                  <span className="text-[9px] text-zinc-600 uppercase flex items-center gap-1">
+                  <span className="text-[9px] text-zinc-500 uppercase flex items-center gap-1">
                     {selectedContentDetails.type === 'VOICE_PRACTICE' ? <Globe size={9} /> : <User size={9} />}
                     {selectedContentDetails.type === 'VOICE_PRACTICE' ? t("admin.academyManager.modal.language") : t("admin.academyManager.modal.author")}
                   </span>
@@ -501,7 +501,7 @@ const AcademyManager = () => {
               </div>
 
               <div>
-                <label className="text-[9px] text-zinc-600 uppercase flex items-center gap-1 mb-1.5"><FileText size={9} /> {t("admin.academyManager.modal.practiceText")}</label>
+                <label className="text-[9px] text-zinc-500 uppercase flex items-center gap-1 mb-1.5"><FileText size={9} /> {t("admin.academyManager.modal.practiceText")}</label>
                 <div className="bg-[#09090b] border border-white/[0.06] p-4 max-h-56 overflow-y-auto text-[12px] text-zinc-300 leading-relaxed whitespace-pre-wrap">
                   {selectedContentDetails.content || t("admin.academyManager.modal.noPracticeText")}
                 </div>

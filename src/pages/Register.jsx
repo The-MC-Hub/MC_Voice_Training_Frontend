@@ -336,13 +336,13 @@ const OtpScreen = ({ email, onSuccess }) => {
       {/* Magic link hint */}
       <div className="w-full bg-emerald-50 border border-emerald-200 rounded-md p-3.5 mb-3 text-left">
         <p className="text-[12px] text-emerald-700 font-medium mb-0.5">✅ Cách nhanh nhất</p>
-        <p className="text-[12px] text-emerald-600">Mở email và nhấn nút <strong>"Xác nhận email ngay"</strong> — tự động đăng nhập, không cần nhập mã.</p>
+        <p className="text-[12px] text-emerald-600">Mở email và nhấn nút <strong>"Xác nhận email ngay"</strong>, tự động đăng nhập, không cần nhập mã.</p>
       </div>
 
       {/* Spam hint */}
       <div className="w-full bg-amber-50 border border-amber-200 rounded-md p-3 mb-6 text-left flex items-start gap-2">
         <span className="text-amber-500 text-[14px] mt-px">⚠️</span>
-        <p className="text-[12px] text-amber-700">Không thấy email? Kiểm tra thư mục <strong>Spam / Quảng cáo</strong> — đôi khi email bị lọc nhầm.</p>
+        <p className="text-[12px] text-amber-700">Không thấy email? Kiểm tra thư mục <strong>Spam / Quảng cáo</strong>, đôi khi email bị lọc nhầm.</p>
       </div>
 
       {/* Divider */}
@@ -813,7 +813,7 @@ const Register = () => {
                   {/* Avatar picker */}
                   <div className="flex flex-col gap-2">
                     <label className="text-[13px] font-semibold text-gray-700">Chọn avatar của bạn</label>
-                    <div className="grid grid-cols-5 gap-2">
+                    <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
                       {AVATARS.map((av) => (
                         <Button
                           key={av.id}
