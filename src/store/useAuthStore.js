@@ -184,6 +184,38 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
+  linkGoogleAccount: async (idToken) => {
+    set({ loading: true, error: null });
+    try {
+      const res = await api.post('/auth/google/link', { idToken });
+      const user = res.data.data.user;
+      const storage = localStorage.getItem('token') ? localStorage : sessionStorage;
+      storage.setItem('user', JSON.stringify(user));
+      set({ user, loading: false, error: null });
+      return user;
+    } catch (err) {
+      const message = err.response?.data?.message || 'Không thể liên kết tài khoản Google';
+      set({ loading: false, error: message });
+      throw err;
+    }
+  },
+
+  unlinkGoogleAccount: async () => {
+    set({ loading: true, error: null });
+    try {
+      const res = await api.post('/auth/google/unlink');
+      const user = res.data.data.user;
+      const storage = localStorage.getItem('token') ? localStorage : sessionStorage;
+      storage.setItem('user', JSON.stringify(user));
+      set({ user, loading: false, error: null });
+      return user;
+    } catch (err) {
+      const message = err.response?.data?.message || 'Không thể hủy liên kết tài khoản Google';
+      set({ loading: false, error: message });
+      throw err;
+    }
+  },
+
   register: async (userData) => {
     set({ loading: true, error: null });
     try {

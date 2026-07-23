@@ -52,6 +52,7 @@ import { trackSettingsProfileUpdate, trackSettingsAvatarUpload, trackLogoutClick
 import { questService } from '../services/questService';
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Card } from "@/components/ui/card";
+import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
 
 const inputCls = "flex-1 bg-transparent text-[13px] text-gray-800 placeholder:text-gray-400 focus:outline-none min-w-0";
 const inputWrapCls = "flex items-center gap-2 bg-white border border-gray-200 rounded-md px-3 py-2.5 focus-within:border-amber-400 transition-colors";
@@ -244,7 +245,7 @@ const ReferralCard = ({ user, updateUser }) => {
 
 const Settings = () => {
   const { t, i18n: i18nInstance } = useTranslation();
-  const { user, updateUser, logout, refreshUser } = useAuth();
+  const { user, updateUser, logout, refreshUser, linkGoogleAccount, unlinkGoogleAccount } = useAuth();
   const navigate = useNavigate();
   const { startTour } = useTour();
   const [showBioPreview, setShowBioPreview] = useState(false);
@@ -279,6 +280,33 @@ const Settings = () => {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [googleActionError, setGoogleActionError] = useState("");
+  const [unlinkingGoogle, setUnlinkingGoogle] = useState(false);
+
+  const handleGoogleLinkCredential = async (idToken) => {
+    setGoogleActionError("");
+    try {
+      const updatedUser = await linkGoogleAccount(idToken);
+      updateUser(updatedUser);
+      toast.success(t('settings.googleLinked', 'Đã liên kết tài khoản Google.'));
+    } catch (err) {
+      setGoogleActionError(err.response?.data?.message || "Không thể liên kết tài khoản Google.");
+    }
+  };
+
+  const handleGoogleUnlink = async () => {
+    setGoogleActionError("");
+    setUnlinkingGoogle(true);
+    try {
+      const updatedUser = await unlinkGoogleAccount();
+      updateUser(updatedUser);
+      toast.success(t('settings.googleUnlinked', 'Đã hủy liên kết tài khoản Google.'));
+    } catch (err) {
+      setGoogleActionError(err.response?.data?.message || "Không thể hủy liên kết tài khoản Google.");
+    } finally {
+      setUnlinkingGoogle(false);
+    }
+  };
 
   const [profileData, setProfileData] = useState({
     name: user?.name || "",
@@ -1052,6 +1080,48 @@ const Settings = () => {
                   </Button>
                 </div>
               </form>
+
+              {/* Google account link/unlink */}
+              <Card className="bg-white border border-gray-200 rounded-md p-6 space-y-4 shadow-sm xl:col-span-2">
+                <div className="flex items-center gap-2">
+                  <svg width="16" height="16" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47a5.54 5.54 0 0 1-2.4 3.63v3.02h3.87c2.27-2.09 3.55-5.17 3.55-8.89z"/>
+                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.87-3.02c-1.08.72-2.45 1.15-4.06 1.15-3.13 0-5.78-2.11-6.73-4.96H1.27v3.11A11.99 11.99 0 0 0 12 24z"/>
+                    <path fill="#FBBC05" d="M5.27 14.26A7.2 7.2 0 0 1 4.89 12c0-.78.14-1.54.38-2.26V6.63H1.27A11.99 11.99 0 0 0 0 12c0 1.93.46 3.76 1.27 5.37l4-3.11z"/>
+                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.69 1.27 6.63l4 3.11C6.22 6.86 8.87 4.75 12 4.75z"/>
+                  </svg>
+                  <p className="text-[13px] font-medium text-gray-800">Tài khoản Google</p>
+                </div>
+
+                {googleActionError && (
+                  <p className="text-[12px] text-red-600 bg-red-50 border border-red-200 rounded-md p-2.5">{googleActionError}</p>
+                )}
+
+                {user?.isGoogleLinked ? (
+                  <div className="flex items-center justify-between gap-3 bg-emerald-50 border border-emerald-200 rounded-md p-3.5">
+                    <div className="flex items-center gap-2.5">
+                      <CheckCircle2 size={16} className="text-emerald-500 shrink-0" />
+                      <div>
+                        <p className="text-[13px] font-medium text-gray-800">Đã liên kết</p>
+                        <p className="text-[11px] text-gray-500">{profileData.email}</p>
+                      </div>
+                    </div>
+                    <Button
+                      type="button"
+                      onClick={handleGoogleUnlink}
+                      disabled={unlinkingGoogle}
+                      className="h-auto px-3 py-1.5 rounded-md border border-gray-300 bg-white hover:bg-gray-50 text-gray-600 text-[12px] font-medium transition-colors disabled:opacity-50 shrink-0"
+                    >
+                      {unlinkingGoogle ? "Đang hủy..." : "Hủy liên kết"}
+                    </Button>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-[12px] text-gray-500 mb-3">Liên kết tài khoản Google để đăng nhập nhanh hơn, không cần nhập mật khẩu.</p>
+                    <GoogleSignInButton onCredential={handleGoogleLinkCredential} onError={() => setGoogleActionError("Không thể tải Google Sign-In.")} text="continue_with" />
+                  </div>
+                )}
+              </Card>
 
               {/* Session + Danger Zone */}
               <Card className="bg-white border border-red-100 rounded-md overflow-hidden shadow-sm gap-0 flex flex-col">
