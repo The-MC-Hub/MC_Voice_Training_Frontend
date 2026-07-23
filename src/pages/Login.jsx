@@ -8,6 +8,8 @@ import { trackLoginSubmit, trackLoginSuccess, trackLoginOtpVerify } from "@/util
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Dialog, DialogContent } from "@/components/animate-ui/components/radix/dialog";
 import { Checkbox } from "@/components/animate-ui/components/radix/checkbox";
+import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
+import GoogleRoleSelectModal from "@/components/auth/GoogleRoleSelectModal";
 
 const ROLE_REDIRECT = { admin: "/m/dashboard", mc: "/m/dashboard", client: "/m/dashboard" };
 
@@ -263,13 +265,15 @@ const AdminOtpModal = ({ adminEmail, rememberMe, onSuccess, onCancel }) => {
 const Login = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { login, loading, error, clearError } = useAuthStore();
+  const { login, loginWithGoogle, loading, error, clearError } = useAuthStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [rememberMe, setRememberMe] = useState(() => localStorage.getItem('rememberMe') === 'true');
   const [shake, setShake] = useState(false);
   const [adminOtp, setAdminOtp] = useState(null); // { email, rememberMe }
+  const [googlePending, setGooglePending] = useState(null); // { pendingToken, email, name }
+  const [googleError, setGoogleError] = useState("");
 
   useEffect(() => {
     if (error) { setShake(true); setTimeout(() => setShake(false), 400); }
@@ -298,6 +302,24 @@ const Login = () => {
     }
   };
 
+  const handleGoogleCredential = async (idToken) => {
+    setGoogleError("");
+    try {
+      const res = await loginWithGoogle(idToken, rememberMe);
+      if (res?.requiresAdminOtp) {
+        setAdminOtp({ email: res.email, rememberMe });
+        return;
+      }
+      if (res?.requiresRoleSelection) {
+        setGooglePending({ pendingToken: res.pendingToken, email: res.email, name: res.name });
+        return;
+      }
+      navigate(ROLE_REDIRECT[res.user?.role?.toLowerCase()] || "/m/dashboard", { replace: true });
+    } catch (err) {
+      setGoogleError(err.response?.data?.message || "Đăng nhập Google thất bại.");
+    }
+  };
+
   return (
     <>
     <AnimatePresence>
@@ -310,6 +332,16 @@ const Login = () => {
             navigate(ROLE_REDIRECT[res.user?.role?.toLowerCase()] || "/m/dashboard", { replace: true });
           }}
           onCancel={() => setAdminOtp(null)}
+        />
+      )}
+      {googlePending && (
+        <GoogleRoleSelectModal
+          pending={googlePending}
+          onSuccess={(res) => {
+            setGooglePending(null);
+            navigate(ROLE_REDIRECT[res.user?.role?.toLowerCase()] || "/m/dashboard", { replace: true });
+          }}
+          onCancel={() => setGooglePending(null)}
         />
       )}
     </AnimatePresence>
@@ -418,6 +450,17 @@ const Login = () => {
               }
             </motion.button>
           </motion.form>
+
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-gray-200" />
+            <span className="text-[11px] text-gray-400 font-medium uppercase tracking-widest">Hoặc</span>
+            <div className="flex-1 h-px bg-gray-200" />
+          </div>
+
+          {googleError && (
+            <p className="text-center text-[12px] text-red-600 mb-3">{googleError}</p>
+          )}
+          <GoogleSignInButton onCredential={handleGoogleCredential} onError={() => setGoogleError("Không thể tải Google Sign-In.")} disabled={loading} />
 
           <p className="text-center text-[13px] text-gray-500 mt-7 pt-6 border-t border-gray-100">
             {t('auth.noAccount')}{" "}

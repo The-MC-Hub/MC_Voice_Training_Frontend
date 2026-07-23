@@ -13,6 +13,8 @@ import { fetchUserRoles } from "../controllers/publicController";
 import { academyService } from "../services/academyService";
 import { trackRegisterSubmit, trackRegisterSuccess, trackRegisterEmailVerify, trackRegisterQuizComplete } from '@/utils/analytics';
 import { Button } from "@/components/animate-ui/components/buttons/button";
+import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
+import GoogleRoleSelectModal from "@/components/auth/GoogleRoleSelectModal";
 const ROLE_REDIRECT = { admin: "/m/dashboard", mc: "/m/dashboard", client: "/m/dashboard" };
 
 const SLIDE_FEATURES = [
@@ -552,8 +554,30 @@ const Register = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { register, loading, error } = useAuthStore();
+  const { register, loginWithGoogle, loading, error } = useAuthStore();
   useApi(fetchUserRoles, []);
+  const [googlePending, setGooglePending] = useState(null); // { pendingToken, email, name }
+  const [googleError, setGoogleError] = useState("");
+
+  const handleGoogleCredential = async (idToken) => {
+    setGoogleError("");
+    try {
+      const res = await loginWithGoogle(idToken);
+      if (res?.requiresAdminOtp) {
+        // Admin accounts can't self-register via this page — surface as an error instead
+        // of silently doing nothing.
+        setGoogleError("Tài khoản admin cần đăng nhập qua trang Login.");
+        return;
+      }
+      if (res?.requiresRoleSelection) {
+        setGooglePending({ pendingToken: res.pendingToken, email: res.email, name: res.name });
+        return;
+      }
+      navigate(ROLE_REDIRECT[res.user?.role?.toLowerCase()] || "/m/dashboard", { replace: true });
+    } catch (err) {
+      setGoogleError(err.response?.data?.message || "Đăng ký Google thất bại.");
+    }
+  };
 
   const refParam = searchParams.get("ref") || "";
 
@@ -666,6 +690,21 @@ const Register = () => {
   const displayError = localError || error;
 
   return (
+    <>
+    <AnimatePresence>
+      {googlePending && (
+        <GoogleRoleSelectModal
+          pending={googlePending}
+          onSuccess={(res) => {
+            setGooglePending(null);
+            localStorage.setItem("mcvt_tour_pending", "1");
+            localStorage.removeItem("mcvt_tour_done");
+            navigate(ROLE_REDIRECT[res.user?.role?.toLowerCase()] || "/m/dashboard", { replace: true });
+          }}
+          onCancel={() => setGooglePending(null)}
+        />
+      )}
+    </AnimatePresence>
     <div className="min-h-screen flex flex-row-reverse">
       {/* Right image panel (visually right, DOM last) */}
       <div className="hidden lg:block lg:w-[46%] xl:w-[48%] shrink-0 sticky top-0 h-screen">
@@ -869,6 +908,22 @@ const Register = () => {
                   </motion.button>
                 </form>
 
+                <div className="flex items-center gap-3 my-5">
+                  <div className="flex-1 h-px bg-gray-200" />
+                  <span className="text-[11px] text-gray-400 font-medium uppercase tracking-widest">Hoặc</span>
+                  <div className="flex-1 h-px bg-gray-200" />
+                </div>
+
+                {googleError && (
+                  <p className="text-center text-[12px] text-red-600 mb-3">{googleError}</p>
+                )}
+                <GoogleSignInButton
+                  onCredential={handleGoogleCredential}
+                  onError={() => setGoogleError("Không thể tải Google Sign-In.")}
+                  disabled={loading}
+                  text="signup_with"
+                />
+
                 <p className="text-center text-[13px] text-gray-500 mt-6 pt-5 border-t border-gray-100">
                   {"Đã có tài khoản?"}{" "}
                   <Link to="/login" className="text-amber-600 hover:text-amber-700 font-semibold transition-colors">
@@ -881,6 +936,7 @@ const Register = () => {
         </motion.div>
       </div>
     </div>
+    </>
   );
 };
 

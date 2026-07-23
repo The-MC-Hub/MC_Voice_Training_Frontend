@@ -129,6 +129,61 @@ export const useAuthStore = create((set, get) => ({
 
 
   
+  // Sends the Google ID token to the backend. Two outcomes:
+  // - existing account: backend logs in immediately (or returns requiresAdminOtp, same as password login)
+  // - new email: backend returns { requiresRoleSelection: true, pendingToken, email, name }
+  loginWithGoogle: async (idToken, rememberMe = true) => {
+    set({ loading: true, error: null });
+    try {
+      const res = await api.post('/auth/google', { idToken });
+      const data = res.data.data;
+
+      if (data?.requiresAdminOtp) {
+        set({ loading: false, error: null });
+        return { requiresAdminOtp: true, email: data.email };
+      }
+      if (data?.requiresRoleSelection) {
+        set({ loading: false, error: null });
+        return { requiresRoleSelection: true, pendingToken: data.pendingToken, email: data.email, name: data.name };
+      }
+
+      const { token, user } = data;
+      const storage = rememberMe ? localStorage : sessionStorage;
+      if (rememberMe) {
+        sessionStorage.removeItem('token'); sessionStorage.removeItem('user');
+      } else {
+        localStorage.removeItem('token'); localStorage.removeItem('user');
+      }
+      storage.setItem('token', token);
+      storage.setItem('user', JSON.stringify(user));
+      set({ user, token, role: user.role, isAuthenticated: true, loading: false, error: null });
+      return { token, user };
+    } catch (err) {
+      const message = err.response?.data?.message || 'Google sign-in failed';
+      set({ loading: false, error: message });
+      throw err;
+    }
+  },
+
+  completeGoogleRegistration: async (pendingToken, role, referralCode, rememberMe = true) => {
+    set({ loading: true, error: null });
+    try {
+      const body = { pendingToken, role };
+      if (referralCode?.trim()) body.referralCode = referralCode.trim().toUpperCase();
+      const res = await api.post('/auth/google/complete-registration', body);
+      const { token, user } = res.data.data;
+      const storage = rememberMe ? localStorage : sessionStorage;
+      storage.setItem('token', token);
+      storage.setItem('user', JSON.stringify(user));
+      set({ user, token, role: user.role, isAuthenticated: true, loading: false, error: null });
+      return { token, user };
+    } catch (err) {
+      const message = err.response?.data?.message || 'Registration failed';
+      set({ loading: false, error: message });
+      throw err;
+    }
+  },
+
   register: async (userData) => {
     set({ loading: true, error: null });
     try {
