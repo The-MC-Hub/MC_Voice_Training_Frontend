@@ -2286,6 +2286,46 @@
         "profileUpdate": "Update profile"
       }
     },
+    "notificationAdmin": {
+      "title": "User Notifications",
+      "reload": "Reload",
+      "recordsCount": "{{count}} records",
+      "searchPlaceholder": "Search title, body, userId...",
+      "allTypes": "All types",
+      "allStatuses": "All statuses",
+      "readOnly": "Read",
+      "unreadOnly": "Unread",
+      "loading": "Loading...",
+      "noRecords": "No records found.",
+      "colTime": "Time",
+      "colType": "Type",
+      "colUser": "User ID",
+      "colTitle": "Title",
+      "colStatus": "Status",
+      "confirmDelete": "Delete this notification? This cannot be undone.",
+      "deleteFailed": "Failed to delete notification.",
+      "sentBanner": "Sent to {{count}} user(s).",
+      "stats": {
+        "total": "Total sent",
+        "unread": "Unread",
+        "byType": "By type"
+      },
+      "compose": {
+        "title": "Send manual notification",
+        "targetUser": "1 user",
+        "targetRole": "By role",
+        "targetAll": "Everyone",
+        "userIdPlaceholder": "Enter user ID",
+        "titlePlaceholder": "Notification title",
+        "bodyPlaceholder": "Notification body",
+        "actionUrlPlaceholder": "Action URL (optional, e.g. /m/payment)",
+        "send": "Send",
+        "confirmSend": "Send this notification to the selected recipients?",
+        "sendFailed": "Failed to send notification.",
+        "validationRequired": "Title and body are required.",
+        "validationUserId": "User ID is required."
+      }
+    },
     "coursePricingManager": {
       "title": "Courses — Pricing & Discounts",
       "subtitle": "Basic plan and above can study any course. Free users can purchase individual courses at the price below.",
@@ -2483,6 +2523,7 @@
       "navMarketing": "Marketing",
       "navPlans": "Plans & Discounts",
       "navNotifications": "Notifications",
+      "navUserNotifications": "User Notifications",
       "navGuide": "Guide",
       "navSecurityLogs": "Security Logs",
       "adminControl": "Admin Control",

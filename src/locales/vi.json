@@ -1951,6 +1951,46 @@
         "profileUpdate": "Cập nhật hồ sơ"
       }
     },
+    "notificationAdmin": {
+      "title": "Thông báo người dùng",
+      "reload": "Tải lại",
+      "recordsCount": "{{count}} bản ghi",
+      "searchPlaceholder": "Tìm tiêu đề, nội dung, userId...",
+      "allTypes": "Tất cả loại",
+      "allStatuses": "Tất cả trạng thái",
+      "readOnly": "Đã đọc",
+      "unreadOnly": "Chưa đọc",
+      "loading": "Đang tải...",
+      "noRecords": "Không có bản ghi nào.",
+      "colTime": "Thời gian",
+      "colType": "Loại",
+      "colUser": "User ID",
+      "colTitle": "Tiêu đề",
+      "colStatus": "Trạng thái",
+      "confirmDelete": "Xóa thông báo này? Hành động không thể hoàn tác.",
+      "deleteFailed": "Xóa thông báo thất bại.",
+      "sentBanner": "Đã gửi tới {{count}} người dùng.",
+      "stats": {
+        "total": "Tổng đã gửi",
+        "unread": "Chưa đọc",
+        "byType": "Theo loại"
+      },
+      "compose": {
+        "title": "Gửi thông báo thủ công",
+        "targetUser": "1 người dùng",
+        "targetRole": "Theo vai trò",
+        "targetAll": "Tất cả",
+        "userIdPlaceholder": "Nhập user ID",
+        "titlePlaceholder": "Tiêu đề thông báo",
+        "bodyPlaceholder": "Nội dung thông báo",
+        "actionUrlPlaceholder": "URL đích (tùy chọn, vd /m/payment)",
+        "send": "Gửi",
+        "confirmSend": "Gửi thông báo này tới người nhận đã chọn?",
+        "sendFailed": "Gửi thông báo thất bại.",
+        "validationRequired": "Cần nhập tiêu đề và nội dung.",
+        "validationUserId": "Cần nhập User ID."
+      }
+    },
     "notificationManager": {
       "types": {
         "newLesson": "Bài học mới",
@@ -2483,6 +2523,7 @@
       "navMarketing": "Marketing",
       "navPlans": "Gói & Giảm giá",
       "navNotifications": "Thông báo",
+      "navUserNotifications": "Thông báo người dùng",
       "navGuide": "Hướng dẫn",
       "navSecurityLogs": "Security Logs",
       "adminControl": "Admin Control",

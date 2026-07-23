@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import AvatarFrame from './ui/AvatarFrame';
+import NotificationBell from './NotificationBell';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Settings, Menu, X, Trophy,
@@ -7,12 +8,23 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
+import { useNotificationStore } from '../store/useNotificationStore';
+import { useNotificationSocket } from '../hooks/useNotificationSocket';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
-  const { user, logout } = useAuth();
+  const { user, token, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { fetchNotifications, fetchUnreadCount, onSocketNotification } = useNotificationStore();
+
+  useEffect(() => {
+    if (!user) return;
+    fetchNotifications();
+    fetchUnreadCount();
+  }, [user?.id]);
+
+  useNotificationSocket(user?.id, token, onSocketNotification);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [streakFrame, setStreakFrame] = useState(() => {
     try { return localStorage.getItem('mchub_streak_frame') || 'NONE'; } catch { return 'NONE'; }
@@ -156,6 +168,7 @@ const Navbar = () => {
                       Free
                     </span>
                   )}
+                  <NotificationBell isDark={isDark} />
                   <Link
                     data-tour="tour-settings"
                     data-quest="quest-settings-nav"

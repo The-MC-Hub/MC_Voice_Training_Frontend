@@ -23,6 +23,7 @@ import NotificationManager from "./admin/sections/NotificationManager";
 import AdminGuide from "./admin/sections/AdminGuide";
 import CoursePricingManager from "./admin/sections/CoursePricingManager";
 import SecurityLogs from "./admin/sections/SecurityLogs";
+import NotificationAdmin from "./admin/sections/NotificationAdmin";
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
@@ -39,6 +40,7 @@ const AdminDashboard = () => {
     { id: "marketing", label: t('admin.dashboard.navMarketing'), icon: Megaphone },
     { id: "plans", label: t('admin.dashboard.navPlans'), icon: Package },
     { id: "notifications", label: t('admin.dashboard.navNotifications'), icon: Bell },
+    { id: "user-notifications", label: t('admin.dashboard.navUserNotifications'), icon: Bell },
     { id: "guide", label: t('admin.dashboard.navGuide'), icon: HelpCircle },
     { id: "security-logs", label: t('admin.dashboard.navSecurityLogs'), icon: Shield },
   ];
@@ -246,6 +248,7 @@ const AdminDashboard = () => {
               {resolvedSection === "marketing" && <MarketingManager />}
               {resolvedSection === "plans" && <PlanManager />}
               {resolvedSection === "notifications" && <NotificationManager />}
+              {resolvedSection === "user-notifications" && <NotificationAdmin />}
               {resolvedSection === "guide" && <AdminGuide />}
               {resolvedSection === "security-logs" && <SecurityLogs />}
             </div>
