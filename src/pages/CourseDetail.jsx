@@ -6,7 +6,8 @@ import {
   ArrowLeft, Clock, Layers, FileText, HelpCircle,
   CheckCircle2, ChevronRight, BookOpen, Mic, Award,
   ShieldCheck, ChevronLeft, Trophy, AlertCircle,
-  Users, Target, GraduationCap, Star, Play, Lock, Map
+  Users, Target, GraduationCap, Star, Play, Lock, Map,
+  Video, Puzzle, Film, TrendingUp
 } from 'lucide-react';
 import { academyService } from '../services/academyService';
 import { trackCourseDetailView, trackCourseEnrollClick, trackLessonStart } from '@/utils/analytics';
@@ -16,6 +17,12 @@ import Breadcrumb from '../components/ui/Breadcrumb';
 import { Card } from '@/components/ui/card';
 import CertificateModal from '../components/CertificateModal';
 import { Button } from '@/components/animate-ui/components/buttons/button';
+import celebrate from '../utils/celebrate';
+import { toast } from 'sonner';
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle,
+} from '@/components/animate-ui/components/radix/dialog';
+import CourseProgressTab from '../components/courses/CourseProgressTab';
 
 const DIFFICULTY_MAP = {
   BEGINNER:     { labelKey: 'courses.difficultyBeginner',     color: 'text-emerald-400 border-emerald-500/20 bg-emerald-500/[0.06]' },
@@ -49,19 +56,37 @@ const nodeVisual = (item, isCurrent) => {
     circle: 'bg-emerald-500 border-emerald-600 text-white shadow-[0_4px_0_0_#059669]',
     icon: <CheckCircle2 size={24} />,
   };
-  if (isCurrent) return {
-    circle: 'bg-[#f5a623] border-[#e09520] text-black shadow-[0_4px_0_0_#b97a10]',
-    icon: item.type === 'quiz' ? <Trophy size={24} /> : <Play size={24} className="ml-0.5" />,
+  if (isCurrent) {
+    const currentIcons = {
+      quiz: <Trophy size={24} />,
+      video: <Video size={24} />,
+      exercise: <Puzzle size={24} />,
+      case_study: <Film size={24} />,
+    };
+    return {
+      circle: 'bg-[#f5a623] border-[#e09520] text-black shadow-[0_4px_0_0_#b97a10]',
+      icon: currentIcons[item.type] || <Play size={24} className="ml-0.5" />,
+    };
+  }
+  const pendingIcons = {
+    quiz: <Trophy size={22} />,
+    reading: <BookOpen size={22} />,
+    video: <Video size={22} />,
+    exercise: <Puzzle size={22} />,
+    case_study: <Film size={22} />,
   };
   return {
     circle: 'bg-[#1f1f23] border-white/[0.08] text-zinc-500 shadow-[0_4px_0_0_rgba(0,0,0,0.4)]',
-    icon: item.type === 'quiz' ? <Trophy size={22} /> : item.type === 'reading' ? <BookOpen size={22} /> : <Mic size={22} />,
+    icon: pendingIcons[item.type] || <Mic size={22} />,
   };
 };
 
 const typeMeta = (item, t) => {
-  if (item.type === 'quiz')    return { label: t('courses.pathQuizLabel'), sub: t('courses.pathQuizSub'), color: 'text-purple-400' };
-  if (item.type === 'reading') return { label: t('courses.pathReadingLabel'), sub: t('courses.pathReadingSub'), color: 'text-sky-400' };
+  if (item.type === 'quiz')       return { label: t('courses.pathQuizLabel'), sub: t('courses.pathQuizSub'), color: 'text-purple-400' };
+  if (item.type === 'reading')    return { label: t('courses.pathReadingLabel'), sub: t('courses.pathReadingSub'), color: 'text-sky-400' };
+  if (item.type === 'video')      return { label: t('courses.pathVideoLabel'), sub: t('courses.pathVideoSub'), color: 'text-red-400' };
+  if (item.type === 'exercise')   return { label: t('courses.pathExerciseLabel'), sub: t('courses.pathExerciseSub'), color: 'text-emerald-400' };
+  if (item.type === 'case_study') return { label: t('courses.pathCaseStudyLabel'), sub: t('courses.pathCaseStudySub'), color: 'text-indigo-400' };
   return { label: t('courses.pathLessonLabel'), sub: t('courses.pathLessonSub'), color: 'text-[#f5a623]' };
 };
 
@@ -212,7 +237,10 @@ const PathMap = ({ items, onOpen }) => {
             )}
 
             <motion.button
+              layout
               whileHover={{ scale: 1.07 }} whileTap={{ scale: 0.95, y: 2 }}
+              animate={item.done ? { scale: [1, 1.25, 1] } : {}}
+              transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
               onClick={() => onOpen(item)}
               {...(i === 0 ? { 'data-quest': 'quest-first-lesson-reading' } : {})}
               className={`relative w-16 h-16 rounded-full border-2 flex items-center justify-center transition-colors ${v.circle}`}
@@ -224,13 +252,18 @@ const PathMap = ({ items, onOpen }) => {
               {v.icon}
             </motion.button>
 
-            {/* label card */}
+            {/* label card — side placement from sm: up, compact centered label below node on mobile */}
             <div className={`absolute top-1/2 -translate-y-1/2 w-44 ${onLeft ? 'right-full mr-4 text-right' : 'left-full ml-4'} hidden sm:block`}>
               <p className={`text-[12px] font-semibold leading-snug line-clamp-2 ${item.done ? 'text-emerald-600' : isCurrent ? 'text-gray-900' : 'text-gray-500'}`}>
                 {item.title}
               </p>
               <p className={`text-[10px] mt-0.5 ${meta.color}`}>{meta.label}</p>
               <p className="text-[10px] text-gray-400">{item.done ? t('courses.pathItemDone') : meta.sub}</p>
+            </div>
+            <div className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 w-24 text-center sm:hidden">
+              <p className={`text-[10px] font-semibold leading-tight line-clamp-2 ${item.done ? 'text-emerald-600' : isCurrent ? 'text-gray-900' : 'text-gray-500'}`}>
+                {item.title}
+              </p>
             </div>
           </div>
         );
@@ -243,7 +276,7 @@ const PathMap = ({ items, onOpen }) => {
 
 const OPTION_LABELS = ['A', 'B', 'C', 'D'];
 
-const QuizTab = ({ questions, courseId }) => {
+const QuizTab = ({ questions, courseId, onCourseCompleted }) => {
   const { t } = useTranslation();
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -263,7 +296,15 @@ const QuizTab = ({ questions, courseId }) => {
     try {
       const answerArray = Array.from({ length: total }, (_, i) => answers[i] ?? 0);
       const res = await academyService.submitQuiz(courseId, answerArray);
-      setResult(res.data?.data || res.data);
+      const data = res.data?.data || res.data;
+      setResult(data);
+      if (data?.courseCompletedNow) {
+        celebrate(t('courses.courseCompletedCelebrate'));
+        const xpMsg = data.xpEarned ? t('courses.xpRewardMsg', { xp: data.xpEarned }) : '';
+        const voucherMsg = data.voucherCode ? ` · ${t('courses.voucherRewardMsg', { code: data.voucherCode, percent: 30 })}` : '';
+        toast.success(`${t('courses.courseCompletedToast')} ${xpMsg}${voucherMsg}`, { duration: 6000 });
+        onCourseCompleted?.();
+      }
     } catch (err) { console.error('Quiz submit error:', err); }
     finally { setSubmitting(false); }
   };
@@ -276,6 +317,16 @@ const QuizTab = ({ questions, courseId }) => {
 
     return (
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
+        {result.courseCompletedNow && (
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+            className="p-6 rounded-md bg-gradient-to-br from-[#f5a623]/[0.1] to-purple-500/[0.06] border border-[#f5a623]/30 text-center space-y-2">
+            <p className="text-[13px] font-bold text-[#f5a623]">{t('courses.courseCompletedTitle')}</p>
+            <div className="flex items-center justify-center gap-4 text-[12px] text-zinc-400 flex-wrap">
+              {result.xpEarned && <span>{t('courses.xpRewardMsg', { xp: result.xpEarned })}</span>}
+              {result.voucherCode && <span>{t('courses.voucherRewardMsg', { code: result.voucherCode, percent: 30 })}</span>}
+            </div>
+          </motion.div>
+        )}
         {certificateEarned && (
           <Card className="p-6 rounded-md bg-[#f5a623]/[0.06] border border-[#f5a623]/20 text-center space-y-3 gap-0 shadow-none">
             <div className="w-12 h-12 mx-auto rounded-md bg-[#f5a623] flex items-center justify-center">
@@ -376,6 +427,104 @@ const QuizTab = ({ questions, courseId }) => {
   );
 };
 
+/* ─────────────────────────── Video dialog ─────────────────────────── */
+
+const VideoDialog = ({ item, onClose }) => (
+  <Dialog open={!!item} onOpenChange={(open) => { if (!open) onClose(); }}>
+    <DialogContent className="max-w-2xl bg-[#111113] border border-white/[0.07]">
+      <DialogHeader>
+        <DialogTitle className="text-white">{item?.title}</DialogTitle>
+      </DialogHeader>
+      {item?.videoUrl && (
+        <video src={item.videoUrl} controls autoPlay className="w-full rounded-md aspect-video bg-black" />
+      )}
+    </DialogContent>
+  </Dialog>
+);
+
+/* ─────────────────────────── Exercise panel ─────────────────────────── */
+
+const ExercisePanel = ({ item, courseId, onClose, onCompleted }) => {
+  const { t } = useTranslation();
+  const [exercise, setExercise] = useState(null);
+  const [selection, setSelection] = useState([]);
+  const [result, setResult] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!item) return;
+    setResult(null);
+    setSelection([]);
+    // exercise summary (with displayOptions) is already embedded in course.exercises; item carries id/prompt only,
+    // so re-find it from the parent's course.exercises list passed via item.displayOptions if present
+    setExercise(item);
+  }, [item]);
+
+  if (!item) return null;
+
+  const options = exercise?.displayOptions || [];
+  const toggleOption = (opt) => {
+    if (result) return;
+    setSelection(prev => prev.includes(opt) ? prev.filter(o => o !== opt) : [...prev, opt]);
+  };
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    try {
+      const res = await academyService.completeExercise(courseId, item.id, selection);
+      const data = res.data?.data || res.data;
+      setResult(data);
+      if (data?.correct) onCompleted?.();
+    } catch (err) { console.error('Exercise submit error:', err); }
+    finally { setSubmitting(false); }
+  };
+
+  return (
+    <Dialog open={!!item} onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent className="max-w-lg bg-[#111113] border border-white/[0.07]">
+        <DialogHeader>
+          <DialogTitle className="text-white flex items-center gap-2"><Puzzle size={16} className="text-emerald-400" /> {t('courses.exerciseDialogTitle')}</DialogTitle>
+        </DialogHeader>
+        <p className="text-[13px] text-zinc-400">{item.title}</p>
+        <div className="flex flex-wrap gap-2 mt-2">
+          {options.map((opt, i) => {
+            const idx = selection.indexOf(opt);
+            const selected = idx !== -1;
+            return (
+              <button key={i} onClick={() => toggleOption(opt)} disabled={!!result}
+                className={`px-3 py-2 rounded-md border text-[12px] transition-colors ${selected ? 'bg-[#f5a623]/[0.1] border-[#f5a623]/40 text-[#f5a623]' : 'border-white/[0.08] text-zinc-400 hover:border-white/[0.16]'}`}>
+                {selected && <span className="mr-1 text-[10px]">{idx + 1}.</span>}{opt}
+              </button>
+            );
+          })}
+        </div>
+        {result && (
+          <div className={`p-3 rounded-md border text-[12px] ${result.correct ? 'bg-emerald-500/[0.06] border-emerald-500/20 text-emerald-400' : 'bg-red-500/[0.06] border-red-500/20 text-red-400'}`}>
+            {result.correct ? t('courses.exerciseCorrect') : t('courses.exerciseIncorrect')}
+            {result.explanation && <p className="mt-1 text-zinc-400">{result.explanation}</p>}
+          </div>
+        )}
+        {!result ? (
+          <button onClick={handleSubmit} disabled={selection.length === 0 || submitting}
+            className="w-full py-2.5 rounded-md bg-[#f5a623] text-black text-[12px] font-semibold hover:bg-[#e09520] transition-colors disabled:opacity-40">
+            {submitting ? t('courses.exerciseGrading') : t('courses.exerciseSubmit')}
+          </button>
+        ) : !result.correct ? (
+          <button onClick={() => { setResult(null); setSelection([]); }}
+            className="w-full py-2.5 rounded-md border border-white/[0.07] text-zinc-400 hover:text-white text-[12px] font-medium transition-colors">
+            {t('courses.exerciseRetry')}
+          </button>
+        ) : (
+          <button onClick={onClose}
+            className="w-full py-2.5 rounded-md bg-emerald-500 text-black text-[12px] font-semibold hover:bg-emerald-400 transition-colors">
+            {t('courses.close')}
+          </button>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 /* ─────────────────────────── Page ─────────────────────────── */
 
 const CourseDetail = () => {
@@ -388,6 +537,8 @@ const CourseDetail = () => {
   const [enrolling, setEnrolling] = useState(false);
   const [showCert, setShowCert] = useState(false);
   const [buying, setBuying] = useState(false);
+  const [videoItem, setVideoItem] = useState(null);
+  const [exerciseItem, setExerciseItem] = useState(null);
   const { user } = useAuthStore();
 
   const fetchCourse = () => {
@@ -412,18 +563,29 @@ const CourseDetail = () => {
     finally { setEnrolling(false); }
   };
 
-  // Interleave readings + lessons into a single sequential path, quiz as final node
+  // Interleave readings + lessons + videos + exercises + case studies into a single sequential path, quiz as final node
   const pathItems = useMemo(() => {
     if (!course) return [];
     const lessons = course.lessons || [];
     const readings = course.readings || [];
+    const exercises = course.exercises || [];
+    const caseStudies = course.caseStudies || [];
     const doneL = new Set(course.myProgress?.completedLessonIds || []);
     const doneR = new Set(course.myProgress?.completedReadingIds || []);
+    const doneE = new Set(course.myProgress?.completedExerciseIds || []);
     const items = [];
     const maxLen = Math.max(lessons.length, readings.length);
     for (let i = 0; i < maxLen; i++) {
       if (readings[i]) items.push({ key: `r-${readings[i].id}`, type: 'reading', title: readings[i].title, id: readings[i].id, done: doneR.has(readings[i].id) });
-      if (lessons[i])  items.push({ key: `l-${lessons[i].id}`,  type: 'lesson',  title: lessons[i].title,  id: lessons[i].id,  done: doneL.has(lessons[i].id) });
+      if (lessons[i]) {
+        items.push({ key: `l-${lessons[i].id}`, type: 'lesson', title: lessons[i].title, id: lessons[i].id, done: doneL.has(lessons[i].id) });
+        if (lessons[i].videoUrl) {
+          items.push({ key: `v-${lessons[i].id}`, type: 'video', title: `Video: ${lessons[i].title}`, id: lessons[i].id, videoUrl: lessons[i].videoUrl, done: doneL.has(lessons[i].id) });
+        }
+      }
+      // Sprinkle exercises/case studies evenly through the path
+      if (exercises[i]) items.push({ key: `ex-${exercises[i].id}`, type: 'exercise', title: exercises[i].prompt || t('courses.exerciseFallbackTitle'), id: exercises[i].id, done: doneE.has(exercises[i].id) });
+      if (caseStudies[i]) items.push({ key: `cs-${caseStudies[i].id}`, type: 'case_study', title: caseStudies[i].title, id: caseStudies[i].id, done: false });
     }
     if ((course.quizQuestions || []).length > 0) {
       items.push({ key: 'quiz', type: 'quiz', title: t('courses.finalQuizAndCert'), done: !!course.myProgress?.isCompleted });
@@ -465,6 +627,12 @@ const CourseDetail = () => {
       trackLessonStart(item.id, item.type);
       navigate(`/m/learning/guide/${item.id}?courseId=${id}`);
     }
+    if (item.type === 'video') setVideoItem(item);
+    if (item.type === 'exercise') {
+      const full = (course.exercises || []).find(ex => ex.id === item.id);
+      setExerciseItem(full ? { ...item, displayOptions: full.displayOptions } : item);
+    }
+    if (item.type === 'case_study') navigate(`/m/learning/case-study/${item.id}?courseId=${id}`);
     if (item.type === 'quiz')    setActiveTab('quiz');
   };
 
@@ -603,12 +771,23 @@ const CourseDetail = () => {
         </div>
       </Card>
 
-      {/* ── Lộ trình học (quiz mở inline từ node cuối) ── */}
+      {/* ── Lộ trình học / Tiến độ / Quiz ── */}
       <Card className="bg-[#111113] border border-white/[0.07] rounded-md overflow-hidden gap-0 shadow-none py-0">
         <div className="flex items-center justify-between border-b border-white/[0.07] px-5 py-4">
-          <div className="flex items-center gap-1.5 text-[12px] font-medium text-[#f5a623]">
-            {activeTab === 'quiz' ? <HelpCircle size={13} /> : <Map size={13} />}
-            <span>{activeTab === 'quiz' ? t('courses.finalQuiz') : t('courses.learningPath')}</span>
+          <div className="flex items-center gap-1">
+            <button onClick={() => setActiveTab('path')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-medium transition-colors ${activeTab === 'path' ? 'bg-[#f5a623]/[0.1] text-[#f5a623]' : 'text-zinc-500 hover:text-white'}`}>
+              <Map size={13} /> {t('courses.learningPath')}
+            </button>
+            <button onClick={() => setActiveTab('progress')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-medium transition-colors ${activeTab === 'progress' ? 'bg-[#f5a623]/[0.1] text-[#f5a623]' : 'text-zinc-500 hover:text-white'}`}>
+              <TrendingUp size={13} /> {t('courses.progressTab')}
+            </button>
+            {activeTab === 'quiz' && (
+              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-medium bg-[#f5a623]/[0.1] text-[#f5a623]">
+                <HelpCircle size={13} /> {t('courses.finalQuiz')}
+              </span>
+            )}
           </div>
           {activeTab === 'quiz' && (
             <Button onClick={() => setActiveTab('path')}
@@ -621,7 +800,8 @@ const CourseDetail = () => {
           <AnimatePresence mode="wait">
             <motion.div key={activeTab} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
               {activeTab === 'path' && <PathMap items={pathItems} onOpen={handleOpen} />}
-              {activeTab === 'quiz' && <QuizTab questions={course.quizQuestions} courseId={id} />}
+              {activeTab === 'quiz' && <QuizTab questions={course.quizQuestions} courseId={id} onCourseCompleted={fetchCourse} />}
+              {activeTab === 'progress' && <CourseProgressTab courseId={id} />}
             </motion.div>
           </AnimatePresence>
         </div>
@@ -634,6 +814,14 @@ const CourseDetail = () => {
         courseTitle={course.title}
         courseId={id}
         isCompleted={isCompleted}
+      />
+
+      <VideoDialog item={videoItem} onClose={() => setVideoItem(null)} />
+      <ExercisePanel
+        item={exerciseItem}
+        courseId={id}
+        onClose={() => setExerciseItem(null)}
+        onCompleted={fetchCourse}
       />
     </div>
   );
