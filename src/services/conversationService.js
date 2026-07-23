@@ -20,7 +20,7 @@ export const getConversationById = async (conversationId) => {
 
 export const markConversationAsRead = async (conversationId) => {
   const response = await api.patch(`/chat/conversations/${conversationId}/read`);
-  return response.data;
+  return response.data.data;
 };
 
 
