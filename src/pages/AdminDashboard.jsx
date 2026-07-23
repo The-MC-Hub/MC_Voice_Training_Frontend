@@ -6,7 +6,7 @@ import { useAdminData } from "../hooks/useAdminData";
 import {
   Users, ShieldCheck, BookOpen, LayoutGrid, CreditCard,
   BarChart2, Award, Trophy, Settings, Terminal, LogOut, Megaphone, Package, Bell, HelpCircle, GraduationCap, Shield,
-  Menu, X,
+  Menu, X, Calendar,
 } from "lucide-react";
 
 import DashboardSection, { DASHBOARD_NAV } from "./admin/sections/DashboardSection";
@@ -24,6 +24,7 @@ import AdminGuide from "./admin/sections/AdminGuide";
 import CoursePricingManager from "./admin/sections/CoursePricingManager";
 import SecurityLogs from "./admin/sections/SecurityLogs";
 import NotificationAdmin from "./admin/sections/NotificationAdmin";
+import BookingManagement from "./admin/sections/BookingManagement";
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
@@ -33,6 +34,7 @@ const AdminDashboard = () => {
     { id: "users", label: t('admin.dashboard.navUsers'), icon: Users },
     { id: "lessons", label: t('admin.dashboard.navLessons'), icon: BookOpen },
     { id: "transactions", label: t('admin.dashboard.navTransactions'), icon: CreditCard },
+    { id: "bookings", label: "Bookings", icon: Calendar },
     { id: "academy", label: t('admin.dashboard.navAcademy'), icon: Award },
     { id: "courses", label: t('admin.dashboard.navCourses'), icon: GraduationCap },
     { id: "competitions", label: t('admin.dashboard.navCompetitions'), icon: Trophy },
@@ -51,7 +53,7 @@ const AdminDashboard = () => {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   const {
-    users, transactions, revenueStats, dashStats, analytics, growthAnalytics,
+    users, transactions, revenueStats, dashStats, analytics, growthAnalytics, bookings,
     loading: adminLoading, refetch: refetchAll,
   } = useAdminData();
 
@@ -242,6 +244,7 @@ const AdminDashboard = () => {
               {resolvedSection === "users" && <UserManagement users={users} handleVerify={handleVerify} handleSuspend={handleSuspend} onRefresh={refetchAll} />}
               {resolvedSection === "lessons" && <LessonManagement />}
               {resolvedSection === "transactions" && <TransactionManagement transactions={transactions} revenueStats={revenueStats} onRefresh={refetchAll} />}
+              {resolvedSection === "bookings" && <BookingManagement bookings={bookings} />}
               {resolvedSection === "academy" && <AcademyManager />}
               {resolvedSection === "courses" && <CoursePricingManager />}
               {resolvedSection === "competitions" && <CompetitionManager />}
