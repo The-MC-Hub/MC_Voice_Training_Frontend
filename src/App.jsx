@@ -40,7 +40,15 @@ const LeaderboardPage = lazy(() => import('./pages/LeaderboardPage'));
 const PaymentPage = lazy(() => import('./pages/PaymentPage'));
 const CoursesList = lazy(() => import('./pages/CoursesList'));
 const CourseDetail = lazy(() => import('./pages/CourseDetail'));
+const Learning = lazy(() => import('./pages/Learning'));
+const CaseStudyView = lazy(() => import('./pages/CaseStudyView'));
+const PeerReview = lazy(() => import('./pages/PeerReview'));
 const ReadingView = lazy(() => import('./pages/ReadingView'));
+const Search = lazy(() => import('./pages/Search'));
+const MCProfilePublic = lazy(() => import('./pages/MCProfilePublic'));
+const Booking = lazy(() => import('./pages/Booking'));
+const BookingList = lazy(() => import('./pages/BookingList'));
+const Messaging = lazy(() => import('./pages/Messaging'));
 
 
 const GuestRoute = ({ children }) => {
@@ -129,6 +137,11 @@ function App() {
                 />
                 <Route path="settings" element={<ProtectedRoute><Wrap><Settings /></Wrap></ProtectedRoute>} />
                 <Route path="payment" element={<ProtectedRoute><Wrap><PaymentPage /></Wrap></ProtectedRoute>} />
+                <Route path="search" element={<ProtectedRoute><Wrap><Search /></Wrap></ProtectedRoute>} />
+                <Route path="mc/:id" element={<ProtectedRoute><Wrap><MCProfilePublic /></Wrap></ProtectedRoute>} />
+                <Route path="booking" element={<RoleRoute allowedRoles={['client']}><Wrap><Booking /></Wrap></RoleRoute>} />
+                <Route path="bookings" element={<ProtectedRoute><Wrap><BookingList /></Wrap></ProtectedRoute>} />
+                <Route path="messaging" element={<ProtectedRoute><Wrap><Messaging /></Wrap></ProtectedRoute>} />
 
 
 
@@ -139,12 +152,13 @@ function App() {
 
                 <Route path="voice/library" element={<Wrap><VoiceLibrary /></Wrap>} />
 
-                <Route path="learning" element={<Wrap><ComingSoon title="Lộ trình học tập" description="Lộ trình luyện tập MC theo từng cấp độ đang được phát triển. Sẽ ra mắt sớm." /></Wrap>} />
-                <Route path="learning/milestone/:id" element={<Wrap><ComingSoon title="Lộ trình học tập" description="Lộ trình luyện tập MC theo từng cấp độ đang được phát triển. Sẽ ra mắt sớm." /></Wrap>} />
+                <Route path="learning" element={<ProtectedRoute><Wrap><Learning /></Wrap></ProtectedRoute>} />
+                <Route path="learning/milestone/:id" element={<Navigate to="/m/learning" replace />} />
                 <Route path="community" element={<Wrap><Community /></Wrap>} />
                 <Route path="leaderboard" element={<ProtectedRoute><Wrap><LeaderboardPage /></Wrap></ProtectedRoute>} />
                 <Route path="courses" element={<ProtectedRoute><Wrap><CoursesList /></Wrap></ProtectedRoute>} />
                 <Route path="courses/:id" element={<ProtectedRoute><Wrap><CourseDetail /></Wrap></ProtectedRoute>} />
+                <Route path="peer-review" element={<RoleRoute allowedRoles={['mc']}><Wrap><PeerReview /></Wrap></RoleRoute>} />
               </Route>
 
               {/* Full-screen views (outside MainLayout — no Navbar/Footer) */}
@@ -153,6 +167,7 @@ function App() {
               <Route path="/m/voice/practice/:id" element={<Wrap><VoicePractice /></Wrap>} />
               <Route path="/m/voice/report/:sessionId" element={<ProtectedRoute><Wrap><VoiceReport /></Wrap></ProtectedRoute>} />
               <Route path="/m/learning/guide/:id" element={<ProtectedRoute><Wrap><ReadingView /></Wrap></ProtectedRoute>} />
+              <Route path="/m/learning/case-study/:id" element={<ProtectedRoute><Wrap><CaseStudyView /></Wrap></ProtectedRoute>} />
 
               <Route path="/payment/success" element={<ProtectedRoute><Wrap><PaymentResult /></Wrap></ProtectedRoute>} />
               <Route path="/payment/cancel" element={<ProtectedRoute><Wrap><PaymentResult /></Wrap></ProtectedRoute>} />

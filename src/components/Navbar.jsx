@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
 import { useNotificationStore } from '../store/useNotificationStore';
-import { useNotificationSocket } from '../hooks/useNotificationSocket';
+import { useAppSocket } from '../hooks/useAppSocket';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
@@ -24,7 +24,7 @@ const Navbar = () => {
     fetchUnreadCount();
   }, [user?.id]);
 
-  useNotificationSocket(user?.id, token, onSocketNotification);
+  useAppSocket(user?.id, token, { onNotification: onSocketNotification });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [streakFrame, setStreakFrame] = useState(() => {
     try { return localStorage.getItem('mchub_streak_frame') || 'NONE'; } catch { return 'NONE'; }
@@ -41,6 +41,7 @@ const Navbar = () => {
 
   const isAuthenticated = !!user;
   const isAdminUser = user && (user.role || '').toLowerCase() === 'admin';
+  const isMc = user && (user.role || '').toLowerCase() === 'mc';
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -110,12 +111,23 @@ const Navbar = () => {
                 <span data-tour="tour-dashboard"><NavLink to="/m/dashboard">{t('navbar.dashboard')}</NavLink></span>
                 <span data-tour="tour-training" data-quest="quest-training-nav"><NavLink to="/m/voice/library">{t('navbar.training')}</NavLink></span>
                 <span data-tour="tour-courses" data-quest="quest-courses-nav"><NavLink to="/m/courses">{t('navbar.courses')}</NavLink></span>
+                <NavLink to="/m/learning">{t('navbar.learningPath')}</NavLink>
                 <NavLink to="/m/leaderboard">
                   <span className="flex items-center gap-1" data-quest="quest-leaderboard-nav">
 
                     Xếp hạng
                   </span>
                 </NavLink>
+                <NavLink to="/m/bookings">
+                  {(user?.role || '').toLowerCase() === 'mc' ? 'Yêu cầu' : 'Booking'}
+                </NavLink>
+                <NavLink to="/m/messaging">Tin nhắn</NavLink>
+                {(user?.role || '').toLowerCase() === 'client' && (
+                  <NavLink to="/m/search">Tìm MC</NavLink>
+                )}
+                {(user?.role || '').toLowerCase() === 'mc' && (
+                  <NavLink to="/m/peer-review">{t('navbar.peerReview')}</NavLink>
+                )}
                 <Link
                   data-tour="tour-pricing"
                   to="/m/payment"
@@ -226,7 +238,16 @@ const Navbar = () => {
                     <MobileNavLink to="/m/dashboard" label={t('navbar.dashboard')} active={isActive('/m/dashboard')} />
                     <MobileNavLink to="/m/voice/library" label={t('navbar.training')} active={isActive('/m/voice')} />
                     <MobileNavLink to="/m/courses" label={t('navbar.courses')} active={isActive('/m/courses')} />
+                    <MobileNavLink to="/m/learning" label={t('navbar.learningPath')} active={isActive('/m/learning')} />
                     <MobileNavLink to="/m/leaderboard" label="🏆 Xếp hạng" active={isActive('/m/leaderboard')} />
+                    <MobileNavLink to="/m/bookings" label={isMc ? 'Yêu cầu' : 'Booking'} active={isActive('/m/bookings')} />
+                    <MobileNavLink to="/m/messaging" label="Tin nhắn" active={isActive('/m/messaging')} />
+                    {(user?.role || '').toLowerCase() === 'client' && (
+                      <MobileNavLink to="/m/search" label="Tìm MC" active={isActive('/m/search')} />
+                    )}
+                    {isMc && (
+                      <MobileNavLink to="/m/peer-review" label={t('navbar.peerReview')} active={isActive('/m/peer-review')} />
+                    )}
                     <MobileNavLink to="/m/payment" label={t('navbar.pricing')} active={isActive('/m/payment')} />
                   </>
                 )}
