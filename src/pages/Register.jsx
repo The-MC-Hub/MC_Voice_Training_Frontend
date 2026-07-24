@@ -5,6 +5,7 @@ import {
   Mail, Lock, User, Phone, ShieldCheck, ArrowRight,
   Eye, EyeOff, CheckCircle2, Mic, Zap, BarChart3, Award, RefreshCw,
   BookOpen, Star, Crown, Gift, Sparkles, Heart, Briefcase,
+  Search, Calendar, CreditCard, MessageCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuthStore } from "../store/useAuthStore";
@@ -17,45 +18,68 @@ import GoogleSignInButton from "@/components/auth/GoogleSignInButton";
 import GoogleRoleSelectModal from "@/components/auth/GoogleRoleSelectModal";
 const ROLE_REDIRECT = { admin: "/m/dashboard", mc: "/m/dashboard", client: "/m/dashboard" };
 
-const SLIDE_FEATURES = [
+const SLIDE_FEATURES_MC = [
   { icon: Mic,      title: "AI phân tích giọng nói",   desc: "5 tiêu chí: phát âm, nhịp điệu, tốc độ, độ rõ ràng, cảm xúc" },
   { icon: BarChart3,title: "Theo dõi tiến trình",       desc: "Biểu đồ điểm số theo thời gian, streak luyện tập hàng ngày" },
   { icon: Award,    title: "50+ kịch bản MC",           desc: "Đám cưới, sự kiện doanh nghiệp, talkshow, lễ tốt nghiệp" },
   { icon: BookOpen, title: "Lộ trình học cá nhân",      desc: "AI gợi ý bài học phù hợp trình độ và mục tiêu của bạn" },
 ];
 
-const SLIDE_PLANS = [
+const SLIDE_PLANS_MC = [
   { icon: Star,  tier: "FREE",  price: "Miễn phí",   perks: ["5 AI sessions", "10 bài học cơ bản"], badge: null },
   { icon: Zap,   tier: "BASIC", price: "199k/tháng", perks: ["20 AI sessions/tháng", "50+ bài học"], badge: "Phổ biến" },
   { icon: Crown, tier: "FULL",  price: "299k/tháng", perks: ["AI không giới hạn", "Toàn bộ tính năng"], badge: null },
 ];
 
-const SLIDE_TESTIMONIALS = [
+const SLIDE_TESTIMONIALS_MC = [
   { quote: "Điểm phát âm tăng từ 64 lên 91 chỉ sau 2 tuần.", name: "Nguyễn Minh Khoa", role: "MC Đám cưới" },
   { quote: "Phân tích nhịp điệu rất chính xác, giúp tôi tự tin dẫn chương trình hơn.", name: "Trần Bảo Châu", role: "MC TV" },
   { quote: "Luyện lúc 11 giờ đêm mà không cần ai chấm điểm.", name: "Lê Đức Anh", role: "MC Doanh nghiệp" },
 ];
 
-const SLIDES = [
+const SLIDE_FEATURES_CLIENT = [
+  { icon: Search,       title: "Tìm MC theo nhu cầu",      desc: "Lọc theo thể loại sự kiện, khu vực, ngân sách và phong cách" },
+  { icon: Calendar,     title: "Đặt lịch dễ dàng",          desc: "Xem lịch rảnh, gửi yêu cầu và xác nhận booking trong vài phút" },
+  { icon: Star,         title: "Đánh giá minh bạch",        desc: "Xếp hạng, nhận xét từ khách hàng trước giúp bạn chọn đúng MC" },
+];
+
+const SLIDE_TESTIMONIALS_CLIENT = [
+  { quote: "Tìm được MC ưng ý cho đám cưới chỉ trong 2 ngày. Rất tiện lợi!", name: "Hoàng Thu Thảo", role: "Cô dâu" },
+  { quote: "Đặt MC cho hội nghị công ty, quy trình nhanh gọn, MC chuyên nghiệp.", name: "Phạm Quốc Bảo", role: "Event Manager" },
+  { quote: "Review chân thực giúp tôi yên tâm chọn MC, không lo giá ảo.", name: "Vũ Minh Trang", role: "Wedding Planner" },
+];
+
+const SLIDES_MC = [
   { key: "features", label: "✦ TÍNH NĂNG" },
   { key: "pricing",  label: "✦ BẢNG GIÁ" },
   { key: "reviews",  label: "✦ ĐÁNH GIÁ" },
 ];
 
-const RightPanel = () => {
+const SLIDES_CLIENT = [
+  { key: "features", label: "✦ TÌM MC" },
+  { key: "booking",  label: "✦ ĐẶT LỊCH" },
+  { key: "reviews",  label: "✦ ĐÁNH GIÁ" },
+];
+
+const RightPanel = ({ role }) => {
+  const isMC = role === "MC";
+  const SLIDES = isMC ? SLIDES_MC : SLIDES_CLIENT;
+  const SLIDE_FEATURES = isMC ? SLIDE_FEATURES_MC : SLIDE_FEATURES_CLIENT;
+  const SLIDE_TESTIMONIALS = isMC ? SLIDE_TESTIMONIALS_MC : SLIDE_TESTIMONIALS_CLIENT;
+
   const [slideIdx, setSlideIdx] = useState(0);
   const [testimonialIdx, setTestimonialIdx] = useState(0);
 
   useEffect(() => {
     const t = setInterval(() => setSlideIdx(i => (i + 1) % SLIDES.length), 7000);
     return () => clearInterval(t);
-  }, []);
+  }, [SLIDES.length]);
 
   useEffect(() => {
-    if (slideIdx !== 2) return;
+    if (slideIdx !== (isMC ? 2 : 2)) return;
     const t = setInterval(() => setTestimonialIdx(i => (i + 1) % SLIDE_TESTIMONIALS.length), 5000);
     return () => clearInterval(t);
-  }, [slideIdx]);
+  }, [slideIdx, isMC, SLIDE_TESTIMONIALS.length]);
 
   return (
     <div className="photo-panel relative w-full h-full overflow-hidden flex flex-col justify-between p-10 lg:p-14">
@@ -85,7 +109,7 @@ const RightPanel = () => {
 
         <div className="relative min-h-[220px]">
           <AnimatePresence mode="wait">
-            {/* Slide 0 — Features */}
+                {/* Slide 0 — Features */}
             {slideIdx === 0 && (
               <motion.div
                 key="features"
@@ -109,17 +133,17 @@ const RightPanel = () => {
               </motion.div>
             )}
 
-            {/* Slide 1 — Pricing */}
+            {/* Slide 1 — Pricing (MC) / Booking (CLIENT) */}
             {slideIdx === 1 && (
               <motion.div
-                key="pricing"
+                key="slide-1"
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                 className="space-y-4"
               >
-                {SLIDE_PLANS.map((p, i) => (
+                {isMC ? SLIDE_PLANS_MC.map((p, i) => (
                   <div key={i} className="flex items-center gap-4">
                     <div className="w-8 h-8 rounded-md bg-amber-500/25 border border-amber-400/40 flex items-center justify-center shrink-0">
                       <p.icon size={15} className="text-amber-300" />
@@ -133,7 +157,37 @@ const RightPanel = () => {
                     </div>
                     <p className="text-[12px] font-semibold text-amber-400 shrink-0">{p.price}</p>
                   </div>
-                ))}
+                )) : (
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-3.5">
+                      <div className="w-8 h-8 rounded-md bg-amber-500/25 border border-amber-400/40 flex items-center justify-center shrink-0">
+                        <Calendar size={15} className="text-amber-300" />
+                      </div>
+                      <div>
+                        <p className="text-[13px] font-semibold text-white leading-none mb-1">Gửi yêu cầu booking</p>
+                        <p className="text-[11px] text-white/70 leading-relaxed">Chọn MC, chọn ngày, gửi yêu cầu — MC xác nhận trong 24h</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3.5">
+                      <div className="w-8 h-8 rounded-md bg-amber-500/25 border border-amber-400/40 flex items-center justify-center shrink-0">
+                        <CreditCard size={15} className="text-amber-300" />
+                      </div>
+                      <div>
+                        <p className="text-[13px] font-semibold text-white leading-none mb-1">Thanh toán an toàn</p>
+                        <p className="text-[11px] text-white/70 leading-relaxed">Đặt cọc online, thanh toán qua PayOS, bảo vệ cả hai bên</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3.5">
+                      <div className="w-8 h-8 rounded-md bg-amber-500/25 border border-amber-400/40 flex items-center justify-center shrink-0">
+                        <MessageCircle size={15} className="text-amber-300" />
+                      </div>
+                      <div>
+                        <p className="text-[13px] font-semibold text-white leading-none mb-1">Trao đổi trực tiếp</p>
+                        <p className="text-[11px] text-white/70 leading-relaxed">Chat với MC để thống nhất kịch bản và yêu cầu đặc biệt</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </motion.div>
             )}
 
@@ -535,7 +589,149 @@ const CoursePickScreen = ({ onPick, onSkip, submitting }) => {
   );
 };
 
-// ── Avatar options (10 icons, emoji-based) ────────────────────────────────
+// ── Role Selection Screen (KYC step) ───────────────────────────────────────
+const RoleSelectScreen = ({ onSelect }) => {
+  const [hovered, setHovered] = useState(null);
+
+  const CARDS = [
+    {
+      role: "MC",
+      icon: Mic,
+      title: "Tôi là MC",
+      desc: "Tôi muốn luyện giọng, nhận đào tạo và tìm kiếm sự kiện phù hợp",
+      features: ["Luyện giọng với AI", "Khóa học chuyên sâu", "Nhận booking từ khách hàng"],
+    },
+    {
+      role: "CLIENT",
+      icon: Search,
+      title: "Tôi cần thuê MC",
+      desc: "Tôi muốn tìm MC chuyên nghiệp cho sự kiện của mình",
+      features: ["Tìm MC theo nhu cầu", "Đặt lịch dễ dàng", "Đánh giá minh bạch"],
+    },
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="flex flex-col items-center justify-center min-h-[520px]"
+    >
+      {/* Decorative top accent */}
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="w-16 h-0.5 bg-amber-400 rounded-full mb-8 origin-left"
+      />
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        className="text-center mb-10"
+      >
+        <h1 className="text-[32px] font-bold text-gray-900 tracking-tight leading-tight mb-3">
+          Chào mừng đến với <span className="text-amber-500">MC Hub</span>
+        </h1>
+        <p className="text-[15px] text-gray-400">Bạn muốn tham gia với vai trò nào?</p>
+      </motion.div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full max-w-xl">
+        {CARDS.map((card, i) => {
+          const isHovered = hovered === card.role;
+          return (
+            <motion.button
+              key={card.role}
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 + i * 0.1, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              onMouseEnter={() => setHovered(card.role)}
+              onMouseLeave={() => setHovered(null)}
+              onClick={() => onSelect(card.role)}
+              className={`group relative flex flex-col items-center text-center p-8 rounded-xl border-2 transition-all duration-300 ${
+                isHovered
+                  ? "border-amber-400 bg-gradient-to-b from-amber-50 to-white shadow-[0_8px_32px_rgba(245,166,35,0.12)] -translate-y-0.5"
+                  : "border-gray-200 bg-white hover:border-amber-200 hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)]"
+              }`}
+            >
+              {/* Hover glow */}
+              <div className={`absolute inset-0 rounded-xl transition-opacity duration-300 ${
+                isHovered ? 'opacity-100' : 'opacity-0'
+              }`} style={{
+                background: 'radial-gradient(ellipse at 50% 0%, rgba(245,166,35,0.08) 0%, transparent 60%)',
+              }} />
+
+              {/* Icon circle */}
+              <div className={`relative w-[68px] h-[68px] rounded-2xl flex items-center justify-center mb-5 transition-all duration-300 ${
+                isHovered
+                  ? "bg-amber-500 text-white shadow-[0_8px_24px_rgba(245,166,35,0.25)] scale-110"
+                  : "bg-amber-50 text-amber-500 border border-amber-200/60"
+              }`}>
+                <card.icon size={30} />
+              </div>
+
+              {/* Title */}
+              <h3 className={`relative text-[18px] font-bold mb-2 transition-colors duration-200 ${
+                isHovered ? 'text-gray-900' : 'text-gray-800'
+              }`}>
+                {card.title}
+              </h3>
+
+              {/* Description */}
+              <p className={`relative text-[13px] leading-relaxed mb-5 transition-colors duration-200 ${
+                isHovered ? 'text-gray-500' : 'text-gray-400'
+              }`}>
+                {card.desc}
+              </p>
+
+              {/* Feature list with amber checks */}
+              <ul className="relative space-y-2 w-full">
+                {card.features.map((f, fi) => (
+                  <motion.li
+                    key={fi}
+                    initial={false}
+                    animate={isHovered ? { x: 0 } : { x: 0 }}
+                    className="flex items-center gap-2.5 text-[12px] text-left"
+                  >
+                    <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 transition-all duration-300 ${
+                      isHovered
+                        ? 'bg-amber-500 text-white'
+                        : 'bg-amber-100 text-amber-500'
+                    }`}>
+                      <CheckCircle2 size={11} />
+                    </div>
+                    <span className={isHovered ? 'text-gray-700' : 'text-gray-500'}>{f}</span>
+                  </motion.li>
+                ))}
+              </ul>
+
+              {/* Bottom arrow indicator on hover */}
+              <motion.div
+                initial={{ opacity: 0, y: 4 }}
+                animate={isHovered ? { opacity: 1, y: 0 } : { opacity: 0, y: 4 }}
+                transition={{ duration: 0.2 }}
+                className="relative mt-5 flex items-center gap-1 text-[11px] font-semibold text-amber-500 uppercase tracking-wider"
+              >
+                Chọn
+                <ArrowRight size={12} />
+              </motion.div>
+            </motion.button>
+          );
+        })}
+      </div>
+
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.3 }}
+        className="text-[11px] text-gray-400 mt-7"
+      >
+        Có thể thay đổi vai trò sau trong phần cài đặt
+      </motion.p>
+    </motion.div>
+  );
+};
 const AVATARS = [
   { id: "mic",     emoji: "🎤", label: "Mic" },
   { id: "star",    emoji: "⭐", label: "Star" },
@@ -614,10 +810,11 @@ const Register = () => {
   const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [agreed, setAgreed] = useState(false);
-  // "form" | "coursePick" | "otp" | "success"
+  // "roleSelect" | "form" | "coursePick" | "otp" | "success"
   const verifyParam = searchParams.get("verify");
-  const [step, setStep] = useState(verifyParam ? "otp" : "form");
+  const [step, setStep] = useState(verifyParam ? "otp" : "roleSelect");
   const [registeredEmail, setRegisteredEmail] = useState(verifyParam || "");
+  const [selectedRole, setSelectedRole] = useState("MC");
   const [userRole, setUserRole] = useState("");
   // Course picked during quiz — enrolled after OTP success
   const [pendingCourse, setPendingCourse] = useState(null);
@@ -652,7 +849,12 @@ const Register = () => {
     setLocalError("");
     setSubmitting(true);
     try {
-      const payload = { name: form.name, email: form.email, password: form.password, phoneNumber: form.phoneNumber, role: "MC", avatar: selectedAvatar };
+      // Send the actual emoji (not the picker's internal id) — the backend
+      // stores `avatar` as-is and the rest of the app (AvatarFrame,
+      // MCAvatar, Settings' picker) all expect either an emoji character or
+      // an image URL, never an id like "mic".
+      const avatarEmoji = AVATARS.find((av) => av.id === selectedAvatar)?.emoji;
+      const payload = { name: form.name, email: form.email, password: form.password, phoneNumber: form.phoneNumber, role: selectedRole, avatar: avatarEmoji };
       if (form.referralCode.trim()) payload.referralCode = form.referralCode.trim().toUpperCase();
       const res = await register(payload);
       trackRegisterSuccess();
@@ -708,7 +910,7 @@ const Register = () => {
     <div className="min-h-screen flex flex-row-reverse">
       {/* Right image panel (visually right, DOM last) */}
       <div className="hidden lg:block lg:w-[46%] xl:w-[48%] shrink-0 sticky top-0 h-screen">
-        <RightPanel />
+        <RightPanel role={step === "roleSelect" ? "MC" : selectedRole} />
       </div>
 
       {/* Left form panel */}
@@ -727,7 +929,9 @@ const Register = () => {
           </div>
 
           <AnimatePresence mode="wait">
-            {step === "success" ? (
+            {step === "roleSelect" ? (
+              <RoleSelectScreen onSelect={(role) => { setSelectedRole(role); setStep("form"); }} />
+            ) : step === "success" ? (
               <motion.div
                 key="success"
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -763,7 +967,15 @@ const Register = () => {
               <OtpScreen email={registeredEmail} onSuccess={handleOtpSuccess} />
             ) : (
               <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                <div className="mb-7">
+                <div className="mb-6">
+                  <button
+                    type="button"
+                    onClick={() => setStep("roleSelect")}
+                    className="flex items-center gap-1 text-[12px] text-gray-400 hover:text-gray-600 transition-colors mb-3"
+                  >
+                    <ArrowRight size={12} className="rotate-180" />
+                    Thay đổi vai trò
+                  </button>
                   <h1 className="text-[28px] font-bold text-gray-900 tracking-tight leading-tight mb-2">
                     {t('auth.createAccount')}
                   </h1>
