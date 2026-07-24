@@ -1,5 +1,6 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import ChatBubble from "../components/ChatBubble";
 import { Outlet } from "react-router-dom";
 
 const MainLayout = () => {
@@ -21,6 +22,7 @@ const MainLayout = () => {
           <Footer />
         </div>
       </main>
+      <ChatBubble />
     </div>
   );
 };

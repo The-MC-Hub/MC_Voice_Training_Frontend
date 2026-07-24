@@ -152,22 +152,22 @@ function App() {
 
                 <Route path="voice/library" element={<Wrap><VoiceLibrary /></Wrap>} />
 
-                <Route path="learning" element={<ProtectedRoute><Wrap><Learning /></Wrap></ProtectedRoute>} />
+                <Route path="learning" element={<RoleRoute allowedRoles={['mc']}><Wrap><Learning /></Wrap></RoleRoute>} />
                 <Route path="learning/milestone/:id" element={<Navigate to="/m/learning" replace />} />
                 <Route path="community" element={<Wrap><Community /></Wrap>} />
-                <Route path="leaderboard" element={<ProtectedRoute><Wrap><LeaderboardPage /></Wrap></ProtectedRoute>} />
-                <Route path="courses" element={<ProtectedRoute><Wrap><CoursesList /></Wrap></ProtectedRoute>} />
-                <Route path="courses/:id" element={<ProtectedRoute><Wrap><CourseDetail /></Wrap></ProtectedRoute>} />
+                <Route path="leaderboard" element={<RoleRoute allowedRoles={['mc']}><Wrap><LeaderboardPage /></Wrap></RoleRoute>} />
+                <Route path="courses" element={<RoleRoute allowedRoles={['mc']}><Wrap><CoursesList /></Wrap></RoleRoute>} />
+                <Route path="courses/:id" element={<RoleRoute allowedRoles={['mc']}><Wrap><CourseDetail /></Wrap></RoleRoute>} />
                 <Route path="peer-review" element={<RoleRoute allowedRoles={['mc']}><Wrap><PeerReview /></Wrap></RoleRoute>} />
               </Route>
 
               {/* Full-screen views (outside MainLayout — no Navbar/Footer) */}
               <Route path="/m/admin" element={<RoleRoute allowedRoles={['admin']}><Wrap><AdminDashboard /></Wrap></RoleRoute>} />
               <Route path="/m/admin/:section" element={<RoleRoute allowedRoles={['admin']}><Wrap><AdminDashboard /></Wrap></RoleRoute>} />
-              <Route path="/m/voice/practice/:id" element={<Wrap><VoicePractice /></Wrap>} />
-              <Route path="/m/voice/report/:sessionId" element={<ProtectedRoute><Wrap><VoiceReport /></Wrap></ProtectedRoute>} />
-              <Route path="/m/learning/guide/:id" element={<ProtectedRoute><Wrap><ReadingView /></Wrap></ProtectedRoute>} />
-              <Route path="/m/learning/case-study/:id" element={<ProtectedRoute><Wrap><CaseStudyView /></Wrap></ProtectedRoute>} />
+              <Route path="/m/voice/practice/:id" element={<RoleRoute allowedRoles={['mc']}><Wrap><VoicePractice /></Wrap></RoleRoute>} />
+              <Route path="/m/voice/report/:sessionId" element={<RoleRoute allowedRoles={['mc', 'admin']}><Wrap><VoiceReport /></Wrap></RoleRoute>} />
+              <Route path="/m/learning/guide/:id" element={<RoleRoute allowedRoles={['mc']}><Wrap><ReadingView /></Wrap></RoleRoute>} />
+              <Route path="/m/learning/case-study/:id" element={<RoleRoute allowedRoles={['mc']}><Wrap><CaseStudyView /></Wrap></RoleRoute>} />
 
               <Route path="/payment/success" element={<ProtectedRoute><Wrap><PaymentResult /></Wrap></ProtectedRoute>} />
               <Route path="/payment/cancel" element={<ProtectedRoute><Wrap><PaymentResult /></Wrap></ProtectedRoute>} />

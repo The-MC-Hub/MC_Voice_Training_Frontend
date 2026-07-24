@@ -615,34 +615,48 @@ const SampleReportCard = () => {
 
 const CARD_W = 220;
 const CARD_GAP = 12;
-const AUTO_INTERVAL = 3000;
+const AUTO_PX_PER_SEC = 40;
 
 const LessonCarousel = ({ lessons, navigate }) => {
   const scrollRef = useRef(null);
   const isPaused = useRef(false);
-  const timerRef = useRef(null);
+  const rafRef = useRef(null);
+  const lastTsRef = useRef(null);
 
   const scroll = (dir) => {
     const el = scrollRef.current;
     if (!el) return;
     const step = (CARD_W + CARD_GAP) * 2;
-    const next = el.scrollLeft + dir * step;
-    const max = el.scrollWidth - el.clientWidth;
-    // loop: if near end scroll back to start, if before start go to end
-    if (dir > 0 && next >= max - 10) {
-      el.scrollTo({ left: 0, behavior: 'smooth' });
-    } else if (dir < 0 && el.scrollLeft <= 10) {
-      el.scrollTo({ left: max, behavior: 'smooth' });
-    } else {
-      el.scrollBy({ left: dir * step, behavior: 'smooth' });
-    }
+    isPaused.current = true;
+    el.scrollBy({ left: dir * step, behavior: 'smooth' });
+    // resume continuous auto-scroll once the manual smooth-scroll settles
+    window.clearTimeout(scroll._resumeTimer);
+    scroll._resumeTimer = window.setTimeout(() => { isPaused.current = false; }, 500);
   };
 
+  // Continuous, constant-speed auto-scroll (rAF) instead of stepped interval jumps —
+  // avoids the per-card "snap" feel of scrollBy(behavior:'smooth') firing every few seconds.
   useEffect(() => {
-    timerRef.current = setInterval(() => {
-      if (!isPaused.current) scroll(1);
-    }, AUTO_INTERVAL);
-    return () => clearInterval(timerRef.current);
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const tick = (ts) => {
+      if (lastTsRef.current == null) lastTsRef.current = ts;
+      const dt = (ts - lastTsRef.current) / 1000;
+      lastTsRef.current = ts;
+
+      if (!isPaused.current) {
+        const half = el.scrollWidth / 2;
+        el.scrollLeft += AUTO_PX_PER_SEC * dt;
+        if (el.scrollLeft >= half) {
+          el.scrollLeft -= half;
+        }
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
   }, [lessons]);
 
   return (

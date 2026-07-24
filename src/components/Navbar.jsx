@@ -1,22 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import AvatarFrame from './ui/AvatarFrame';
-import NotificationBell from './NotificationBell';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import {
-  Settings, Menu, X, Trophy,
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
-import { useAuth } from '../hooks/useAuth';
-import { useNotificationStore } from '../store/useNotificationStore';
-import { useAppSocket } from '../hooks/useAppSocket';
+import React, { useState, useEffect, useCallback } from "react";
+import AvatarFrame from "./ui/AvatarFrame";
+import NotificationBell from "./NotificationBell";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Settings, Menu, X, Trophy, LayoutDashboard } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
+import { useAuth } from "../hooks/useAuth";
+import { useNotificationStore } from "../store/useNotificationStore";
+import { useAppSocket } from "../hooks/useAppSocket";
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
   const { user, token, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { fetchNotifications, fetchUnreadCount, onSocketNotification } = useNotificationStore();
+  const { fetchNotifications, fetchUnreadCount, onSocketNotification } =
+    useNotificationStore();
 
   useEffect(() => {
     if (!user) return;
@@ -27,21 +26,27 @@ const Navbar = () => {
   useAppSocket(user?.id, token, { onNotification: onSocketNotification });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [streakFrame, setStreakFrame] = useState(() => {
-    try { return localStorage.getItem('mchub_streak_frame') || 'NONE'; } catch { return 'NONE'; }
+    try {
+      return localStorage.getItem("mchub_streak_frame") || "NONE";
+    } catch {
+      return "NONE";
+    }
   });
   useEffect(() => {
     const onStorage = () => {
-      try { setStreakFrame(localStorage.getItem('mchub_streak_frame') || 'NONE'); } catch {}
+      try {
+        setStreakFrame(localStorage.getItem("mchub_streak_frame") || "NONE");
+      } catch {}
     };
-    window.addEventListener('storage', onStorage);
+    window.addEventListener("storage", onStorage);
     // Also poll once on mount in case widget already wrote it this session
     onStorage();
-    return () => window.removeEventListener('storage', onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, []);
 
   const isAuthenticated = !!user;
-  const isAdminUser = user && (user.role || '').toLowerCase() === 'admin';
-  const isMc = user && (user.role || '').toLowerCase() === 'mc';
+  const isAdminUser = user && (user.role || "").toLowerCase() === "admin";
+  const isMc = user && (user.role || "").toLowerCase() === "mc";
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -49,29 +54,29 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate("/");
   };
 
-  const isDark = location.pathname.startsWith('/m/');
+  const isDark = location.pathname.startsWith("/m/");
 
   const isActive = (path) => {
-    if (path === '/') return location.pathname === '/';
-    if (path === '/m/dashboard') return location.pathname === path;
-    if (path === '/about') return location.pathname === path;
+    if (path === "/") return location.pathname === "/";
+    if (path === "/m/dashboard") return location.pathname === path;
+    if (path === "/about") return location.pathname === path;
     return location.pathname.startsWith(path);
   };
 
   const NavLink = ({ to, children }) => (
     <Link
       to={to}
-      className={`relative text-[13px] font-medium transition-all duration-200 pb-[2px] ${
+      className={`relative text-[13px] font-medium transition-all duration-200 pb-[2px] whitespace-nowrap ${
         isActive(to)
           ? isDark
-            ? 'text-white font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-amber-500 after:rounded-full'
-            : 'text-gray-900 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-amber-500 after:rounded-full'
+            ? "text-white font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-amber-500 after:rounded-full"
+            : "text-gray-900 font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-amber-500 after:rounded-full"
           : isDark
-            ? 'text-zinc-400 hover:text-white'
-            : 'text-gray-500 hover:text-gray-900'
+            ? "text-zinc-400 hover:text-white"
+            : "text-gray-500 hover:text-gray-900"
       }`}
     >
       {children}
@@ -80,22 +85,34 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 h-14 backdrop-blur-md border-b ${
-        isDark
-          ? 'bg-[#09090b]/90 border-white/6'
-          : 'bg-white/90 border-black/8 shadow-sm'
-      }`}>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 h-14 backdrop-blur-md border-b ${
+          isDark
+            ? "bg-[#09090b]/90 border-white/6"
+            : "bg-white/90 border-black/8 shadow-sm"
+        }`}
+      >
         <div className="max-w-6xl mx-auto h-full px-6 flex items-center justify-between gap-8">
-
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-1 shrink-0 group transition-opacity hover:opacity-80">
-            <span className={`text-[16px] font-bold tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>MC</span>
+          <Link
+            to="/"
+            className="flex items-center gap-1 shrink-0 group transition-opacity hover:opacity-80"
+          >
+            <span
+              className={`text-[16px] font-bold tracking-tight ${isDark ? "text-white" : "text-gray-900"}`}
+            >
+              MC
+            </span>
             <span className="w-[5px] h-[5px] rounded-full bg-amber-500 mb-0.5 group-hover:scale-110 transition-transform" />
-            <span className={`text-[16px] font-bold tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>Hub</span>
+            <span
+              className={`text-[16px] font-bold tracking-tight ${isDark ? "text-white" : "text-gray-900"}`}
+            >
+              Hub
+            </span>
           </Link>
 
           {/* Desktop Nav — centered */}
-          <div className="hidden md:flex items-center gap-7 flex-1 justify-center border-b border-transparent">
+          <div className="hidden md:flex items-center gap-3 lg:gap-5 xl:gap-7 flex-1 justify-center border-b border-transparent overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {isAdminUser ? (
               <>
                 <NavLink to="/m/admin/overview">Overview</NavLink>
@@ -106,34 +123,49 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <NavLink to="/">{t('navbar.home')}</NavLink>
-                <NavLink to="/about">{t('navbar.about')}</NavLink>
-                <span data-tour="tour-dashboard"><NavLink to="/m/dashboard">{t('navbar.dashboard')}</NavLink></span>
-                <span data-tour="tour-training" data-quest="quest-training-nav"><NavLink to="/m/voice/library">{t('navbar.training')}</NavLink></span>
-                <span data-tour="tour-courses" data-quest="quest-courses-nav"><NavLink to="/m/courses">{t('navbar.courses')}</NavLink></span>
-                <NavLink to="/m/learning">{t('navbar.learningPath')}</NavLink>
-                <NavLink to="/m/leaderboard">
-                  <span className="flex items-center gap-1" data-quest="quest-leaderboard-nav">
+                <NavLink to="/">{t("navbar.home")}</NavLink>
+                <NavLink to="/about">{t("navbar.about")}</NavLink>
 
-                    Xếp hạng
-                  </span>
-                </NavLink>
+                {isMc && (
+                  <>
+                    <span data-tour="tour-training" data-quest="quest-training-nav">
+                      <NavLink to="/m/voice/library">
+                        {t("navbar.training")}
+                      </NavLink>
+                    </span>
+                    <span data-tour="tour-courses" data-quest="quest-courses-nav">
+                      <NavLink to="/m/courses">{t("navbar.courses")}</NavLink>
+                    </span>
+                    <NavLink to="/m/learning">{t("navbar.learningPath")}</NavLink>
+                    <NavLink to="/m/leaderboard">
+                      <span
+                        className="flex items-center gap-1"
+                        data-quest="quest-leaderboard-nav"
+                      >
+                        Xếp hạng
+                      </span>
+                    </NavLink>
+                  </>
+                )}
                 <NavLink to="/m/bookings">
-                  {(user?.role || '').toLowerCase() === 'mc' ? 'Yêu cầu' : 'Booking'}
+                  {(user?.role || "").toLowerCase() === "mc"
+                    ? "Yêu cầu"
+                    : "Booking"}
                 </NavLink>
-                <NavLink to="/m/messaging">Tin nhắn</NavLink>
-                {(user?.role || '').toLowerCase() === 'client' && (
+                {(user?.role || "").toLowerCase() === "client" && (
                   <NavLink to="/m/search">Tìm MC</NavLink>
                 )}
-                {(user?.role || '').toLowerCase() === 'mc' && (
-                  <NavLink to="/m/peer-review">{t('navbar.peerReview')}</NavLink>
+                {(user?.role || "").toLowerCase() === "mc" && (
+                  <NavLink to="/m/peer-review">
+                    {t("navbar.peerReview")}
+                  </NavLink>
                 )}
                 <Link
                   data-tour="tour-pricing"
                   to="/m/payment"
-                  className="text-[13px] font-semibold text-[#f5a623] hover:text-[#e09520] transition-colors"
+                  className="text-[13px] font-semibold text-[#f5a623] hover:text-[#e09520] transition-colors whitespace-nowrap"
                 >
-                  {t('navbar.pricing')}
+                  {t("navbar.pricing")}
                 </Link>
               </>
             )}
@@ -141,16 +173,35 @@ const Navbar = () => {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2 shrink-0">
+            <span data-tour="tour-dashboard" title={t("navbar.dashboard")}>
+              <Link
+                to="/m/dashboard"
+                className={`flex items-center justify-center w-8 h-8 rounded-md transition-colors ${
+                  isActive("/m/dashboard")
+                    ? isDark
+                      ? "text-white bg-white/10"
+                      : "text-gray-900 bg-gray-100"
+                    : isDark
+                      ? "text-zinc-400 hover:text-white hover:bg-white/[0.07]"
+                      : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
+                }`}
+              >
+                <LayoutDashboard size={16} />
+              </Link>
+            </span>
             {!isAuthenticated ? (
               <div className="flex items-center gap-3">
-                <Link to="/login" className="text-[13px] font-medium text-gray-500 hover:text-gray-800 transition-colors">
-                  {t('navbar.login')}
+                <Link
+                  to="/login"
+                  className="text-[13px] font-medium text-gray-500 hover:text-gray-800 transition-colors"
+                >
+                  {t("navbar.login")}
                 </Link>
                 <Link
                   to="/register"
                   className="hidden sm:block px-4 py-1.5 rounded-md bg-amber-500 text-white text-[13px] font-semibold hover:bg-amber-600 transition-colors"
                 >
-                  {t('navbar.join')}
+                  {t("navbar.join")}
                 </Link>
               </div>
             ) : (
@@ -158,22 +209,29 @@ const Navbar = () => {
                 {/* Avatar + Settings gear */}
                 <div className="flex items-center gap-1">
                   <AvatarFrame
-                    src={user?.avatar?.startsWith('http') ? user.avatar : undefined}
+                    src={
+                      user?.avatar?.startsWith("http") ? user.avatar : undefined
+                    }
                     alt={user?.name}
-                    frameKey={user ? streakFrame : 'NONE'}
+                    frameKey={user ? streakFrame : "NONE"}
                     size={28}
-                    showBadge={streakFrame !== 'NONE'}
+                    showBadge={streakFrame !== "NONE"}
                     fallbackEmoji={
-                      user?.avatar && !user.avatar.startsWith('http') && user.avatar.length <= 4
-                        ? user.avatar : '😊'
+                      user?.avatar &&
+                      !user.avatar.startsWith("http") &&
+                      user.avatar.length <= 4
+                        ? user.avatar
+                        : "😊"
                     }
                   />
-                  <span className={`hidden lg:block text-[13px] font-medium mx-1 ${isDark ? 'text-zinc-300' : 'text-gray-600'}`}>
-                    {user?.name?.split(' ')[0]}
+                  <span
+                    className={`hidden lg:block text-[13px] font-medium mx-1 ${isDark ? "text-zinc-300" : "text-gray-600"}`}
+                  >
+                    {user?.name?.split(" ")[0]}
                   </span>
                   {user?.isPremium ? (
                     <span className="hidden lg:inline-flex items-center px-2 py-0.5 rounded-md bg-amber-100 border border-amber-300 text-[10px] font-bold text-amber-700 uppercase tracking-wide">
-                      {user?.plan || 'Premium'}
+                      {user?.plan || "Premium"}
                     </span>
                   ) : (
                     <span className="hidden lg:inline-flex items-center px-2 py-0.5 rounded-md bg-gray-100 border border-gray-200 text-[10px] font-semibold text-gray-500 uppercase tracking-wide">
@@ -185,7 +243,7 @@ const Navbar = () => {
                     data-tour="tour-settings"
                     data-quest="quest-settings-nav"
                     to="/m/settings"
-                    className={`w-8 h-8 flex items-center justify-center rounded-md transition-colors ${isDark ? 'text-zinc-500 hover:text-white hover:bg-white/[0.07]' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'}`}
+                    className={`w-8 h-8 flex items-center justify-center rounded-md transition-colors ${isDark ? "text-zinc-500 hover:text-white hover:bg-white/[0.07]" : "text-gray-400 hover:text-gray-700 hover:bg-gray-100"}`}
                   >
                     <Settings size={16} />
                   </Link>
@@ -195,8 +253,8 @@ const Navbar = () => {
 
             {/* Mobile hamburger */}
             <button
-              onClick={() => setIsMobileMenuOpen(v => !v)}
-              className={`flex md:hidden w-11 h-11 items-center justify-center rounded-md transition-colors ${isDark ? 'text-zinc-500 hover:text-white hover:bg-white/[0.07]' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'}`}
+              onClick={() => setIsMobileMenuOpen((v) => !v)}
+              className={`flex md:hidden w-11 h-11 items-center justify-center rounded-md transition-colors ${isDark ? "text-zinc-500 hover:text-white hover:bg-white/[0.07]" : "text-gray-400 hover:text-gray-700 hover:bg-gray-100"}`}
             >
               {isMobileMenuOpen ? <X size={16} /> : <Menu size={16} />}
             </button>
@@ -226,38 +284,112 @@ const Navbar = () => {
               <nav className="flex flex-col gap-1">
                 {isAdminUser ? (
                   <>
-                    <MobileNavLink to="/m/admin/overview" label="Overview" active={isActive('/m/admin/overview')} />
-                    <MobileNavLink to="/m/admin/users" label="Users" active={isActive('/m/admin/users')} />
-                    <MobileNavLink to="/m/admin/lessons" label="Lessons" active={isActive('/m/admin/lessons')} />
-                    <MobileNavLink to="/m/admin/competitions" label="Arenas" active={isActive('/m/admin/competitions')} />
-                    <MobileNavLink to="/m/admin/transactions" label="Transactions" active={isActive('/m/admin/transactions')} />
+                    <MobileNavLink
+                      to="/m/admin/overview"
+                      label="Overview"
+                      active={isActive("/m/admin/overview")}
+                    />
+                    <MobileNavLink
+                      to="/m/admin/users"
+                      label="Users"
+                      active={isActive("/m/admin/users")}
+                    />
+                    <MobileNavLink
+                      to="/m/admin/lessons"
+                      label="Lessons"
+                      active={isActive("/m/admin/lessons")}
+                    />
+                    <MobileNavLink
+                      to="/m/admin/competitions"
+                      label="Arenas"
+                      active={isActive("/m/admin/competitions")}
+                    />
+                    <MobileNavLink
+                      to="/m/admin/transactions"
+                      label="Transactions"
+                      active={isActive("/m/admin/transactions")}
+                    />
                   </>
                 ) : (
                   <>
-                    <MobileNavLink to="/about" label={t('navbar.about')} active={isActive('/about')} />
-                    <MobileNavLink to="/m/dashboard" label={t('navbar.dashboard')} active={isActive('/m/dashboard')} />
-                    <MobileNavLink to="/m/voice/library" label={t('navbar.training')} active={isActive('/m/voice')} />
-                    <MobileNavLink to="/m/courses" label={t('navbar.courses')} active={isActive('/m/courses')} />
-                    <MobileNavLink to="/m/learning" label={t('navbar.learningPath')} active={isActive('/m/learning')} />
-                    <MobileNavLink to="/m/leaderboard" label="🏆 Xếp hạng" active={isActive('/m/leaderboard')} />
-                    <MobileNavLink to="/m/bookings" label={isMc ? 'Yêu cầu' : 'Booking'} active={isActive('/m/bookings')} />
-                    <MobileNavLink to="/m/messaging" label="Tin nhắn" active={isActive('/m/messaging')} />
-                    {(user?.role || '').toLowerCase() === 'client' && (
-                      <MobileNavLink to="/m/search" label="Tìm MC" active={isActive('/m/search')} />
+                    <MobileNavLink
+                      to="/about"
+                      label={t("navbar.about")}
+                      active={isActive("/about")}
+                    />
+                    <MobileNavLink
+                      to="/m/dashboard"
+                      label={t("navbar.dashboard")}
+                      active={isActive("/m/dashboard")}
+                    />
+                    {isMc && (
+                      <>
+                        <MobileNavLink
+                          to="/m/voice/library"
+                          label={t("navbar.training")}
+                          active={isActive("/m/voice")}
+                        />
+                        <MobileNavLink
+                          to="/m/courses"
+                          label={t("navbar.courses")}
+                          active={isActive("/m/courses")}
+                        />
+                        <MobileNavLink
+                          to="/m/learning"
+                          label={t("navbar.learningPath")}
+                          active={isActive("/m/learning")}
+                        />
+                        <MobileNavLink
+                          to="/m/leaderboard"
+                          label="🏆 Xếp hạng"
+                          active={isActive("/m/leaderboard")}
+                        />
+                      </>
+                    )}
+                    <MobileNavLink
+                      to="/m/bookings"
+                      label={isMc ? "Yêu cầu" : "Booking"}
+                      active={isActive("/m/bookings")}
+                    />
+                    <MobileNavLink
+                      to="/m/messaging"
+                      label="Tin nhắn"
+                      active={isActive("/m/messaging")}
+                    />
+                    {(user?.role || "").toLowerCase() === "client" && (
+                      <MobileNavLink
+                        to="/m/search"
+                        label="Tìm MC"
+                        active={isActive("/m/search")}
+                      />
                     )}
                     {isMc && (
-                      <MobileNavLink to="/m/peer-review" label={t('navbar.peerReview')} active={isActive('/m/peer-review')} />
+                      <MobileNavLink
+                        to="/m/peer-review"
+                        label={t("navbar.peerReview")}
+                        active={isActive("/m/peer-review")}
+                      />
                     )}
-                    <MobileNavLink to="/m/payment" label={t('navbar.pricing')} active={isActive('/m/payment')} />
+                    <MobileNavLink
+                      to="/m/payment"
+                      label={t("navbar.pricing")}
+                      active={isActive("/m/payment")}
+                    />
                   </>
                 )}
                 {!isAuthenticated && (
                   <div className="flex gap-3 mt-4 pt-4 border-t border-black/8">
-                    <Link to="/login" className="flex-1 py-2 text-center text-[13px] font-medium border border-gray-200 rounded-md text-gray-600 hover:bg-gray-50 transition-colors">
-                      {t('navbar.login')}
+                    <Link
+                      to="/login"
+                      className="flex-1 py-2 text-center text-[13px] font-medium border border-gray-200 rounded-md text-gray-600 hover:bg-gray-50 transition-colors"
+                    >
+                      {t("navbar.login")}
                     </Link>
-                    <Link to="/register" className="flex-1 py-2 text-center text-[13px] font-semibold bg-amber-500 text-white rounded-md hover:bg-amber-600 transition-colors">
-                      {t('navbar.join')}
+                    <Link
+                      to="/register"
+                      className="flex-1 py-2 text-center text-[13px] font-semibold bg-amber-500 text-white rounded-md hover:bg-amber-600 transition-colors"
+                    >
+                      {t("navbar.join")}
                     </Link>
                   </div>
                 )}
@@ -274,7 +406,9 @@ const MobileNavLink = ({ to, label, active }) => (
   <Link
     to={to}
     className={`px-3 py-2.5 rounded-md text-[14px] font-medium transition-colors ${
-      active ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+      active
+        ? "bg-amber-50 text-amber-700 font-semibold"
+        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
     }`}
   >
     {label}
