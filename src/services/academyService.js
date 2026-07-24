@@ -14,10 +14,22 @@ export const academyService = {
     return api.patch(`/admin/courses/${courseId}/pricing?${params.toString()}`);
   },
   getAllCoursesAdmin: () => api.get('/admin/courses'),
+  updateCourseOutcomes: (courseId, outcomes) => api.patch(`/admin/courses/${courseId}/outcomes`, outcomes),
   completeLesson: (courseId, lessonId) => api.post(`/courses/${courseId}/lessons/${lessonId}/complete`),
   completeReading: (courseId, readingId) => api.post(`/courses/${courseId}/readings/${readingId}/complete`),
+  completeExercise: (courseId, exerciseId, answer) => api.post(`/courses/${courseId}/exercises/${exerciseId}/complete`, { answer }),
   submitQuiz: (courseId, answers) => api.post(`/courses/${courseId}/quiz/submit`, { answers }),
   getReadingGuide: (id) => api.get(`/courses/reading-guides/${id}`),
+  getProgressStats: (courseId) => api.get(`/courses/${courseId}/progress-stats`),
+  getCaseStudy: (id) => api.get(`/case-studies/${id}`),
+
+  peerReview: {
+    request: (practiceSessionId) => api.post(`/peer-review/request/${practiceSessionId}`),
+    pending: () => api.get('/peer-review/pending'),
+    submit: (reviewId, comment, rating) => api.post(`/peer-review/${reviewId}/submit`, { comment, rating }),
+    my: () => api.get('/peer-review/my'),
+    forSession: (practiceSessionId) => api.get(`/peer-review/session/${practiceSessionId}`),
+  },
 
   getHighlights: (guideId, userId) => api.get(`/highlights/reading-guides/${guideId}/users/${userId}`),
   createHighlight: (data) => api.post('/highlights', data),

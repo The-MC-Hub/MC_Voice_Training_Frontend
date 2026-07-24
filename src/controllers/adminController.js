@@ -43,6 +43,11 @@ export const fetchDashboardStats = async () => {
   return response.data.data || {};
 };
 
+export const fetchAllBookings = async () => {
+  const response = await api.get('/admin/bookings');
+  return response.data.data || [];
+};
+
 export const fetchAnalytics = async () => {
   const response = await api.get('/admin/analytics');
   return response.data.data || {};

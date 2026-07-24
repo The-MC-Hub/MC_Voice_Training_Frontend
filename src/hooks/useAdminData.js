@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import {
   fetchAllUsers, fetchAllTransactions, fetchRevenueStats,
   fetchDashboardStats, fetchAnalytics, fetchGrowthAnalytics,
+  fetchAllBookings,
 } from "../controllers/adminController";
 import { cacheGet, cacheSet } from "../utils/adminCache";
 
@@ -12,6 +13,7 @@ const FETCHERS = [
   { key: "dashStats",      fn: fetchDashboardStats },
   { key: "analytics",      fn: fetchAnalytics },
   { key: "growthAnalytics",fn: fetchGrowthAnalytics },
+  { key: "bookings",       fn: fetchAllBookings },
 ];
 
 const DEFAULTS = {
@@ -21,6 +23,7 @@ const DEFAULTS = {
   dashStats: null,
   analytics: null,
   growthAnalytics: null,
+  bookings: null,
 };
 
 export const useAdminData = () => {

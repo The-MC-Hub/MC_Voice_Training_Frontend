@@ -34,7 +34,7 @@ test.describe('Admin dashboard (authenticated as ADMIN)', () => {
         await page.goto(`/m/admin/${section}`);
         // Sidebar logout button is always rendered once the admin shell mounts, regardless
         // of which section is active — a stable smoke-test anchor.
-        await expect(page.getByRole('button', { name: /Đăng xuất/i })).toBeVisible({ timeout: 10_000 });
+        await expect(page.getByRole('button', { name: /Đăng xuất|Log ?Out/i })).toBeVisible({ timeout: 10_000 });
       });
     }
   });

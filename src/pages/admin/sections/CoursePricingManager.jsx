@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { GraduationCap, Pencil, Check, X, Users, Tag, RefreshCw } from 'lucide-react';
+import { GraduationCap, Pencil, Check, X, Users, Tag, RefreshCw, Target } from 'lucide-react';
 import { academyService } from '../../../services/academyService';
 import { Button } from "@/components/animate-ui/components/buttons/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,9 @@ const CoursePricingManager = () => {
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState({ priceVnd: 0, discountPercent: 0 });
   const [saving, setSaving] = useState(false);
+  const [outcomesEditId, setOutcomesEditId] = useState(null);
+  const [outcomesForm, setOutcomesForm] = useState('');
+  const [savingOutcomes, setSavingOutcomes] = useState(false);
 
   const load = () => {
     setLoading(true);
@@ -41,6 +44,22 @@ const CoursePricingManager = () => {
       load();
     } catch (e) { console.error(e); }
     finally { setSaving(false); }
+  };
+
+  const startEditOutcomes = (c) => {
+    setOutcomesEditId(c.id);
+    setOutcomesForm((c.outcomes || []).join('\n'));
+  };
+
+  const saveOutcomes = async (id) => {
+    setSavingOutcomes(true);
+    try {
+      const outcomes = outcomesForm.split('\n').map(s => s.trim()).filter(Boolean);
+      await academyService.updateCourseOutcomes(id, outcomes);
+      setOutcomesEditId(null);
+      load();
+    } catch (e) { console.error(e); }
+    finally { setSavingOutcomes(false); }
   };
 
   return (
@@ -126,6 +145,29 @@ const CoursePricingManager = () => {
                       <Pencil size={12} /> {t('admin.coursePricingManager.editPrice')}
                     </Button>
                   </div>
+                )}
+
+                {outcomesEditId === c.id ? (
+                  <div className="w-full lg:w-80 space-y-2">
+                    <label className="block text-[10px] text-[--text-muted] uppercase">{t('admin.coursePricingManager.outcomesLabel')}</label>
+                    <textarea rows={4} value={outcomesForm} onChange={e => setOutcomesForm(e.target.value)}
+                      className="w-full px-3 py-2 rounded-md bg-[--bg-base] border border-[--border-subtle] text-[12px] text-[--text-primary] focus:border-amber-500 outline-none resize-none" />
+                    <div className="flex items-center gap-2">
+                      <Button onClick={() => saveOutcomes(c.id)} disabled={savingOutcomes}
+                        className="h-auto flex items-center gap-1 px-3 py-1.5 rounded-md bg-emerald-500 text-white text-[11px] disabled:opacity-50">
+                        <Check size={12} /> {t('admin.coursePricingManager.save')}
+                      </Button>
+                      <Button onClick={() => setOutcomesEditId(null)}
+                        className="h-auto flex items-center gap-1 px-3 py-1.5 rounded-md border border-[--border-subtle] text-[--text-muted] text-[11px]">
+                        <X size={12} /> {t('admin.coursePricingManager.cancel')}
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <Button onClick={() => startEditOutcomes(c)}
+                    className="h-auto flex items-center gap-1.5 px-3.5 py-2 rounded-md border border-[--border-subtle] text-[12px] text-[--text-secondary] hover:border-amber-500/40 hover:text-amber-500 transition-colors">
+                    <Target size={12} /> {t('admin.coursePricingManager.outcomesButton', { count: c.outcomes?.length ?? 0 })}
+                  </Button>
                 )}
               </Card>
             );

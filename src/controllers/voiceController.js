@@ -71,6 +71,12 @@ export const fetchPracticeById = async (id) => {
     return response.data.data;
 };
 
+export const fetchLessonPracticeHistory = async (userId, lessonId) => {
+    if (!userId || !lessonId) return [];
+    const response = await api.get(`/voice/practice/history/${userId}/lesson/${lessonId}`);
+    return response.data.data;
+};
+
 /**
  * Generate TTS audio from text via AI service.
  * Returns a Blob URL that can be set as <audio src>.

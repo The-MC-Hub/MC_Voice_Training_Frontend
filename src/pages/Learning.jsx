@@ -157,7 +157,7 @@ const Learning = () => {
 
                                             {step.status !== 'Locked' ? (
                                                 <button
-                                                    onClick={() => navigate(isAuthenticated ? `/m/learning/milestone/${step.id}` : '/login')}
+                                                    onClick={() => navigate(isAuthenticated ? `/m/courses/${step.id}` : '/login')}
                                                     className="flex items-center gap-2 px-5 py-2 bg-[#f5a623] text-black text-[13px] font-semibold rounded-md hover:bg-[#e09520] transition-colors"
                                                 >
                                                     {step.status === 'Completed' ? t('learning.reviewMilestone') : t('learning.resumeJourney')}

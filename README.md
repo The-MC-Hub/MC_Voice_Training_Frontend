@@ -10,7 +10,14 @@ For full architectural detail (route table, dead/orphaned routes, UI component m
 
 ## Overview
 
-React 19 SPA for voice practice sessions, AI analysis reports, course/academy content, and community leaderboards/competitions. Three roles with distinct access: `CLIENT`, `MC`, `ADMIN` (route guards: `GuestRoute`, `ProtectedRoute`, `RoleRoute` — see `src/App.jsx`).
+React 19 SPA for voice practice sessions, AI analysis reports, course/academy content (learning roadmap, video/exercise/case-study lessons, progress dashboard, peer review), MC discovery search, MC booking, in-app chat, and community leaderboards/competitions. Three roles with distinct access: `CLIENT`, `MC`, `ADMIN` (route guards: `GuestRoute`, `ProtectedRoute`, `RoleRoute` — see `src/App.jsx`).
+
+## Feature areas
+
+- **Course learning path** (`/m/learning`, `/m/courses/:id`) — roadmap page, path map with reading/video/exercise/quiz/case-study nodes, `CourseProgressTab` (practice-session stats + score-over-time chart), `CaseStudyView` (annotated video + discussion), `PeerReview` (`/m/peer-review`, MC-only) for reviewing learners' practice sessions, gamified completion (XP + voucher toast)
+- **MC search** (`/m/search`, `/m/mc/:id`) — filterable MC discovery and public profile view
+- **Booking** (`/m/booking`, `/m/bookings`) — client booking creation/list, `BookingStatusBadge`, admin booking management section
+- **Chat** (`/m/messaging`) — conversation list + message thread, backed by `useChatStore` and the shared `useAppSocket` hook (also used for notifications)
 
 **Note:** `package.json`'s `name` field is `fpt-s7-website-frontend` (inherited from the repo this was forked from) — this doesn't affect functionality but will show up in build output/lockfiles.
 
@@ -26,7 +33,7 @@ React 19 SPA for voice practice sessions, AI analysis reports, course/academy co
 | UI Components | animate-ui (Radix-backed, animated) + shadcn/ui (plain primitives it doesn't cover) |
 | i18n | react-i18next (`src/locales/en.json` + `vi.json`) |
 | HTTP | axios (`src/services/api.js`, 45s timeout to survive backend cold-starts) |
-| Realtime | `@stomp/stompjs` + `sockjs-client` (connects to backend's `/ws-chat`; no chat feature is actually wired to it server-side) |
+| Realtime | `@stomp/stompjs` + `sockjs-client` via `useAppSocket` (connects to backend's `/ws-chat`; powers both notifications and chat) |
 | Collaborative editing | Tiptap 3 + Yjs (reading-guide highlight annotations) |
 | E2E | Playwright |
 
@@ -53,7 +60,7 @@ The animate-ui/shadcn migration is complete (`ANIMATE_UI_MIGRATION_PLAN.md`). Ch
 
 ## Routing gotchas
 
-`/courses`, `/m/learning`, and `/m/learning/milestone/:id` render an inline `<ComingSoon>` placeholder — they do **not** use `src/pages/CoursesPublic.jsx` or `src/pages/MilestoneDetail.jsx`, which exist in the codebase but are orphaned (no route references them). Don't assume a page file being present means it's reachable — check `src/App.jsx`.
+`/m/learning` now renders the real `Learning.jsx` roadmap (no longer `<ComingSoon>`); `/m/learning/milestone/:id` redirects to `/m/courses/:id` instead of using the orphaned `MilestoneDetail.jsx`. `/courses` (public, unauthenticated landing) still renders `<ComingSoon>` — that one is unchanged. `src/pages/CoursesPublic.jsx` and `src/pages/MilestoneDetail.jsx` remain orphaned (no route references them). Don't assume a page file being present means it's reachable — check `src/App.jsx`.
 
 ## E2E tests
 

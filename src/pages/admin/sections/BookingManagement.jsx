@@ -36,8 +36,8 @@ const BookingManagement = ({ bookings }) => {
                 </TableCell>
                 <TableCell className="p-4 whitespace-normal">
                   <div className="flex flex-col gap-1">
-                    <span className="font-semibold text-slate-200">{t("admin.booking.clientLabel")}{b.client?.name || "Client"}</span>
-                    <span className="text-[10px] text-slate-400">{t("admin.booking.talentLabel")}{b.mc?.name || "Talent"}</span>
+                    <span className="font-semibold text-slate-200">{t("admin.booking.clientLabel")}{b.clientName || b.client || "Client"}</span>
+                    <span className="text-[10px] text-slate-400">{t("admin.booking.talentLabel")}{b.mcName || b.mc || "Talent"}</span>
                   </div>
                 </TableCell>
                 <TableCell className="p-4">

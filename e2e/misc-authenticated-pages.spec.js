@@ -43,13 +43,24 @@ test.describe('Admin dashboard (role-gated: ADMIN only)', () => {
 });
 
 test.describe('Coming-soon placeholder routes', () => {
-  test('learning path (coming soon) loads', async ({ page }) => {
-    await page.goto('/m/learning');
-    await expect(page.locator('body')).toBeVisible();
-  });
-
   test('legacy /courses (coming soon) loads', async ({ page }) => {
     await page.goto('/courses');
     await expect(page.locator('body')).toBeVisible();
+  });
+});
+
+test.describe('Learning roadmap (authenticated, real page — not ComingSoon)', () => {
+  test('loads the roadmap page with a heading, not the ComingSoon placeholder', async ({ page }) => {
+    await page.goto('/m/learning');
+    await expect(page.locator('body')).toBeVisible();
+    // ComingSoon renders a generic "coming soon"/"đang được xây dựng" message — assert it's gone.
+    await expect(page.getByText(/đang được (xây dựng|phát triển)/i)).toHaveCount(0);
+  });
+});
+
+test.describe('Peer review page (role-gated: MC only)', () => {
+  test('CLIENT user is redirected away from peer-review', async ({ page }) => {
+    await page.goto('/m/peer-review');
+    await page.waitForURL(/\/m\/dashboard/, { timeout: 10_000 });
   });
 });
