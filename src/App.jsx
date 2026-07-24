@@ -25,11 +25,13 @@ import VerifyEmail from './pages/VerifyEmail';
 import Layout from './layout/MainLayout';
 import AdSidebar from './components/ui/AdSidebar';
 import PopularLessonsSidebar from './components/ui/PopularLessonsSidebar';
+import Navbar from './components/Navbar';
 
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Wallet = lazy(() => import('./pages/Wallet'));
 const Success = lazy(() => import('./pages/Success'));
 const Settings = lazy(() => import('./pages/Settings'));
+const ClientProfilePublic = lazy(() => import('./pages/ClientProfilePublic'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const PaymentResult = lazy(() => import('./pages/PaymentResult'));
 const VoiceLibrary = lazy(() => import('./pages/VoiceLibrary'));
@@ -103,6 +105,14 @@ function App() {
       <div className={`app-container${noSidebar ? '' : ' has-sidebars'}`}>
         <PopularLessonsSidebar />
         <AdSidebar />
+        {/* Rendered once, outside the key={location.pathname} tree below —
+            so it never unmounts/remounts on route change. Previously every
+            page rendered its own <Navbar/>, which meant it (and any
+            in-progress animation inside it, like the active-link pill)
+            was torn down and rebuilt on every navigation. Hidden on
+            login/register — those pages have their own full-screen layout
+            with no room/need for the top nav. */}
+        {!noSidebar && <Navbar />}
         <Suspense fallback={<PageLoader />}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
@@ -136,9 +146,13 @@ function App() {
                   })()}
                 />
                 <Route path="settings" element={<ProtectedRoute><Wrap><Settings /></Wrap></ProtectedRoute>} />
+                <Route path="profile/client" element={<RoleRoute allowedRoles={['client']}><Wrap><ClientProfilePublic /></Wrap></RoleRoute>} />
                 <Route path="payment" element={<ProtectedRoute><Wrap><PaymentPage /></Wrap></ProtectedRoute>} />
-                <Route path="search" element={<ProtectedRoute><Wrap><Search /></Wrap></ProtectedRoute>} />
-                <Route path="mc/:id" element={<ProtectedRoute><Wrap><MCProfilePublic /></Wrap></ProtectedRoute>} />
+                {/* Public — lets a not-yet-registered visitor browse MC
+                    profiles before signing up (backend /public/mcs/search
+                    doesn't require auth either). */}
+                <Route path="search" element={<Wrap><Search /></Wrap>} />
+                <Route path="mc/:id" element={<Wrap><MCProfilePublic /></Wrap>} />
                 <Route path="booking" element={<RoleRoute allowedRoles={['client']}><Wrap><Booking /></Wrap></RoleRoute>} />
                 <Route path="bookings" element={<ProtectedRoute><Wrap><BookingList /></Wrap></ProtectedRoute>} />
                 <Route path="messaging" element={<ProtectedRoute><Wrap><Messaging /></Wrap></ProtectedRoute>} />
@@ -164,7 +178,13 @@ function App() {
               {/* Full-screen views (outside MainLayout — no Navbar/Footer) */}
               <Route path="/m/admin" element={<RoleRoute allowedRoles={['admin']}><Wrap><AdminDashboard /></Wrap></RoleRoute>} />
               <Route path="/m/admin/:section" element={<RoleRoute allowedRoles={['admin']}><Wrap><AdminDashboard /></Wrap></RoleRoute>} />
-              <Route path="/m/voice/practice/:id" element={<RoleRoute allowedRoles={['mc']}><Wrap><VoicePractice /></Wrap></RoleRoute>} />
+              {/* Public — powers the unauthenticated "try once, reset every N
+                  hours" guest trial (VoicePractice's own guestCooldownUntil
+                  logic + backend /practice/analyze-guest handle the gating,
+                  not a route guard). Logged-in CLIENTs land here too but
+                  VoicePractice's real analyze call is MC-only server-side;
+                  they'd only get the guest-trial path. */}
+              <Route path="/m/voice/practice/:id" element={<Wrap><VoicePractice /></Wrap>} />
               <Route path="/m/voice/report/:sessionId" element={<RoleRoute allowedRoles={['mc', 'admin']}><Wrap><VoiceReport /></Wrap></RoleRoute>} />
               <Route path="/m/learning/guide/:id" element={<RoleRoute allowedRoles={['mc']}><Wrap><ReadingView /></Wrap></RoleRoute>} />
               <Route path="/m/learning/case-study/:id" element={<RoleRoute allowedRoles={['mc']}><Wrap><CaseStudyView /></Wrap></RoleRoute>} />
